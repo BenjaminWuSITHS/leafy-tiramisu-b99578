@@ -150,7 +150,7 @@ body.no-controls #rail .keep{pointer-events:auto}
 body.no-controls #rail>*:not(.keep){transform:translateX(-72px);opacity:0;visibility:hidden;transition:transform .3s var(--ease),opacity .3s,visibility 0s .3s}
 /* Short windows: the strip scrolls (tooltips can't show outside a scrolling box) */
 @media (max-height:640px){
-  #rail{overflow-y:auto;scrollbar-width:none}
+  #rail{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none} /* (up and down only: with just overflow-y set, browsers let it slide sideways too) */
   #rail::-webkit-scrollbar{display:none}
   #rail>*{flex:none}
   #rail .rbtn::after{display:none}
@@ -654,7 +654,7 @@ body.m-portrait #panelBg{left:calc(48px + var(--sal));right:0;width:auto;border-
 body.m-portrait main,body.m-portrait #rail{top:var(--stage-h);bottom:calc(var(--viz-h) + var(--sab) + var(--tabs-h));transform:none!important;visibility:visible!important}
 body.m-portrait main{left:calc(48px + var(--sal));right:0;width:auto;padding:16px calc(12px + var(--sar)) 32px 12px;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 22px),transparent)}
-body.m-portrait #rail{padding:8px 0;overflow-y:auto;scrollbar-width:none;pointer-events:auto;
+body.m-portrait #rail{padding:8px 0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;scrollbar-width:none;pointer-events:auto; /* (up and down only: iPhones dragged it sideways) */
   -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 14px),transparent)}
 body.m-portrait #rail::-webkit-scrollbar{display:none}
 body.m-portrait #rail>*{transform:none!important;opacity:1!important;visibility:visible!important;flex:none}

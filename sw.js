@@ -1,7 +1,7 @@
 // Multi Audio Player — mobile web version. Once opened it also works offline, and it keeps itself
 // up to date: when online, the page always comes fresh from the site (a new upload shows up the
 // next time it's opened); offline (or the network is very slow), the saved copy opens instead.
-const VERSION = '4093ef1c1e'; // (set by tools/build-mobile.js: a new build replaces the old saved files)
+const VERSION = 'aaa1409cae'; // (set by tools/build-mobile.js: a new build replaces the old saved files)
 const CACHE = 'map-' + VERSION;
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png', 'apple-touch-icon-precomposed.png', 'favicon-32.png', 'favicon.ico'];
 
