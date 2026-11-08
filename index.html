@@ -955,7 +955,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 </nav>
 
 <canvas id="vidGlow" width="24" height="14" aria-hidden="true"></canvas>
-<video id="bg" muted loop playsinline preload="auto"></video>
+<video id="bg" muted loop playsinline preload="auto" x-webkit-wirelessvideoplaybackdisabled></video>
 <div id="tabs"><button class="tab" id="allTab" style="--c:var(--fg)">All</button></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="loadBox" hidden>
@@ -991,8 +991,8 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 <div id="bgmDrag" aria-hidden="true" title="Drag to move"></div>
 <div id="airHelp" role="dialog" aria-label="AirPlay" hidden>
   <div class="air-head"><b>AirPlay</b><button class="air-x" aria-label="Close" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-  <p class="air-how">Your iPhone sends the sound to AirPlay itself. Choose a speaker or TV here, or in Control Center: tap the AirPlay icon on the music controls.</p>
-  <button type="button" class="air-pick pri">Choose a speaker or TV…</button>
+  <p class="air-how">Your iPhone sends the player's sound to AirPlay itself. Choose a speaker or TV here, or in Control Center (the AirPlay icon on the music controls). A TV plays the sound only: the picture stays on this phone. To stop, choose iPhone in the same list.</p>
+  <button type="button" class="air-pick pri">Play the sound on a speaker or TV…</button>
   <p class="air-none" hidden>No AirPlay speakers or TVs found yet: they need to be on the same Wi-Fi as this phone.</p>
   <label class="air-late"><input type="checkbox"> <span>Keep the lyrics and piano roll in time with an AirPlay speaker (it plays about 2 seconds late; Settings → Speaker delay)</span></label>
 </div>
@@ -1621,6 +1621,7 @@ function addTrack(file) {
   if (ENG.on) audio = new EngTrack();
   else {
     audio = new Audio();
+    audio.setAttribute('x-webkit-wirelessvideoplaybackdisabled', ''); // (AirPlay: only their sound goes, through the mix — a TV can't fetch a blob: file and would spin)
     audio.preload = 'auto';
     audio.loop = false;
     audio.defaultPlaybackRate = rate;
@@ -4092,7 +4093,9 @@ function updateMediaSession() {
   if (!('mediaSession' in navigator) || !window.MediaMetadata) return;
   const title = (currentProject && currentProject.name) ||
     (tracks[0] ? tracks[0]._name.replace(/\.[^.]+$/, '') : 'Multi Audio Player');
-  try { navigator.mediaSession.metadata = new MediaMetadata({ title, artist: 'Multi Audio Player' }); } catch (e) {}
+  // (artwork: what an AirPlay TV, the lock screen and Control Center show while the sound plays — the app's icon where there is one)
+  const art = MOBILE_BUILD ? [{ src: new URL('icon-512.png', location.href).href, sizes: '512x512', type: 'image/png' }] : [];
+  try { navigator.mediaSession.metadata = new MediaMetadata({ title, artist: 'Multi Audio Player', artwork: art }); } catch (e) {}
 }
 if ('mediaSession' in navigator) {
   const set = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch (e) {} };
@@ -6686,7 +6689,7 @@ function setUpSafariAir() {
     w(0, 'RIFF'); b.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 1, true);
     b.setUint32(24, 22050, true); b.setUint32(28, 44100, true); b.setUint16(32, 2, true); b.setUint16(34, 16, true); w(36, 'data'); b.setUint32(40, n * 2, true);
     el = document.createElement('audio');
-    el.setAttribute('x-webkit-airplay', 'allow'); el.setAttribute('playsinline', ''); el.preload = 'auto'; el.hidden = true;
+    el.setAttribute('x-webkit-airplay', 'allow'); el.setAttribute('x-webkit-wirelessvideoplaybackdisabled', ''); el.setAttribute('playsinline', ''); el.preload = 'metadata'; el.hidden = true;
     el.src = URL.createObjectURL(new Blob([b.buffer], { type: 'audio/wav' }));
     el.addEventListener('webkitplaybacktargetavailabilitychanged', e => { none.hidden = e.availability !== 'not-available'; });
     document.body.appendChild(el);
