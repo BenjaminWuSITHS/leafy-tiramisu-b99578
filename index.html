@@ -467,6 +467,19 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #airPanel{position:fixed;z-index:31;left:calc(56px + var(--sal));bottom:calc(var(--viz-h) + var(--sab) + 12px);width:min(340px,calc(100vw - 72px));max-height:calc(100vh - var(--viz-h) - 40px);overflow:auto;
   padding:12px 14px;border-radius:12px;background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:0 10px 32px rgba(0,0,0,.3);font-size:.88rem}
 #airPanel[hidden],#airPanel [hidden]{display:none!important}
+#airBtn[hidden],#bgmAir[hidden]{display:none!important} /* (#rail .rbtn's display:grid beat the hidden attribute: a dead button on phones) */
+/* AirPlay in Safari (iPhone, iPad, Mac without the desktop app): Safari's own speaker picker, and the delay that keeps the picture in time */
+#airHelp{position:fixed;z-index:31;left:calc(56px + var(--sal));bottom:calc(var(--viz-h) + var(--sab) + 12px);width:min(340px,calc(100vw - 72px));max-height:calc(100vh - var(--viz-h) - 40px);overflow:auto;
+  padding:12px 14px;border-radius:12px;background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:0 10px 32px rgba(0,0,0,.3);font-size:.88rem}
+#airHelp[hidden],#airHelp [hidden]{display:none!important}
+#airHelp .air-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+#airHelp .air-x{width:30px;height:30px;padding:0;display:grid;place-items:center;border:none;background:none;border-radius:6px}
+#airHelp svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+#airHelp p{margin:4px 0 10px;color:var(--muted);line-height:1.4}
+#airHelp .air-pick{width:100%;margin:0 0 10px}
+#airHelp .air-late{display:flex;align-items:flex-start;gap:8px;margin:0 0 4px;line-height:1.35}
+#airHelp .air-late input{margin-top:2px;flex:none}
+body.bgm #airHelp{left:auto;right:calc(12px + var(--sar));top:calc(48px + var(--sat));bottom:auto}
 #airPanel .air-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
 #airPanel .air-x{width:30px;height:30px;padding:0;display:grid;place-items:center;border:none;background:none;border-radius:6px}
 #airPanel .air-x:hover{background:color-mix(in srgb,var(--fg) 10%,transparent)}
@@ -976,6 +989,13 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <button id="bgmBarExit" aria-label="Back to the full player" title="Back to the full player (Esc)"><svg class="i-back" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7.5 7.5"/><path d="M11 5H6.5A2.5 2.5 0 0 0 4 7.5v10A2.5 2.5 0 0 0 6.5 20h10a2.5 2.5 0 0 0 2.5-2.5V13"/></svg><svg class="i-stop" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
 </div>
 <div id="bgmDrag" aria-hidden="true" title="Drag to move"></div>
+<div id="airHelp" role="dialog" aria-label="AirPlay" hidden>
+  <div class="air-head"><b>AirPlay</b><button class="air-x" aria-label="Close" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <p class="air-how">Your iPhone sends the sound to AirPlay itself. Choose a speaker or TV here, or in Control Center: tap the AirPlay icon on the music controls.</p>
+  <button type="button" class="air-pick pri">Choose a speaker or TV…</button>
+  <p class="air-none" hidden>No AirPlay speakers or TVs found yet: they need to be on the same Wi-Fi as this phone.</p>
+  <label class="air-late"><input type="checkbox"> <span>Keep the lyrics and piano roll in time with an AirPlay speaker (it plays about 2 seconds late; Settings → Speaker delay)</span></label>
+</div>
 <div id="airPanel" role="dialog" aria-label="AirPlay" hidden>
   <div class="air-head"><b>AirPlay</b><button class="air-x" aria-label="Close" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <p class="air-status" role="status"></p>
@@ -6649,6 +6669,43 @@ async function airTap(on, lat) {
   if (was !== AIR.on) afterHidden(); // (the picture's clock moved by the delay: the video lines itself up again)
   unlockAudio();
 }
+/* ---- AirPlay without the desktop app: in Safari (iPhone, iPad, Mac) the page can't reach AirPlay devices
+   itself, but Safari can — the AirPlay button opens a small panel with Safari's own speaker picker (a hidden
+   <audio> asks for it: picking a speaker moves this page's sound there, the mix included) and the Speaker delay
+   that keeps the picture in time with the speaker. Other browsers have no AirPlay: no button. ---- */
+function setUpSafariAir() {
+  if (SUBWIN || !(IS_WEBKIT || 'WebKitPlaybackTargetAvailabilityEvent' in window)) return;
+  const p = $('airHelp'), pick = p.querySelector('.air-pick'), none = p.querySelector('.air-none'), late = p.querySelector('.air-late input');
+  const canPick = typeof HTMLMediaElement !== 'undefined' && 'webkitShowPlaybackTargetPicker' in HTMLMediaElement.prototype;
+  pick.hidden = !canPick;
+  let el = null;
+  const media = () => {
+    if (el) return el;
+    // (½ s of silence as a WAV: the picker belongs to a media element, and it needs something to play)
+    const n = 22050 / 2, b = new DataView(new ArrayBuffer(44 + n * 2)), w = (o, t) => [...t].forEach((c, i) => b.setUint8(o + i, c.charCodeAt(0)));
+    w(0, 'RIFF'); b.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 1, true);
+    b.setUint32(24, 22050, true); b.setUint32(28, 44100, true); b.setUint16(32, 2, true); b.setUint16(34, 16, true); w(36, 'data'); b.setUint32(40, n * 2, true);
+    el = document.createElement('audio');
+    el.setAttribute('x-webkit-airplay', 'allow'); el.setAttribute('playsinline', ''); el.preload = 'auto'; el.hidden = true;
+    el.src = URL.createObjectURL(new Blob([b.buffer], { type: 'audio/wav' }));
+    el.addEventListener('webkitplaybacktargetavailabilitychanged', e => { none.hidden = e.availability !== 'not-available'; });
+    document.body.appendChild(el);
+    return el;
+  };
+  pick.onclick = () => { try { media().webkitShowPlaybackTargetPicker(); } catch (e) { none.hidden = false; } };
+  const syncLate = () => { late.checked = (+spkDelayIn.value || 0) >= 1000; };
+  late.onchange = () => {
+    spkDelayIn.value = late.checked ? 2000 : 0;
+    spkDelayIn.dispatchEvent(new Event('input', { bubbles: true }));
+    spkDelayIn.dispatchEvent(new Event('change', { bubbles: true }));
+    savePrefs();
+  };
+  const show = open => { p.hidden = !open; if (open) { syncLate(); if (canPick) media(); } };
+  for (const btn of [$('airBtn'), $('bgmAir')]) { btn.hidden = false; btn.onclick = () => show(p.hidden); }
+  p.querySelector('.air-x').onclick = () => show(false);
+  document.addEventListener('pointerdown', e => { if (!p.hidden && !e.target.closest('#airHelp, #airBtn, #bgmAir')) show(false); }, true);
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !p.hidden) { e.stopPropagation(); e.preventDefault(); show(false); } }, true);
+}
 /* ---- The picture on an Apple TV (desktop app; see airplay-video.js). While the TV shows it, this window
    films its own page (getDisplayMedia: main answers with this page itself, never anything else) 30 times a
    second, encodes it to H.264 (WebCodecs; a keyframe at the start of every HLS segment) and the mix to AAC,
@@ -7077,7 +7134,7 @@ function airPanel(open) {
   airUI();
 }
 function setUpAirplay() {
-  if (!CAN_AIR) return;
+  if (!CAN_AIR) { setUpSafariAir(); return; }
   mapApp.onAir(m => {
     if (m.state) { AIR.st = m.state; if (m.state.devices) AIR.devices = m.state.devices; airUI(); }
     if (m.devices) { AIR.devices = m.devices; airUI(); }
