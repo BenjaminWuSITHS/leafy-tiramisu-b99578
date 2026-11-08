@@ -477,8 +477,9 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #airHelp svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
 #airHelp p{margin:4px 0 10px;color:var(--muted);line-height:1.4}
 #airHelp .air-pick{width:100%;margin:0 0 10px}
-#airHelp .air-late{display:flex;align-items:flex-start;gap:8px;margin:0 0 4px;line-height:1.35}
-#airHelp .air-late input{margin-top:2px;flex:none}
+#airHelp .air-late,#airHelp .air-nd{display:flex;align-items:flex-start;gap:8px;margin:0 0 4px;line-height:1.35}
+#airHelp .air-late input,#airHelp .air-nd input{margin-top:2px;flex:none}
+#airHelp .air-nd-msg{color:var(--fg)}
 body.bgm #airHelp{left:auto;right:calc(12px + var(--sar));top:calc(48px + var(--sat));bottom:auto}
 #airPanel .air-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
 #airPanel .air-x{width:30px;height:30px;padding:0;display:grid;place-items:center;border:none;background:none;border-radius:6px}
@@ -501,7 +502,7 @@ body.bgm #airHelp{left:auto;right:calc(12px + var(--sar));top:calc(48px + var(--
 #airPanel .air-msound{display:flex;align-items:center;gap:8px;margin:4px 0 8px;font-size:.84rem}
 #airPanel .air-mlead select{font:inherit;font-size:.82rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
 #airPanel .air-pw{display:flex;gap:6px;margin:0 0 8px}
-#airPanel .air-pw input{flex:1;min-width:0;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+#airPanel .air-pw input,#airPanel .air-ipin input{flex:1;min-width:0;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
 #airPanel .air-vol{display:flex;align-items:center;gap:10px;margin:0 0 8px}
 #airPanel .air-vol input{flex:1}
 #airPanel .air-both{display:flex;align-items:center;gap:8px;margin:4px 0 8px;font-size:.84rem}
@@ -524,9 +525,23 @@ html.corner #airPanel .air-cal{display:none}
 #airPanel .air-way{display:block;margin:6px 0 0;padding:0;border:none;background:none;font-size:.75rem;color:var(--muted);text-decoration:underline;cursor:pointer;text-align:left}
 #airPanel .air-way:hover{color:var(--fg)}
 html.corner #airPanel .air-way{display:none}
-#airPanel .air-rep{display:block;margin:6px 0 0;padding:0;border:none;background:none;font-size:.75rem;color:var(--muted);text-decoration:underline;cursor:pointer}
-#airPanel .air-rep:hover{color:var(--fg)}
+#airPanel .air-rep,#airPanel .air-ip{display:block;margin:6px 0 0;padding:0;border:none;background:none;font-size:.75rem;color:var(--muted);text-decoration:underline;cursor:pointer}
+#airPanel .air-rep:hover,#airPanel .air-ip:hover{color:var(--fg)}
 html.corner #airPanel .air-rep{display:none}
+/* (nothing shows up: why, with what helps — the network settings, letting the player through Windows Firewall, or both —
+   and devices added by their IP address; the corner player only says why) */
+#airPanel .air-fix{margin:0 0 8px}
+#airPanel .air-act{width:100%}
+#airPanel .air-net:not([hidden])+.air-fw{margin-top:6px}
+#airPanel .air-pub{display:flex;align-items:center;gap:8px;margin:6px 0 0;font-size:.84rem}
+#airPanel .air-fix-msg,#airPanel .air-ip-msg{margin:6px 0 0;font-size:.78rem;color:var(--muted);line-height:1.35}
+#airPanel .air-fix-msg.err,#airPanel .air-ip-msg.err{color:#c0392b}
+#airPanel .air-fix-msg:empty,#airPanel .air-ip-msg:empty{display:none}
+#airPanel .air-ipin{display:flex;gap:6px;margin:6px 0 0}
+#airPanel .air-hosts{list-style:none;margin:4px 0 0;padding:0;font-size:.84rem}
+#airPanel .air-hosts li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:3px 0}
+#airPanel .air-hosts button{padding:3px 10px;font-size:.78rem}
+html.corner #airPanel .air-fix,html.corner #airPanel .air-ip,html.corner #airPanel .air-ipf{display:none}
 #dcStatus[data-status=connected]{color:#2e8b57}
 #dcStatus[data-status=error]{color:#c0392b}
 /* Cover the screen (desktop app): this page in the see-through window over the whole screen — just the
@@ -994,11 +1009,15 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <p class="air-how">Your iPhone sends the player's sound to AirPlay itself. Choose a speaker or TV here, or in Control Center (the AirPlay icon on the music controls). A TV plays the sound only: the picture stays on this phone. To stop, choose iPhone in the same list.</p>
   <button type="button" class="air-pick pri">Play the sound on a speaker or TV…</button>
   <p class="air-none" hidden>No AirPlay speakers or TVs found yet: they need to be on the same Wi-Fi as this phone.</p>
+  <label class="air-nd"><input type="checkbox"> <span>No-delay AirPlay</span></label>
+  <p class="air-nd-how">On: the speaker starts at once and stays in time with the lyrics and piano roll, as it plays a ready-made mix of the song. Changes to the mix (a track's volume or mute, tracks added) take a moment to reach the speaker.</p>
+  <p class="air-nd-msg" role="status" hidden></p>
   <label class="air-late"><input type="checkbox"> <span>Keep the lyrics and piano roll in time with an AirPlay speaker (it plays about 2 seconds late; Settings → Speaker delay)</span></label>
 </div>
 <div id="airPanel" role="dialog" aria-label="AirPlay" hidden>
   <div class="air-head"><b>AirPlay</b><button class="air-x" aria-label="Close" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <p class="air-status" role="status"></p>
+  <div class="air-fix" hidden><button class="air-act air-net">Open network settings</button><button class="air-act air-fw"></button><label class="air-pub" hidden><input type="checkbox"> Also on public networks</label><p class="air-fix-msg" role="status"></p></div>
   <ul class="air-list"></ul>
   <div class="air-pw" hidden><input type="password" autocomplete="off" placeholder="The device's password" aria-label="The device's password"><button class="primary">Connect</button></div>
   <div class="air-pw air-pin" hidden><input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="The code on the TV" aria-label="The code shown on the TV"><button class="primary">Pair</button></div>
@@ -1013,6 +1032,8 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <button class="air-way" hidden></button>
   <button class="air-way air-pcm" hidden></button>
   <button class="air-way air-forget" hidden></button>
+  <button class="air-ip" title="For a speaker or TV that doesn't show up by itself (its IP address is in its network settings)">Add a device by IP address…</button>
+  <div class="air-ipf" hidden><div class="air-ipin"><input type="text" inputmode="decimal" maxlength="40" autocomplete="off" spellcheck="false" placeholder="Its IP address, like 192.168.1.20" aria-label="The device's IP address"><button>Add</button></div><p class="air-ip-msg" role="status"></p><ul class="air-hosts" aria-label="Devices added by IP address"></ul></div>
   <button class="air-rep" title="Saves what happened while connecting and playing (a file to send to whoever looks into it)">A device doesn't play well? Save a report</button>
 </div>
 <div class="grip" id="vizGrip" role="separator" aria-orientation="horizontal" aria-label="Visualizer height (drag)" title="Drag to resize the visualizer · double-click: normal size"></div>
@@ -1031,6 +1052,14 @@ const tracks = [];
 const clamp01 = v => Math.min(1, Math.max(0, v));
 const ease = t => t * t * (3 - 2 * t);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+/* sleep, for work that waits in many short steps. Out of sight (screen locked, another app or tab) Safari puts a chain
+   of timers — each set from the one before — on whole seconds, even while the page plays: there each step is set from
+   a message instead, which starts no chain. */
+const snooze = (() => {
+  const ch = new MessageChannel(), q = [];
+  ch.port1.onmessage = () => q.shift()();
+  return ms => (document.hidden ? new Promise(r => { q.push(() => setTimeout(r, ms)); ch.port2.postMessage(0); }) : sleep(ms));
+})();
 
 function hslToRgb(hh, s, l) {
   const k = n => (n + hh / 30) % 12, a = s * Math.min(l, 1 - l);
@@ -1114,6 +1143,8 @@ const master = actx.createGain();
 const localOut = actx.createGain(); // (this computer's speakers: silent while AirPlay plays the sound)
 master.connect(localOut);
 localOut.connect(actx.destination);
+// The limiter, once in between master and everything that leaves the page (limIn); d: how late it makes the sound (s)
+const LIM = { node: null, d: 0 };
 // Level meter on everything you hear (finds quiet moments for corrections)
 const meter = actx.createAnalyser();
 meter.fftSize = 2048;
@@ -1147,6 +1178,10 @@ const AIR = { on: false, lat: 0, node: null, sink: null, both: false, st: null, 
 // (the picture on an Apple TV: this page filmed and encoded while the TV shows it — see picOn())
 const PIC = { on: false, gen: 0, o: null, track: null, enc: null, w: 0, h: 0, srcW: 0, srcH: 0, off: Infinity, seen: 0,
   nextKey: 0, fresh: false, lastPts: -Infinity, last: null, lastArr: 0, lastSent: 0, timer: 0, aenc: null, jsaac: null, aT: null, aNext: null, aRest: 0, aFail: false };
+// (No-delay AirPlay, in Safari's AirPlay panel: the song mixed ahead, played by a hidden <audio> — el, which is then the
+// sound and the clock; null while the sound is live. See ndPlay.)
+const ND = { want: false, can: false, el: null, els: [], sig: '', job: null, gen: 0, pend: null, bad: '', failSig: '',
+  seen: '', since: 0, stems: new Map(), work: new Map(), ids: new WeakMap(), n: 0, raw: null, at: 0, go: false, t: 0, fixAt: 0, lead: 0.03, seam: null };
 const CAN_AIR = !!(window.mapApp && mapApp.airScan && mapApp.onAir);
 const IS_TOUCH = MOBILE_BUILD || matchMedia('(pointer: coarse)').matches;
 document.body.classList.toggle('touch', IS_TOUCH);
@@ -1657,6 +1692,7 @@ function addTrack(file) {
       return;
     }
     if (audio.paused) {
+      if (ND.el && !wantPlay) { startAll(); return; } // (No-delay AirPlay: the ready mix is the sound — the whole song plays, as with the precise engine; see ndNow)
       if (audio.ended) audio.currentTime = 0;
       wantPlay = true;
       unmuteMaster();
@@ -1754,7 +1790,7 @@ function removeTrack(audio) {
   audio._tab.remove();
   audio._crow.remove();
   audio._li.remove();
-  if (!tracks.length) { wantPlay = false; engReset(); lenDismissed.clear(); } // (a new song: its warnings are new)
+  if (!tracks.length) { wantPlay = false; ndDrop(); engReset(); lenDismissed.clear(); } // (a new song: its warnings are new; No-delay AirPlay's mix was the old song's)
   checkLengths(); // (the length warning is about the tracks that are left, at once)
   recolorTracks(); // (also updates the All tracks card)
   updateMediaSession(); // the lock screen / Now Playing title
@@ -2718,6 +2754,92 @@ function setFree(on) {
   return true;
 }
 
+/* @pure:limiter begin */
+/* The limiter at the very end of the mix (the 'limiter' audio worklet in ENG_CODE; see limIn): where the mix would
+   go over the ceiling, -1 dB, it turns everything down for that moment and smoothly back up afterwards — every
+   channel by the same amount, so the stereo picture stays. Tracks added together can peak over full scale (some
+   projects reach +3.7 dB), and an AirPlay TV crackles on that (a phone's speaker hides it). The sound comes out
+   lag(rate) samples (~4 ms) late: that look-ahead lets the gain come down before a peak arrives, so nothing goes
+   over, not even the very first sample. Under the ceiling it changes nothing: the gain is exactly 1, the sound
+   only delayed. It also looks halfway between every two samples (from the 6 around: 2× oversampling), as a TV's
+   converter, or a change of sample rate on the way, can make the wave there louder than either sample.
+   Plain code, no Web Audio: run(ins, outs) takes arrays of channels, any number and length (a missing channel,
+   NaN or infinity counts as silence); then gn[i] is the gain sample i out got. */
+class LimiterCore {
+  static lag(sr) { return Math.round(0.004 * sr) + 2; } // (in samples: the ~4 ms attack, and 2 for the halfway points)
+  constructor(sr) {
+    this.D = LimiterCore.lag(sr);
+    this.W = this.D - 2;                     // the gain comes down along a straight line over W samples (an average)
+    this.H = this.W + Math.round(0.01 * sr); // and stays down 10 ms longer (till a bass wave's next peak)
+    this.c = Math.pow(10, -1 / 20);          // the ceiling: -1 dBFS
+    this.rel = Math.exp(-1 / (0.08 * sr));   // then back up: 80 ms
+    this.dl = []; this.hx = []; this.dp = 0; // per channel: the delay line; the last 5 samples and halfway point
+    this.pk = new Float64Array(128); this.gn = new Float64Array(128);
+    this.qv = new Float64Array(this.H + 1); this.qt = new Float64Array(this.H + 1); this.qh = 0; this.qn = 0; this.t = 0;
+    this.s = 0; this.bx = new Float64Array(this.W); this.bi = 0; this.S = 0; this.nz = 0;
+  }
+  run(ins, outs) {
+    const C = outs.length, n = C ? outs[0].length : 0;
+    if (!n) return;
+    while (this.dl.length < C) { this.dl.push(new Float64Array(this.D)); this.hx.push(new Float64Array(6)); }
+    this.dl.length = this.hx.length = C; // (a channel that goes away is forgotten: back, it starts from silence)
+    if (this.pk.length < n) { this.pk = new Float64Array(n); this.gn = new Float64Array(n); }
+    const pk = this.pk, gn = this.gn, c = this.c, W = this.W, H = this.H, Q = H + 1, D = this.D, rel = this.rel;
+    const qv = this.qv, qt = this.qt, bx = this.bx;
+    // 1. how loud each moment is: the loudest channel, at a sample and halfway to the samples either side of it
+    //    (three samples back: the halfway point after a sample needs the three after it)
+    pk.fill(0, 0, n);
+    for (let k = 0; k < C; k++) {
+      const x = ins[k], h = this.hx[k];
+      let x1 = h[0], x2 = h[1], x3 = h[2], x4 = h[3], x5 = h[4], m0 = h[5];
+      for (let i = 0; i < n; i++) {
+        let v = x ? x[i] : 0;
+        if (v - v !== 0) v = 0;
+        const m = (150 * (x3 + x2) - 25 * (x4 + x1) + 3 * (x5 + v)) / 256; // (halfway between the samples 3 and 2 back)
+        const a = Math.max(Math.abs(x3), Math.abs(m0), Math.abs(m)); // (the sample 3 back, and halfway to either side)
+        if (a > pk[i]) pk[i] = a;
+        x5 = x4; x4 = x3; x3 = x2; x2 = x1; x1 = v; m0 = m;
+      }
+      h[0] = x1; h[1] = x2; h[2] = x3; h[3] = x4; h[4] = x5; h[5] = m0;
+    }
+    // 2. the gain. e: how much a moment needs taken off. s: the most any moment of the last H needs (qv/qt: a queue
+    //    of such amounts, each smaller than the one before, with when they came), or what's left of an earlier one
+    //    fading out. The gain takes off s averaged over the last W: it starts down W samples before the peak.
+    let qh = this.qh, qn = this.qn, t = this.t, s = this.s, bi = this.bi, S = this.S, nz = this.nz;
+    for (let i = 0; i < n; i++, t++) {
+      const p = pk[i], e = p > c ? 1 - c / p : 0;
+      while (qn) { let b = qh + qn - 1; if (b >= Q) b -= Q; if (qv[b] > e) break; qn--; }
+      let b = qh + qn; if (b >= Q) b -= Q;
+      qv[b] = e; qt[b] = t; qn++;
+      if (qt[qh] <= t - H) { if (++qh === Q) qh = 0; qn--; }
+      s *= rel;
+      if (s < 1e-6) s = 0; // (what's left is far too little to hear: over)
+      if (qv[qh] > s) s = qv[qh];
+      const o = bx[bi];
+      bx[bi] = s; if (++bi === W) bi = 0;
+      if (o !== 0) nz--;
+      if (s !== 0) nz++;
+      S = nz ? S + s - o : 0; // (exactly 0 once nothing's left: the gain is exactly 1 again)
+      gn[i] = S > 0 ? 1 - S / W : 1;
+    }
+    this.qh = qh; this.qn = qn; this.t = t; this.s = s; this.bi = bi; this.S = S; this.nz = nz;
+    // 3. out: each channel, D samples late, times the gain
+    const dp = this.dp;
+    for (let k = 0; k < C; k++) {
+      const x = ins[k], y = outs[k], d = this.dl[k];
+      let j = dp;
+      for (let i = 0; i < n; i++) {
+        let v = x ? x[i] : 0;
+        if (v - v !== 0) v = 0;
+        y[i] = d[j] * gn[i];
+        d[j] = v;
+        if (++j === D) j = 0;
+      }
+    }
+    this.dp = (dp + n) % D;
+  }
+}
+/* @pure:limiter end */
 const ENG_CODE = `
 const S = 1 / 32768;
 class TrackPlayer extends AudioWorkletProcessor {
@@ -2916,6 +3038,13 @@ class MicRec extends AudioWorkletProcessor {
   }
 }
 registerProcessor('mic-rec', MicRec);
+// The limiter at the end of the mix (its code is the page's LimiterCore, put in here as it is)
+${LimiterCore}
+class Limiter extends AudioWorkletProcessor {
+  constructor() { super(); this.k = new LimiterCore(sampleRate); }
+  process(inputs, outputs) { this.k.run(inputs[0] || [], outputs[0]); return true; }
+}
+registerProcessor('limiter', Limiter);
 `;
 const ENG = {
   on: false,          // this session's engine (decided when the first track is added)
@@ -2942,19 +3071,50 @@ function engChooseMode() {
   if (v === 'precise' && !engSupported()) say('This browser has no AudioWorklet: using the standard engine');
 }
 /* The player code is loaded from a blob: URL (works on websites); a page opened straight from a
-   file (file://) only accepts it as a data: URL, so that is tried next. */
+   file (file://) only accepts it as a data: URL, so that is tried next. Into this page's audio context, or any
+   other (the tests: the limiter in an OfflineAudioContext). */
+let engUrl = '';
+function workletLoad(ctx) {
+  if (!engUrl) engUrl = URL.createObjectURL(new Blob([ENG_CODE], { type: 'text/javascript' }));
+  const dataUrl = () => 'data:text/javascript;base64,' + btoa(unescape(encodeURIComponent(ENG_CODE)));
+  return ctx.audioWorklet.addModule(engUrl).catch(() => ctx.audioWorklet.addModule(dataUrl()));
+}
 function engLoadModule() {
   if (!ENG.mod) {
-    const blobUrl = URL.createObjectURL(new Blob([ENG_CODE], { type: 'text/javascript' }));
-    const dataUrl = () => 'data:text/javascript;base64,' + btoa(unescape(encodeURIComponent(ENG_CODE)));
-    ENG.mod = actx.audioWorklet.addModule(blobUrl).catch(() => actx.audioWorklet.addModule(dataUrl()));
-    ENG.mod.catch(() => { ENG.mod = null; });
+    ENG.mod = workletLoad(actx);
+    ENG.mod.then(limIn, () => { ENG.mod = null; });
   }
   return ENG.mod;
 }
-function decodeAudio(buf) {
+/* The limiter (LimiterCore) goes in between the mix (master) and everything that leaves the page: this device's
+   speakers (localOut), and the AirPlay tap with Show on TV's sound. It goes in as soon as the player code has
+   loaded: that starts with the page, long before anything plays, and comes before any track's player is made.
+   Were something playing by then, at the next pause instead, where switching over (and the ~4 ms the sound
+   moves) can't be heard. Without AudioWorklet the mix goes straight out, as before. The picture waits the ~4 ms
+   too: see heardDelay. */
+function limIn() {
+  if (LIM.node || wantPlay) return;
+  let node;
+  try { node = limNode(actx); } catch (e) { return; } // (the code hasn't loaded)
+  node.connect(localOut);
+  master.connect(node);
+  master.disconnect(localOut);
+  if (AIR.node) { node.connect(AIR.node); master.disconnect(AIR.node); }
+  LIM.node = node;
+  LIM.d = node.delay;
+}
+// (a limiter where the player code is loaded: the channels of the context's output, whatever comes in mixed to
+// those; node.delay: how late its sound comes out, in s)
+function limNode(ctx) {
+  const n = ctx.destination.channelCount;
+  const node = new AudioWorkletNode(ctx, 'limiter', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [n], channelCount: n, channelCountMode: 'explicit', channelInterpretation: 'speakers' });
+  node.delay = LimiterCore.lag(ctx.sampleRate) / ctx.sampleRate;
+  return node;
+}
+if (engSupported()) engLoadModule(); // (for the limiter: see limIn)
+function decodeAudio(buf, ctx = actx) { // (at ctx's sample rate)
   return new Promise((res, rej) => {
-    try { const p = actx.decodeAudioData(buf, res, rej); if (p && p.then) p.then(res, rej); } catch (e) { rej(e); }
+    try { const p = ctx.decodeAudioData(buf, res, rej); if (p && p.then) p.then(res, rej); } catch (e) { rej(e); }
   });
 }
 /* Decoded audio → 16-bit (half the memory of the browser's 32-bit buffers). Converted in slices
@@ -2992,7 +3152,7 @@ async function toPCM16(ab, progress, gentle) {
     const s0 = b * PCM_BLK, e0 = Math.min(n, s0 + PCM_BLK);
     const loud = loudIn(L0, s0, e0) || (!!R0 && loudIn(R0, s0, e0));
     ix[b] = loud ? kept++ * PCM_BLK : -1;
-    if ((b & 255) === 255) { if (progress) progress(0.2 * b / nb / passes); await sleep(gentle ? 12 : 0); }
+    if ((b & 255) === 255) { if (progress) progress(0.2 * b / nb / passes); await snooze(gentle ? 12 : 0); }
   }
   const conv = async (src, pass) => { // src: one channel, or [[channel, weight], …] to mix
     const o = new Int16Array(kept * PCM_BLK), mix = Array.isArray(src), per = step / PCM_BLK; // (only the kept blocks)
@@ -3009,7 +3169,7 @@ async function toPCM16(ab, progress, gentle) {
         }
       }
       if (progress) progress((0.2 + pass + b1 / nb) / passes);
-      await sleep(gentle ? 12 : 0); // (gentle: a frame's rest between pieces, so playback never stutters)
+      await snooze(gentle ? 12 : 0); // (gentle: a frame's rest between pieces, so playback never stutters)
     }
     return o;
   };
@@ -3123,9 +3283,9 @@ function heardCtxTime() {
   }
   return actx.currentTime - (actx.baseLatency || 0) - (actx.outputLatency || 0) - late;
 }
-/* Seconds the sound reaches you later than this device plays it: AirPlay from the desktop app (it says how
-   long), plus Settings → Speaker delay (Bluetooth, AirPlay chosen on an iPhone / Mac). */
-function heardDelay() { return PIC.on ? 0 : (AIR.on ? AIR.lat : 0) + Math.max(0, Math.min(5000, +spkDelayIn.value || 0)) / 1000; } // (the TV's picture: filmed as it happens here, with its sound)
+/* Seconds the sound reaches you later than the page plays it: the limiter's look-ahead (~4 ms), AirPlay from the
+   desktop app (it says how long), plus Settings → Speaker delay (Bluetooth, AirPlay chosen on an iPhone / Mac). */
+function heardDelay() { return LIM.d + (PIC.on || ND.el ? 0 : (AIR.on ? AIR.lat : 0) + Math.max(0, Math.min(5000, +spkDelayIn.value || 0)) / 1000); } // (the TV's picture: filmed as it happens here, with its sound; No-delay AirPlay: what its <audio> plays is what's heard)
 /* Seconds between scheduling sound and hearing it (on this device; the extra delay above is separate). */
 const outLatency = () => Math.max(0, Math.min(0.5, actx.currentTime - heardCtxTime() - heardDelay()));
 /* Song position you are hearing right now. */
@@ -3332,9 +3492,9 @@ async function engLaunch(start, keep) {
   ENG.pausedAt = start - audioOffset;
   const useVid = hasVideo && !!bg.getAttribute('src') && (!vidDur() || start + videoOffset < vidDur() - 0.3);
   if (useVid) {
-    // The audio is heard ~0.1 s after it's started (scheduling + output delay), the video shows
-    // at once: start the video that much earlier so both are at `start` together.
-    videoSeekTo(Math.max(0, start + videoOffset - (0.06 + outLatency()) * rate));
+    // The audio is heard ~0.1 s after it's started (scheduling, the limiter + output delay), the video
+    // shows at once: start the video that much earlier so both are at `start` together.
+    videoSeekTo(Math.max(0, start + videoOffset - (0.06 + LIM.d + outLatency()) * rate));
     await waitVideoReady(tok, 3000);
     if (tok !== playToken) return done();
     playEl(bg);
@@ -3545,6 +3705,7 @@ function videoFollow(refT, settling) {
 }
 let vsTick = 0;
 function checkVideoSync() { // every 150 ms
+  if (ND.el) { ndFollow(); return; } // (No-delay AirPlay: everything follows its <audio>)
   if (!bg.getAttribute('src') || !tracks.length || launching || document.hidden) return; // (hidden: see afterHidden)
   if (ENG.on) { engVideoSync(); return; }
   const now = performance.now();
@@ -3685,13 +3846,14 @@ function checkAudioSync() {
       if (ENG.on && ENG.playing) engStop();
       tracks.forEach(a => { if (!a._eng && !a.paused) a.pause(); });
       if (bg.getAttribute('src') && !bg.paused) bg.pause();
+      if (ND.el && !ND.el.paused) ND.el.pause();
     }
     return;
   }
   // Standard engine: every track has stopped (they reached the end — also while a start was still being
   // set up, when their "ended" was ignored) → the song is over. It used to stay "playing" with nothing
-  // playing (the play button showing pause, the clock standing still).
-  if (!ENG.on && !launching && !pre.on && tracks.length && tracks.every(a => a.paused || a.ended)) {
+  // playing (the play button showing pause, the clock standing still). (No-delay AirPlay: its <audio> says when.)
+  if (!ENG.on && !ND.el && !launching && !pre.on && tracks.length && tracks.every(a => a.paused || a.ended)) {
     if (!sync.stoppedAt) sync.stoppedAt = tNow;
     else if (tNow - sync.stoppedAt > 600) { sync.stoppedAt = 0; wantPlay = false; refreshTrackStates(); return; }
   } else sync.stoppedAt = 0;
@@ -3769,6 +3931,7 @@ function clockMedia() {
 }
 /* Song time you are hearing. */
 function songTime() {
+  if (ND.el) return ndTime(); // (No-delay AirPlay: what its <audio> plays)
   if (ENG.on && tracks.length) return engHeard() + audioOffset;
   if (pre.on) return preTime();
   if (stdPos != null && tracks.length) return stdPos;
@@ -3915,6 +4078,7 @@ function startAll(from) {
   let keep = FREE.on && from == null;
   if (from == null && (ENG.on ? (T && start >= T - 0.1) : (FREE.on ? T && start >= T - 0.1 : !r || r.ended || (T && start >= T - 0.1)))) { start = 0; keep = false; }
   unlockAudio();
+  if (ndPlay(start)) return true; // (No-delay AirPlay, its mix not ready yet: playing starts once it is)
   if (ENG.on) {
     // Inside the tap: let the video play later (iOS Low Power Mode blocks videos started otherwise)
     if (bg.getAttribute('src') && hasVideo && !primed.has(bg)) playP(bg);
@@ -3939,12 +4103,16 @@ function pauseAll() {
   if (ENG.on) engStop();
   tracks.forEach(a => { if (!a._eng) a.pause(); });
   if (bg.getAttribute('src')) bg.pause();
+  ND.els.forEach(e => e.pause()); // (No-delay AirPlay: its <audio>, and one taking over)
+  ND.pend = null;
   unmuteMaster();
   refreshTrackStates();
+  if (!LIM.node && ENG.mod) setTimeout(limIn, 200); // (the limiter, had it waited for a pause: once the sound has faded)
 }
 function seekTo(frac) {
   const t = frac * total();
   nowT = t;
+  if (ndSeek(t)) return; // (No-delay AirPlay: its <audio> goes there too, and what follows it follows — or, play waiting for its mix, it starts there)
   if (ENG.on) {
     if (!wantPlay) { ENG.pausedAt = t - audioOffset; if (FREE.on) freeReset(ENG.pausedAt); videoAt(t); return; }
     if (launching && !dragging) { engLaunch(t); return; } // still getting ready: start there instead
@@ -3989,13 +4157,14 @@ function tickSeek() {
   const T = total();
   let cur = 0;
   if (dragging) cur = dragFrac * T;
+  else if (ND.el) { const h = ndTime(); cur = T ? Math.min(T, h) : h; } // (No-delay AirPlay: its <audio>, as heard)
   else if (ENG.on) { const h = engHeard() + audioOffset; cur = T ? Math.min(T, h) : h; }
   else if (pre.on || stdPos != null || (FREE.on && tracks.length)) cur = T ? Math.min(T, songTime()) : songTime();
   else { const r = clockMedia(); cur = r ? (r.ended ? T : Math.max(0, r.currentTime + (tracks.length ? audioOffset : 0))) : 0; }
-  if (!ENG.on && wantPlay) cur = Math.max(0, cur - heardDelay()); // (standard engine: the picture waits for the sound; precise: already in its clock)
+  if (!ENG.on && !ND.el && wantPlay) cur = Math.max(0, cur - heardDelay()); // (standard engine: the picture waits for the sound; precise: already in its clock)
   nowT = cur;
-  // precise engine: the song is over
-  if (ENG.on && ENG.playing && wantPlay && !launching && T && engNow() + audioOffset >= T + 0.05 && !tracks.some(a => a.loop)) {
+  // precise engine: the song is over (No-delay AirPlay: its <audio> says when)
+  if (ENG.on && ENG.playing && wantPlay && !launching && !ND.el && T && engNow() + audioOffset >= T + 0.05 && !tracks.some(a => a.loop)) {
     pauseAll();
     ENG.pausedAt = T - audioOffset;
   }
@@ -4012,7 +4181,10 @@ function tickSeek() {
   if (txt !== seekTxt) { seekTxt = txt; timeEl.textContent = txt; }
 }
 
-function applyMaster() { if (!launching || ENG.on) master.gain.setTargetAtTime(masterMuted ? 0 : masterVol, actx.currentTime, 0.01); }
+function applyMaster() {
+  if (!launching || ENG.on) master.gain.setTargetAtTime(masterMuted ? 0 : masterVol, actx.currentTime, 0.01);
+  if (ND.el) ND.el.muted = masterMuted; // (No-delay AirPlay: the volume is in its mix; muting is at once)
+}
 function volMsg() { say('Volume ' + Math.round(masterVol * 100) + '%'); }
 function skip(sec) {
   const T = total();
@@ -4053,18 +4225,19 @@ function setRate(r) {
   tracks.forEach(a => { if (!a._eng) { const v = r * (FREE.on ? a._spd : 1); a.defaultPlaybackRate = v; setRateOf(a, v); } });
   bg.defaultPlaybackRate = r;
   bg.playbackRate = r;
+  if (ND.el) ndRate(ND.el);
   say('Speed ' + r + 'x');
 }
 $('playPause').onclick = () => { if (!tracks.length) { say('Add some audio first'); return; } togglePlay(); };
 $('playAll').onclick = () => { if (tracks.length) startAll(0); };
 $('syncAll').onclick = () => { if (tracks.length) syncAll(); };
-$('stopAll').onclick = () => { airPause(pauseAll); if (ENG.on) { ENG.pausedAt = -audioOffset; if (FREE.on) freeReset(-audioOffset); videoAt(0); } else placeSong(0); };
+$('stopAll').onclick = () => { airPause(pauseAll); ndSeek(0); if (ENG.on) { ENG.pausedAt = -audioOffset; if (FREE.on) freeReset(-audioOffset); videoAt(0); } else placeSong(0); };
 
 /* Interruptions (calls, Siri, lock screen…). When the sound comes back, the precise engine lines
    everything up with the video again (the video may have kept going meanwhile). */
 if (actx.addEventListener) actx.addEventListener('statechange', () => {
   if (actx.state === 'running') { if (wantPlay && ENG.on && ENG.playing && !launching) engLaunch(songTime(), FREE.on); }
-  else if (wantPlay) say('Tap anywhere to resume the audio');
+  else if (wantPlay && !ND.el) say('Tap anywhere to resume the audio'); // (No-delay AirPlay: its <audio> plays on)
 });
 document.addEventListener('visibilitychange', () => {
   holdGq(3000); // hidden tabs get no frames: don't judge the frame rate right after
@@ -6659,7 +6832,7 @@ async function airTap(on, lat) {
       if (PIC.on && !PIC.mirror) picAudio(e.data.pcm, e.data.ctx, at); // (the TV's picture: its sound, as AAC — before the piece goes to main; mirroring: the sound stays here)
       if (AIR.on && !(AIR.st && AIR.st.device && AIR.st.device.way === 'tv')) mapApp.airPcm(e.data.pcm, actx.sampleRate, e.data.ctx, at); // (the TV gets its sound in the video)
     };
-    master.connect(AIR.node);
+    (LIM.node || master).connect(AIR.node); // (the mix as it leaves the page: after the limiter)
     AIR.sink = actx.createGain(); AIR.sink.gain.value = 0; // (kept running by the output, silent)
     AIR.node.connect(AIR.sink);
     AIR.sink.connect(actx.destination);
@@ -6685,9 +6858,8 @@ function setUpSafariAir() {
   const media = () => {
     if (el) return el;
     // (½ s of silence as a WAV: the picker belongs to a media element, and it needs something to play)
-    const n = 22050 / 2, b = new DataView(new ArrayBuffer(44 + n * 2)), w = (o, t) => [...t].forEach((c, i) => b.setUint8(o + i, c.charCodeAt(0)));
-    w(0, 'RIFF'); b.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 1, true);
-    b.setUint32(24, 22050, true); b.setUint32(28, 44100, true); b.setUint16(32, 2, true); b.setUint16(34, 16, true); w(36, 'data'); b.setUint32(40, n * 2, true);
+    const n = 22050 / 2, b = new DataView(new ArrayBuffer(44 + n * 2));
+    wavHead(b, n, 22050, 1);
     el = document.createElement('audio');
     el.setAttribute('x-webkit-airplay', 'allow'); el.setAttribute('x-webkit-wirelessvideoplaybackdisabled', ''); el.setAttribute('playsinline', ''); el.preload = 'metadata'; el.hidden = true;
     el.src = URL.createObjectURL(new Blob([b.buffer], { type: 'audio/wav' }));
@@ -6703,11 +6875,453 @@ function setUpSafariAir() {
     spkDelayIn.dispatchEvent(new Event('change', { bubbles: true }));
     savePrefs();
   };
-  const show = open => { p.hidden = !open; if (open) { syncLate(); if (canPick) media(); } };
+  const show = open => { p.hidden = !open; if (open) { syncLate(); ndUI(); if (canPick) media(); } };
   for (const btn of [$('airBtn'), $('bgmAir')]) { btn.hidden = false; btn.onclick = () => show(p.hidden); }
   p.querySelector('.air-x').onclick = () => show(false);
   document.addEventListener('pointerdown', e => { if (!p.hidden && !e.target.closest('#airHelp, #airBtn, #bgmAir')) show(false); }, true);
   addEventListener('keydown', e => { if (e.key === 'Escape' && !p.hidden) { e.stopPropagation(); e.preventDefault(); show(false); } }, true);
+  // No-delay AirPlay (below): the switch, remembered on this device (off at first)
+  const nd = p.querySelector('.air-nd input');
+  try { ND.want = localStorage.getItem(ND_KEY) === '1'; } catch (e) {}
+  ND.can = true;
+  nd.onchange = () => ndSwitch(nd.checked);
+  setInterval(ndWatch, 250);
+  ndUI();
+}
+/* ---- No-delay AirPlay (the switch in the panel above). AirPlay takes a page's sound only as it's made, and a speaker
+   plays that about 2 s late. A music app hands AirPlay a finished file instead, which the speaker reads ahead: it starts
+   at once and stays in time. With the switch on, the player does that too: it mixes the whole song ahead — every track's
+   volume, mute and loop, Audio starts at and Skip the start, through the same limiter — into a WAV file (44.1 kHz,
+   16-bit: what AirPlay carries), and a hidden <audio> plays that. The live sound goes quiet (the engine plays on
+   silently, following it, for the visualizer), and the song's clock — progress bar, piano roll, lyrics, video — is that
+   <audio>'s time, with no Speaker delay: AirPlay keeps it in step with what the speaker plays. A change to the mix is
+   mixed again in the background and swapped in where the song is; meanwhile the speaker plays the mix as it was. Each
+   track is decoded once, at 44.1 kHz, and kept while the switch is on: mixing again takes a moment, not a decode. ---- */
+/* @pure:nodelay begin */
+/* The mix made ahead, in plain code (no Web Audio): the tests run it as it is. ndPlan: from the song's length T (s),
+   Audio starts at and Skip the start of the audio (start, trim), the master volume and every track's gain (its volume;
+   0 when it's muted, hidden or switched off) and loop — what each audible track adds: at song frame s its own frame
+   k = s − off, from fl (the cut start) to its end, or round again from fl when it loops. The live engine's rules
+   (TrackPlayer), on whole frames. lead: the song frame where the audio comes in (a song whose tracks all loop goes
+   round again from there, as they do: Audio starts at isn't played again). */
+function ndPlan(m) {
+  const off = Math.round((m.start - m.trim) * m.sr), fl = Math.round(m.trim * m.sr);
+  return { sr: m.sr, frames: Math.max(0, Math.round(m.T * m.sr)), master: m.master, lead: Math.max(0, off + fl),
+           parts: m.tracks.map((t, k) => ({ k, gain: t.gain, loop: !!t.loop, off, fl })).filter(p => p.gain > 0) };
+}
+/* One track's sound for song frames s0 … s0 + n − 1, added (× its gain) to L and R. st: the sound as toPCM16 keeps it
+   (16-bit; R null for mono; ix: where each block of 4096 frames is kept, −1 for silence; len: frames). */
+function ndAdd(L, R, s0, n, p, st) {
+  const S = 1 / 32768, g = p.gain, len = st.len, fl = p.fl, ix = st.ix, A = st.L, B = st.R;
+  const at = (ch, k) => { if (!ix) return ch[k]; const o = ix[k >> 12]; return o < 0 ? 0 : ch[o + (k & 4095)]; };
+  for (let i = 0; i < n;) {
+    let k = s0 + i - p.off;
+    if (k < fl) { i += Math.min(n - i, fl - k); continue; } // (before it comes in: silence)
+    if (k >= len) { if (!p.loop || len <= fl) break; k = fl + (k - fl) % (len - fl); }
+    const m = Math.min(n - i, len - k); // (to its end — or this round's)
+    for (let j = 0; j < m; j++, i++, k++) {
+      const l = at(A, k) * S;
+      L[i] += l * g;
+      R[i] += (B ? at(B, k) * S : l) * g;
+    }
+  }
+}
+/* A WAV file's 44-byte header (16-bit PCM): `frames` frames of `ch` channels at `sr` Hz, into DataView v. */
+function wavHead(v, frames, sr, ch) {
+  const w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + frames * ch * 2, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, ch, true); v.setUint32(24, sr, true); v.setUint32(28, sr * ch * 2, true);
+  v.setUint16(32, ch * 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, frames * ch * 2, true);
+}
+/* The whole mix as a stereo WAV file (an ArrayBuffer): the parts added up (stems[k]: track k's sound), × the master
+   volume, through the limiter as live (its ~4 ms look-ahead taken back out: sample i is song frame i), to 16 bits — in
+   pieces of 65536 frames, `await tick(how far, 0…1)` after each (false: stop, and null comes back). */
+async function ndMix(plan, stems, tick) {
+  const { sr, frames, parts, master } = plan, lim = new LimiterCore(sr), D = lim.D, N = 65536, end = frames + D;
+  const wav = new ArrayBuffer(44 + frames * 4), out = new Int16Array(wav, 44, frames * 2);
+  wavHead(new DataView(wav), frames, sr, 2);
+  const L = new Float32Array(N), R = new Float32Array(N), oL = new Float32Array(N), oR = new Float32Array(N);
+  for (let s = 0; s < end; s += N) {
+    const n = Math.min(N, end - s), m = Math.max(0, Math.min(n, frames - s)); // (m frames of the song; then the look-ahead's tail)
+    const l = L.subarray(0, n), r = R.subarray(0, n), ol = oL.subarray(0, n), or = oR.subarray(0, n);
+    l.fill(0);
+    r.fill(0);
+    for (const p of parts) if (stems[p.k]) ndAdd(l, r, s, m, p, stems[p.k]);
+    if (master !== 1) for (let i = 0; i < m; i++) { l[i] *= master; r[i] *= master; }
+    lim.run([l, r], [ol, or]);
+    for (let i = Math.max(0, D - s); i < n; i++) { // (out sample i is song frame s + i − D)
+      const f = 2 * (s + i - D);
+      let a = ol[i] * 32767, b = or[i] * 32767;
+      a = a > 32767 ? 32767 : a < -32768 ? -32768 : a;
+      b = b > 32767 ? 32767 : b < -32768 ? -32768 : b;
+      out[f] = a < 0 ? a - 0.5 : a + 0.5; // (rounded: Int16Array cuts the fraction off)
+      out[f + 1] = b < 0 ? b - 0.5 : b + 0.5;
+    }
+    if (await tick((s + n) / end) === false) return null;
+  }
+  return wav;
+}
+/* @pure:nodelay end */
+const ND_SR = 44100, ND_KEY = 'map-air-nodelay', ND_LIVE = ': AirPlay plays live, about 2 seconds late.';
+const ND_MEM = IS_TOUCH ? 800e6 : 4e9; // (sound a page may hold with the mix made ahead: on a phone, about what the precise engine's own copy and its decoding take at most)
+/* The switch (remembered on this device). Switched on inside its tap, so the <audio> may play by themselves later. */
+function ndSwitch(on) {
+  ND.want = on;
+  try { localStorage.setItem(ND_KEY, on ? '1' : '0'); } catch (e) {}
+  if (on) { ndPrime(); ndWatch(); } else ndDrop();
+  ndUI();
+}
+/* The mix as it is now: { sig, plan, files, lp } — { bad: why } when it can't be made ahead — or null when there's
+   nothing to make yet (no tracks, or files still loading). lp: every track loops, so the song does — round again from
+   lp (s), where the audio comes in. */
+function ndNow() {
+  if (!tracks.length || isLoading()) return null;
+  if (FREE.on && tracks.some(a => a._spd !== 1)) return { bad: "Separate track speeds are on, so the mix can't be made ahead" + ND_LIVE };
+  const ts = tracks.filter(a => !a._failed && isFinite(a.duration)), files = ts.map(a => a._file);
+  const solo = !ENG.on && wantPlay && !launching && !pre.on; // (standard engine, playing: a track paused with its own button is out of the mix, as it is out of the live sound)
+  const plan = ndPlan({ sr: ND_SR, T: total(), start: audioStart, trim: audioTrim, master: masterVol,
+    tracks: ts.map(a => ({ gain: a._show && !a._muted && a._on !== false && !(solo && a.paused && !a.ended) ? a._vol : 0, loop: a.loop })) });
+  if (!plan.frames) return null;
+  // (every track looping, each goes round on its own length: one file can only go round as a whole — a tenth of a
+  // second apart is near enough. Only some looping, they go round in the mix till the song's end, and the song ends
+  // there — live, they would play on after the others end, till a pause)
+  const loop = ts.every(a => a.loop), len = Math.max(...ts.map(a => a.duration));
+  if (loop && plan.parts.some(p => len - ts[p.k].duration > 0.1)) return { bad: "Tracks of different lengths loop, so the mix can't be made ahead" + ND_LIVE };
+  // (the memory it takes, with what the page holds already — the precise engine's own copy, background mode's next
+  // song, files read in: each track's sound as it's kept (made already, or as the precise engine keeps it — mono and
+  // silence take less — else 16-bit stereo), the file twice while it's handed over, and one track being decoded
+  // meanwhile: its file, and its sound in 32-bit floats)
+  let need = plan.frames * 8 + ENG.used + preBytes + MEM.used, dec = 0;
+  const seen = new Set();
+  ts.forEach((a, k) => {
+    const f = a._file, st = ND.stems.get(f);
+    if (seen.has(f) || !(st || plan.parts.some(p => p.k === k))) return;
+    seen.add(f);
+    need += st ? st.bytes : a._bytes ? a._bytes * ND_SR / actx.sampleRate : a.duration * ND_SR * 4;
+    if (!st) dec = Math.max(dec, a.duration * ND_SR * 8 + f.size);
+  });
+  if (need + dec > ND_MEM) return { bad: 'This song is too big to get ready ahead on this device' + ND_LIVE };
+  const id = f => ND.ids.get(f) || (ND.ids.set(f, ++ND.n), ND.n), lp = loop ? plan.lead / ND_SR : null;
+  return { plan, files, lp, sig: JSON.stringify([plan.frames, plan.master, lp, plan.parts.map(p => [id(files[p.k]), p.gain, p.loop, p.off, p.fl])]) };
+}
+/* Every ¼ s with the switch on: is the mix that plays the mix as it is? A change is mixed again once it has settled for
+   0.6 s (a volume being dragged is mixed once) — at once when nothing is ready or being made yet. A change undone
+   meanwhile drops the mix being made for it. */
+function ndWatch() {
+  if (!ND.want || !ND.can) return;
+  const m = ndNow();
+  if (!m) return;
+  const bad = m.bad || (m.sig === ND.failSig ? ND.bad : '');
+  if (bad !== ND.bad) { ND.bad = bad; if (bad) { ndForget(); ndLive(); say(bad, 3000); } else ndUI(); }
+  if (bad) return;
+  const now = performance.now();
+  if (m.sig !== ND.seen) { ND.seen = m.sig; ND.since = now; }
+  if (ND.sig === m.sig) {
+    if (ND.job) { ND.gen++; ND.job = null; ndUI(); if (ND.el.ended && wantPlay) pauseAll(); } // (the mix that plays ran out meanwhile: the song is over — see ndSpare)
+    return;
+  }
+  if (ND.job && ND.job.sig === m.sig) return;
+  if ((!ND.el && !ND.job) || now - ND.since >= 600) ndRender(m);
+}
+/* One track's sound for the mix: its file decoded at 44.1 kHz (by an OfflineAudioContext), kept 16-bit (toPCM16) while
+   the switch is on. Made once, whatever mixes come and go meanwhile: a newer mix waits for the one under way (each
+   holds the file and its sound in 32-bit floats while it's made — several at once could run a phone out of memory).
+   Not kept when the switch went off or the track was removed meanwhile. w.tell(0…1): how far it is. */
+function ndStem(f, OAC, gentle) {
+  let w = ND.work.get(f);
+  if (w) return w;
+  ND.work.set(f, w = { tell: null });
+  const mine = () => ND.work.get(f) === w;
+  w.p = (async () => {
+    try {
+      const ab = await decodeAudio(await f.arrayBuffer(), new OAC(1, 1, ND_SR));
+      if (!mine()) return;
+      const pcm = await toPCM16(ab, x => w.tell(0.2 + 0.8 * x), gentle);
+      if (mine()) ND.stems.set(f, pcm);
+    } finally { if (mine()) ND.work.delete(f); }
+  })();
+  w.p.catch(() => {}); // (no mix may wait for it any more)
+  return w;
+}
+/* Mix m (ndNow) and load it into the <audio> that isn't playing, which then takes over (ndSwap). The work goes in
+   pieces, so the page stays smooth — with a longer rest between them while the live sound plays (a ready mix's <audio>
+   plays on whatever the page does); a newer mix stops it. */
+async function ndRender(m) {
+  const gen = ++ND.gen, job = ND.job = { sig: m.sig, f: 0 }, mine = () => gen === ND.gen, gentle = () => wantPlay && !ND.el && !ND.pend;
+  let url = '';
+  ndUI();
+  try {
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!OAC) throw Object.assign(new Error('no OfflineAudioContext'), { nd: "This browser can't make the mix ahead" });
+    for (const M of [ND.stems, ND.work]) for (const f of [...M.keys()]) if (!m.files.includes(f)) M.delete(f); // (removed tracks: let go)
+    const todo = [...new Set(m.plan.parts.map(p => m.files[p.k]))].filter(f => !ND.stems.has(f)), n = todo.length + 1;
+    const step = (k, f) => { job.f = (k + f) / n; ndUI(); };
+    for (let k = 0; k < todo.length; k++) {
+      const w = ndStem(todo[k], OAC, gentle());
+      w.tell = f => step(k, f);
+      await w.p;
+      if (!mine()) return;
+    }
+    const tick = f => { if (!mine()) return false; step(n - 1, f); return snooze(gentle() ? 12 : 0); };
+    let wav = await ndMix(m.plan, m.files.map(f => ND.stems.get(f)), tick);
+    if (!wav) return;
+    const B = ndSpare();
+    B.src = url = URL.createObjectURL(new Blob([wav], { type: 'audio/wav' }));
+    wav = null; // (the file has it now)
+    if (!await mediaReady(B, () => !mine())) throw new Error("the mix's file didn't load");
+    if (mine()) await ndSwap(B, m, gen);
+  } catch (e) {
+    if (mine()) ndFail(m.sig, (e && e.nd) || (e instanceof RangeError ? 'This song is too big to get ready ahead on this device' : "Couldn't get the mix ready ahead"));
+  } finally {
+    if (ND.job === job) { ND.job = null; ndUI(); }
+    if (url && !(ND.el && ND.el.src === url)) { // (not the mix that plays now: let it go)
+      for (const e of ND.els) if (e.src === url) { e.removeAttribute('src'); e.load(); }
+      URL.revokeObjectURL(url);
+    }
+  }
+}
+/* The new mix, loaded in B, takes over where the song is. From a mix playing (A): B starts a moment ahead, from where A
+   will be by then (placed again if A jumps meanwhile), and A stops once B plays — no gap. Paused, B waits where A waits.
+   Where A ran out while B was on its way, or B ends too soon for that, B plays on from where A is (round again when
+   every track loops) — or the song is over there. The first mix takes over from the live sound — or starts the play
+   that waited for it. */
+async function ndSwap(B, m, gen) {
+  const A = ND.el, u = B.src, stale = () => gen !== ND.gen || ND.el !== A || B.src !== u; // (a newer mix, or switched off)
+  const end = (B.duration || Infinity) - 0.05; // (play() at its end would start it over from the beginning)
+  ndLoop(B, m.lp);
+  B.muted = masterMuted;
+  ndRate(B);
+  if (!A) {
+    const p = ND.pend && ND.pend.tok === playToken && wantPlay ? ND.pend : null;
+    const t = ndAt(B, p ? p.start : songTime()); // (songTime: still the live sound's — past the end, every track looping)
+    B.currentTime = t == null ? end : t;
+    const e = !p && wantPlay && t != null ? await playP(B) : null;
+    if (stale()) return;
+    ND.pend = null;
+    ndUse(B, m);
+    if (t == null) { if (wantPlay) pauseAll(); } // (the song is over there)
+    else if (e && e.name === 'NotAllowedError') ndTap();
+    else if (p) { launching = 0; startAll(t); }
+    return;
+  }
+  if (wantPlay && !A.paused) {
+    let t = 0;
+    for (let k = 0; k < 4; k++) { // (B waits at t; it's started when A is ND.lead short of t — the time an <audio> takes to get going)
+      t = A.currentTime + 0.3;
+      if (t > end) break;
+      B.currentTime = t;
+      await ndSeeked(B);
+      while (!stale() && wantPlay && !A.paused && A.currentTime > t - 0.6 && A.currentTime < t - ND.lead) await snooze(4);
+      if (stale() || !wantPlay || A.paused || Math.abs(A.currentTime - t + ND.lead) < 0.1) break;
+    }
+    if (stale()) return;
+    if (wantPlay && !A.paused && t <= end) {
+      const w0 = performance.now(), e = await playP(B), t0 = B.currentTime;
+      for (let k = 0; k < 75 && !e && !stale() && !B.paused && B.currentTime === t0; k++) await snooze(4); // (A stops once B's time moves: its sound has started)
+      if (!e && !document.hidden) ND.lead = Math.min(0.25, (ND.lead + (performance.now() - w0) / 1000 * B.playbackRate) / 2); // (learnt: how long this one took)
+      if (stale()) { if (B.src === u) B.pause(); return; }
+      if (e && e.name === 'NotAllowedError') { // (B can't play by itself — iOS: never started by a tap): A plays the new mix instead, from where it is
+        const t = A.currentTime, old = A.src;
+        B.removeAttribute('src');
+        B.load();
+        A.src = u;
+        ndLoop(A, m.lp);
+        A.currentTime = t;
+        playEl(A);
+        URL.revokeObjectURL(old);
+        ND.sig = m.sig;
+        ND.raw = null;
+        return;
+      }
+    }
+  }
+  const go = wantPlay && B.paused; // (A ran out, or no time to start B ahead: B plays on from where A is)
+  let at = A.currentTime;
+  if (go && at > end && B._lp != null) at = B._lp;
+  if (B.paused) B.currentTime = at;
+  else ND.seam = B.currentTime - at; // (where the sound went on: + a skip, − a bit again; Debug shows it)
+  ndUse(B, m);
+  ndFree(A);
+  if (go) { if (at < end) ndGo(B); else pauseAll(); }
+}
+/* Every track looping, the song goes round from lp (ndNow): from its very start, by the <audio>'s own loop; from where
+   Audio starts at puts the audio in, once it has ended (see ndSpare). */
+function ndLoop(el, lp) { el._lp = lp; el.loop = lp === 0; }
+/* Song time t in the mix el plays: at or past its end (within 0.05 s of it: play() there would start it over from the
+   beginning), round again from lp when every track loops — else null: the song is over there. */
+function ndAt(el, t) {
+  const d = el.duration || Infinity, lp = el._lp;
+  if (t <= d - 0.05) return Math.max(0, t);
+  return lp != null && d - lp > 0.1 ? lp + Math.max(0, t - d) % (d - lp) : null;
+}
+const ndSeeked = el => new Promise(res => {
+  if (!el.seeking) { res(); return; }
+  const t = setTimeout(res, 2000);
+  el.addEventListener('seeked', () => { clearTimeout(t); res(); }, { once: true });
+});
+/* el now plays the sound (m: its mix), and is the clock; the live sound goes quiet. */
+function ndUse(el, m) {
+  ND.el = el;
+  ND.sig = m.sig;
+  ND.raw = null;
+  el.muted = masterMuted;
+  airLocal();
+  ndUI();
+}
+function ndFree(el) { // (its mix let go: the file's memory can be freed)
+  el.pause();
+  const u = el.getAttribute('src') && el.src;
+  el.removeAttribute('src');
+  el.load();
+  if (u) URL.revokeObjectURL(u);
+}
+function ndFail(sig, why) { ND.failSig = sig; ND.bad = why + ND_LIVE; ndForget(); ndLive(); say(ND.bad, 3000); }
+/* Back to the live sound, where the song is (switched off, or the mix can't be made ahead): a mix being made or swapped
+   in stops, and a play that waited for one starts live. */
+function ndLive() {
+  const el = ND.el, p = ND.pend;
+  ND.gen++;
+  ND.job = ND.pend = null;
+  if (el) {
+    const t = ndTime();
+    ND.el = null;
+    ND.sig = '';
+    ndFree(el);
+    airLocal();
+    if (!wantPlay) { if (ENG.on) { ENG.pausedAt = Math.max(-audioOffset, t - audioOffset); if (FREE.on) freeReset(ENG.pausedAt); } else placeSong(t); }
+  }
+  if (p && p.tok === playToken && wantPlay) { launching = 0; startAll(p.start); }
+  ndUI();
+}
+/* The tracks' sound kept for mixing let go (a track's sound being made isn't kept: ndStem) — while the song plays live,
+   a phone shouldn't hold it beside the live sound's own; it's made again when a mix can be made ahead once more. */
+function ndForget() {
+  ND.stems.clear();
+  ND.work.clear();
+}
+/* Everything let go: switched off, or the song is gone (its tracks' sound too). */
+function ndDrop() {
+  ndForget();
+  ND.seen = ND.failSig = ND.bad = '';
+  ndLive();
+}
+/* Play pressed with the switch on (inside the tap): the ready mix plays from song time `start` — the live engine starts
+   too, silent (startAll goes on). No mix ready yet: true — playing waits for it (the panel and a toast say how far it
+   is) and starts with it (ndSwap). */
+function ndPlay(start) {
+  if (!ND.want || !ND.can) return false;
+  ndPrime();
+  const el = ND.el;
+  if (el) {
+    ndRate(el);
+    const t = ndAt(el, start);
+    el.currentTime = t == null ? el.duration - 0.05 : t;
+    ND.raw = null;
+    if (t == null) { pauseAll(); return true; } // (the song is over there)
+    ndGo(el);
+    return false;
+  }
+  const m = ndNow();
+  if (!m || m.bad || ND.bad) return false; // (it can't be made ahead: live)
+  const tok = ++playToken;
+  launching = tok;
+  wantPlay = true;
+  ND.pend = { start, tok };
+  ndHold(start);
+  ndWatch(); // (the mix gets made, if it isn't being made yet)
+  ndUI();
+  return true;
+}
+// (iOS wouldn't let the ready mix's <audio> start without a tap — the mix came after the tap: the next tap starts it)
+function ndTap() { pauseAll(); say('Tap play again to start the audio'); }
+const ndGo = el => playP(el).then(e => { if (e && e.name === 'NotAllowedError' && el === ND.el && wantPlay) ndTap(); }); // (the ready mix plays)
+/* Inside a tap: every <audio> / <video> no tap has started yet is started and stopped at once — iOS then lets it play by
+   itself later (the next mix swaps in without a tap; a play that waited for its mix starts when it's ready). Not inside
+   a tap (a start of background mode's, a play that waited), iOS refuses: those wait for the next tap. */
+function ndPrime() {
+  ndSpare();
+  lastUserPause = performance.now(); // (these pauses are ours)
+  for (const el of [...ND.els, ...mediaEls()]) if (!primed.has(el) && el.paused) {
+    const p = el.play();
+    el.pause();
+    Promise.resolve(p).then(() => primed.add(el), e => { if (!e || e.name !== 'NotAllowedError') primed.add(el); }); // (stopped at once: AbortError)
+  }
+}
+/* The two hidden <audio> — the next mix gets ready in the one that isn't playing: that one comes back. */
+function ndSpare() {
+  while (ND.els.length < 2) {
+    const el = document.createElement('audio');
+    el.setAttribute('playsinline', '');
+    el.setAttribute('x-webkit-wirelessvideoplaybackdisabled', ''); // (AirPlay gets its sound, never the file: a TV can't fetch a blob: file and would spin)
+    el.preload = 'auto';
+    el.hidden = true;
+    el.addEventListener('ended', () => { // the song is over — or, every track looping, round again from where the audio comes in (lp: ndNow)
+      if (el !== ND.el || !wantPlay) return;
+      if (el._lp != null) { ndSeek(el._lp); playEl(el); }
+      else if (!ND.job) pauseAll(); // (a newer mix on its way plays on from there, or ends it: ndSwap)
+    });
+    el.addEventListener('pause', () => { // paused by the system (a call, Siri, the TV's remote…): everything pauses with it
+      if (el === ND.el && el.paused && !el.ended && wantPlay && !launching && performance.now() - lastUserPause > 400) { pauseAll(); say('Paused'); }
+    });
+    el.addEventListener('error', () => { if (el === ND.el) ndFail(ND.sig, "The ready mix wouldn't play"); });
+    document.body.appendChild(el);
+    ND.els.push(el);
+  }
+  return ND.els[ND.els[0] === ND.el ? 1 : 0];
+}
+/* Song time with the ready mix: its <audio>'s time (as heard: AirPlay keeps it in step with the speaker), carried on at
+   its speed between the moments it changes (at most ½ s: not on past a stall) — and never back by a hair while it
+   plays: a reading a few ms behind waits for it to catch up instead (a seek or a loop is followed at once). */
+function ndTime() {
+  const el = ND.el, raw = el.currentTime, now = performance.now();
+  if (raw !== ND.raw || el.paused || el.seeking) {
+    ND.go = ND.raw !== null && raw !== ND.raw && !el.paused && !el.seeking; // (moving by itself)
+    ND.raw = raw;
+    ND.at = now;
+  }
+  let t = ND.go ? raw + Math.min(0.5, (now - ND.at) / 1000) * el.playbackRate : raw;
+  if (ND.go && t < ND.t && ND.t - t < 0.05) t = ND.t;
+  return (ND.t = t);
+}
+/* A jump to song time t: the ready mix's <audio> goes there — true while play waits for the mix (it starts there). */
+function ndSeek(t) {
+  if (ND.pend) { ndHold(t); return true; }
+  if (ND.el) { ND.el.currentTime = t; ND.raw = null; }
+  return false;
+}
+function ndHold(t) { // (play waits for the mix: the song waits at t)
+  ND.pend.start = t;
+  if (!ENG.on) { placeSong(t); return; }
+  ENG.pausedAt = t - audioOffset;
+  if (FREE.on) freeReset(ENG.pausedAt);
+  videoAt(t);
+}
+function ndRate(el) { el.defaultPlaybackRate = el.playbackRate = rate; el.preservesPitch = el.webkitPreservesPitch = !ENG.on; } // (the precise engine's speed moves the pitch, as a record's does)
+/* Every 150 ms while the ready mix plays: the video, and the live engine (silent — it feeds the visualizer), follow its
+   <audio>. The engine by a jump once it's 50 ms off (nobody hears it), aimed at where the <audio> will be by then. */
+function ndFollow() {
+  if (!wantPlay || launching || dragging || document.hidden || !tracks.length) return;
+  const t = ndTime(), now = performance.now();
+  if (hasVideo && bg.getAttribute('src')) videoFollow(t, now < Math.max(evs.leadUntil, sync.vidAfter));
+  if (!ENG.on || !ENG.playing || !ND.go) return;
+  setSync(1);
+  if (Math.abs(engHeard() + audioOffset - t) > 0.05 && now - ND.fixAt > 1000) {
+    ND.fixAt = now;
+    engJump(t - audioOffset + (0.03 + outLatency() + LIM.d) * rate, 0.02);
+  }
+}
+/* The panel: the switch, and how the mix is getting on (a toast too, while a play waits for it). */
+function ndUI() {
+  if (!ND.can) return;
+  const p = $('airHelp'), msg = p.querySelector('.air-nd-msg');
+  const txt = !ND.want ? '' : ND.bad || (ND.job ? 'Getting the mix ready for AirPlay… ' + Math.floor(ND.job.f * 100) + '%' : ND.el ? 'The mix is ready: the speaker starts at once.' : '');
+  p.querySelector('.air-nd input').checked = ND.want;
+  p.querySelector('.air-late').hidden = ND.want && !ND.bad; // (Speaker delay is for the live sound)
+  $('airBtn').classList.toggle('busy', !!ND.job);
+  if (msg.textContent === txt) return;
+  msg.textContent = txt;
+  msg.hidden = !txt;
+  if (ND.pend && ND.job) say(txt, 2000);
 }
 /* ---- The picture on an Apple TV (desktop app; see airplay-video.js). While the TV shows it, this window
    films its own page (getDisplayMedia: main answers with this page itself, never anything else) 30 times a
@@ -6721,20 +7335,24 @@ const PIC_SILENT = new Uint8Array([0x21, 0x10, 0x04, 0x60, 0x8c, 0x1c]); // (one
 // draws, the next refresh shows it. Its time goes back by that much, so it matches its sound; measured, §12)
 const PIC_LAG_US = 16667;
 const PIC_CODECS = ['avc1.640028', 'avc1.4D4028', 'avc1.42E028']; // (High, Main, Baseline; level 4: up to 1080p)
+// (Show on TV's other formats — for TVs that don't take the usual one — come with what they need: o.canvas, the
+// exact size the TV gets (the filmed picture fitted in, with bars of the page's background, never stretched);
+// o.codecs, the H.264 profiles and levels to try in turn; o.aRate with o.resample: the sound converted to that rate;
+// o.aBitrate. o.sid: which stream the pieces are for — main takes only those.)
 
 async function picOn(o) {
   if (!o || !o.on) return picOff();
   if (PIC.on) { // (mirroring that starts again for another TV screen, or another size: filmed anew)
-    if (PIC.o && PIC.o.mode === o.mode && PIC.o.maxW === o.maxW && PIC.o.maxH === o.maxH && PIC.o.fps === o.fps && PIC.o.bitrate === o.bitrate) return;
+    if (PIC.o && PIC.o.mode === o.mode && PIC.o.maxW === o.maxW && PIC.o.maxH === o.maxH && PIC.o.fps === o.fps && PIC.o.bitrate === o.bitrate && PIC.o.sid === o.sid) return;
     picOff();
   }
   const gen = ++PIC.gen;
   for (const k of ['enc', 'aenc']) { if (PIC[k] && PIC[k].state !== 'closed') PIC[k].close(); PIC[k] = null; } // (nothing left from an earlier start)
   if (PIC.last) { PIC.last.close(); PIC.last = null; }
-  PIC.jsaac = null; PIC.aNext = null;
+  PIC.jsaac = null; PIC.aNext = null; PIC.rs = null; PIC.cv = null;
   // (mirror: screen mirroring — keyframes only when the TV asks, no sound in it (it stays here))
   Object.assign(PIC, { on: true, o, mirror: o.mode === 'mirror', wantKey: false, off: Infinity, seen: 0, nextKey: 0, fresh: false, lastPts: -Infinity, lastSent: 0, aT: null, aRest: 0, aFail: false, srcW: 0, srcH: 0 });
-  afterHidden(); // (heardDelay() is 0 from now on: the video lines itself up again)
+  afterHidden(); // (heardDelay() is only the limiter's from now on: the video lines itself up again)
   if (!window.VideoEncoder || !window.MediaStreamTrackProcessor) return picFail('this version can’t make video');
   if (!PIC.mirror) { airTap(AIR.on, AIR.lat); picAudioOn(gen); } // (the mix tap runs while the TV shows the picture, for its sound)
   try {
@@ -6751,7 +7369,7 @@ function picOff() {
   clearInterval(PIC.timer); PIC.timer = 0;
   if (PIC.track) { PIC.track.stop(); PIC.track = null; }
   for (const k of ['enc', 'aenc']) { if (PIC[k] && PIC[k].state !== 'closed') PIC[k].close(); PIC[k] = null; }
-  PIC.jsaac = null;
+  PIC.jsaac = null; PIC.rs = null; PIC.cv = null;
   if (PIC.last) { PIC.last.close(); PIC.last = null; }
   if (AIR.node) AIR.node.port.postMessage({ on: AIR.on });
   afterHidden();
@@ -6766,11 +7384,12 @@ function picFail(why) {
 } // (main stops it whichever TV it was)
 
 // The encoder, at the picture's size (even numbers; the capture already scaled it to fit maxW × maxH,
-// shape kept) — again when the window changes size (that starts with a keyframe)
+// shape kept) — again when the window changes size (that starts with a keyframe). With o.canvas: at that size, once
+// (the picture is fitted into it: a new window size changes nothing for the TV).
 async function picConfigure(f, gen) {
   PIC.srcW = f.displayWidth; PIC.srcH = f.displayHeight;
-  const width = PIC.srcW & ~1, height = PIC.srcH & ~1;
-  const codecs = PIC.forceBaseline ? PIC_CODECS.slice(-1) : PIC_CODECS; // (Baseline: no B-frames — screen mirroring can't take them)
+  const cv = PIC.o.canvas, width = cv ? cv[0] : PIC.srcW & ~1, height = cv ? cv[1] : PIC.srcH & ~1;
+  const codecs = PIC.forceBaseline ? PIC_CODECS.slice(-1) : Array.isArray(PIC.o.codecs) && PIC.o.codecs.length ? PIC.o.codecs : PIC_CODECS; // (Baseline: no B-frames — screen mirroring can't take them)
   const cfgs = [];
   for (const codec of codecs) {
     const cfg = { codec, width, height, bitrate: PIC.o.bitrate, framerate: PIC.o.fps, latencyMode: 'realtime', hardwareAcceleration: 'no-preference', avc: { format: 'annexb' } };
@@ -6785,7 +7404,12 @@ async function picConfigure(f, gen) {
     if (gen !== PIC.gen) return false;
     PIC.enc = new VideoEncoder({ output: picOut, error: e => picFail('video encoder: ' + e.message) });
     PIC.enc.configure(cfg);
-    PIC.w = width; PIC.h = height; PIC.fresh = true; // (its first picture is a keyframe; the segment schedule goes on)
+    PIC.w = width; PIC.h = height; PIC.fresh = true; PIC.codec = cfg.codec; // (its first picture is a keyframe; the segment schedule goes on)
+    if (cv && !PIC.cv) { // (the TV's exact size: the picture drawn into it, the bars in the page's own background)
+      PIC.cv = new OffscreenCanvas(width, height);
+      PIC.cx = PIC.cv.getContext('2d', { alpha: false });
+      PIC.bg = getComputedStyle(document.body).backgroundColor || '#000';
+    }
     return true;
   }
   if (gen === PIC.gen) picFail('no H.264 encoder on this computer');
@@ -6802,7 +7426,7 @@ async function picRead(reader, gen) {
     // the smallest of the first 60 is that constant, to within the quickest trip (5-10 ms).
     const arr = picNow(), d = arr - f.timestamp;
     if (PIC.seen++ < 60 && d < PIC.off) PIC.off = d;
-    if ((!PIC.enc || f.displayWidth !== PIC.srcW || f.displayHeight !== PIC.srcH) && !(await picConfigure(f, gen))) { f.close(); reader.cancel().catch(() => {}); return; }
+    if ((!PIC.enc || (!PIC.o.canvas && (f.displayWidth !== PIC.srcW || f.displayHeight !== PIC.srcH))) && !(await picConfigure(f, gen))) { f.close(); reader.cancel().catch(() => {}); return; }
     if (gen !== PIC.gen) { f.close(); reader.cancel().catch(() => {}); return; }
     if (picEncode(f, f.timestamp + PIC.off - PIC_LAG_US)) PIC.lastSent = arr;
     if (PIC.last) PIC.last.close();
@@ -6822,15 +7446,24 @@ function picEncode(f, pts) {
   const due = PIC.o.keyUs > 0 && pts >= PIC.nextKey, key = due || PIC.fresh || PIC.wantKey;
   PIC.fresh = false; PIC.wantKey = false;
   if (due) PIC.nextKey = pts + PIC.o.keyUs - Math.min(20000, PIC.o.keyUs * 0.02);
-  const g = new VideoFrame(f, { timestamp: Math.round(pts) }); // (the chunk comes out with this time)
+  const g = PIC.cv ? picFit(f, pts) : new VideoFrame(f, { timestamp: Math.round(pts) }); // (the chunk comes out with this time)
   e.encode(g, { keyFrame: key });
   g.close();
   return true;
 }
+// The filmed picture in the TV's exact size: as large as fits, centred, shape kept; the rest the page's background
+function picFit(f, pts) {
+  const W = PIC.cv.width, H = PIC.cv.height, sw = f.displayWidth || W, sh = f.displayHeight || H, k = Math.min(W / sw, H / sh);
+  const w = Math.min(W, Math.round(sw * k)), h = Math.min(H, Math.round(sh * k)), x = (W - w) >> 1, y = (H - h) >> 1;
+  const c = PIC.cx;
+  c.fillStyle = PIC.bg; c.fillRect(0, 0, W, H);
+  c.drawImage(f, x, y, w, h);
+  return new VideoFrame(PIC.cv, { timestamp: Math.round(pts), alpha: 'discard' });
+}
 function picOut(chunk) {
   const buf = new ArrayBuffer(chunk.byteLength);
   chunk.copyTo(buf);
-  mapApp.airAv('v', buf, { key: chunk.type === 'key', ptsUs: chunk.timestamp, width: PIC.w, height: PIC.h });
+  mapApp.airAv('v', buf, { key: chunk.type === 'key', ptsUs: chunk.timestamp, width: PIC.w, height: PIC.h, sid: PIC.o && PIC.o.sid });
 }
 // Mirroring: the TV needs a keyframe (it's starting, or a picture was lost): the next picture is one — or, when
 // nothing new is filmed within 20 ms, the last picture again, as one. 'reconfigure-baseline': the encoder made
@@ -6858,16 +7491,19 @@ function picRepeat() {
 // The sound: the mix tap's pieces (2048 frames of interleaved stereo at actx.sampleRate) as AAC, at the rate
 // main made the stream for (o.aRate). No AAC encoder on this computer (Linux, Windows "N"), or another rate:
 // silent AAC frames instead, so the TV still gets a sound track (some Apple TVs won't start without one).
+// (o.resample: Show on TV's plainer formats — 44.1 kHz whatever this page's rate: the sound is converted first.)
 async function picAudioOn(gen) {
-  const cfg = { codec: 'mp4a.40.2', sampleRate: actx.sampleRate, numberOfChannels: 2, bitrate: 192000 }; // (Windows' AAC encoder: 96/128/160/192 kb/s)
-  const ok = window.AudioEncoder && actx.sampleRate === PIC.o.aRate && await AudioEncoder.isConfigSupported(cfg).then(r => r.supported, () => false);
+  const o = PIC.o, sr = actx.sampleRate, conv = !!o.resample && o.aRate > 0 && sr !== o.aRate, rate = conv ? o.aRate : sr;
+  const cfg = { codec: 'mp4a.40.2', sampleRate: rate, numberOfChannels: 2, bitrate: o.aBitrate || 192000 }; // (Windows' AAC encoder: 96/128/160/192 kb/s)
+  const ok = window.AudioEncoder && rate === o.aRate && await AudioEncoder.isConfigSupported(cfg).then(r => r.supported, () => false);
   if (gen !== PIC.gen) return; // (stopped meanwhile)
+  PIC.rs = conv ? picResampler(sr, rate) : null; PIC.aRate = rate;
   if (!ok) {
     // No system AAC encoder (some Windows builds, Linux): make the AAC ourselves, if this page can (its sound
-    // rate must be the one the stream wants). Otherwise the stream carries silence.
+    // rate must be the one the stream wants, or be converted to it). Otherwise the stream carries silence.
     PIC.aFail = true;
-    if (window.AacEncoder && actx.sampleRate === PIC.o.aRate) {
-      try { PIC.jsaac = window.AacEncoder.createAacEncoder({ sampleRate: actx.sampleRate, channels: 2, bitrate: 192000 }); PIC.aNext = null; } catch (e) { PIC.jsaac = null; }
+    if (window.AacEncoder && rate === o.aRate) {
+      try { PIC.jsaac = window.AacEncoder.createAacEncoder({ sampleRate: rate, channels: 2, bitrate: cfg.bitrate }); PIC.aNext = null; } catch (e) { PIC.jsaac = null; }
     }
     if (!PIC.jsaac) say('The TV shows the picture, but this computer can’t make its sound for it', 6000);
     return;
@@ -6877,35 +7513,135 @@ async function picAudioOn(gen) {
       let b = new Uint8Array(c.byteLength);
       c.copyTo(b);
       if (b[0] === 0xff && (b[1] & 0xf6) === 0xf0) b = b.slice(b[1] & 1 ? 7 : 9); // (main wants raw AAC: an ADTS header off, should one come)
-      mapApp.airAv('a', b.buffer, { ptsUs: c.timestamp });
+      mapApp.airAv('a', b.buffer, { ptsUs: c.timestamp, sid: PIC.o && PIC.o.sid });
     },
     error: () => { PIC.aenc = null; PIC.aFail = true; },
   });
   PIC.aenc.configure(cfg);
 }
 function picAudio(pcm, ctx, at) {
-  const e = PIC.aenc, sr = actx.sampleRate;
+  const e = PIC.aenc, sr = actx.sampleRate, rate = PIC.aRate || sr, rs = PIC.rs, sid = PIC.o && PIC.o.sid;
   if (!at || !(e ? e.state === 'configured' : PIC.aFail)) return;
   const n = pcm.byteLength / 8, wall = (at.wall + (ctx - at.ctx) * 1000) * 1000; // (µs: when this sound is heard here)
   // (counted in samples, pulled gently towards the clock: smooth times that still follow the sound card's drift)
   PIC.aT = PIC.aT == null || Math.abs(wall - PIC.aT) > 200e3 ? wall : PIC.aT + (wall - PIC.aT) * 0.01;
+  // (converted to the stream's rate: the first sample out is the filter's delay behind the first one in)
+  const x = rs && (e || PIC.jsaac) ? rs.run(new Float32Array(pcm)) : null, t0 = PIC.aT - (rs ? rs.delay * 1e6 : 0);
   if (e) {
-    const d = new AudioData({ format: 'f32', sampleRate: sr, numberOfFrames: n, numberOfChannels: 2, timestamp: Math.round(PIC.aT), data: pcm });
-    e.encode(d);
-    d.close();
+    if (!x || x.length) {
+      const d = new AudioData({ format: 'f32', sampleRate: rate, numberOfFrames: x ? x.length / 2 : n, numberOfChannels: 2, timestamp: Math.round(t0), data: x || pcm });
+      e.encode(d);
+      d.close();
+    }
   } else if (PIC.jsaac) { // (our own AAC: feed it this chunk, send out whatever whole frames came back)
     // the first frame plays one frame (1024 samples) after the sound it covers was heard here (the encoder's delay)
-    if (PIC.aNext == null) PIC.aNext = PIC.aT - PIC.jsaac.delay / sr * 1e6;
-    let frames; try { frames = PIC.jsaac.encode(new Float32Array(pcm)); } catch (x) { frames = []; }
-    for (const f of frames) { mapApp.airAv('a', f.buffer.slice(f.byteOffset, f.byteOffset + f.byteLength), { ptsUs: Math.round(PIC.aNext) }); PIC.aNext += 1024 / sr * 1e6; }
-  } else { // (no encoder at all: silence, so the stream still carries a sound track — one frame per 1024 samples)
-    let t = PIC.aT - PIC.aRest / sr * 1e6;
-    for (PIC.aRest += n; PIC.aRest >= 1024; PIC.aRest -= 1024, t += 1024 / sr * 1e6) mapApp.airAv('a', PIC_SILENT.slice().buffer, { ptsUs: Math.round(t) });
+    if (PIC.aNext == null) PIC.aNext = t0 - PIC.jsaac.delay / rate * 1e6;
+    let frames; try { frames = PIC.jsaac.encode(x || new Float32Array(pcm)); } catch (y) { frames = []; }
+    for (const f of frames) { mapApp.airAv('a', f.buffer.slice(f.byteOffset, f.byteOffset + f.byteLength), { ptsUs: Math.round(PIC.aNext), sid }); PIC.aNext += 1024 / rate * 1e6; }
+  } else { // (no encoder at all: silence, so the stream still carries a sound track — one frame per 1024 samples at its rate)
+    const out = PIC.o.aRate || sr;
+    let t = PIC.aT - PIC.aRest / out * 1e6;
+    for (PIC.aRest += n * out / sr; PIC.aRest >= 1024; PIC.aRest -= 1024, t += 1024 / out * 1e6) mapApp.airAv('a', PIC_SILENT.slice().buffer, { ptsUs: Math.round(t), sid });
   }
   PIC.aT += n / sr * 1e6;
 }
-function airLocal() { const tv = !!(AIR.st && AIR.st.device && /^(tv|mirror)$/.test(AIR.st.device.way)); localOut.gain.setTargetAtTime(AIR.on && (!AIR.both || tv) ? 0 : 1, actx.currentTime, 0.03); } // (on a TV: never here too — it plays seconds later, or a tenth of a second when mirroring's sound goes there: an echo)
+// Sound from one rate to another (48 → 44.1 kHz, say): interleaved stereo in and out, the pieces joined seamlessly.
+// A windowed-sinc filter (Kaiser) in L phases — 48 → 44.1 kHz is up 147, down 160 — 64 taps each, cut just below
+// half the lower rate. delay: how far (s) the sound out lags the sound in.
+function picResampler(from, to) {
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  let L = to / gcd(from, to), M = from / gcd(from, to);
+  if (L > 1000) { // (an unusual pair of rates: the nearest simple ratio, a tiny bit off in pitch)
+    let best = null;
+    for (let l = 1; l <= 1000; l++) { const m = Math.round(l * from / to), er = Math.abs(l / m - to / from); if (!best || er < best.e) best = { l, m, e: er }; }
+    L = best.l; M = best.m;
+  }
+  const N = 64, T = N * L, fc = 0.5 * 0.91 * Math.min(from, to) / (L * from), beta = 8;
+  const i0 = v => { let sum = 1, term = 1; for (let k = 1; k < 32; k++) { term *= (v / 2 / k) ** 2; sum += term; } return sum; };
+  const I0b = i0(beta), bank = [];
+  for (let p = 0; p < L; p++) {
+    const b = new Float32Array(N); // (the taps for phase p, newest input first)
+    for (let j = 0; j < N; j++) {
+      const n = p + j * L, x = n - (T - 1) / 2, sinc = x === 0 ? 2 * fc : Math.sin(2 * Math.PI * fc * x) / (Math.PI * x);
+      b[j] = sinc * i0(beta * Math.sqrt(Math.max(0, 1 - (2 * n / (T - 1) - 1) ** 2))) / I0b * L;
+    }
+    bank.push(b);
+  }
+  let hist = new Float32Array(2 * N), t = 0, have = 0; // (t: where the next sample out is, in the stream L times faster)
+  return {
+    delay: (T - 1) / 2 / (L * from),
+    run(x) {
+      const nIn = x.length / 2, buf = new Float32Array(hist.length + x.length), base = N;
+      buf.set(hist); buf.set(x, hist.length);
+      const out = new Float32Array(2 * (Math.ceil(nIn * L / M) + 2));
+      let k = 0;
+      for (;;) {
+        const i = Math.floor(t / L) - have + base; // (the newest input frame this sample out takes, in buf)
+        if (i >= base + nIn) break;
+        const tp = bank[t % L];
+        let l = 0, r = 0;
+        for (let j = 0; j < N; j++) { const q = (i - j) * 2; l += buf[q] * tp[j]; r += buf[q + 1] * tp[j]; }
+        out[k++] = l; out[k++] = r;
+        t += M;
+      }
+      have += nIn;
+      hist = buf.slice(buf.length - 2 * N); // (the last N frames, for the next piece)
+      const drop = Math.floor(Math.min(t / L, have) / 1e6) * 1e6; // (t and have kept small)
+      if (drop > 0) { t -= drop * L; have -= drop; }
+      return out.slice(0, k);
+    },
+  };
+}
+function airLocal() { const tv = !!(AIR.st && AIR.st.device && /^(tv|mirror)$/.test(AIR.st.device.way)); localOut.gain.setTargetAtTime((AIR.on && (!AIR.both || tv)) || ND.el ? 0 : 1, actx.currentTime, 0.03); } // (on a TV: never here too — it plays seconds later, or a tenth of a second when mirroring's sound goes there: an echo; No-delay AirPlay: its <audio> plays the sound)
 const airModel = (m, d) => /^AudioAccessory/i.test(m) ? 'HomePod' : /^AppleTV/i.test(m) ? 'Apple TV' : /^AirPort/i.test(m) ? 'AirPort Express' : /^Mac/i.test(m) ? 'Mac' : /shairport/i.test(m) ? 'AirPlay receiver' : d && d.tv ? 'TV' : 'AirPlay speaker';
+/* Why no AirPlay device shows up, in plain words — the most likely cause first: from what finding devices saw (d: its
+   discovery() — the sockets, who answered, what left on each network, the addresses added by hand) and, on Windows, what
+   the network and the firewall say (w: the diagnosis, see airplay-windows.js; null elsewhere). → { why, text, act } —
+   act: what helps, 'net' (the network settings), 'fw' (letting the player through Windows Firewall), both ('net fw') or '' */
+function airWhy(d, w) {
+  const v = (w && w.verdict) || {}, socks = (d && d.sockets) || [], mine = (d && d.interfaces) || [];
+  const sum = k => socks.reduce((n, s) => n + (+s[k] || 0), 0), mdns = socks.find(s => s.id === 'mdns');
+  // (the networks a TV can be on: not the loopback, where sending and joining always work, and on Windows only the ones
+  // it says a TV can be on (v.lan: this computer's own Wi-Fi or Ethernet, by the names finding devices has for them too) —
+  // not a VPN's or a virtual machine's adapter, where they work whatever the Wi-Fi does. When Windows names none of
+  // them (not Windows, or its answer from before a change): every one but the loopback.)
+  const lan = v.lan && mine.some(i => (w.network || []).some(n => n.alias === i.name)) ? v.lan : null;
+  const nets = mine.filter(i => !i.internal && (!lan || lan.includes(i.name)));
+  // (packets from anyone but this computer — answers or other devices' questions: they do get in, so the firewall isn't
+  // what keeps the TV away)
+  const heard = socks.some(s => (s.from || []).some(f => !/^127\./.test(f.ip) && !mine.some(i => i.address === f.ip)));
+  const cause = (why, text, act) => ({ why, text, act: act || '' });
+  if (d && !nets.length) return cause('offline', 'This computer isn’t on a network. Connect it to the same Wi-Fi as the TV.');
+  if (d && socks.length && !socks.some(s => s.bound)) return cause('cantlisten', 'The player couldn’t start looking for devices on this computer. Restarting the player may help.');
+  // (nothing left on any network, nor for an address added by hand)
+  if (d && nets.some(i => i.sendErrors) && !nets.some(i => i.sent) && !(d.hosts || []).some(h => h.asked && !h.error)) return cause('cantsend', 'This computer couldn’t send anything on the network to look for devices. Is it connected? (A VPN can get in the way too.)');
+  if (!heard && !v.firewallOff) {
+    // (the firewall button can help: rules made on this computer count, none an organisation set blocks the player, and
+    // the player stays where it is — the portable one runs from a temporary folder, gone when it ends)
+    const managed = v.localRulesOff || v.blockedByPolicy, fw = !managed && !(w && w.portable);
+    const hand = ' in Windows Security → Firewall & network protection → Allow an app through firewall'; // (by hand: the portable player's way)
+    if (v.publicNetwork && !(v.allowedHere && !v.blockedByRule)) return cause('public', 'Windows treats this network as public, so it keeps devices from finding the player. If it’s your own network, open network settings, click Properties and choose Private network.'
+      + (fw ? ' If it isn’t (a hotel’s, say), let only the player through Windows Firewall instead.' : managed ? '' : ' If it isn’t (a hotel’s, say), let only the player through' + hand + ', with Public ticked (the portable player can’t do that itself).'), fw ? 'net fw' : 'net');
+    if (v.blockedByRule || (v.inboundBlockedByDefault && !v.allowedHere)) {
+      if (managed) return cause('managed', 'Windows Firewall keeps devices from answering the player, and only your organisation can change that on this computer: ask whoever looks after it.');
+      const why = v.blockedByRule ? 'blocked' : 'firewall', text = v.blockedByRule ? 'Windows Firewall is blocking the player (from an earlier “Cancel” on its question).' : 'Windows Firewall doesn’t let devices answer the player yet, so it can’t find them.';
+      return fw ? cause(why, text, 'fw') : cause(why, text + ' Let it through' + hand + ' (the portable player can’t do that itself).');
+    }
+  }
+  if (mdns && !(mdns.bound && (mdns.joined || []).some(a => nets.some(i => i.address === a)))) return cause('deaf', 'The player can’t hear devices announce themselves on this computer (another program may be in the way). You can still add the TV by its IP address.');
+  if (heard && !sum('answers')) return cause('notairplay', 'The player hears other devices on this network, but no AirPlay speaker or TV. Is the TV on, with AirPlay switched on in its settings?');
+  const h = ((d && d.hosts) || []).find(x => x.asked && !x.answered);
+  if (h) return cause('host', h.ip + ' didn’t answer. Is the TV on, and is that still its address? (On the TV: Settings → Network.)');
+  return cause('none', 'No AirPlay device answered. Is the TV on, and on the same Wi-Fi as this computer? You can also add it by its IP address (on the TV: Settings → Network).');
+}
+/* An address typed into "Add a device by IP address…" → { ip } (written plainly) or { error } in plain words. (Which
+   addresses may be asked at all, airplay.js decides too: this computer's own, say.) */
+function airIp(s) {
+  const m = /^\s*(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\s*$/.exec(String(s || '')), n = m ? m.slice(1).map(Number) : [];
+  if (!m || n.some(x => x > 255)) return { ip: '', error: 'That isn’t an IP address: four numbers from 0 to 255 with dots between them, like 192.168.1.20.' };
+  if (n[0] === 0 || n[0] >= 224) return { ip: '', error: 'No device has that address. The TV shows its own in its settings (Settings → Network).' };
+  return { ip: n.join('.'), error: '' };
+}
 function airUI() {
   const p = $('airPanel'), st = AIR.st || { status: 'off' };
   const tip = st.status === 'playing' && st.device ? 'AirPlay: playing on ' + st.device.name : 'AirPlay';
@@ -6917,9 +7653,15 @@ function airUI() {
   $('airBtn').title = '';
   if (p.hidden) return;
   const stat = p.querySelector('.air-status'), cur = st.device && (st.status === 'playing' || st.status === 'connecting' || st.status === 'pin') ? st.device.id : '';
+  // (busy: a start under way — also Show on TV trying another format on its own, which the page didn't ask for)
+  const busy = !!AIR.tvFor || !!AIR.mirrorFor || !!(st.device && st.device.way === 'tv' && st.status === 'connecting');
   if (st.device && st.device.way === 'tv' && st.tv === 'loading' && !AIR.tvAt) { AIR.tvAt = performance.now(); setTimeout(airUI, 15100); }
   if (st.tv !== 'loading') AIR.tvAt = 0;
-  const tvMsg = { loading: 'Starting on the TV… (a few seconds)', playing: 'On the TV — picture and sound, a few seconds behind this computer', paused: 'The TV paused it', stopped: 'The TV stopped showing it', error: 'The TV couldn’t play it' };
+  // (another of Show on TV's formats than the usual one: which, and how far down the list)
+  const fmt = st.tvFormat && st.tvFormat.id !== 'P0' ? st.tvFormat : null, fmtNote = fmt ? ' — in ' + fmt.name + (fmt.n > 1 ? ' (' + fmt.n + ' of ' + fmt.of + ')' : '') : '';
+  const tvMsg = { loading: 'Starting on the TV… (a few seconds)' + fmtNote, playing: 'On the TV — picture and sound, a few seconds behind this computer' + fmtNote, paused: 'The TV paused it', stopped: 'The TV stopped showing it', error: 'The TV couldn’t play it' };
+  // (nothing found for 8 s: why — once finding devices and, on Windows, the firewall have answered; see airLook)
+  const why = !AIR.devices.length && st.status === 'off' && !st.message && AIR.disc !== undefined && AIR.diag !== undefined ? airWhy(AIR.disc, AIR.diag) : null;
   stat.textContent = (AIR.tvFor || AIR.mirrorFor) && st.status === 'connecting' && /^Waiting for /.test(st.message || '') ? st.message // (the TV may be asking on its screen whether to let the player in)
     : AIR.tvFor && st.status !== 'pin' ? 'Getting the picture ready for the TV…' + ((AIR.devices.find(d => d.id === AIR.tvFor) || {}).apple === false ? ' (about 15 seconds: TVs other than Apple TV want a longer stream)' : '')
     : st.status === 'playing' && st.device && st.device.way === 'tv' ? st.device.name + ': ' + (st.tv === 'loading' && !st.tvReached && performance.now() - (AIR.tvAt || 0) > 15000 ? 'it hasn’t started yet — if Windows asked about its firewall, allow the player on private networks' : tvMsg[st.tv] || st.message)
@@ -6927,9 +7669,27 @@ function airUI() {
     : st.status === 'playing' || st.status === 'connecting' || st.status === 'pin' || st.status === 'error' ? st.message
     : st.status === 'off' && st.message ? st.message // (the TV ended screen mirroring itself)
     : AIR.devices.length ? 'Choose where to play:'
-    : performance.now() - (AIR.openAt || 0) > 8000 ? 'No AirPlay devices found yet. They need to be on the same network as this computer — and if Windows asked about its firewall, allow the player on private networks.'
+    : why ? why.text
+    : !mapApp.airDiscovery && performance.now() - (AIR.openAt || 0) > 8000 ? 'No AirPlay devices found yet. They need to be on the same network as this computer — and if Windows asked about its firewall, allow the player on private networks.' // (an older desktop app can't say why)
     : 'Looking for AirPlay devices on your network…';
   stat.classList.toggle('err', st.status === 'error');
+  // (with what helps: the network settings, letting the player through Windows Firewall — Windows asks first — or both)
+  const fix = p.querySelector('.air-fix'), acts = why ? why.act.split(' ').filter(Boolean) : [], fw = acts.includes('fw');
+  if (why && why.why !== AIR.whyWas) { // (another reason: no message from before, and "Also on public networks" ticked to begin with on a public network, where only that helps)
+    AIR.whyWas = why.why; AIR.fixMsg = '';
+    fix.querySelector('.air-pub input').checked = why.why === 'public';
+  }
+  fix.hidden = !acts.length;
+  if (!fix.hidden) {
+    const fwb = fix.querySelector('.air-fw');
+    fix.querySelector('.air-net').hidden = !acts.includes('net');
+    fwb.hidden = fix.querySelector('.air-pub').hidden = !fw;
+    fwb.textContent = AIR.fixing ? 'Waiting for Windows…' : 'Let the player through Windows Firewall';
+    fwb.disabled = !!AIR.fixing;
+    const m = fix.querySelector('.air-fix-msg');
+    m.textContent = !fw ? '' : AIR.fixMsg || (AIR.fixing ? 'Windows asks whether to let Windows PowerShell make changes: choose Yes.' : 'Windows asks you first (Windows PowerShell makes the change).');
+    m.classList.toggle('err', fw && !!AIR.fixMsg);
+  }
   const ul = p.querySelector('.air-list');
   ul.innerHTML = '';
   for (const d of AIR.devices) {
@@ -6942,7 +7702,7 @@ function airUI() {
       tvb.className = 'air-tvb';
       tvb.textContent = onTv ? (st.status === 'playing' ? 'On the TV' : 'Starting…') : AIR.tvFor === d.id ? 'Getting ready…' : 'Show on TV';
       tvb.title = 'The player itself — picture and sound — on the TV (it runs a few seconds behind this computer)';
-      tvb.disabled = onTv || !!AIR.tvFor || !!AIR.mirrorFor;
+      tvb.disabled = onTv || busy;
       if (!tvb.disabled) tvb.onclick = () => airShowTv(d.id);
       li.appendChild(tvb);
     }
@@ -6952,7 +7712,7 @@ function airUI() {
       mb.className = 'air-mirb';
       mb.textContent = onMir ? (st.status === 'playing' ? 'Mirroring' : 'Starting…') : AIR.mirrorFor === d.id ? 'Starting…' : 'Mirror';
       mb.title = 'The player live on the TV, about a tenth of a second behind (screen mirroring; the sound stays on this computer)';
-      mb.disabled = onMir || !!AIR.tvFor || !!AIR.mirrorFor;
+      mb.disabled = onMir || busy;
       if (!mb.disabled) mb.onclick = () => airMirrorTo(d.id);
       li.appendChild(mb);
     }
@@ -6960,7 +7720,7 @@ function airUI() {
     li.querySelector('.air-name span').textContent = airModel(d.model, d) + (d.use === 'ap2' ? ' · AirPlay 2' : '') + (d.password ? ' · password' : '') + (d.ok ? '' : ' · can’t play from here');
     const b = li.querySelector('button');
     b.textContent = now ? (st.status === 'connecting' ? 'Connecting…' : st.status === 'pin' ? 'Pairing…' : 'Playing') : 'Play here';
-    b.disabled = now || !d.ok || !!AIR.tvFor || !!AIR.mirrorFor;
+    b.disabled = now || !d.ok || busy;
     if (!d.ok) b.title = d.why;
     else if (!now) b.onclick = () => airPlay(d.id, '');
     ul.appendChild(li);
@@ -7009,6 +7769,9 @@ function airUI() {
   p.querySelector('.air-both input').checked = AIR.both;
   const dl = p.querySelector('.air-delay select');
   if (st.delay != null && document.activeElement !== dl) dl.value = String(st.delay);
+  // (an address that didn't answer when it was added: once a device there shows up, the form says so)
+  const ipd = AIR.ipFor && AIR.devices.find(d => [d.host, d.raop && d.raop.host, d.ap2 && d.ap2.host].includes(AIR.ipFor));
+  if (ipd) { const m = p.querySelector('.air-ip-msg'); m.textContent = 'Found ' + ipd.name + ' at ' + AIR.ipFor; m.classList.remove('err'); AIR.ipFor = ''; }
 }
 /* Measure how late the device really plays (AirPlay devices may add a delay of their own that they don't
    tell): a few short beeps on this computer's speakers, then on the device, heard by the microphone. The
@@ -7129,9 +7892,40 @@ async function airPlay(id, pw) {
     inp.value = ''; inp.focus();
   }
 }
+/* While the panel is open and nothing has shown up for 8 s, every 2 s: what finding devices saw, and (every 30 s, or when
+   you come back to the window) what Windows says about the network and its firewall — airUI says why from them */
+async function airLook() {
+  if ($('airPanel').hidden || AIR.devices.length || AIR.looking || performance.now() - AIR.openAt < 8000) return;
+  if (!mapApp.airDiscovery) { airUI(); return; } // (an older desktop app can't tell: airUI says it in plain words)
+  const look = AIR.openAt, ask = performance.now() - AIR.diagAt > 30000;
+  AIR.looking = true;
+  if (ask) AIR.diagAt = performance.now();
+  try {
+    const [d, w] = await Promise.all([mapApp.airDiscovery().catch(() => null), ask ? mapApp.airWinDiag().catch(() => null) : AIR.diag]);
+    if ($('airPanel').hidden || AIR.openAt !== look) return; // (the panel closed meanwhile, or a new look began: these answers aren't for it)
+    AIR.disc = d; AIR.diag = w;
+  } finally { AIR.looking = false; }
+  airUI();
+}
+/* The addresses added by hand, each with Remove */
+async function airHostList() {
+  const ul = $('airPanel').querySelector('.air-hosts'), list = (await mapApp.airHosts().catch(() => null)) || [];
+  ul.innerHTML = '';
+  for (const ip of list) {
+    const li = document.createElement('li');
+    li.innerHTML = '<span></span><button>Remove</button>';
+    li.querySelector('span').textContent = ip;
+    li.querySelector('button').onclick = () => { if (AIR.ipFor === ip) AIR.ipFor = ''; mapApp.airRemoveHost(ip).then(airHostList).catch(() => {}); };
+    ul.appendChild(li);
+  }
+}
 function airPanel(open) {
   const p = $('airPanel');
-  if (open && p.hidden) { AIR.openAt = performance.now(); setTimeout(airUI, 8100); } // (nothing found after a while: says why it may be)
+  if (open && p.hidden) { // (nothing found after a while: says why it may be)
+    AIR.openAt = performance.now(); AIR.disc = AIR.diag = undefined; AIR.diagAt = -Infinity; AIR.fixMsg = AIR.whyWas = '';
+    clearInterval(AIR.lookT); AIR.lookT = setInterval(airLook, 2000);
+  }
+  if (!open) clearInterval(AIR.lookT);
   p.hidden = !open;
   if (CAN_AIR) mapApp.airScan(open || (AIR.st && AIR.st.status !== 'off')).catch(() => {}); // (looks while it's open)
   airUI();
@@ -7186,6 +7980,40 @@ function setUpAirplay() {
     if (r) saveBlob(new Blob([JSON.stringify(r, null, 1)], { type: 'application/json' }), 'AirPlay report ' + new Date().toISOString().slice(0, 16).replace(/[T:]/g, '-') + '.json');
   };
   else rep.hidden = true;
+  // (nothing shows up: what helps — the network settings, or letting the player through Windows Firewall)
+  p.querySelector('.air-net').onclick = () => mapApp.airNetSettings().catch(() => {});
+  p.querySelector('.air-fw').onclick = async () => {
+    if (AIR.fixing) return;
+    AIR.fixing = true; AIR.fixMsg = ''; airUI();
+    const r = await mapApp.airFirewallFix(p.querySelector('.air-pub input').checked).catch(() => null);
+    AIR.fixing = false;
+    if (!r || !r.ok) AIR.fixMsg = (r && r.message) || 'The player couldn’t ask Windows.';
+    else { // (what Windows says now: the player let in here — finding starts again, "Looking…" for a moment, then what it found or why not — or not yet)
+      const v = r.diag && !r.diag.error ? r.diag.verdict : null;
+      AIR.diag = r.diag; AIR.diagAt = performance.now();
+      if (!v || (v.allowedHere && !v.blockedByRule)) { AIR.disc = undefined; AIR.openAt = performance.now(); say('Done: Windows Firewall lets the player through now', 4000); }
+      else AIR.fixMsg = v.publicNetwork && !v.allowedPublic ? 'Done for private networks only — this one is public: tick “Also on public networks” to let the player through here too.' : 'Windows made the change, but something else still keeps devices from answering the player.';
+    }
+    airUI();
+  };
+  addEventListener('focus', () => { if (performance.now() - AIR.diagAt > 5000) { AIR.diagAt = -Infinity; airLook(); } }); // (back from Windows' settings: what it says now)
+  // (a device that doesn't show up by itself: added by its IP address, remembered)
+  const ipf = p.querySelector('.air-ipf'), ipIn = ipf.querySelector('input');
+  const ipSay = (t, err) => { const m = ipf.querySelector('.air-ip-msg'); m.textContent = t; m.classList.toggle('err', !!err); };
+  p.querySelector('.air-ip').hidden = !mapApp.airAddHost; // (an older desktop app can't ask a device by its address)
+  p.querySelector('.air-ip').onclick = () => { ipf.hidden = !ipf.hidden; if (!ipf.hidden) { ipSay(''); airHostList(); ipIn.focus(); } };
+  const addIp = async () => {
+    const r = airIp(ipIn.value);
+    if (r.error) { ipSay(r.error, true); return; }
+    ipSay('Asking ' + r.ip + '…');
+    const a = await mapApp.airAddHost(r.ip).catch(() => null);
+    ipSay(a ? a.message : 'Couldn’t add it.', !(a && a.ok));
+    AIR.ipFor = a && a.ok && !a.found.length ? a.ip : ''; // (no device there yet: said when one shows up, see airUI)
+    if (a && a.ok) ipIn.value = '';
+    airHostList(); airUI();
+  };
+  ipf.querySelector('.air-ipin button').onclick = addIp;
+  ipIn.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') addIp(); });
   mapApp.airGet().then(s => { if (s) { AIR.st = s; AIR.devices = s.devices || []; airUI(); } }).catch(() => {});
 }
 function setUpDiscord() {
@@ -7434,6 +8262,7 @@ function resetSettings(keepDevice) {
 function resetAll(keepDevice) {
   if (!keepDevice && BGM.on) bgmStop(); // (Reset everything ends background mode; its songs loading reset the rest)
   if (!keepDevice && COVER.on) coverStop();
+  if (!keepDevice && ND.want) ndSwitch(false); // (No-delay AirPlay is this device's too, like Speaker delay)
   pauseAll();
   tracks.slice().forEach(removeTrack);
   if (bgFile || bg.getAttribute('src')) bgClear.click(); // (also a video still waiting to be read in)
@@ -7861,7 +8690,7 @@ async function bgmPreloadNext() {
     if (!rec) continue;
     const f = rec.file, k = fileKey(f);
     if (PRE_PCM.has(k)) continue;
-    if (ENG.used + preBytes + f.size * 1.2 > ENG.budget) break; // (no memory for more: the rest is decoded when it starts)
+    if (ND.want || ENG.used + preBytes + f.size * 1.2 > ENG.budget) break; // (no memory for more — No-delay AirPlay's own copy of this song takes it: the rest is decoded when it starts)
     try {
       await engLoadModule();
       const ab = await decodeAudio(await f.arrayBuffer());
@@ -8602,7 +9431,7 @@ function debugText() {
          (rot.deg ? '  turned ' + rot.deg + '°' : '') + (portraitLock ? '  locked' : ''));
   L.push('device   ' + innerWidth + '×' + innerHeight + '  dpr ' + (window.devicePixelRatio || 1).toFixed(2) + ' → ' + pxRatio().toFixed(2) +
          '  ' + (IS_TOUCH ? 'touch' : 'mouse') + (IS_WEBKIT ? ' · Safari/WebKit' : '') + '  gfx ' + GQ_NAMES[gq] + (gqAuto ? ' (auto)' : ''));
-  L.push('fps      ' + dbgFps.toFixed(0) + '   audio ' + actx.state + ' ' + actx.sampleRate + ' Hz' + '   output delay ' + Math.round(outLatency() * 1000) + 'ms');
+  L.push('fps      ' + dbgFps.toFixed(0) + '   audio ' + actx.state + ' ' + actx.sampleRate + ' Hz' + '   output delay ' + Math.round(outLatency() * 1000) + 'ms' + (LIM.node ? ' + limiter ' + (LIM.d * 1000).toFixed(1) + 'ms' : '   no limiter'));
   L.push('state    ' + (wantPlay ? 'playing' : 'paused') + (launching ? ' (getting ready…)' : '') + '   ' + nowT.toFixed(2) + 's  speed ' + rate + '×   level ' + db(quiet.rms) + (quiet.on ? ' (quiet)' : ''));
   L.push('engine   ' + (ENG.on ? 'PRECISE (one shared clock)' : 'standard (one player per track)') + (ENG.noMem ? ' — precise ran out of memory' : '') +
          (ENG.on ? '   decoded ' + fmtBytes(ENG.used) + (ENG.pending ? ', ' + ENG.pending + ' to go' : '') : '   in memory ' + fmtBytes(MEM.used)));
@@ -8622,6 +9451,9 @@ function debugText() {
              (performance.now() < (a._fixOff || 0) ? '  (left alone)' : ''));
     }
   }
+  if (ND.want) L.push('no-delay ' + (ND.bad ? 'live — ' + ND.bad.split(':')[0] : ND.job ? 'mixing ' + Math.floor(ND.job.f * 100) + '%' : !ND.el ? 'waiting for audio'
+    : 'the ready mix at ' + ND.el.currentTime.toFixed(2) + 's' + (ND.el.paused ? ' (paused)' : '') + (ENG.on && ENG.playing ? '   engine ' + ms(engHeard() + audioOffset - ndTime()) : '')) +
+    '   kept ' + fmtBytes([...ND.stems.values()].reduce((s, p) => s + p.bytes, 0)) + (ND.seam !== null ? '   last swap ' + ms(ND.seam) : ''));
   if (svp) L.push('— score  ' + svp.notes.length + ' notes · ' + (svp.mainLines ? svp.mainLines.length : 0) + ' top lines · ' + parts.length + ' particles' +
                   (svp.tpq ? ' · ' + svp.tpq + ' ticks/beat' : '') + (scoreOffset ? ' · offset ' + scoreOffset + 's' : ''));
   return L.join('\n');
