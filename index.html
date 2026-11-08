@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Audio Player">
 <meta name="theme-color" content="#1a1a18">
 <title>Multi Audio Player</title>
-<script>/* (desktop app, background mode: this page is its own window — the corner player, or the see-through one that covers the screen) */ if (window.mapApp && window.mapApp.coverState) { const m = /[?&]overlay=(1|corner)(&|$)/.exec(location.search); if (m) document.documentElement.classList.add(m[1] === '1' ? 'overlay' : 'corner'); }</script>
+<script>/* (desktop app, background mode: this page is its own window — the corner player, the see-through one that covers the screen, or the desktop pets' strip) */ if (window.mapApp && window.mapApp.coverState) { const m = /[?&]overlay=(1|corner|pet)(&|$)/.exec(location.search); if (m) document.documentElement.classList.add(m[1] === '1' ? 'overlay' : m[1]); }</script>
 <!-- App icon (browser tab, Add to Home Screen) -->
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -458,7 +458,53 @@ body.bgm-visual #viz{--ui-bg:0;border-top-color:transparent;box-shadow:none}
    instead of leaving it empty, with the glow behind it) */
 body.bgm.bgm-fill:not(.phone){--viz-h:100vh}
 body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-shadow:none}
-#plCoverRow[hidden],#plCoverHint[hidden]{display:none}
+#plWhereRow[hidden],#plCoverHint[hidden],#plPetOld[hidden],#petSet[hidden],#petPanel[hidden],#plVisualRow[hidden],#plVisualHint[hidden],#plOneLyricRow[hidden],#plOneLyricHint[hidden]{display:none}
+#petList{list-style:none;margin:6px 0 10px;padding:0}
+#petList li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:.85rem}
+#petList .pc-th{flex:none;width:48px;height:60px;display:flex;align-items:flex-end;justify-content:center;border-radius:6px;background:color-mix(in srgb,var(--fg) 6%,transparent)}
+#petList .pc-th>*{max-width:48px;max-height:60px;object-fit:contain}
+#petList .pc-txt{flex:1;min-width:0}
+#petList .pc-name{font-weight:600}
+#petList .pc-badge{display:inline-block;margin-left:6px;padding:0 6px;border-radius:999px;font-size:.72rem;font-weight:500;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--fg)}
+#petList .pc-badge.off{background:color-mix(in srgb,var(--fg) 8%,transparent);color:var(--muted)}
+#petList .pc-key{color:var(--muted);font-size:.75rem;overflow-wrap:anywhere}
+#petList .pc-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+#petList .pc-btns button{font-size:.75rem;padding:2px 8px}
+/* Desktop pet: the pictures for the singers, asked for before the pets start (petAskDialog) */
+#petPicDlg{width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+#petPicDlg[open]{display:flex;flex-direction:column}
+#petPicDlg:not([open]){display:none} /* (a browser from before <dialog> wouldn't hide it by itself) */
+#petPicDlg::backdrop{background:rgba(0,0,0,.5)}
+#petPicDlg h3{margin:0;padding:18px 20px 6px;font-size:1.05rem}
+#petPicDlg .pp-intro{margin:0;padding:0 20px 12px;color:var(--muted);font-size:.85rem;line-height:1.45}
+#petPicList{flex:1 1 auto;min-height:0;overflow:auto;margin:0;padding:4px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#petPicList li{display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:6px 14px;padding:10px 0}
+#petPicList li+li{border-top:1px solid var(--line)}
+#petPicList .pp-th{width:64px;height:80px;padding:4px;display:flex;align-items:flex-end;justify-content:center;border-radius:8px;border:1.5px dashed color-mix(in srgb,var(--fg) 28%,transparent);background:color-mix(in srgb,var(--fg) 4%,transparent);color:color-mix(in srgb,var(--fg) 35%,transparent);cursor:pointer;overflow:hidden}
+#petPicList .pp-th:hover{border-color:var(--accent)}
+#petPicList .pp-th.on{border-style:solid;border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--fg) 7%,transparent)}
+#petPicList .pp-th svg{width:30px;height:30px;margin:auto}
+#petPicList .pp-th img{max-width:100%;max-height:100%;object-fit:contain}
+#petPicList .pp-name{font-weight:600;overflow-wrap:anywhere}
+#petPicList .pp-songs{color:var(--muted);font-size:.8rem;line-height:1.35;overflow-wrap:anywhere}
+#petPicList .pp-state{font-size:.78rem;color:var(--muted)}
+#petPicList .pp-state.on{color:var(--accent)}
+#petPicList .pp-state.bad{color:#d0473f}
+#petPicList button.pp-pick{padding:6px 12px;font-size:.85rem;white-space:nowrap}
+#petPicDlg .pp-none{margin:0;padding:10px 20px 0;color:#d0473f;font-size:.85rem;line-height:1.4}
+#petPicDlg .pp-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px 16px}
+#petPicDlg .pp-foot button{min-width:96px}
+@media (max-width:480px){
+  #petPicDlg h3{padding:16px 16px 6px}
+  #petPicDlg .pp-intro{padding:0 16px 10px}
+  #petPicList{padding:2px 16px}
+  #petPicList li{grid-template-columns:56px minmax(0,1fr)}
+  #petPicList .pp-th{width:56px;height:70px;grid-row:span 2}
+  #petPicList button.pp-pick{justify-self:start}
+  #petPicDlg .pp-none{padding:8px 16px 0}
+  #petPicDlg .pp-foot{padding:10px 16px 14px}
+  #petPicDlg .pp-foot button{flex:1}
+}
 #dcBox .dc-more[hidden]{display:none}
 /* AirPlay (desktop app) */
 #airBtn.on{color:var(--accent)}
@@ -551,6 +597,26 @@ html.overlay :is(#bg,#vidGlow,#amb,#seek,#toast,#loadBox,#barToggle,#lenWarn,.gr
 html.overlay :is(main,#panelBg,#tabs,#tabsToggle){visibility:hidden!important} /* (still measured for the layout) */
 html.overlay #viz{cursor:default;pointer-events:none}
 html.overlay #bgmBar{display:none!important} /* (its controls are a little window of their own, in the corner of the screen) */
+/* Desktop pet (desktop app): this page in the see-through strip along the bottom of the screen — only the
+   singers and their speech bubbles show; only the singers take the mouse (main lets it through elsewhere) */
+#pet{display:none}
+html.pet,html.pet body{background:transparent!important;overflow:hidden}
+html.pet body>:not(#app),html.pet #app>:not(#pet){display:none!important}
+html.pet #pet{display:block;position:fixed;inset:0;pointer-events:none;overflow:hidden;contain:strict;-webkit-user-select:none;user-select:none}
+#pet .pet-ch{position:absolute;left:0;top:0;will-change:transform}
+#pet .pet-fig{position:absolute;inset:0;transform-origin:50% 100%;will-change:transform}
+#pet .pet-fig>img{position:absolute;inset:0;width:100%;height:100%;pointer-events:auto;cursor:grab;-webkit-user-drag:none;user-select:none;touch-action:none}
+#pet .pet-ch.held .pet-fig>*{cursor:grabbing}
+#pet .pet-ch.held{z-index:5}
+#pet .pet-fig.poof{animation:petPoof .42s ease-out}
+@keyframes petPoof{0%{filter:brightness(2.2) saturate(.3);transform:scale(.6)}55%{filter:brightness(1.4);transform:scale(1.08)}100%{filter:none;transform:scale(1)}}
+#pet .pet-puff{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:rgb(255 255 255 / .85);pointer-events:none;animation:petPuff .5s ease-out forwards}
+@keyframes petPuff{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+#pet svg.pet-bubs{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#pet .pet-bub{fill:var(--cap-bg)}
+#pet .pet-txt{position:absolute;left:0;top:0;padding:6px 12px;white-space:pre;color:rgb(255 255 255 / .92);font-weight:600;font-family:system-ui,sans-serif;line-height:1.25;will-change:transform,opacity}
+#pet .pet-txt .s{color:var(--c);text-shadow:0 0 6px color-mix(in srgb,var(--c) 55%,transparent)}
+#pet .pet-txt .c{background:linear-gradient(90deg,var(--c) var(--p,calc(var(--f)*100%)),rgb(255 255 255 / .92) 0);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* Editing a saved project without opening it */
 #projEdit[hidden],#viewProjects.editing>:not(#projEdit){display:none}
 #projEdit .pe-head{display:flex;align-items:center;gap:8px;margin:0 0 4px}
@@ -941,11 +1007,19 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <div class="dbg-row"><button id="plAddAll">Add all projects</button><button id="plClear">Clear the list</button></div>
     <label class="op">Loop the playlist <input type="checkbox" id="plLoop" checked></label>
     <label class="op">Shuffle <input type="checkbox" id="plShuffle"></label>
-    <label class="op">Visuals only <input type="checkbox" id="plVisual"></label>
+    <label class="op" id="plVisualRow">Visuals only <input type="checkbox" id="plVisual"></label>
     <p class="hint" id="plVisualHint">Visuals only: just the visualizer and the piano roll with its lyrics — no video, no backgrounds.</p>
-    <label class="op">Small player: just the main lyrics <input type="checkbox" id="plOneLyric" checked></label>
-    <p class="hint">In the small player (the corner window), only the main singer's lines — or, while the main singer is quiet, the line that's being sung right now. In all of background mode, the lyrics and the syllables on the notes sit on a dark caption box, and so does the time, so they stay easy to read over anything behind them; in the small player and the browser's compact player the song name and "Next" do too (on phones they stay in the bar at the top). Its opacity is the song's Caption box opacity, at least 60%.</p>
-    <label class="op" id="plCoverRow" hidden>Cover the screen <input type="checkbox" id="plCover"></label>
+    <label class="op" id="plOneLyricRow">Small player: just the main lyrics <input type="checkbox" id="plOneLyric" checked></label>
+    <p class="hint" id="plOneLyricHint">In the small player (the corner window), only the main singer's lines — or, while the main singer is quiet, the line that's being sung right now. In all of background mode, the lyrics and the syllables on the notes sit on a dark caption box, and so does the time, so they stay easy to read over anything behind them; in the small player and the browser's compact player the song name and "Next" do too (on phones they stay in the bar at the top). Its opacity is the song's Caption box opacity, at least 60%.</p>
+    <label class="op" id="plWhereRow" hidden>Plays in <select id="plWhere" autocomplete="off"><option value="corner">Small corner player</option><option value="cover">Cover the screen</option><option value="pet" id="plWherePet">Desktop pet</option></select></label>
+    <p class="hint" id="plPetOld" hidden>Run build.bat again to get Desktop pet mode (this copy of the desktop app is from before it).</p>
+    <div id="petSet" hidden>
+      <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer left or right along the taskbar (it's remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the right, just above them) stops. Each singer is a picture of your own: when you start, the player asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
+      <label class="op">Character size <select id="petSize" autocomplete="off"><option value="S">Small</option><option value="M">Medium</option><option value="L">Large</option></select></label>
+      <label class="op"><span>Height on the taskbar <span class="rv" id="petLiftTxt">50%</span></span><input autocomplete="off" type="range" id="petLift" min="0" max="150" step="5" value="50" title="0%: feet on the bottom edge of the screen · 50%: on the middle of the taskbar · 100%: on its top edge"></label>
+      <div class="dbg-row"><button id="petCharsBtn" aria-expanded="false">Characters…</button></div>
+      <div id="petPanel" hidden><p class="hint">Every singer the pets have met, and its picture: only singers with a picture come on. Choose picture… sets or changes it (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more.</p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*" hidden></div>
+    </div>
     <p class="hint" id="plCoverHint" hidden>Cover the screen: instead of the small window, the visualizer and the piano roll play over your whole screen, with nothing behind them — your other windows show through, and the mouse goes straight through to them. The player waits in the taskbar as the remote control. The controls are in a little window in the bottom-right corner of the screen (the song, ⏮ ⏯ ⏭, and ✕ to stop), and these keys work from any app while it plays: Ctrl+Alt+Space play / pause, Ctrl+Alt+Page Down next song, Ctrl+Alt+Page Up previous song, Ctrl+Alt+End stop — and the media keys on your keyboard.</p>
     <button id="bgmStart" class="primary bgm-big">Start background mode</button>
   </section>
@@ -969,6 +1043,8 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <button class="rbtn" id="playPause" data-tip="Play / pause" aria-label="Play / pause" data-key="Space"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></button>
 </nav>
 
+<div id="pet" aria-hidden="true"><svg class="pet-bubs"></svg></div>
+<dialog id="petPicDlg" aria-labelledby="petPicT" aria-describedby="petPicP"><h3 id="petPicT">Pictures for the singers</h3><p class="pp-intro" id="petPicP">Choose a picture of your own for each singer: it stands on your taskbar and sings their lines. A picture with see-through parts is trimmed, a plain background is cleared; other pictures become a sticker card. Singers left without a picture aren't shown. To change them later: Characters… in the Desktop pet settings.</p><ul id="petPicList"></ul><p class="pp-none" id="petPicNone" role="alert" hidden>None of the singers has a picture yet — choose at least one.</p><div class="pp-foot"><button type="button" id="petPicNo">Cancel</button><button type="button" id="petPicGo" class="primary">Start</button></div><input type="file" id="petPicFile" accept="image/*" hidden></dialog>
 <canvas id="vidGlow" width="24" height="14" aria-hidden="true"></canvas>
 <video id="bg" muted loop playsinline preload="auto" x-webkit-wirelessvideoplaybackdisabled></video>
 <div id="tabs"><button class="tab" id="allTab" style="--c:var(--fg)">All</button></div>
@@ -1167,11 +1243,13 @@ const IS_WEBKIT = IS_IOS || (/Safari\//.test(UA) && !/Chrome|Chromium|CriOS|FxiO
    (those are hidden on touch screens anyway) — and it can be installed from the browser. */
 const MOBILE_BUILD = document.documentElement.dataset.build === 'mobile';
 // Background mode's own window (desktop app): OVERLAY = this page is the see-through window that covers
-// the screen, CORNER = the small player in the corner (SUBWIN: either); COVER = (in the main window) such
-// a window is playing — kind 'corner' or 'cover' — and this one is its remote control.
+// the screen, CORNER = the small player in the corner, PET = the desktop pets' strip along the bottom of
+// the screen (SUBWIN: any of them); COVER = (in the main window) such a window is playing — kind
+// 'corner', 'cover' or 'pet' — and this one is its remote control.
 const OVERLAY = document.documentElement.classList.contains('overlay');
 const CORNER = document.documentElement.classList.contains('corner');
-const SUBWIN = OVERLAY || CORNER;
+const PET = document.documentElement.classList.contains('pet');
+const SUBWIN = OVERLAY || CORNER || PET;
 const COVER = { on: false, playing: false, s: null, fin: false, kind: '', gen: 0, live: false };
 // AirPlay (desktop app): on = this window's sound goes to a device (lat: how much later it's heard there)
 const AIR = { on: false, lat: 0, node: null, sink: null, both: false, st: null, devices: [], pwFor: '', mirrorFor: '' };
@@ -2424,6 +2502,7 @@ function draw() {
 }
 /* now: draw at once (the canvas was just resized, so it's blank until drawn again) */
 function drawViz(now) {
+  if (PET) return; // (the desktop pets show no visualizer)
   // visuals hidden (V): nothing to draw — every track's analysis is an FFT on the main thread
   if (document.body.classList.contains('no-visuals') && !document.body.classList.contains('m-portrait')) {
     // (hidden for a while: its picture's memory goes — it's made again when it shows)
@@ -4530,17 +4609,28 @@ function parseSVP(text) {
   };
   const lib = {};
   (j.library || j.groups || []).forEach(g => { lib[g.uuid] = g; });
-  const notes = [], names = [];
+  const notes = [], names = [], singers = [];
   (j.tracks || []).forEach((t, ti) => {
     names.push(t.name || 'Track ' + (ti + 1));
+    // each group reference names its own voice (database), so one track can have several singers
+    const mute = !!(t.mixer && t.mixer.mute === true), fb = singerOf('svp', null, names[ti], { mute }), ids = new Map();
+    const who = r => {
+      const d = r && r.database, v = d && String(d.name || '').trim(), m = mute || !!(r && r.mute === true), k = (v ? normSinger(v) : '') + '|' + m;
+      if (!ids.has(k)) ids.set(k, v ? voiceSinger('svp', v, { lang: String(d.language || ''), mute: m }) : m === mute ? fb : singerOf('svp', null, names[ti], { mute: m }));
+      return ids.get(k);
+    };
     const refs = [];
-    if (t.mainGroup) refs.push({ g: t.mainGroup, off: (t.mainRef && t.mainRef.blickOffset) || 0, po: (t.mainRef && t.mainRef.pitchOffset) || 0 });
-    (t.groups || []).forEach(r => { const g = lib[r.groupID]; if (g) refs.push({ g, off: r.blickOffset || 0, po: r.pitchOffset || 0 }); });
-    refs.forEach(({ g, off, po }) => (g.notes || []).forEach(n => {
-      notes.push({ s: toSec(off + n.onset), e: toSec(off + n.onset + n.duration), p: n.pitch + po, l: (n.lyrics || '').trim(), t: ti });
+    if (t.mainGroup) refs.push({ g: t.mainGroup, off: (t.mainRef && t.mainRef.blickOffset) || 0, po: (t.mainRef && t.mainRef.pitchOffset) || 0, sg: who(t.mainRef) });
+    (t.groups || []).forEach(r => { const g = lib[r.groupID]; if (g) refs.push({ g, off: r.blickOffset || 0, po: r.pitchOffset || 0, sg: who(r) }); });
+    const ns = [], sgs = [];
+    refs.forEach(({ g, off, po, sg }) => (g.notes || []).forEach(n => {
+      ns.push({ s: toSec(off + n.onset), e: toSec(off + n.onset + n.duration), p: n.pitch + po, l: (n.lyrics || '').trim(), t: ti });
+      sgs.push(sg);
     }));
+    singers.push(trackSinger(ns, sgs, who(t.mainRef)));
+    for (const n of ns) notes.push(n);
   });
-  return finishScore(notes, names);
+  return finishScore(notes, names, singers);
 }
 /* First index in a list sorted by .s whose .s >= t. */
 function firstAt(ns, t) {
@@ -4584,8 +4674,70 @@ function cleanKanaParts(notes) {
     if (n.l !== '+' && n.l !== '-') prev.set(n.t, n.l || ''); // (a phoneme-only note, e.g. "[sh ah t]", counts as not kana)
   }
 }
-/* Shared by all score formats: sort, note labels, ranges, lyric lines. */
-function finishScore(notes, names) {
+/* @pure:pet begin */
+/* Who sings a track, as the score file says (for the desktop pet's characters; the lyric display
+   still goes by names[t] and ignores mute). svp.singers[t] = { key, label, eng, mute, id, lang, alt }:
+   key — the same singer has the same key in every song and format (svp:<name>, utau:<singer's
+     folder, see utauFolder>, vocaloid:<compID>, voisona:<name>, cevio:<CastId>); null when the file doesn't say
+     (MIDI, a track without a voice): petCast then goes by the track's name, within that song only.
+   label — a readable name · eng — which editor: svp / utau / vocaloid / voisona / cevio / midi ·
+   mute — muted in the file · id — the voice id as written (UTAU folder, VOCALOID compID, CeVIO
+   CastId, VoiSona voice file) · lang — the voice's language if given · alt — other spellings.
+   A track that changes singer partway (SVP groups with different voices, VSQX <singer> changes)
+   gets the singer of most of its notes plus multi: true, and each of its notes carries its own
+   n.sg (another of these). */
+const singerOf = (eng, key, label, more) =>
+  Object.assign({ key: key || null, label: String(label == null ? '' : label).trim(), eng, mute: false, id: '', lang: '', alt: [] }, more);
+const VER_RE = /\s*\b(ver\.?\s*\d+(\.\d+)*|v\d+(\.\d+)+)$/i; // "ver1.3", "Ver.2", "v1.0" (a bare "V3" is part of the product name)
+const lastSeg = s => String(s == null ? '' : s).replace(/%(voice|data)%/gi, '/').split(/[\\/]+/).filter(x => x.trim()).pop() || '';
+/* A name as a key: NFKC, lower case, "_" as a space, no trailing version. A "/" stays: "Lumi / Lead"
+   is a track name, not a folder. */
+function normName(name) {
+  const s = String(name == null ? '' : name).normalize('NFKC').toLowerCase().replace(/[_\s]+/g, ' ').trim();
+  return s.replace(VER_RE, '').trim() || s;
+}
+/* The key part of a singer's name: normName without %VOICE% or folders. */
+function normSinger(name) { return normName(lastSeg(String(name == null ? '' : name).normalize('NFKC'))); }
+/* An UTAU voicebank folder (VoiceDir, or OpenUtau's singer Id: the path under its Singers folder).
+   Packs keep one bank per sub-folder ("Lumi\CVVC", "Bolt\CVVC", "Lumi\Power"), so the singer is the
+   deepest folder that isn't only bank-type, voice-colour, language, pitch or version words; above
+   %VOICE%, %DATA% or a voice / Singers folder is the install, not the singer. '' when there's none. */
+const BANK_WORD = /^(?:cv|vc|vcv|cvvc|vccv|cvc|arpa|arpasing|act\d*|multi|multipitch|pitch|append|power|soft|whisper|normal|strong|solid|light|dark|sweet|falsetto|breath|breathy|natural|lite|full|high|mid|low|jp|jpn|ja|japanese|en|eng|english|cn|zh|chn|chinese|kr|ko|kor|korean|ver\.?|v?\d+(?:\.\d+)*|ver\.?\d+(?:\.\d+)*|[a-g][#b]?\d|単独音|連続音|単独|連続|多音階|通常|強|弱|囁き|地声|裏声|日本語|英語|中国語)$/i;
+function utauFolder(raw) {
+  const segs = String(raw == null ? '' : raw).replace(/%(voice|data)%/gi, '/voice/').split(/[\\/]+/).map(x => x.trim()).filter(Boolean);
+  const own = segs.slice(segs.map(x => /^(voice|singers)$/i.test(x)).lastIndexOf(true) + 1);
+  const bank = x => x.normalize('NFKC').split(/[\s_+-]+/).filter(Boolean).every(w => BANK_WORD.test(w));
+  for (let i = own.length - 1; i >= 0; i--) if (!bank(own[i])) return own[i];
+  return own[own.length - 1] || ''; // (only bank words: the last one is all there is)
+}
+const utauSinger = (id, more) => { const f = utauFolder(id); return f ? voiceSinger('utau', f, Object.assign({ id }, more)) : null; };
+/* A voicebank name to show: "星野ルミ・Hoshino Lumi ver1.3" → "Hoshino Lumi" (the Latin half of a
+   "Japanese・Latin" name, version dropped); "Bolt_JP" → "Bolt JP". */
+function singerLabel(raw) {
+  const s = lastSeg(raw).replace(/_/g, ' ').replace(/\s+/g, ' ').trim(), b = s.replace(VER_RE, '').trim() || s;
+  const parts = b.split(/\s*[・･]\s*/).filter(Boolean), latin = parts.filter(p => /[a-z]/i.test(p) && !CJK.test(p));
+  return parts.length > 1 && latin.length && latin.length < parts.length ? latin[0] : b;
+}
+/* A singer named by its voice (key = eng:<normalised name>); alt keeps the other spellings. */
+function voiceSinger(eng, raw, more) {
+  const name = lastSeg(raw).trim(), label = singerLabel(name);
+  const alt = [...new Set([name, ...name.split(/\s*[・･]\s*/)].map(x => x.trim()))].filter(x => x && x !== label);
+  return singerOf(eng, eng + ':' + normSinger(name), label, Object.assign({ alt }, more));
+}
+/* One track's notes with each note's singer beside it (sgs[i]): the track's singer. The notes get
+   n.sg only when the singer changes partway. */
+function trackSinger(ns, sgs, fb) {
+  const by = new Map();
+  ns.forEach((n, i) => { if (!isFiller(n.l)) by.set(sgs[i], (by.get(sgs[i]) || 0) + 1); });
+  let top = null;
+  for (const [sg, c] of by) if (!top || c > by.get(top)) top = sg;
+  if (by.size < 2) return top || sgs[0] || fb;
+  ns.forEach((n, i) => { n.sg = sgs[i]; });
+  return Object.assign({}, top, { multi: true });
+}
+/* @pure:pet end */
+/* Shared by all score formats: sort, note labels, ranges, lyric lines. singers[t]: see singerOf. */
+function finishScore(notes, names, singers) {
   notes.sort((a, b) => a.s - b.s);
   cleanKanaParts(notes);
   let min = Infinity, max = -Infinity, maxLen = 0, end = 0;
@@ -4596,7 +4748,8 @@ function finishScore(notes, names) {
     if (n.e - n.s > maxLen) maxLen = n.e - n.s;
     if (n.e > end) end = n.e;
   }
-  return { notes, names, maxLen, end, min, max, ...buildLines(notes) };
+  singers = names.map((nm, t) => (singers && singers[t]) || singerOf('', null, nm));
+  return { notes, names, singers, maxLen, end, min, max, ...buildLines(notes) };
 }
 
 /* =====================================================================
@@ -4725,12 +4878,13 @@ async function openBlobs(n, depth) {
 }
 /* Collect notes (in ticks) and the tempo map; seconds are worked out later by timeTicks(). */
 function scoreFromTree(root) {
-  const owners = new Map(), tempoBy = new Map(), groups = {};
+  const owners = new Map(), tempoBy = new Map(), voiceBy = new Map(), groups = {};
   const num = v => (v === null || v === undefined || v === '' ? NaN : +v);
   const walk = (n, owner) => {
     if (n.type === 'Track' || n.type === 'Unit') owner = n;
     const P = n.props;
-    if (n.type === 'Group' && P.Id != null && P.Name) groups[P.Id] = P.Name;
+    if (n.type === 'Group' && P.Id != null && (P.Name || !groups[P.Id])) groups[P.Id] = P;
+    if (n.type === 'VoiceInformation' && P.CharacterName && !voiceBy.has(owner)) voiceBy.set(owner, P); // (VoiSona: inside the track's plugin data)
     if (n.type === 'Note' && isFinite(num(P.Clock)) && isFinite(num(P.Duration)) && (P.PitchStep != null || P.Pitch != null)) {
       if (!owners.has(owner)) owners.set(owner, []);
       owners.get(owner).push(P);
@@ -4750,11 +4904,16 @@ function scoreFromTree(root) {
   tl.forEach(x => byClock.set(x.c, x.bpm));
   const tempos = [...byClock].map(([c, bpm]) => ({ c, bpm })).sort((a, b) => a.c - b.c);
   if (!tempos.length || tempos[0].c > 0) tempos.unshift({ c: 0, bpm: tempos.length ? tempos[0].bpm : 120 });
-  const notes = [], names = [];
+  const notes = [], names = [], singers = [];
   let maxTick = 0;
   [...owners].forEach(([o, ns], ti) => {
-    const P = o ? o.props : {};
-    names.push(String(P.Name || groups[P.Group] || 'Track ' + (ti + 1)));
+    const P = o ? o.props : {}, G = groups[P.Group] || {}, V = voiceBy.get(o), cast = String(P.CastId || G.CastId || '').trim();
+    names.push(String(P.Name || G.Name || 'Track ' + (ti + 1)));
+    // VoiSona names the voice (CharacterName); CeVIO only has a cast code, so the label is the track's name
+    const lang = String((V && V.Language) || P.Language || G.Language || ''), mute = /^true$/i.test(G.IsMuted);
+    singers.push(V ? voiceSinger('voisona', V.CharacterName, { lang, id: String(V.VoiceFileName || '') })
+      : cast ? singerOf('cevio', 'cevio:' + cast, names[ti], { id: cast, lang, mute })
+      : singerOf(o && o.type === 'Unit' ? 'cevio' : 'voisona', null, names[ti], { lang, mute }));
     let carry = false; // previous word ended with "-": this note continues it
     ns.slice().sort((a, b) => num(a.Clock) - num(b.Clock)).forEach(n => {
       const c0 = num(n.Clock), d = Math.max(1, num(n.Duration));
@@ -4768,7 +4927,7 @@ function scoreFromTree(root) {
     });
   });
   if (!notes.length) throw new Error('no notes');
-  const raw = { ticks: true, notes, names, tempos };
+  const raw = { ticks: true, notes, names, singers, tempos };
   raw.endAt1 = tickSecs(raw, 1)(maxTick); // seconds at 1 tick per beat (scales as 1 / ticks per beat)
   return raw;
 }
@@ -4787,7 +4946,7 @@ function tickSecs(raw, tpq) {
 }
 function timeTicks(raw, tpq) {
   const toSec = tickSecs(raw, tpq);
-  const sc = finishScore(raw.notes.map(n => ({ s: toSec(n.c), e: toSec(n.c + n.d), p: n.p, l: n.l, t: n.t, glue: n.glue })), raw.names);
+  const sc = finishScore(raw.notes.map(n => ({ s: toSec(n.c), e: toSec(n.c + n.d), p: n.p, l: n.l, t: n.t, glue: n.glue })), raw.names, raw.singers);
   sc.raw = raw;
   sc.tpq = tpq;
   return sc;
@@ -4878,7 +5037,7 @@ function parseMIDI(buf) {
     p += 8;
     const end = Math.min(p + len, u8.length);
     if (id !== 'MTrk') { p = end; continue; }
-    const tr = { name: null, notes: [], lyr: [], text: [] };
+    const tr = { name: null, inst: null, notes: [], lyr: [], text: [] };
     const open = new Map();
     let tick = 0, run = 0;
     const vlq = () => { // variable-length number: max 4 bytes, never past the track end
@@ -4899,6 +5058,7 @@ function parseMIDI(buf) {
         p += l;
         if (type === 0x51 && l >= 3) tempos.push({ tick, us: (u8[o] << 16) | (u8[o + 1] << 8) | u8[o + 2] });
         else if (type === 0x03 && !tr.name) tr.name = u8.slice(o, o + l);
+        else if (type === 0x04 && !tr.inst) tr.inst = u8.slice(o, o + l); // (instrument name: kept for the pet, may name the voice)
         else if (type === 0x05) tr.lyr.push({ tick, b: u8.slice(o, o + l) });
         else if (type === 0x01) tr.text.push({ tick, b: u8.slice(o, o + l) });
         else if (type === 0x2f) break;
@@ -4962,6 +5122,7 @@ function parseMIDI(buf) {
     const base = tr.name ? dec(tr.name).replace(/\0/g, '').trim() : '';
     chans.forEach(ch => disp.push({
       src: ti,
+      inst: tr.inst ? dec(tr.inst).replace(/\0/g, '').trim() : '', // (not in the decoder's sample above, so names and lyrics read as before)
       name: (base || 'Track ' + (ti + 1)) + (chans.length > 1 ? ' (ch ' + (ch + 1) + ')' : ''),
       notes: tr.notes.filter(n => n.ch === ch).sort((a, b) => a.s - b.s || b.p - a.p), // chords: top note first
     }));
@@ -5039,7 +5200,7 @@ function parseMIDI(buf) {
       notes.push({ s: toSec(n.s), e: toSec(n.e), p: n.p, l, t: di, glue: !!n.glue, brk: !!n.brk });
     }
   });
-  return finishScore(notes, disp.map(D => D.name));
+  return finishScore(notes, disp.map(D => D.name), disp.map(D => singerOf('midi', null, D.name, { alt: D.inst && D.inst !== D.name ? [D.inst] : [] })));
 }
 
 function applyRoll() {
@@ -5107,21 +5268,45 @@ function parseVSQX(text) {
     for (const x of segs) { if (x.c <= tk) g = x; else break; }
     return g.sec + (tk - g.c) * g.spt;
   };
-  const notes = [], names = [];
+  // Who sings: the voice table (V4 vVoice bs/pc/id/name, V3 vBS/vPC/compID/vVoiceName), and in each
+  // part its <singer>s (V4 t/bs/pc, V3 posTick/vBS/vPC), each from its tick on: the singer can change
+  // partway through a part. Muted tracks: the mixer's vsUnit (V4 tNo/m, V3 vsTrackNo/mute).
+  const txt = (el, ...ns) => { const c = kid(el, ...ns); return c ? c.textContent.trim() : ''; };
+  const bp = el => (num(el, 'bs', 'vBS') || 0) + '/' + (num(el, 'pc', 'vPC') || 0), vt = new Map();
+  all(doc, 'vVoice').forEach(v => {
+    const id = txt(v, 'id', 'compID'), name = txt(v, 'name', 'vVoiceName') || id;
+    if (!name || vt.has(bp(v))) return;
+    const sg = voiceSinger('vocaloid', name, { id });
+    if (id) sg.key = 'vocaloid:' + id;
+    vt.set(bp(v), sg);
+  });
+  const muted = new Set(all(doc, 'vsUnit').filter(u => num(u, 'm', 'mute') > 0).map(u => num(u, 'tNo', 'vsTrackNo')));
+  const notes = [], names = [], singers = [];
   all(doc, 'vsTrack').forEach((tr, ti) => {
     const nm = kid(tr, 'name', 'trackName');
     names.push((nm && nm.textContent.trim()) || 'Track ' + (ti + 1));
+    const no = num(tr, 'tNo', 'vsTrackNo'), mute = muted.has(isFinite(no) ? no : ti);
+    const fb = singerOf('vocaloid', null, names[ti], { mute }), mine = new Map(); // (copies: mute is per track)
+    const as = v => { if (!v) return fb; if (!mine.has(v)) mine.set(v, Object.assign({}, v, { mute })); return mine.get(v); };
+    const ns = [], sgs = [];
     [...tr.children].filter(c => c.localName === 'vsPart' || c.localName === 'musicalPart').forEach(part => {
       const at = (num(part, 't', 'posTick') || 0) - prefix;
+      const sw = [...part.children].filter(c => c.localName === 'singer')
+        .map(g => ({ c: num(g, 't', 'posTick') || 0, v: vt.get(bp(g)) })).sort((a, b) => a.c - b.c);
       [...part.children].filter(c => c.localName === 'note').forEach(n => {
-        const c = at + (num(n, 't', 'posTick') || 0), d = num(n, 'dur', 'durTick'), p = num(n, 'n', 'noteNum');
+        const nt = num(n, 't', 'posTick') || 0, c = at + nt, d = num(n, 'dur', 'durTick'), p = num(n, 'n', 'noteNum');
         if (!(d > 0) || !isFinite(p) || c + d <= 0) return;
         const ly = kid(n, 'y', 'lyric');
-        notes.push({ s: toSec(Math.max(0, c)), e: toSec(c + d), p, l: (ly ? ly.textContent : '').trim(), t: ti });
+        let v = sw.length ? sw[0].v : null;
+        for (const x of sw) { if (x.c <= nt) v = x.v; else break; }
+        ns.push({ s: toSec(Math.max(0, c)), e: toSec(c + d), p, l: (ly ? ly.textContent : '').trim(), t: ti });
+        sgs.push(as(v));
       });
     });
+    singers.push(trackSinger(ns, sgs, fb));
+    for (const n of ns) notes.push(n);
   });
-  return finishScore(notes, names);
+  return finishScore(notes, names, singers);
 }
 function decodeText(buf) {
   const u8 = new Uint8Array(buf);
@@ -5163,21 +5348,23 @@ function parseUST(text) {
     t += d;
   }
   if (!notes.length) throw new Error('no notes');
-  return notes;
+  return Object.assign(notes, { voice: (set && set.v.VoiceDir) || '' }); // (the voicebank folder: who sings)
 }
 /* Read .ust files into one score: a part per file. Files that can't be read are skipped (bad). */
 async function scoreFromUST(files, bad) {
-  const notes = [], names = [], used = [];
+  const notes = [], names = [], singers = [], used = [];
   for (const f of files) {
     let ns;
     try { ns = parseUST(decodeText(await f.arrayBuffer())); } catch (e) { bad.push(f.name); continue; }
     const t = names.length;
     names.push(f.name.replace(/\.ust$/i, ''));
+    // VoiceDir: "%VOICE%folder", "%DATA%…\folder" or a full path (utauFolder finds the singer in it)
+    singers.push(utauSinger(ns.voice) || singerOf('utau', null, names[t]));
     used.push(f);
     for (const n of ns) notes.push({ ...n, t });
   }
   if (!notes.length) throw new Error('no notes');
-  const sc = finishScore(notes, names);
+  const sc = finishScore(notes, names, singers);
   sc.ustFiles = used;
   return sc;
 }
@@ -5335,34 +5522,42 @@ function scoreFromUSTX(doc) {
       if (d > 0 && isFinite(p) && isFinite(c)) byTrack.get(tn).push({ c, d, p, l: n.lyric });
     }
   }
-  const notes = [], names = [];
+  const notes = [], names = [], singers = [];
   [...byTrack.keys()].sort((a, b) => a - b).forEach(tn => {
     const ns = byTrack.get(tn);
     if (!ns.length) return;
     const t = names.length, T = trackInfo[tn] || {};
     names.push(String(T.track_name || T.singer || 'Track ' + (tn + 1)));
+    // singer = OpenUtau's singer Id: the voicebank folder's path under the Singers folder
+    const id = T.singer == null ? '' : String(T.singer).trim(), mute = T.mute === true;
+    singers.push(utauSinger(id, { mute }) || singerOf('utau', null, names[t], { mute }));
     for (const n of ns) {
       const l = ustxLyric(n.l);
       if (l !== null) notes.push({ s: toSec(n.c), e: toSec(n.c + n.d), p: n.p, l, t });
     }
   });
   if (!notes.length) throw new Error('no notes');
-  return finishScore(notes, names);
+  return finishScore(notes, names, singers);
 }
 let scoreGen = 0; // the latest score being read (a newer one, a project or Reset supersedes it)
+/* A score file (or a list of .ust files, one part each) read into a score, nothing else changed — so the
+   desktop pets can read the next song's singers while this one plays. Throws if it can't be read;
+   bad collects .ust files that couldn't be. */
+async function parseScoreFile(list, bad) {
+  const f = list[0], kind = scoreLabel(f.name);
+  if (kind === 'UST') return scoreFromUST(list, bad);
+  if (kind === 'USTX') return scoreFromUSTX(parseYAML(decodeText(await f.arrayBuffer())));
+  if (kind === 'MIDI') return parseMIDI(await f.arrayBuffer());
+  if (kind === 'VSQX') return parseVSQX(decodeText(await f.arrayBuffer()));
+  if (kind === 'VoiSona' || kind === 'CeVIO') { const raw = await parseVoiSona(await f.arrayBuffer()); return timeTicks(raw, chooseTpq(raw)); }
+  return parseSVP(await f.text());
+}
 async function loadScore(f) { // f: a score file, or a list of .ust files (one part each)
   const my = ++scoreGen;
   const list = Array.isArray(f) ? f : [f], bad = [];
   f = list[0];
   try {
-    const kind = scoreLabel(f.name);
-    let parsed;
-    if (kind === 'UST') parsed = await scoreFromUST(list, bad);
-    else if (kind === 'USTX') parsed = scoreFromUSTX(parseYAML(decodeText(await f.arrayBuffer())));
-    else if (kind === 'MIDI') parsed = parseMIDI(await f.arrayBuffer());
-    else if (kind === 'VSQX') parsed = parseVSQX(decodeText(await f.arrayBuffer()));
-    else if (kind === 'VoiSona' || kind === 'CeVIO') { const raw = await parseVoiSona(await f.arrayBuffer()); parsed = timeTicks(raw, chooseTpq(raw)); }
-    else parsed = parseSVP(await f.text());
+    const parsed = await parseScoreFile(list, bad);
     if (my !== scoreGen) return null; // superseded while it was being read
     if (!parsed.notes.length) throw new Error('no notes');
     stopVoices();
@@ -5385,6 +5580,293 @@ async function loadScore(f) { // f: a score file, or a list of .ust files (one p
   }
   return true;
 }
+
+/* @pure:pet begin */
+/* =====================================================================
+   Desktop pet: who the characters are, who sings now, when each one hops and where they stand.
+   No DOM: the pet window calls these each frame with now = smoothTime(…) - scoreOffset.
+   early – a line's bubble shows this long before it starts · unison – lines with the same words
+   starting this close together share one bubble · appear – singers after the first come on this
+   long before their first line · jump – a clock step bigger than this (s) is a seek, not a frame ·
+   max – characters on screen (the rest share one "Chorus") · at – the first one's spot (× width) ·
+   step / pad – the next one stands this far to the left (× width + DIP: what's drawn never touches) ·
+   bump – a saved spot closer than this (× width) to another character moves aside · edge / gap –
+   bubbles keep this far from the screen's sides / from each other (DIP) · rows – bubble rows before
+   the text shrinks · round / tail – a bubble's corner radius / half its tail's root (DIP)
+   ===================================================================== */
+const PETL = { early: 0.25, unison: 0.3, appear: 1, jump: 1, max: 6, at: 0.7, step: 1, pad: 16, bump: 0.6, edge: 8, gap: 6, rows: 3, round: 12, tail: 7 };
+/* A track named after its singer plus a harmony word ("Lumi_harm", "Lumi (chorus)", "Lumiハモリ",
+   "ルミ（ハモリ）", "ルミ・ハモ") is that singer. Latin words need a separator before them ("Echo" stays
+   "Echo"). NFKC first: Japanese typing gives full-width brackets （ ）［ ］. */
+const HARM_RE = /(?:[\s_\-.\/・]+|[\s_\-.\/・]*[(\[【「『])(?:harmony|harmonies|harmo|harm|hamo|chorus|cho)\s*\d*\s*[)\]】」』]?$|[\s_\-.\/・]*[(\[【「『]?(?:ハモリ|ハモ|コーラス)\s*\d*\s*[)\]】」』]?$/i;
+const harmBase = name => {
+  const s = String(name == null ? '' : name).trim(), n = s.normalize('NFKC'), b = n.replace(HARM_RE, '').trim();
+  return b && b !== n ? b : s; // (a name with nothing dropped is kept as it was written)
+};
+const nUpTo = (a, x) => { let lo = 0, hi = a.length; while (lo < hi) { const m = (lo + hi) >> 1; if (a[m].s <= x) lo = m + 1; else hi = m; } return lo; }; // how many have .s ≤ x
+// (the pattern is made here, not written out as /…/u: a browser that doesn't know \p{} couldn't start the page at all)
+const petText = L => L.toks.map(k => k.text).join('').normalize('NFKC').toLowerCase().replace(new RegExp('[\\s\\p{P}\\p{S}]+', 'gu'), '');
+/* The song's characters: tracks grouped by singer (svp.singers[t].key). A track the file says
+   nothing about goes by its name, harmony words dropped ("Vocal 2" joins a "Vocal"), within this
+   song only (proj:<projectId>:<name>), so "Vocal" in two songs isn't one character. Muted tracks and
+   tracks without lyrics are left out. Most sung notes first; past PETL.max the rest share one
+   "Chorus". Each: { key, label, eng, id, lang, alt, tname, tracks (most notes first), lead, n,
+   chorus? } — plain data. The lines and notes each
+   one sings are kept on the score (svp.pet) for petActive / petOnsets / petFirstLineAt: run it again
+   whenever svp is replaced (another score, retimeScore). */
+function petCast(svp, projectId) {
+  if (!svp || !svp.lyr) return [];
+  const S = svp.singers || [], scope = String(projectId != null && projectId !== '' ? projectId : svp.fileName || '');
+  const base = svp.names.map(harmBase), bases = new Set(base.map(normName)); // (normName: a "/" in a track name isn't a folder)
+  const fbKey = t => {
+    const b = normName(base[t]), m = b.match(/^(.*\D)[\s_-]*2$/), b1 = m && m[1].replace(/[\s_-]+$/, '');
+    return 'proj:' + scope + ':' + (b1 && bases.has(b1) ? b1 : b);
+  };
+  const notesOf = new Map(), groups = new Map();
+  for (const n of svp.notes) { if (!notesOf.has(n.t)) notesOf.set(n.t, []); notesOf.get(n.t).push(n); }
+  const add = (sg, t, lines, notes, n) => { // (lines may be [] on a track: its notes still make it hop)
+    if (sg.mute || !(lines.length || notes.length)) return;
+    const key = String(sg.key || fbKey(t)).slice(0, 200); // (the app refuses a longer one, and with it the whole cast)
+    if (!groups.has(key)) groups.set(key, { key, parts: new Map() });
+    const g = groups.get(key), P = g.parts.get(t);
+    if (!P) g.parts.set(t, { t, sg, lines, notes, n });
+    else Object.assign(P, { lines: P.lines.concat(lines).sort((a, b) => a.s - b.s), notes: P.notes.concat(notes).sort((a, b) => a.s - b.s), n: P.n + n });
+  };
+  for (const [t, Ls] of svp.lyr) {
+    const sg = S[t] || singerOf('', null, svp.names[t]), ns = notesOf.get(t) || [];
+    if (!sg.multi) { add(sg, t, Ls, ns, svp.counts.get(t) || 0); continue; }
+    // the singer changes partway: each singer gets lines of its own notes. (The track's lines can
+    // join a call and its answer, with no gap between them, into one line.)
+    const by = new Map();
+    for (const n of ns) {
+      const w = n.sg || sg, k = (w.mute ? '!' : '') + (w.key || '');
+      if (!by.has(k)) by.set(k, { w, notes: [] });
+      by.get(k).notes.push(n);
+    }
+    for (const { w, notes } of by.values()) { const b = buildLines(notes); add(w, t, b.lyr.get(t) || [], notes, b.counts.get(t) || 0); }
+  }
+  const byN = (a, b) => b.n - a.n || a.t - b.t;
+  let cast = [...groups.values()].filter(g => [...g.parts.values()].some(p => p.lines.length)).map(g => {
+    const parts = [...g.parts.values()].sort(byN);
+    return { key: g.key, parts, n: parts.reduce((a, p) => a + p.n, 0), t: parts[0].t };
+  }).sort(byN);
+  if (cast.length > PETL.max) { // the rest sing as one "Chorus"
+    const ps = new Map();
+    for (const c of cast.splice(PETL.max - 1)) for (const p of c.parts) {
+      const q = ps.get(p.t);
+      ps.set(p.t, q ? { t: p.t, sg: q.sg, lines: q.lines.concat(p.lines).sort((a, b) => a.s - b.s), notes: q.notes.concat(p.notes).sort((a, b) => a.s - b.s), n: q.n + p.n } : p);
+    }
+    const parts = [...ps.values()].sort(byN);
+    cast.push({ key: 'chorus', parts, n: parts.reduce((a, p) => a + p.n, 0), t: parts[0].t, chorus: true });
+  }
+  const lines = new Map(), notes = new Map();
+  const out = cast.map(c => {
+    const lead = c.parts[0], sg = lead.sg, fb = c.chorus || !sg.key;
+    lines.set(c.key, c.parts.map(p => [p.t, p.lines]));
+    notes.set(c.key, c.parts.length > 1 ? [].concat(...c.parts.map(p => p.notes)).sort((a, b) => a.s - b.s) : lead.notes);
+    // a track-name character is called after the track that gave it its key ("Vocal", not "Vocal 2")
+    const named = fb && !c.chorus && (c.parts.find(p => 'proj:' + scope + ':' + normName(base[p.t]) === c.key) || lead);
+    return {
+      key: c.key, label: c.chorus ? 'Chorus' : fb ? base[named.t] : sg.label, eng: c.chorus ? '' : sg.eng,
+      id: fb ? '' : sg.id, lang: c.chorus ? '' : sg.lang, alt: fb ? [] : (sg.alt || []).slice(), tname: base[lead.t],
+      tracks: c.parts.map(p => p.t), lead: lead.t, n: c.n, ...(c.chorus ? { chorus: true } : {}),
+    };
+  });
+  svp.pet = { lines, notes };
+  return out;
+}
+/* Who sings now. Per character: on each of its tracks (most notes first) the last line starting by
+   now + early, while now ≤ its end + hold; the first such track wins (the lead over its own
+   harmony). Characters singing the same words together share one bubble: in start order, a line
+   joins the bubble whose latest start is within PETL.unison before it (so 0 / 0.2 / 0.4 s is one
+   bubble, whatever order the cast is in). → [{ L (the earliest line), who: [characters], lines:
+   [each one's line], s, e }], earliest first. Nothing is kept between calls, so seeks and jumps
+   need no care. */
+function petActive(cast, svp, now, hold) {
+  const P = svp && svp.pet, h = hold == null ? LY.hold : hold, on = [], out = [];
+  if (!P) return out;
+  for (const g of cast) {
+    for (const [, Ls] of P.lines.get(g.key) || []) {
+      const M = Ls[nUpTo(Ls, now + PETL.early) - 1];
+      if (M && now <= M.e + h) { on.push([g, M]); break; }
+    }
+  }
+  on.sort((a, b) => a[1].s - b[1].s); // (stable: the cast's order on a tie)
+  for (const [g, L] of on) {
+    if (L._pt == null) L._pt = petText(L) || L.toks.map(k => k.text).join(' ');
+    const b = out.find(b => b.L._pt === L._pt && L.s - b.lines[b.lines.length - 1].s <= PETL.unison + 1e-6); // (times are sums of floats)
+    if (b) { b.who.push(g); b.lines.push(L); b.e = Math.max(b.e, L.e); }
+    else out.push({ L, who: [g], lines: [L], s: L.s, e: L.e });
+  }
+  return out;
+}
+/* Each character's note onsets (it hops on each): time order, notes starting together (a harmony
+   doubling its lead) counted once. → Map(key → [{ s, d, e, ee }]); ee = the latest end so far, so
+   "is a note sounding" is one look-up. */
+function petOnsets(cast, svp) {
+  const P = svp && svp.pet, out = new Map();
+  for (const g of cast) {
+    const on = [];
+    for (const n of (P && P.notes.get(g.key)) || []) {
+      if (isFiller(n.l)) continue;
+      const o = on[on.length - 1];
+      if (o && n.s - o.s < 0.03) { o.e = Math.max(o.e, n.e); o.d = Math.max(o.d, n.e - n.s); }
+      else on.push({ s: n.s, d: n.e - n.s, e: n.e });
+    }
+    let ee = -Infinity;
+    for (const o of on) o.ee = ee = Math.max(ee, o.e);
+    out.set(g.key, on);
+  }
+  return out;
+}
+/* The onset a character hops for this frame, or null. cur ({} to start) is kept per character
+   between frames. The first call, a step back in time, or a step of more than PETL.jump s (a
+   seek) only finds the place again: no hop for the notes skipped. Otherwise: the newest onset
+   passed since the last frame (one hop, however many a slow frame passed). */
+function petOnsetStep(cur, on, now) {
+  const seek = cur.t == null || now < cur.t || now - cur.t > PETL.jump;
+  cur.t = now;
+  if (seek) { cur.i = nUpTo(on, now); return null; }
+  let hit = null;
+  while (cur.i < on.length && on[cur.i].s <= now) hit = on[cur.i++];
+  return hit;
+}
+/* One of the character's notes is sounding now (after this frame's petOnsetStep): its mouth is open. */
+const petSounding = (cur, on, now) => cur.i > 0 && now < on[cur.i - 1].ee;
+/* When each character's first line starts: Map(key → s). */
+function petFirstLineAt(cast, svp) {
+  const P = svp && svp.pet, out = new Map();
+  for (const g of cast) {
+    let s = Infinity;
+    for (const [, Ls] of (P && P.lines.get(g.key)) || []) if (Ls.length && Ls[0].s < s) s = Ls[0].s;
+    out.set(g.key, s);
+  }
+  return out;
+}
+/* When each character comes on: whoever sings the song's first line (or joins it within
+   PETL.unison) as the song starts (-Infinity); every other one PETL.appear s before its first line. */
+function petAppearAt(cast, svp) {
+  const first = petFirstLineAt(cast, svp), s0 = Math.min(...first.values()), out = new Map();
+  for (const [k, s] of first) out.set(k, s <= s0 + PETL.unison + 1e-6 ? -Infinity : s - PETL.appear);
+  return out;
+}
+/* petAppearAt again, once a picture came or went (cast: the singers with a picture now; was: the times till now).
+   Once the song has started, one who was waiting for his own line keeps that time — Remove on the singer who sang
+   first doesn't bring the next one on long before his first line; only one who had no time yet (a picture that just
+   came) can come on at once. */
+function petAppearNow(cast, svp, was, started) {
+  const at = petAppearAt(cast, svp);
+  if (!started) return at;
+  const first = petFirstLineAt(cast, svp);
+  for (const [k, s] of at) if (s === -Infinity && was && isFinite(was.get(k))) at.set(k, first.get(k) - PETL.appear);
+  return at;
+}
+/* A line cut into bubble-wide pieces. splitLine measures with '600 <base>px system-ui, sans-serif':
+   the bubble must use that font. Kept on the line until the width or size changes. */
+function petPieces(L, maxW, base) {
+  const k = maxW + '|' + base;
+  if (!L._pp || L._pp.k !== k) L._pp = { k, pcs: splitLine(L, maxW, base) };
+  return L._pp.pcs;
+}
+/* The piece a bubble shows now: the next one takes over as it starts, or as the one before's last
+   word ends (as the main lyrics' pieces do), whichever is first. */
+function petPieceAt(pcs, now) {
+  let i = 0;
+  while (i + 1 < pcs.length && now >= Math.min(pcs[i + 1].s, pcs[i].e - 0.12)) i++;
+  return i;
+}
+/* How wide a singer w wide is for spacing, with box = where it's drawn (fractions x0..x1 of w): what's
+   drawn, both ways from its centre (one drawn off to one side keeps the wider side's room on both). */
+const petSpan = (w, box) => 2 * w * Math.max(0.5 - box.x0, box.x1 - 0.5, 0);
+/* Where the characters stand: centre x (DIP) on a strip W wide; widths (DIP) in the order they came
+   on; saved[k] = the fraction of the width the user dragged that one to, or null. Saved spots first:
+   one closer than PETL.bump × width to an earlier character moves to the nearest gap. The rest take
+   the next free spot: PETL.at across, then leftwards (PETL.step × width + PETL.pad apart), then to
+   the right of it once the left runs out. Everyone stays on the strip. */
+function petSlots(W, widths, saved) {
+  const xs = widths.map(() => null), done = [];
+  const fit = (x, w) => (w >= W ? W / 2 : Math.max(w / 2, Math.min(W - w / 2, x)));
+  const near = (w, j) => PETL.bump * (w + widths[j]) / 2, apart = (w, j) => PETL.step * (w + widths[j]) / 2 + PETL.pad;
+  const clash = (x, w, f) => done.filter(j => Math.abs(xs[j] - x) < f(w, j) - 1e-6);
+  const gap = (want, w) => { // the nearest spot to want that is clear of everyone (null: none)
+    if (!clash(want, w, near).length) return want;
+    let best = null;
+    for (const j of done) for (const c of [xs[j] - near(w, j), xs[j] + near(w, j)]) {
+      const x = fit(c, w);
+      if (!clash(x, w, near).length && (best === null || Math.abs(x - want) < Math.abs(best - want))) best = x;
+    }
+    return best;
+  };
+  widths.forEach((w, k) => {
+    const f = saved && saved[k];
+    if (f == null || !isFinite(f)) return;
+    const want = fit(f * W, w), x = gap(want, w);
+    xs[k] = x === null ? want : x;
+    done.push(k);
+  });
+  widths.forEach((w, k) => {
+    if (xs[k] !== null) return;
+    const x0 = fit(W * PETL.at, w);
+    let x = null;
+    for (const dir of [-1, 1]) {
+      for (let c = x0; c >= w / 2 - 1e-6 && c <= W - w / 2 + 1e-6;) {
+        const hit = clash(c, w, apart);
+        if (!hit.length) { x = c; break; }
+        c = dir < 0 ? Math.min(...hit.map(j => xs[j] - apart(w, j))) : Math.max(...hit.map(j => xs[j] + apart(w, j)));
+      }
+      if (x !== null) break;
+    }
+    if (x === null) x = gap(x0, w);
+    xs[k] = x === null ? x0 : x;
+    done.push(k);
+  });
+  return xs;
+}
+/* Where a singer coming on stands (centre x on a strip W wide): on = the ones standing, out = the ones
+   still sinking away (a song change), each { x, span } (petSpan); its own span, and saved (petSlots).
+   Never where one is still going down: a saved spot waits for that one to be gone (null: not yet); a
+   spot of its own choosing is the next one free of them too, so it comes on at once. */
+function petSpot(W, on, out, span, saved) {
+  const hit = x => out.some(o => Math.abs(o.x - x) < (o.span + span) / 2);
+  const at = os => petSlots(W, [...os.map(o => o.span), span], [...os.map(o => o.x / W), os === on ? saved : null]).pop();
+  const x = at(on);
+  if (!hit(x)) return x;
+  if (saved != null && isFinite(saved)) return null;
+  const y = at([...on, ...out]);
+  return hit(y) ? null : y;
+}
+/* Bubble places: items { cx, w, tips } in start order (as petActive gives them; tips = its singers'
+   x). Each is centred over its character(s) and kept PETL.edge from the strip's sides; one that would
+   overlap an earlier one goes up a row. A tail from a higher row runs down past the lower bubbles: one
+   it would cross (and so seem to point at that singer too) moves sideways off it, as far as it still
+   stands over its own singers. → { x: left edges, row: 0 = lowest, over: more than PETL.rows rows
+   were needed (shrink the text to 85 % and place them again) }. */
+function petRows(items, W) {
+  const E = PETL.edge, G = PETL.gap, x = [], row = [], taken = [];
+  const fit = (b, v) => (b.w >= W - 2 * E ? E : Math.max(E, Math.min(W - E - b.w, v)));
+  let over = false;
+  items.forEach((b, i) => {
+    x[i] = fit(b, b.cx - b.w / 2);
+    let r = 0;
+    while (r < PETL.rows && (taken[r] || []).some(([a, z]) => x[i] < z + G && a < x[i] + b.w + G)) r++;
+    if (r === PETL.rows) { over = true; r = PETL.rows - 1; }
+    (taken[r] = taken[r] || []).push([x[i], x[i] + b.w]);
+    row[i] = r;
+  });
+  const M = PETL.tail + G, R = PETL.round + PETL.tail; // (clear of a tail by the gap; its own tail's root off the corners)
+  items.forEach((b, i) => {
+    const avoid = items.flatMap((o, j) => (row[j] > row[i] ? o.tips || [] : []));
+    const crosses = v => avoid.some(t => t > v - M && t < v + b.w + M);
+    if (!crosses(x[i])) return;
+    const ok = v => Math.abs(fit(b, v) - v) < 1e-6 && !crosses(v) && b.cx >= v + R && b.cx <= v + b.w - R &&
+      items.every((o, j) => j === i || row[j] !== row[i] || x[j] + o.w + G <= v || v + b.w + G <= x[j]);
+    let best = null;
+    for (const t of avoid) for (const v of [t + M, t - M - b.w]) if (ok(v) && (best === null || Math.abs(v - x[i]) < Math.abs(best - x[i]))) best = v;
+    if (best !== null) x[i] = best; // (no such place: it stays, crossed)
+  });
+  return { x, row, over };
+}
+/* @pure:pet end */
 
 /* media.currentTime only updates in coarse steps: extrapolate with the frame clock and
    gently correct toward the real time, so the roll and lyric wipe move smoothly.
@@ -6587,6 +7069,7 @@ function drawRoll() {
    tens of MB on a big, sharp screen. It's made again when the roll comes back. */
 function rollIdle(now) { if (rollEl.width > 1 && now - (view.onAt || 0) > 1500) { rollEl.width = rollEl.height = 1; } }
 function paintRoll() {
+  if (PET) return; // (the desktop pets: no piano roll, and petFrame keeps the clock and the guide synth)
   const tNow = performance.now();
   const dt = Math.min(0.1, (tNow - (view.at || tNow)) / 1000);
   view.at = tNow;
@@ -8058,7 +8541,7 @@ function setUpDiscord() {
 // iOS greys out file types it doesn't know (.svp, .mid, .tssln…) when a filter is set: allow everything.
 if (IS_IOS) picker.removeAttribute('accept');
 let dragDepth = 0;
-const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+const hasFiles = e => !PET && e.dataTransfer && [...e.dataTransfer.types].includes('Files'); // (the pets take no files: a drag over a singer is refused)
 addEventListener('dragenter', e => { if (!hasFiles(e)) return; dragDepth++; document.body.classList.add('dropping'); });
 addEventListener('dragleave', e => { if (!hasFiles(e)) return; if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dropping'); } });
 addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
@@ -8493,10 +8976,13 @@ const fmtBytes = b => b >= 1e9 ? (b / 1e9).toFixed(1) + ' GB' : b >= 1e6 ? Math.
    the visualizer and the piano roll, no video or backgrounds. The playlist is kept on this device.
    ===================================================================== */
 const PL_KEY = 'map-playlist';
-const PL = { ids: [], loop: true, shuffle: false, visual: false, cover: false, oneLyric: true };
+const PL = { ids: [], loop: true, shuffle: false, visual: false, cover: false, oneLyric: true, where: '' };
 try { Object.assign(PL, JSON.parse(localStorage.getItem(PL_KEY) || '{}')); } catch (e) {}
 if (!Array.isArray(PL.ids)) PL.ids = [];
-const savePL = () => { try { localStorage.setItem(PL_KEY, JSON.stringify(PL)); } catch (e) {} };
+// where it plays (desktop app): the small corner player, Cover the screen, or the desktop pets (it was
+// a "Cover the screen" checkbox, PL.cover, which is kept in step for an older copy of the page)
+if (!['corner', 'cover', 'pet'].includes(PL.where)) PL.where = PL.cover ? 'cover' : 'corner';
+const savePL = () => { PL.cover = PL.where === 'cover'; try { localStorage.setItem(PL_KEY, JSON.stringify(PL)); } catch (e) {} };
 const BGM = { on: false, order: [], i: 0, gen: 0, pre: null, busy: false, keep: null, ended: 0, fails: 0 };
 const PRE_PCM = new Map(); // file key → decoded audio, for the next song
 let preBytes = 0;
@@ -8535,9 +9021,8 @@ async function renderPlaylist() {
   $('plLoop').checked = PL.loop;
   $('plShuffle').checked = PL.shuffle;
   $('plVisual').checked = PL.visual;
-  $('plCover').checked = PL.cover;
   $('plOneLyric').checked = PL.oneLyric !== false;
-  $('plCoverRow').hidden = $('plCoverHint').hidden = !CAN_COVER;
+  petWhereUI();
   $('bgmStart').textContent = BGM.on ? 'Leave background mode' : 'Start background mode';
   $('bgmStart').classList.toggle('primary', !BGM.on && !COVER.on);
   bgmUI();
@@ -8547,8 +9032,8 @@ $('plAddAll').onclick = async () => { const ps = await listProjects().catch(() =
 $('plClear').onclick = () => { PL.ids = []; savePL(); renderPlaylist(); };
 $('plLoop').onchange = e => { PL.loop = e.target.checked; savePL(); bgmUI(); };
 $('plShuffle').onchange = e => { PL.shuffle = e.target.checked; savePL(); };
-$('plVisual').onchange = e => { PL.visual = e.target.checked; savePL(); if (BGM.on) document.body.classList.toggle('bgm-visual', PL.visual || OVERLAY); };
-$('plCover').onchange = e => { PL.cover = e.target.checked; savePL(); };
+$('plVisual').onchange = e => { PL.visual = e.target.checked; savePL(); if (BGM.on) document.body.classList.toggle('bgm-visual', PL.visual || OVERLAY || PET); };
+$('plWhere').onchange = e => { PL.where = e.target.value; savePL(); petWhereUI(); };
 $('plOneLyric').onchange = e => { PL.oneLyric = e.target.checked; savePL(); };
 $('bgmStart').onclick = () => (COVER.on ? (COVER.kind === 'corner' ? coverBack() : coverStop()) : BGM.on ? bgmStop() : bgmStart());
 $('bgmPrev').onclick = () => (COVER.on ? coverCmd('prev') : bgmNext(-1));
@@ -8575,7 +9060,12 @@ async function bgmStart() {
   const ok = PL.ids.filter(id => ps.some(p => p.id === id));
   if (!ok.length) { say(PL.ids.length ? 'The playlist only has deleted projects' : 'Add some saved projects to the playlist first', 2500); return false; }
   if (BGM.on || COVER.on) return false;
-  if (CAN_COVER && PL.cover) { coverStart('cover'); return true; }
+  if (CAN_PET && PL.where === 'pet') { // (a picture for each singer first: petAskFirst)
+    if (!(await petAskFirst(ok)) || BGM.on || COVER.on) return false;
+    coverStart('pet');
+    return true;
+  }
+  if (CAN_COVER && PL.where === 'cover') { coverStart('cover'); return true; }
   if (CAN_CORNER) { coverStart('corner'); return true; } // (desktop app: the small player in the corner)
   BGM.on = true;
   syncCapCss(); // (the caption boxes' opacity floor)
@@ -8583,10 +9073,10 @@ async function bgmStart() {
   BGM.order = PL.shuffle ? shuffled(ok) : ok;
   BGM.keep = { controls: ctrlToggle.on, tabs: document.body.classList.contains('no-tabs'), view: Object.keys(VIEWS).find(k => !$(VIEWS[k][0]).hidden) };
   document.body.classList.add('bgm');
-  document.body.classList.toggle('bgm-visual', PL.visual || OVERLAY);
+  document.body.classList.toggle('bgm-visual', PL.visual || OVERLAY || PET);
   if (!mobileMode()) { if (!ctrlToggle.on) ctrlToggle.toggle(); document.body.classList.add('no-tabs'); updateTabsBtn(); }
   $('bgmBar').hidden = false;
-  const x = $('bgmBarExit'), tip = CORNER ? 'Back to the full player (Esc)' : OVERLAY ? 'Stop' : 'Leave background mode (Esc)';
+  const x = $('bgmBarExit'), tip = CORNER ? 'Back to the full player (Esc)' : OVERLAY || PET ? 'Stop' : 'Leave background mode (Esc)';
   x.title = tip;
   x.setAttribute('aria-label', tip.replace(/ \(Esc\)$/, ''));
   if (window.mapApp && mapApp.mini && !SUBWIN) mapApp.mini(true).catch(() => {}); // (an older desktop app: the main window goes to the corner itself)
@@ -8618,6 +9108,7 @@ async function bgmPlay(i) {
   const gen = ++BGM.gen, id = BGM.order[i];
   BGM.i = i;
   BGM.busy = true;
+  if (PET) petBye(id); // (the singers not in it start going now)
   const pre = BGM.pre && BGM.pre.id === id ? BGM.pre : null;
   BGM.pre = null;
   if (!pre) { PRE_PCM.clear(); preBytes = 0; }
@@ -8643,6 +9134,7 @@ async function bgmPlay(i) {
       return;
     }
     BGM.fails = 0;
+    if (PET) { await petSong(gen); if (gen !== BGM.gen || !BGM.on) return; } // (its singers, and their pictures — a moment at most)
     startAll(0);
   } finally { if (gen === BGM.gen) BGM.busy = false; }
   bgmUI();
@@ -8684,6 +9176,7 @@ async function bgmPreloadNext() {
   try { p = await getProject(id); recs = p && await getFiles(projKeys(p)); } catch (e) { return; }
   if (!p || stale()) return;
   BGM.pre = { id, p, recs };
+  if (PET) petAhead(id, p, recs, stale); // (the next song's singers: their pictures are found meanwhile)
   if (!ENG.on) return; // (standard engine: its players read the files fast enough)
   for (const t of p.tracks) {
     const rec = recs.get(t.key);
@@ -8722,13 +9215,13 @@ setInterval(() => {
 async function bgmUI() {
   const now = $('bgmNow');
   if (COVER.on) { // (main window, while background mode plays in its own window: what's playing there)
-    const c = COVER.s || {}, corner = COVER.kind === 'corner';
+    const c = COVER.s || {}, corner = COVER.kind === 'corner', pet = COVER.kind === 'pet';
     now.hidden = false;
     now.querySelector('.bgm-title').textContent = !COVER.live // (its window shows once the first song has loaded and plays)
-      ? (corner ? 'Getting the corner player ready' : 'Getting ready to cover the screen') + (c.song ? ' — loading ' + c.song : '') + '…'
-      : (corner ? 'Playing in the corner' : 'Covering the screen') + (c.song ? ' — now playing: ' + c.song + (c.n ? ' (' + c.i + ' / ' + c.n + ')' : '') : '…');
+      ? (corner ? 'Getting the corner player ready' : pet ? 'Getting the desktop pets ready' : 'Getting ready to cover the screen') + (c.song ? ' — loading ' + c.song : '') + '…'
+      : (corner ? 'Playing in the corner' : pet ? 'Desktop pets' : 'Covering the screen') + (c.song ? (pet ? ': now playing ' : ' — now playing: ') + c.song + (c.n ? ' (' + c.i + ' / ' + c.n + ')' : '') : '…');
     now.querySelector('.bgm-next').textContent = c.up || '';
-    $('bgmStart').textContent = corner ? 'Back to the full player' : 'Stop covering the screen';
+    $('bgmStart').textContent = corner ? 'Back to the full player' : pet ? 'Stop the desktop pets' : 'Stop covering the screen';
     $('bgmStart').classList.remove('primary');
     document.querySelectorAll('#plList li').forEach((li, k) => li.classList.toggle('now', !!c.id && PL.ids[k] === c.id));
     return;
@@ -8757,6 +9250,7 @@ async function bgmUI() {
    Playing something else in the main window stops it — never two players at once. ---- */
 const CAN_COVER = !SUBWIN && !!(window.mapApp && mapApp.cover && mapApp.onCover);
 const CAN_CORNER = CAN_COVER && !!mapApp.corner; // (an older desktop app moves its own window instead)
+const CAN_PET = CAN_COVER && !!(mapApp.pet && mapApp.petPics && mapApp.petCfg); // (an older desktop app: run build.bat again)
 const coverPost = s => (SUBWIN ? mapApp.coverState(s).catch(() => {}) : Promise.resolve());
 const coverCmd = c => { if (COVER.on) mapApp.coverCmd(c).catch(() => {}); };
 function coverStop() { if (COVER.on) mapApp.cover(false).catch(() => {}); } // (the app then says it ended)
@@ -8771,8 +9265,8 @@ async function coverStart(kind) {
   Object.assign(COVER, { on: true, playing: false, s: null, fin: false, kind, gen: COVER.gen + 1, live: false });
   renderPlaylist(); airUI(); // (an open AirPlay panel: no Show on TV / Mirror while it plays in its own window)
   let ok = false;
-  try { ok = await (kind === 'corner' ? mapApp.corner() : mapApp.cover(true)); } catch (e) {}
-  if (!ok) { COVER.on = false; renderPlaylist(); airUI(); say(kind === 'corner' ? "Couldn't open the corner player" : "Couldn't cover the screen", 2500); }
+  try { ok = await (kind === 'corner' ? mapApp.corner() : kind === 'pet' ? mapApp.pet() : mapApp.cover(true)); } catch (e) {}
+  if (!ok) { COVER.on = false; renderPlaylist(); airUI(); say(kind === 'corner' ? "Couldn't open the corner player" : kind === 'pet' ? "Couldn't start the desktop pets" : "Couldn't cover the screen", 2500); }
 }
 /* Background mode's window is gone: back here, with nothing loaded (it was emptied when it started). */
 function coverEnded() {
@@ -8811,7 +9305,7 @@ function once(k, src) {
 /* The compact player's controls show while the mouse moves on it (or after a tap), then fade away. */
 let bgmAwakeT = 0;
 function bgmWake() {
-  if (!BGM.on || OVERLAY) return;
+  if (!BGM.on || OVERLAY || PET) return;
   document.body.classList.toggle('bgm-low', lyricPosSel.value !== 'bottom'); // (lyrics at the top: the song shows at the bottom)
   document.body.classList.add('bgm-awake');
   clearTimeout(bgmAwakeT);
@@ -8834,6 +9328,1104 @@ async function coverPage() {
     else if (m.cmd === 'back') { if (BGM.on && CORNER) bgmBack(); else mapApp.cover(false).catch(() => {}); }
   });
   if (!(await bgmStart())) mapApp.cover(false).catch(() => {}); // (nothing to play: close again)
+}
+
+/* @pure:pet begin */
+/* Desktop pet pictures (RGBA pixels px, w × h, as getImageData gives them), made ready to stand on the
+   taskbar: one that's already cut out is trimmed to what's drawn; one on a flat backdrop (all four
+   corners the same even colour) has the backdrop cleared from its edges in; anything else — and small
+   icons, which it would only blow up — becomes a sticker card (a rounded card with a white edge).
+   clear – this share of see-through pixels makes a picture "cut out" · a – more opaque than this
+   (0-255) counts as drawn · patch – the corner patches (px) · std – a corner at least this even
+   (0-255) · same – the four corners at least this alike · tol – backdrop pixels this close to its
+   colour (0-255, each channel) · small – icons under this (px) · maxH – kept at most this tall (px) ·
+   up – never shown bigger than this × its own size */
+const PETP = { clear: 0.02, a: 24, patch: 8, std: 12, same: 24, tol: 24, small: 200, maxH: 600, up: 2 };
+/* The box around every pixel more opaque than a: { x, y, w, h }, or null when there's none. */
+function petAlphaBox(px, w, h, a = PETP.a) {
+  let x0 = w, y0 = -1, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) {
+    const row = y * w * 4;
+    let l = -1, r = -1;
+    for (let x = 0; x < w; x++) if (px[row + x * 4 + 3] > a) { if (l < 0) l = x; r = x; }
+    if (l < 0) continue;
+    if (y0 < 0) y0 = y;
+    y1 = y;
+    if (l < x0) x0 = l;
+    if (r > x1) x1 = r;
+  }
+  return y0 < 0 ? null : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+}
+/* The share of pixels that are (nearly) see-through. */
+function petClearShare(px) {
+  let n = 0;
+  for (let i = 3; i < px.length; i += 4) if (px[i] <= 16) n++;
+  return px.length ? n / (px.length / 4) : 0;
+}
+/* The backdrop's colour [r, g, b] when each corner patch is one even colour and the four are alike;
+   else null (a busy picture, or one that's cut out right to its corners). */
+function petCornerColour(px, w, h) {
+  const n = Math.min(PETP.patch, w, h), means = [];
+  for (const [cx, cy] of [[0, 0], [w - n, 0], [0, h - n], [w - n, h - n]]) {
+    const sum = [0, 0, 0], sq = [0, 0, 0];
+    for (let y = cy; y < cy + n; y++) for (let x = cx; x < cx + n; x++) {
+      const i = (y * w + x) * 4;
+      for (let c = 0; c < 3; c++) { sum[c] += px[i + c]; sq[c] += px[i + c] * px[i + c]; }
+    }
+    const k = n * n, m = sum.map(v => v / k);
+    if (sq.some((v, c) => Math.sqrt(Math.max(0, v / k - m[c] * m[c])) >= PETP.std)) return null;
+    means.push(m);
+  }
+  if (means.some(m => m.some((v, c) => Math.abs(v - means[0][c]) > PETP.same))) return null;
+  return [0, 1, 2].map(c => Math.round(means.reduce((a, m) => a + m[c], 0) / 4));
+}
+/* Clears the backdrop, in place: every pixel joined to the picture's edge through pixels within tol of
+   col becomes see-through, and the drawn pixels touching them half see-through (a 1 px soft edge, so
+   the outline isn't jagged). → how many were cleared. */
+function petFlood(px, w, h, col, tol = PETP.tol) {
+  const N = w * h, gone = new Uint8Array(N), q = new Int32Array(N);
+  let qt = 0, n = 0;
+  const push = i => {
+    if (gone[i]) return;
+    const j = i * 4;
+    if (Math.abs(px[j] - col[0]) > tol || Math.abs(px[j + 1] - col[1]) > tol || Math.abs(px[j + 2] - col[2]) > tol) return;
+    gone[i] = 1; q[qt++] = i;
+  };
+  for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+  for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+  for (let qh = 0; qh < qt; qh++) {
+    const i = q[qh], x = i % w;
+    if (x > 0) push(i - 1);
+    if (x < w - 1) push(i + 1);
+    if (i >= w) push(i - w);
+    if (i < N - w) push(i + w);
+  }
+  for (let i = 0; i < N; i++) {
+    if (gone[i]) { px[i * 4 + 3] = 0; n++; continue; }
+    const x = i % w;
+    if ((x > 0 && gone[i - 1]) || (x < w - 1 && gone[i + 1]) || (i >= w && gone[i - w]) || (i < N - w && gone[i + w])) px[i * 4 + 3] >>= 1;
+  }
+  return n;
+}
+/* What to do with a picture: { mode: 'trim' } (it has see-through parts), { mode: 'flood', col } (a
+   flat backdrop to clear) or { mode: 'card' } (a busy picture, or a small icon). */
+function petPlan(px, w, h) {
+  if (Math.max(w, h) < PETP.small) return { mode: 'card' };
+  if (petClearShare(px) >= PETP.clear) return { mode: 'trim' };
+  const col = petCornerColour(px, w, h);
+  return col ? { mode: 'flood', col } : { mode: 'card' };
+}
+/* A speech bubble's outline as one SVG path (strip DIP): the rounded box x, y, w × h (corner radius r)
+   and a tail to each tip { x, y } below it. A tail is a wedge at least 2·half wide where it leaves the
+   box, measured square to where it points, so one to a singer far off to the side is as plain as one
+   straight down: its root (inside the box, off the rounded corners) moves along the bottom edge towards
+   the tip and, for a tip far to the side, up into the lower corner, turned to face it. A long tail is a
+   little wider, bowed up a little and full-sided (a horn) rather than a thin straight sliver; a short
+   one is a plain triangle. One path, every part drawn the same way round: where a tail meets the box the
+   see-through colour isn't doubled. */
+function petBubblePath(x, y, w, h, r, tips, half = 7) {
+  const f = v => Math.round(v * 10) / 10, b = y + h, P = (u, v) => f(u) + ' ' + f(v);
+  r = Math.max(0, Math.min(r, w / 2, h / 2));
+  let d = 'M' + f(x + r) + ' ' + f(y) + 'H' + f(x + w - r) + 'A' + r + ' ' + r + ' 0 0 1 ' + f(x + w) + ' ' + f(y + r) +
+    'V' + f(b - r) + 'A' + r + ' ' + r + ' 0 0 1 ' + f(x + w - r) + ' ' + f(b) + 'H' + f(x + r) +
+    'A' + r + ' ' + r + ' 0 0 1 ' + f(x) + ' ' + f(b - r) + 'V' + f(y + r) + 'A' + r + ' ' + r + ' 0 0 1 ' + f(x + r) + ' ' + f(y) + 'Z';
+  for (const t of tips || []) {
+    if (!(t.y > b)) continue; // (a tip inside the box: no tail)
+    // the root's middle (ax, ay), its half-width hw and its direction across (nx, ny), square to the tail:
+    // found together (each moves the others a little). Its two ends stay inside the box.
+    let ax = x + w / 2, ay = b - 1, nx = 1, ny = 0, hw = half, L = 1;
+    for (let k = 0; k < 3; k++) {
+      L = Math.hypot(t.x - ax, t.y - ay) || 1;
+      nx = (t.y - ay) / L; ny = -(t.x - ax) / L;
+      hw = half * (1 + 0.15 * Math.min(1, L / 600));
+      const m = hw * Math.abs(nx), lo = x + r + m, hi = x + w - r - m;
+      ax = lo > hi ? x + w / 2 : Math.max(lo, Math.min(hi, t.x));
+      ay = b - 1 - hw * Math.abs(ny);
+    }
+    // both sides curve through a point beside the middle, raised a little for a long reach (up to 8)
+    const lift = Math.min(8, 0.03 * Math.abs(t.x - ax)), ux = ny > 0 ? -nx : nx, uy = ny > 0 ? -ny : ny;
+    const cx = (ax + t.x) / 2 + ux * lift, cy = (ay + t.y) / 2 + uy * lift, c = hw * (0.5 + 0.45 * Math.min(1, L / 250));
+    d += 'M' + P(ax + nx * hw, ay + ny * hw) + 'Q' + P(cx + nx * c, cy + ny * c) + ' ' + P(t.x, t.y) +
+      'Q' + P(cx - nx * c, cy - ny * c) + ' ' + P(ax - nx * hw, ay - ny * hw) + 'Z';
+  }
+  return d;
+}
+/* Which bubbles that are on give way to a new one: items { cx, w, x, shown, keys, held, drag } in start
+   order (x: where a shown one is; held: its line is over, only lingering; drag: its singer is being dragged
+   along). A bubble not shown yet goes where petRows starts it (centred over cx, kept off the sides); a held
+   one of other singers there would push it up a row, and back down once it fades — so that one goes now
+   (it fades out quickly) and the new one comes where it will stay. The same for a shown one whose singer
+   is dragged over there: a bubble never goes back down, so it would stay up a row, on a long tail, for the
+   rest of its line. A line still being sung never gives way. → indices (ascending). */
+function petYields(items, W) {
+  const E = PETL.edge, G = PETL.gap, out = new Set();
+  const fit = b => (b.w >= W - 2 * E ? E : Math.max(E, Math.min(W - E - b.w, b.cx - b.w / 2)));
+  items.forEach((n, i) => {
+    if (n.shown && !n.drag) return;
+    const x = fit(n);
+    items.forEach((o, j) => {
+      if (j === i || !o.shown || !o.held || (o.keys || []).some(k => (n.keys || []).includes(k))) return;
+      if (x < o.x + o.w + G && o.x < x + n.w + G) out.add(j);
+    });
+  });
+  return [...out].sort((a, b) => a - b);
+}
+/* A new line never draws over one fading out. live: the bubbles that are on { x, y, w, h, shown }; gone:
+   the ones fading out { x, y, w, h, a (how visible) }. → { wait: per live one (not shown yet, and over a
+   fading one: it stays hidden until that's gone), quick: per gone one (a new one waits for it: it fades
+   out in 0.1 s), drop: per gone one (one already showing is over it: it goes at once) }. */
+function petGate(live, gone) {
+  const ov = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  const quick = gone.map(() => false), drop = gone.map(() => false);
+  const wait = live.map(L => {
+    let w = false;
+    gone.forEach((g, j) => {
+      if (!(g.a > 0.001) || !ov(L, g)) return;
+      if (L.shown) drop[j] = true;
+      else { quick[j] = true; w = true; }
+    });
+    return w;
+  });
+  return { wait, quick, drop };
+}
+/* A word's karaoke wipe goes by what's drawn of it, not its box: px are its pixels (RGBA, cw × ch) drawn
+   in the bubble's font from its left edge. → its ink's share left of each column (cdf[i], i = 0…cw; 1 at
+   the right), or null when nothing is drawn. */
+function petInkCdf(px, cw, ch) {
+  const col = new Float64Array(cw);
+  let tot = 0;
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) { const a = px[(y * cw + x) * 4 + 3]; col[x] += a; tot += a; }
+  if (!tot) return null;
+  const cdf = new Float64Array(cw + 1);
+  for (let x = 0, sum = 0; x < cw; x++) { sum += col[x]; cdf[x + 1] = sum / tot; } // (whole sums: the last is exactly 1)
+  return cdf;
+}
+/* Where the wipe's edge is (in those columns) with f of the word sung: as much of its ink coloured as f —
+   so it starts where the drawing starts, and its last stroke turns as the note ends (a held last note's
+   thin end used to be coloured a fifth of the note early, the colour running over the word's empty box). */
+function petWipeAt(cdf, f) {
+  const n = cdf.length - 1;
+  if (!(f > 0)) { let i = 0; while (i < n && cdf[i + 1] <= 0) i++; return i; }
+  if (f >= 1) { let i = n; while (i > 0 && cdf[i - 1] >= 1) i--; return i; }
+  let lo = 1, hi = n; // (the first column edge with that much ink left of it)
+  while (lo < hi) { const m = (lo + hi) >> 1; if (cdf[m] < f) lo = m + 1; else hi = m; }
+  const a = cdf[lo - 1], b = cdf[lo];
+  return lo - 1 + (b > a ? (f - a) / (b - a) : 1);
+}
+/* A hop's height at k (0–1 through it): up and down, h at the top. */
+const petArc = (k, h) => (k >= 0 && k < 1 ? h * 4 * k * (1 - k) : 0);
+/* How far a singer is lifted: bob (the idle bob), note (a note's hop now), click (a click's big hop now,
+   up to top). The click's hop runs its whole course and a note never cuts it short; but they don't add
+   up, and the bob gives way as it goes up: at most top over the head's place at rest, so a click never
+   lifts a singer into its own bubble (its bottom 18 DIP above that). */
+const petLift = (bob, note, click, top) => bob * (1 - Math.min(1, click / top)) + Math.max(click, note);
+/* How high bubbles stand, with x and row from petRows: lowest row first, each one's bottom at its own
+   `bottom` (above its singers' heads) or higher — above every bubble of a lower row it would overlap,
+   and above any `fixed` box { x, y, w, h } it would overlap (a bubble still fading out where it was).
+   → tops. */
+function petStack(items, x, row, gap = PETL.gap, fixed = []) {
+  const top = [], order = items.map((b, i) => i).sort((i, j) => row[i] - row[j] || i - j);
+  const across = (x0, w0, x1, w1) => x0 < x1 + w1 + gap && x1 < x0 + w0 + gap;
+  for (const i of order) {
+    const b = items[i];
+    let bottom = b.bottom;
+    for (const j of order) if (top[j] != null && row[j] < row[i] && across(x[i], b.w, x[j], items[j].w)) bottom = Math.min(bottom, top[j] - gap);
+    for (let moved = true, n = 0; moved && n < 8; n++) { // (above one box can be into the next: again until clear)
+      moved = false;
+      for (const f of fixed) if (across(x[i], b.w, f.x, f.w) && bottom - b.h < f.y + f.h + gap && bottom > f.y - gap) { bottom = f.y - gap; moved = true; }
+    }
+    top[i] = bottom - b.h;
+  }
+  return top;
+}
+/* What one singer does on the strip as its picture or the song changes (petSync): only a singer with a
+   picture of its own is ever on it. pic – it has one now; state – where it is ('wait': not on yet, 'rising',
+   'in', 'leaving'; '': not on the strip); inSong – one of this song's singers. → 'come' (it comes on when
+   its time comes — a new one, or one still sinking away comes back), 'swap' (its picture goes in, a new one
+   with a poof), 'leave' (no picture: it goes — Remove while it's on) or '' (nothing to do). */
+function petStep(pic, state, inSong) {
+  if (!pic) return state && state !== 'leaving' ? 'leave' : '';
+  if (state && state !== 'leaving') return 'swap';
+  return inSong ? 'come' : '';
+}
+/* Before the desktop pets start: who in the playlist needs a picture. songs: [{ name, cast }] in playlist
+   order, each cast as petCast gives it; known: key → { url, asked } (what the app has: petpics' pics()).
+   A singer with a picture, or one the user started without before (asked), isn't asked about again; the
+   "Chorus" (the rest of a big cast, past PETL.max) is no one to ask about. Merged per key: a singer in
+   several songs comes once, with each song it sings in (once each), in the order the singers first sing,
+   named as its first song names it. → [{ key, label, songs: [names] }] */
+function petAskList(songs, known) {
+  const out = new Map();
+  for (const s of songs || []) for (const g of (s && s.cast) || []) {
+    if (!g || typeof g.key !== 'string' || !g.key || g.chorus) continue;
+    const k = known && known.get(g.key);
+    if (k && (k.url || k.asked)) continue;
+    let o = out.get(g.key);
+    if (!o) out.set(g.key, (o = { key: g.key, label: String(g.label || '').trim() || g.key.replace(/^[a-z]+:/, ''), songs: [] }));
+    const n = String((s && s.name) || '').trim();
+    if (n && !o.songs.includes(n)) o.songs.push(n);
+  }
+  return [...out.values()];
+}
+/* Would anyone come on? songs and known as for petAskList. → '' to start: a singer in the playlist (the
+   Chorus too) has a picture of its own — or there are no singers at all, and it plays with just the
+   little controls, as a song without words does; else what to tell the user instead of starting with
+   nobody to show (there are singers, but none of them has a picture yet). */
+function petNobody(songs, known) {
+  let n = 0;
+  for (const s of songs || []) for (const g of (s && s.cast) || []) {
+    if (!g || typeof g.key !== 'string' || !g.key) continue;
+    const k = known && known.get(g.key);
+    if (k && k.url) return '';
+    n++;
+  }
+  return n ? 'None of the singers has a picture yet — choose at least one in Characters…' : '';
+}
+/* "Sings in …": the songs' names, up to three, then how many more. */
+function petSongsText(names) {
+  const a = (names || []).filter(Boolean), n = a.length;
+  if (n <= 1) return a[0] || '';
+  if (n <= 3) return a.slice(0, -1).join(', ') + ' and ' + a[n - 1];
+  return a.slice(0, 2).join(', ') + ' and ' + (n - 2) + ' more';
+}
+/* @pure:pet end */
+
+/* =====================================================================
+   Desktop pet (desktop app, ?overlay=pet): this page in a see-through strip along the bottom of the
+   screen plays the playlist (as Cover the screen does) and shows only the singers, standing on the
+   taskbar, with what they sing in speech bubbles. Who sings when, the hops and the places: the
+   @pure:pet blocks. main.js (petwin.js) puts the strip there and lets the mouse through everywhere but
+   over a singer (the rectangles sent from here); each singer's picture is the user's own (petpics.js),
+   chosen in the main window — asked for before the pets start. Only singers with a picture come on.
+   ===================================================================== */
+const PETS = {
+  G: { feetY: 0, charH: 190, scale: 1, txt: 1, W: 0, H: 0, T: 48 }, // where the feet go (main's pet:geom; DIP = CSS px; txt: the bubble text's scale)
+  chars: new Map(),  // key → a singer on the strip (petNew): only singers with a picture (petSync)
+  cast: [], svp: null, songId: null, song: '', on: null, cur: new Map(), appear: new Map(), ready: false, started: false,
+  pics: new Map(),   // key → its picture, ready to show: { url, w, h, box, from, id }; null: none (that singer isn't shown)
+  bubs: new Map(), small: false, rectSig: '', rectAt: 0, first: true, at: 0, now: 0, playing: false, pos: {}, seq: 0,
+  yielded: new Set(), // bubbles of lines that gave way to a new one (petYields): not shown again
+  next: null,         // the next song's singers, from the read-ahead: { id, cast } (petBye)
+};
+/* ---- the strip ---- */
+function petPage() {
+  PETS.layer = $('pet');
+  PETS.svg = PETS.layer.querySelector('.pet-bubs');
+  PETS.G = { ...PETS.G, W: innerWidth, H: innerHeight, feetY: innerHeight - 24 }; // (until main says)
+  try { const p = JSON.parse(localStorage.getItem('map-pet.pos') || '{}'); if (p && typeof p === 'object' && !Array.isArray(p)) PETS.pos = p; } catch (e) {}
+  mapApp.onPet(m => {
+    if (!m) return;
+    if (m.geom) petGeom(m.geom);
+    if (m.img && typeof m.img.key === 'string' && typeof m.img.url === 'string') petNewPic(m.img);
+  });
+  mapApp.petGeom().then(petGeom).catch(() => {});
+  // (for tests: what's on the strip, read-only — a copy each time)
+  Object.defineProperty(window, '__pet', { get: petSnapshot });
+}
+function petGeom(g) {
+  if (!g || ![g.feetY, g.charH, g.scale, g.W, g.H].every(Number.isFinite)) return;
+  const was = PETS.G.charH;
+  // (txt: a full strip makes the bubble text smaller first — petwin.geom; an older app sends none)
+  PETS.G = { feetY: g.feetY, charH: g.charH, scale: g.scale, txt: Number.isFinite(g.txt) ? g.txt : g.scale, W: g.W, H: g.H, T: +g.T || 0 };
+  for (const c of PETS.chars.values()) petSize(c);
+  if (was !== g.charH) petRespace(); // (bubbles are measured again by petBubText: its font size changed)
+}
+/* A singer with a picture: an element on the strip (its picture inside .pet-fig, which hops and tilts), not
+   shown yet. */
+function petNew(g) {
+  const c = { key: g.key, label: g.label, g, state: 'wait', t0: 0, fx: null, w: 0, h: 0, y: 0, phase: Math.random(),
+    hopAt: -1e9, hopH: 0, hopMs: 240, clickAt: -1e9, tilt: 0, tiltTo: 0, side: 1, sing: false, drag: null, landAt: -1e9, say: null,
+    tf: '', ff: '', picUrl: null, pic: null, box: null };
+  const el = document.createElement('div'), fig = document.createElement('div');
+  el.className = 'pet-ch';
+  fig.className = 'pet-fig';
+  el.style.visibility = 'hidden';
+  el.appendChild(fig);
+  PETS.layer.insertBefore(el, PETS.svg); // (under the bubbles)
+  c.el = el; c.fig = fig;
+  petPic(c, false);
+  fig.addEventListener('pointerdown', e => petDown(c, e));
+  fig.addEventListener('pointermove', e => petDragTo(c, e));
+  for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) fig.addEventListener(ev, e => petUp(c, e));
+  fig.addEventListener('dragstart', e => e.preventDefault()); // (no drag picture of the image)
+  return c;
+}
+/* Its picture in place; poof: a new one swapped in while it's on screen (not the same picture again: see
+   petTake). */
+function petPic(c, poof) {
+  const p = PETS.pics.get(c.key), was = c.pic;
+  if (c.picUrl === p.url) return;
+  const n = new Image();
+  n.src = p.url; n.alt = ''; n.draggable = false;
+  c.fig.replaceChildren(n);
+  c.picUrl = p.url; c.pic = p;
+  petSize(c);
+  if (poof && c.state !== 'wait' && !(was && p.id && p.id === was.id)) petPoof(c);
+}
+/* charH tall (the strip's size), never wider than 1.1 × that, never more than PETP.up × its own size. */
+function petSize(c) {
+  const C = PETS.G.charH, p = c.pic, nw = p.w, nh = p.h;
+  let h = Math.min(C, nh * PETP.up), w = h * nw / nh;
+  if (w > C * 1.1) { w = C * 1.1; h = w * nh / nw; }
+  c.w = Math.max(1, Math.round(w)); c.h = Math.max(1, Math.round(h));
+  c.box = p.box;
+  c.el.style.width = c.w + 'px';
+  c.el.style.height = c.h + 'px';
+  c.tf = ''; // (placed again this frame)
+}
+function petPoof(c) {
+  const f = c.fig, G = PETS.G;
+  f.classList.remove('poof');
+  void f.offsetWidth; // (the animation starts again)
+  f.classList.add('poof');
+  setTimeout(() => f.classList.remove('poof'), 450);
+  const cx = c.fx * G.W, cy = G.feetY - c.h * 0.45;
+  for (let i = 0; i < 9; i++) {
+    const p = document.createElement('div'), a = (i / 9) * 2 * Math.PI;
+    p.className = 'pet-puff';
+    p.style.left = cx + 'px'; p.style.top = cy + 'px';
+    p.style.setProperty('--dx', (Math.cos(a) * c.w * 0.62).toFixed(1) + 'px');
+    p.style.setProperty('--dy', (Math.sin(a) * c.h * 0.5).toFixed(1) + 'px');
+    PETS.layer.appendChild(p);
+    setTimeout(() => p.remove(), 600);
+  }
+}
+/* It comes on (rises) — unless its spot is where one is still sinking away: false, it waits for that. */
+function petShow(c, t) {
+  if (c.fx == null && !petPlace(c)) return false;
+  c.state = 'rising'; c.t0 = t; c.seq = ++PETS.seq;
+  c.el.style.visibility = '';
+  return true;
+}
+const petSaved = c => (Number.isFinite(PETS.pos[c.key]) ? PETS.pos[c.key] : null);
+/* Its spot: where the user last left it (map-pet.pos), else the next free one (petSlots); the ones
+   already standing never move for it, and it never comes up where one is still going down (petSpot). */
+function petPlace(c) {
+  const W = PETS.G.W, all = [...PETS.chars.values()].filter(o => o !== c && o.fx != null);
+  const at = st => all.filter(o => st.includes(o.state)).map(o => ({ x: o.fx * W, span: petSpan(o.w, o.box) }));
+  const x = petSpot(W, at(['rising', 'in']), at(['leaving']), petSpan(c.w, c.box), petSaved(c));
+  if (x == null) return false;
+  c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, x)) / W;
+  return true;
+}
+/* A new size (Settings, live): the singers standing take their spots again at it, in the order they
+   came on (the ones dragged somewhere keep theirs), so bigger ones don't overlap. */
+function petRespace() {
+  const W = PETS.G.W, on = [...PETS.chars.values()].filter(c => c.fx != null && petVis(c)).sort((a, b) => a.seq - b.seq);
+  if (!on.length) return;
+  const xs = petSlots(W, on.map(c => petSpan(c.w, c.box)), on.map(petSaved));
+  on.forEach((c, i) => { if (!c.drag) c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, xs[i])) / W; });
+}
+function petLeave(c, t) {
+  if (c.state === 'leaving') return; // (going already)
+  if (c.state === 'wait') { petDrop(c); return; }
+  if (c.drag) { c.drag = null; mapApp.petDrag(false).catch(() => {}); }
+  c.y0 = c.y || 0; c.state = 'leaving'; c.t0 = t; // (it sinks from where it is: one still rising is partway up)
+}
+function petDrop(c) { c.el.remove(); if (PETS.chars.get(c.key) === c) PETS.chars.delete(c.key); }
+/* One singer on the strip as its picture says (petStep), after a new song or a picture that came, changed
+   or went: one of this song's singers with a picture comes on, a new picture swaps in, and one without a
+   picture isn't shown — Remove in Characters… while it's on: it sinks away, the others stay where they are. */
+function petSync(key) {
+  const c = PETS.chars.get(key), g = PETS.cast.find(x => x.key === key);
+  const step = petStep(!!PETS.pics.get(key), c ? c.state : '', !!g);
+  if (step === 'leave') petLeave(c, performance.now());
+  else if (step === 'swap') petPic(c, true);
+  else if (step === 'come') { if (c) petDrop(c); PETS.chars.set(key, petNew(g)); }
+  petWhen(); // (the first singer with a picture to sing may be another one now)
+}
+/* ---- songs ---- */
+/* A song is loaded (background mode's bgmPlay, before it starts): its cast; singers who are in it too
+   stay where they are, the others sink away (a song without words keeps everyone); its pictures —
+   ready from the read-ahead, or asked for now (the first song waits up to 2 s for them, so its first
+   singer is there as it starts). Only singers with a picture come on: one the user gave none — or one who
+   first turns up now, a song re-saved with another score — isn't shown, and nothing is asked here. */
+async function petSong(gen) {
+  const id = BGM.order[BGM.i], t = performance.now();
+  const cast = svp && svp.lyr ? petCast(svp, id) : [];
+  Object.assign(PETS, { songId: id, svp, cast, ready: true, started: false, song: currentProject && currentProject.id === id ? currentProject.name : '' });
+  petTimes();
+  if (cast.length) for (const c of [...PETS.chars.values()]) if (!cast.some(g => g.key === c.key)) petLeave(c, t);
+  for (const g of cast) {
+    const c = PETS.chars.get(g.key);
+    if (c && c.state !== 'leaving') { c.g = g; c.label = g.label; } else petSync(g.key); // (a picture not known yet: petPics below brings it on)
+  }
+  const P = petPics(cast, true);
+  await Promise.race([P, new Promise(r => setTimeout(r, PETS.first ? 2000 : 1000))]);
+  PETS.first = false;
+}
+/* The song changes to id (bgmPlay, as it starts loading it): when the read-ahead knows its singers, the
+   ones not in it start sinking away now, while it loads, rather than once it's ready — so they're gone,
+   or nearly, as it starts and its first singer comes on. */
+function petBye(id) {
+  const n = PETS.next;
+  if (!n || n.id !== id || !n.cast.length) return;
+  const t = performance.now();
+  for (const c of [...PETS.chars.values()]) if (!n.cast.some(g => g.key === c.key)) petLeave(c, t);
+}
+/* Onsets and when each one comes on: again whenever the score is replaced (its timing changed). */
+function petTimes() {
+  const sc = PETS.svp;
+  PETS.on = sc ? petOnsets(PETS.cast, sc) : null;
+  PETS.cur = new Map(PETS.cast.map(g => [g.key, {}]));
+  petWhen();
+}
+/* When each one comes on, worked out over the singers with a picture (only they're shown): the first of
+   them to sing is there as the song starts, even when one without a picture sings before. Again whenever
+   a picture comes or goes (petSync — the first song's pictures always come after its timing); once the song
+   has started, nobody already waiting for his own line comes on early (petAppearNow). */
+function petWhen() {
+  PETS.appear = PETS.svp ? petAppearNow(PETS.cast.filter(g => PETS.pics.get(g.key)), PETS.svp, PETS.appear, PETS.started) : new Map();
+}
+function petRecast() {
+  PETS.svp = svp;
+  PETS.cast = petCast(svp, PETS.songId);
+  petTimes();
+  for (const g of PETS.cast) { const c = PETS.chars.get(g.key); if (c) c.g = g; else petSync(g.key); }
+}
+/* While a song plays: the next one's singers, so their pictures are ready before it starts (its
+   score is read on the side: the playing one isn't touched). */
+async function petAhead(id, p, recs, stale) {
+  const fileOf = k => (k && recs.get(k) ? recs.get(k).file : null);
+  const fs = (p.scores && p.scores.length ? p.scores.map(fileOf) : [fileOf(p.score)]).filter(Boolean);
+  if (!fs.length) return;
+  let sc = null;
+  try { sc = await parseScoreFile(fs, []); } catch (e) { return; }
+  if (stale() || !sc || !sc.lyr) return;
+  const cast = petCast(sc, id);
+  PETS.next = { id, cast }; // (who's in it: petBye)
+  await petPics(cast, false);
+}
+/* ---- pictures ---- */
+/* The cast's pictures from the app (the user's own: petpics.js; a singer with none isn't shown), each
+   looked at once here. apply: the strip follows them now (petSync; not for the next song's read-ahead). */
+async function petPics(cast, apply) {
+  const list = (cast || []).filter(g => g && g.key).slice(0, 12);
+  if (!list.length || !mapApp.petPics) return;
+  let r = null;
+  try { r = await mapApp.petPics(list.map(g => ({ key: g.key, label: g.label, eng: g.eng }))); } catch (e) {}
+  if (Array.isArray(r)) await Promise.all(r.map(p => petTake(p, apply)));
+}
+/* One singer's picture from the app ({ key, url, v }; url '': none): ready to show. The same picture again
+   (the same v: a new picture is a new file, so a new v) is not looked at or swapped in again. */
+async function petTake(p, apply) {
+  if (!p || typeof p.key !== 'string') return;
+  const url = typeof p.url === 'string' && /^file:/i.test(p.url) ? p.url : '', id = url && typeof p.v === 'string' && p.v ? 'manual|' + p.v : '';
+  let pic = null;
+  if (url) {
+    const have = PETS.pics.get(p.key);
+    if (have && (have.from === url || (id && have.id === id))) pic = have; // (that very picture is here already)
+    else try { pic = { ...(await petProbe(url)), from: url, id }; } catch (e) { pic = null; } // (one that can't be read: not shown)
+  }
+  PETS.pics.set(p.key, pic);
+  if (apply) petSync(p.key);
+}
+/* A picture's size and where it's drawn (fractions of it): looked at no more than 160 px tall. */
+async function petProbe(url) {
+  const im = new Image();
+  im.src = url;
+  await im.decode();
+  const w = im.naturalWidth, h = im.naturalHeight;
+  if (!w || !h) throw new Error('empty picture');
+  const k = Math.min(1, 160 / h), cw = Math.max(1, Math.round(w * k)), ch = Math.max(1, Math.round(h * k));
+  const cv = document.createElement('canvas');
+  cv.width = cw; cv.height = ch;
+  const x = cv.getContext('2d', { willReadFrequently: true });
+  x.drawImage(im, 0, 0, cw, ch);
+  const b = petAlphaBox(x.getImageData(0, 0, cw, ch).data, cw, ch, 64) || { x: 0, y: 0, w: cw, h: ch };
+  return { url, w, h, box: { x0: b.x / cw, y0: b.y / ch, x1: (b.x + b.w) / cw, y1: (b.y + b.h) / ch } };
+}
+/* The user's picture (a file they chose: PNG, JPG, WebP, GIF or BMP) → one that stands on the taskbar
+   (see PETP): a PNG at most 600 px tall, trimmed to what's drawn, its backdrop cleared, or a sticker
+   card. Made here, in the main window, as it's chosen; main keeps it. → { png (ArrayBuffer), pic }. */
+async function petNormalise(url) {
+  const bm = await createImageBitmap(await (await fetch(url)).blob());
+  const k0 = Math.min(1, 1200 / bm.height, 2000 / bm.width); // (a photo can be huge: looked at ≤ 1200 px tall)
+  const w = Math.max(1, Math.round(bm.width * k0)), h = Math.max(1, Math.round(bm.height * k0));
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const x = cv.getContext('2d', { willReadFrequently: true });
+  x.drawImage(bm, 0, 0, w, h);
+  bm.close();
+  const id = x.getImageData(0, 0, w, h);
+  let plan = petPlan(id.data, w, h);
+  if (plan.mode === 'flood') {
+    const n = petFlood(id.data, w, h, plan.col);
+    if (n < w * h * PETP.clear || n > w * h * 0.9) plan = { mode: 'card' }; // (hardly anything, or nearly all of it: no backdrop after all)
+    else x.putImageData(id, 0, 0);
+  }
+  const out = plan.mode === 'card' ? petCard(cv, w, h) : petCrop(cv, id.data, w, h);
+  const blob = await new Promise((res, rej) => out.toBlob(b => (b ? res(b) : rej(new Error('no PNG'))), 'image/png'));
+  return { png: await blob.arrayBuffer(), pic: await petProbe(URL.createObjectURL(blob)) };
+}
+function petCrop(cv, px, w, h) {
+  const b = petAlphaBox(px, w, h);
+  if (!b) throw new Error('nothing drawn');
+  const k = Math.min(1, PETP.maxH / b.h), o = document.createElement('canvas');
+  o.width = Math.max(1, Math.round(b.w * k)); o.height = Math.max(1, Math.round(b.h * k));
+  const x = o.getContext('2d');
+  x.imageSmoothingQuality = 'high';
+  x.drawImage(cv, b.x, b.y, b.w, b.h, 0, 0, o.width, o.height);
+  return o;
+}
+/* A sticker card: the picture with rounded corners on a white card, a soft shadow round it. Never made
+   bigger than it is (a 100 px icon stays 100 px: it's shown at most PETP.up × that). The edge is about
+   4 DIP wide where it's shown (≈ 190 DIP tall). */
+function petCard(cv, w, h) {
+  const k = Math.min(1, (PETP.maxH - 60) / h), iw = Math.max(1, Math.round(w * k)), ih = Math.max(1, Math.round(h * k));
+  const u = ih / Math.min(190, PETP.up * ih), o = Math.max(2, Math.round(4 * u)), blur = 6 * u, m = Math.ceil(blur + o);
+  const c = document.createElement('canvas');
+  c.width = iw + 2 * o + 2 * m; c.height = ih + 2 * o + m + o;
+  const x = c.getContext('2d'), r = Math.max(4, Math.min(iw, ih) * 0.08);
+  x.save();
+  x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = blur; x.shadowOffsetY = u;
+  x.fillStyle = '#fff';
+  x.beginPath(); x.roundRect(m, m, iw + 2 * o, ih + 2 * o, r + o); x.fill();
+  x.restore();
+  x.save();
+  x.beginPath(); x.roundRect(m + o, m + o, iw, ih, r); x.clip();
+  x.imageSmoothingQuality = 'high';
+  x.drawImage(cv, 0, 0, w, h, m + o, m + o, iw, ih);
+  x.restore();
+  return c;
+}
+/* main: a singer's picture changed (Characters… or the dialog before the start, while the pets are on):
+   it swaps in with a poof — or comes on, if it's one of this song's singers; url '': it was removed, that
+   singer leaves (petSync). */
+async function petNewPic(m) {
+  const url = m.url;
+  if (url && !/^file:/i.test(url)) return;
+  const id = url && typeof m.v === 'string' && m.v ? 'manual|' + m.v : '', have = PETS.pics.get(m.key);
+  if (url ? !!have && !!id && have.id === id : !have) return; // (that one is here already)
+  let pic = null;
+  if (url) try { pic = { ...(await petProbe(url)), from: url, id }; } catch (e) { return; }
+  PETS.pics.set(m.key, pic);
+  petSync(m.key);
+}
+/* ---- every frame ---- */
+/* The clock (smoothTime: only called here, once a frame — it keeps state between frames), the guide
+   synth, then the singers, their bubbles and the rectangles main hit-tests the mouse against. */
+function petFrame() {
+  requestAnimationFrame(petFrame);
+  const t = performance.now();
+  const playing = mediaList().some(m => !m.paused) || pre.on;
+  const now = smoothTime(nowT, playing) - scoreOffset;
+  if (svp) synthStep(now, tracks.some(a => !a.paused) || pre.on);
+  const dt = Math.min(0.1, (t - (PETS.at || t)) / 1000);
+  PETS.at = t; PETS.now = now; PETS.playing = playing;
+  const same = PETS.ready && PETS.songId === BGM.order[BGM.i];
+  if (same && svp && svp !== PETS.svp) petRecast();
+  const sc = same && !!svp && svp === PETS.svp; // (this song's own score is the one playing)
+  if (sc && playing) PETS.started = true;
+  for (const c of [...PETS.chars.values()]) {
+    if (c.state === 'wait') {
+      const at = PETS.appear.get(c.key);
+      if (!same || !PETS.started || at == null || (at !== -Infinity && now < at)) continue; // (the first singer as the song starts; the others 1 s before their first line; one this song has no time for isn't in it)
+      // (a song change: never one coming up in the spot of one still going down — petPlace)
+      if (!petShow(c, t)) continue;
+    }
+    petAnim(c, now, t, dt, sc);
+  }
+  petBubbles(now, t, dt, sc);
+  petRects(t);
+}
+const petOut = k => 1 - (1 - k) * (1 - k) * (1 - k);
+function petAnim(c, now, t, dt, sc) {
+  const G = PETS.G, s = G.scale, low = c.h + (G.H - G.feetY) + 8; // (that far down: below the strip, out of sight)
+  let y = 0;
+  if (c.state === 'rising') { const k = Math.min(1, (t - c.t0) / 500); y = (1 - petOut(k)) * low; if (k >= 1) c.state = 'in'; }
+  else if (c.state === 'leaving') { const k = Math.min(1, (t - c.t0) / 400); y = c.y0 + k * k * (low - c.y0); if (k >= 1) { petDrop(c); return; } }
+  // idle: a slow bob and a breath
+  const b = 0.5 - 0.5 * Math.cos((t / 2600 + c.phase) * 2 * Math.PI);
+  let up = 3 * s * b, sx = 1, sy = 1 + 0.01 * b;
+  // singing: a hop on each note it starts (half for short ones), a little squash, a tilt each way in turn
+  const on = sc && PETS.on ? PETS.on.get(c.key) : null, cur = PETS.cur.get(c.key);
+  let sing = false;
+  if (on && cur) {
+    const hit = petOnsetStep(cur, on, now);
+    if (hit && !c.drag && t - c.hopAt > 120) { c.hopAt = t; c.hopH = (hit.d < 0.15 ? 3 : 6) * s; c.hopMs = 240; c.side = -c.side; }
+    sing = petSounding(cur, on, now);
+  }
+  c.tiltTo = c.drag ? 4 * c.drag.dir : sing ? 2 * c.side : 0;
+  // (a click's big hop runs its whole course, the notes' hops over it only where higher: petLift)
+  up = petLift(up, petArc((t - c.hopAt) / c.hopMs, c.hopH), petArc((t - c.clickAt) / 420, 14), 14);
+  const kq = (t - Math.max(c.hopAt, c.clickAt)) / 120;
+  if (kq >= 0 && kq < 1) { sx *= 1 + 0.03 * (1 - kq); sy *= 1 - 0.04 * (1 - kq); }
+  // held: lifted a little; let go: it lands with a small bounce
+  if (c.drag) up += 8;
+  else { const kl = (t - c.landAt) / 450; if (kl >= 0 && kl < 1) up += 8 * Math.abs(Math.cos(kl * Math.PI * 1.5)) * (1 - kl); }
+  c.tilt += (c.tiltTo - c.tilt) * Math.min(1, dt * 14);
+  c.sing = sing; c.y = y; c.up = up;
+  const tf = 'translate(' + (c.fx * G.W - c.w / 2).toFixed(1) + 'px,' + (G.feetY - c.h + y).toFixed(1) + 'px)';
+  if (tf !== c.tf) c.el.style.transform = c.tf = tf;
+  const ff = 'translateY(' + (-up).toFixed(2) + 'px) rotate(' + c.tilt.toFixed(2) + 'deg) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')';
+  if (ff !== c.ff) c.fig.style.transform = c.ff = ff;
+}
+const petVis = c => !!c && (c.state === 'rising' || c.state === 'in');
+const petHead = c => PETS.G.feetY - c.h + c.box.y0 * c.h; // (the top of what's drawn)
+/* The speech bubbles: who sings now (petActive) — one bubble per line, one shared by singers singing the
+   same words together, with a tail to each; a long line in bubble-wide pieces with the karaoke wipe; on
+   0.25 s early at 0.7, then held and faded as the lyrics are (LY); stacked up to 3 rows (then smaller
+   text). A click's song name is a bubble too. Paused: the song's clock stands still, so they do too.
+   A bubble never jumps: it comes where it will stay (a finished line of another singer's that's only
+   lingering where it would go gives way: petYields), and once shown it only ever moves up (to make room)
+   or sideways, never back down. A new one never draws over one fading out (petGate): it waits until that
+   one has gone (quickly, 0.1 s), then fades in. */
+function petBubbles(now, t, dt, sc) {
+  const G = PETS.G, W = G.W, act = [];
+  if (sc) {
+    const cast = PETS.cast.filter(g => petVis(PETS.chars.get(g.key)));
+    for (const b of petActive(cast, PETS.svp, now)) act.push({ id: b.who.map(g => g.key).join('+') + '@' + b.L.s.toFixed(3) + '#' + b.L.t, b, who: b.who.map(g => PETS.chars.get(g.key)) });
+  }
+  for (const c of PETS.chars.values()) if (c.say && t < c.say.until && petVis(c)) act.push({ id: 'say@' + c.key, say: c.say, who: [c] });
+  // (a line that gave way stays gone until petActive lets it go)
+  for (const id of PETS.yielded) if (!act.some(it => it.id === id)) PETS.yielded.delete(id);
+  let items = act.filter(it => !PETS.yielded.has(it.id));
+  for (const B of PETS.bubs.values()) B.live = false;
+  const base = Math.round(20 * G.txt * (PETS.small ? 0.85 : 1)), maxW = Math.min(460, 0.3 * W);
+  const cxOf = it => it.who.reduce((a, c) => a + c.fx * W, 0) / it.who.length;
+  for (const it of items) {
+    let B = PETS.bubs.get(it.id);
+    if (!B) PETS.bubs.set(it.id, (B = petBub(it)));
+    B.live = true; B.gone = null; B.who = it.who; it.B = B;
+    petBubText(B, it, now, base, maxW);
+    B.a = it.say ? 1 : now < it.b.s ? 0.7 * Math.max(0, Math.min(1, (now - (it.b.s - PETL.early)) / 0.1)) : 1;
+  }
+  if (items.length > 1) {
+    const yi = petYields(items.map(it => ({ cx: cxOf(it), w: it.B.w, x: it.B.x, shown: it.B.shown, keys: it.who.map(c => c.key), held: !it.say && now > it.b.e,
+      drag: it.who.some(c => c.drag && c.drag.moved) })), W);
+    for (const i of yi) { items[i].B.live = false; PETS.yielded.add(items[i].id); }
+    if (yi.length) items = items.filter((it, i) => !yi.includes(i));
+  }
+  if (items.length) {
+    const R = petRows(items.map(it => ({ cx: cxOf(it), w: it.B.w, tips: it.who.map(c => c.fx * W) })), W);
+    if (R.over) PETS.small = true; // (more than 3 rows: smaller text from the next frame)
+    // (one shown already: no lower than it is — ty, where it was put last frame)
+    const tops = petStack(items.map(it => {
+      const B = it.B, own = Math.min(...it.who.map(petHead)) - 18;
+      return { w: B.w, h: B.h, bottom: B.shown && B.ty != null ? Math.min(own, B.ty + B.h) : own };
+    }), R.x, R.row, PETL.gap);
+    items.forEach((it, i) => {
+      const B = it.B, y = Math.max(2, tops[i]);
+      const k = B.shown ? Math.min(1, dt * 16) : 1; // (one shown that moves up a row, or aside for another's tail, glides there)
+      B.ty = y;
+      B.x += (R.x[i] - B.x) * k;
+      B.y += (y - B.y) * k;
+      B.tips = it.who.map(c => ({ x: c.fx * W, y: petHead(c) - 8 }));
+    });
+  }
+  if (items.length < 2) PETS.small = false;
+  const gone = [...PETS.bubs.values()].filter(B => !B.live);
+  const gate = petGate(items.map(it => ({ x: it.B.x, y: it.B.y, w: it.B.w, h: it.B.h, shown: !!it.B.shown })),
+    gone.map(B => ({ x: B.x, y: B.y, w: B.w, h: B.h, a: B.da || 0 })));
+  gone.forEach((B, j) => { B.quick = gate.quick[j]; B.drop = gate.drop[j]; });
+  items.forEach((it, i) => { it.B.wait = gate.wait[i]; });
+  for (const B of [...PETS.bubs.values()]) {
+    let a = B.a;
+    if (!B.live) { // gone from petActive: it fades where it was (in song time — frozen while paused; a click's, or one
+      // whose singer has gone, in clock time); quickly (0.1 s) once a new bubble waits for its place; at once if one
+      // that's showing is over it, or when the song is changing (its clock has started again from 0 by then)
+      const fade = G => (B.say || B.who.some(c => !petVis(c)) ? (t - G.t) / 1000 : now - G.now) / (G.quick ? 0.1 : LY.fade);
+      if (!B.gone) B.gone = { now, t, a: B.da || 0, quick: B.quick };
+      else if (B.quick && !B.gone.quick) B.gone = { now, t, a: B.gone.a * Math.max(0, 1 - fade(B.gone)), quick: true }; // (on from where it was)
+      const k = fade(B.gone);
+      a = B.gone.a * (1 - k);
+      if (B.drop || k >= 1 || k < -0.05 || a <= 0.001 || (!sc && !B.say)) { B.path.remove(); B.txt.remove(); PETS.bubs.delete(B.id); continue; }
+    } else if (B.wait) { a = 0; B.inAt = null; } // (waiting for a fading one to go)
+    else { // it fades in (0.1 s) where it is to stay
+      if (B.inAt == null) B.inAt = t;
+      a *= Math.max(0, Math.min(1, (t - B.inAt) / 100));
+      if (a > 0) B.shown = true;
+    }
+    B.da = a;
+    const op = a.toFixed(3);
+    if (op !== B.op) { B.op = op; B.txt.style.opacity = op; B.path.style.opacity = op; }
+    const tf = 'translate(' + B.x.toFixed(1) + 'px,' + B.y.toFixed(1) + 'px)';
+    if (tf !== B.tf) B.txt.style.transform = B.tf = tf;
+    const d = petBubblePath(B.x, B.y, B.w, B.h, PETL.round, B.tips, PETL.tail);
+    if (d !== B.d) B.path.setAttribute('d', (B.d = d));
+  }
+}
+function petBub(it) {
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'), txt = document.createElement('div');
+  path.setAttribute('class', 'pet-bub');
+  PETS.svg.appendChild(path);
+  txt.className = 'pet-txt';
+  PETS.layer.appendChild(txt);
+  return { id: it.id, path, txt, say: !!it.say, pc: null, toks: [], spans: [], text: '', line: '', w: 0, h: 0, x: 0, y: 0, a: 0, tips: [], op: '', tf: '', d: '', live: true, gone: null, who: it.who };
+}
+/* The piece of the line that's sung now (petPieces / petPieceAt, the font splitLine measures with), one
+   span a word: sung ones in the line's colour (as the lyrics' sung part), the one being sung filling up. */
+function petBubText(B, it, now, base, maxW) {
+  if (it.say) {
+    if (B.pc !== it.say || B.base !== base) { B.pc = it.say; B.base = base; petBubSet(B, null, [{ text: it.say.text }]); B.line = B.text; }
+    return;
+  }
+  const L = it.b.L, pcs = petPieces(L, maxW, base), pc = pcs[petPieceAt(pcs, now)];
+  if (B.pc !== pc || B.base !== base) {
+    B.pc = pc; B.base = base;
+    petBubSet(B, L, pc.toks);
+    B.line = L.toks.map((k, i) => (k.sp && i ? ' ' : '') + k.text).join('');
+  }
+  for (let i = 0; i < B.spans.length; i++) {
+    const f = tokFrac(B.toks[i], now), st = f >= 1 ? 2 : f > 0 ? 1 : 0, sp = B.spans[i];
+    if (st !== sp._st) { sp._st = st; sp.className = st === 2 ? 's' : st === 1 ? 'c' : ''; }
+    if (st === 1) {
+      const q = Math.round(f * 40) / 40;
+      if (q !== sp._f) { sp._f = q; sp.style.setProperty('--f', q); }
+      if (sp._ink) { const p = Math.round(petWipeAt(sp._ink, f)) / 2; if (p !== sp._p) { sp._p = p; sp.style.setProperty('--p', p + 'px'); } } // (½ px steps)
+    }
+  }
+}
+function petBubSet(B, L, toks) {
+  const T = B.txt;
+  T.replaceChildren();
+  T.style.fontSize = B.base + 'px';
+  if (L) T.style.setProperty('--c', lyricCol(L.t));
+  B.toks = toks; B.spans = [];
+  toks.forEach((k, i) => {
+    if (k.sp && i) T.append(' ');
+    const sp = document.createElement('span');
+    sp.textContent = k.text;
+    T.appendChild(sp);
+    B.spans.push(sp);
+  });
+  B.text = toks.map((k, i) => (k.sp && i ? ' ' : '') + k.text).join('');
+  B.w = T.offsetWidth; B.h = T.offsetHeight; // (measured once a piece)
+  // each word's wipe goes by what's drawn of it (petInkCdf): drawn here in the bubble's own font, at 2×
+  if (!L) return;
+  const cx = petInkCx || (petInkCx = document.createElement('canvas').getContext('2d', { willReadFrequently: true }));
+  B.spans.forEach((sp, i) => {
+    const cw = Math.ceil(sp.getBoundingClientRect().width * 2) + 2, ch = Math.ceil(B.base * 3.2);
+    if (cw < 3 || cw > 4000) return;
+    cx.canvas.width = cw; cx.canvas.height = ch;
+    cx.setTransform(2, 0, 0, 2, 0, 0);
+    cx.font = '600 ' + B.base + 'px system-ui, sans-serif';
+    cx.textBaseline = 'middle';
+    cx.fillStyle = '#000';
+    cx.fillText(toks[i].text, 0, ch / 4);
+    const cdf = petInkCdf(cx.getImageData(0, 0, cw, ch).data, cw, ch);
+    if (cdf) sp._ink = cdf;
+  });
+}
+let petInkCx = null;
+/* The singers' rectangles (what's drawn of each, where it stands) for main's mouse test: when they
+   change, at most 10 times a second. Bubbles let the mouse through. */
+function petRects(t) {
+  if (t - PETS.rectAt < 100) return;
+  const G = PETS.G, r = [];
+  for (const c of PETS.chars.values()) {
+    if (!petVis(c) || r.length >= 8) continue;
+    const left = c.fx * G.W - c.w / 2, top = G.feetY - c.h + c.y - (c.drag ? 8 : 0), b = c.box;
+    r.push({ x: Math.round(left + b.x0 * c.w), y: Math.round(top + b.y0 * c.h), w: Math.round((b.x1 - b.x0) * c.w), h: Math.round((b.y1 - b.y0) * c.h) });
+  }
+  const sig = JSON.stringify(r);
+  if (sig === PETS.rectSig) return;
+  PETS.rectSig = sig; PETS.rectAt = t;
+  mapApp.petRects(r);
+}
+/* ---- the mouse: drag a singer along the taskbar, or click it ---- */
+function petDown(c, e) {
+  if (e.button !== 0 || c.drag || !petVis(c)) return;
+  e.preventDefault();
+  try { c.fig.setPointerCapture(e.pointerId); } catch (x) {}
+  c.drag = { id: e.pointerId, px: e.clientX, x0: c.fx * PETS.G.W, lastX: e.clientX, moved: false, dir: 1 };
+  c.el.classList.add('held'); // (on top of the others)
+  mapApp.petDrag(true).catch(() => {}); // (main keeps the mouse even when a quick drag leaves the rectangle)
+}
+function petDragTo(c, e) {
+  const d = c.drag;
+  if (!d || e.pointerId !== d.id) return;
+  const dx = e.clientX - d.px;
+  if (!d.moved && Math.abs(dx) < 4) return; // (less than that is a click)
+  d.moved = true;
+  if (e.clientX !== d.lastX) { d.dir = e.clientX > d.lastX ? 1 : -1; d.lastX = e.clientX; }
+  const W = PETS.G.W;
+  c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, d.x0 + dx)) / W; // (only sideways: the feet stay on the taskbar)
+}
+function petUp(c, e) {
+  const d = c.drag;
+  if (!d || e.pointerId !== d.id) return;
+  c.drag = null;
+  c.el.classList.remove('held');
+  try { c.fig.releasePointerCapture(e.pointerId); } catch (x) {}
+  mapApp.petDrag(false).catch(() => {});
+  const t = performance.now();
+  if (d.moved) { // it lands, and stays there next time (as a share of the strip's width)
+    c.landAt = t;
+    PETS.pos[c.key] = Math.round(c.fx * 1e4) / 1e4;
+    const ks = Object.keys(PETS.pos);
+    for (const k of ks.slice(0, Math.max(0, ks.length - 200))) delete PETS.pos[k];
+    try { localStorage.setItem('map-pet.pos', JSON.stringify(PETS.pos)); } catch (x) {}
+  } else if (e.type === 'pointerup') { // a click: a big hop, and the song's name for 2 s
+    c.clickAt = t;
+    const name = PETS.song || (currentProject && currentProject.name) || '';
+    if (name) c.say = { text: '♪ ' + name, until: t + 2000 };
+  }
+}
+/* What's on the strip now, for tests (window.__pet): a plain copy. Places in strip DIP; rect = what
+   main hit-tests. */
+function petSnapshot() {
+  const G = PETS.G;
+  return JSON.parse(JSON.stringify({
+    characters: [...PETS.chars.values()].map(c => {
+      const x = c.fx == null ? null : c.fx * G.W, b = c.box;
+      return { key: c.key, label: c.label, x, y: G.feetY - c.h + c.y, w: c.w, h: c.h,
+        feet: G.feetY + c.y, up: c.up || 0, visible: c.state === 'rising' || c.state === 'in' || c.state === 'leaving', state: c.state, held: !!c.drag, singing: c.sing,
+        rect: x == null ? null : { x: x - c.w / 2 + b.x0 * c.w, y: G.feetY - c.h + c.y + b.y0 * c.h, w: (b.x1 - b.x0) * c.w, h: (b.y1 - b.y0) * c.h } };
+    }),
+    bubbles: [...PETS.bubs.values()].filter(B => B.live).map(B => ({ text: B.text, line: B.line, singers: B.who.map(c => c.key), labels: B.who.map(c => c.label),
+      rect: { x: B.x, y: B.y, w: B.w, h: B.h }, alpha: B.a, tails: B.tips.length, say: B.say })),
+    fading: [...PETS.bubs.values()].filter(B => !B.live).map(B => ({ text: B.text, singers: B.who.map(c => c.key), rect: { x: B.x, y: B.y, w: B.w, h: B.h } })),
+    geom: G, song: { id: PETS.songId, name: PETS.song, i: BGM.i }, time: PETS.now, playing: PETS.playing, small: PETS.small,
+  }));
+}
+
+/* ---- Settings → Background mode: where it plays, and the desktop pets' settings (the app keeps them:
+   pet.json, as the strip's size and place come from them) and the Characters list ---- */
+function petWhereUI() {
+  const where = PL.where === 'pet' && !CAN_PET ? 'corner' : PL.where;
+  $('plWhereRow').hidden = !CAN_COVER;
+  $('plWherePet').hidden = $('plWherePet').disabled = !CAN_PET;
+  $('plWhere').value = where;
+  $('plPetOld').hidden = !(CAN_COVER && !CAN_PET);
+  $('plCoverHint').hidden = !(CAN_COVER && where === 'cover');
+  const pet = CAN_PET && where === 'pet';
+  $('petSet').hidden = !pet;
+  for (const id of ['plVisualRow', 'plVisualHint', 'plOneLyricRow', 'plOneLyricHint']) $(id).hidden = pet; // (the pets show no visuals and no lyric roll)
+  if (pet) petCfgUI();
+}
+async function petCfgUI() {
+  let c = null;
+  try { c = await mapApp.petCfgGet(); } catch (e) {}
+  if (!c) return;
+  $('petSize').value = c.size;
+  $('petLift').value = Math.round(c.lift * 100);
+  $('petLiftTxt').textContent = Math.round(c.lift * 100) + '%';
+  paintRange($('petLift'));
+}
+let petCfgBusy = null, petCfgNext = null;
+function petCfgSet(c) { // (one at a time; the slider's newest value wins — it moves the pets live)
+  if (!CAN_PET) return;
+  petCfgNext = { ...(petCfgNext || {}), ...c };
+  if (petCfgBusy) return;
+  petCfgBusy = (async () => {
+    while (petCfgNext) { const n = petCfgNext; petCfgNext = null; try { await mapApp.petCfg(n); } catch (e) {} }
+    petCfgBusy = null;
+  })();
+}
+$('petSize').onchange = e => petCfgSet({ size: e.target.value });
+$('petLift').oninput = e => { $('petLiftTxt').textContent = e.target.value + '%'; petCfgSet({ lift: e.target.value / 100 }); };
+$('petLift').ondblclick = e => { e.target.value = 50; e.target.dispatchEvent(new Event('input', { bubbles: true })); };
+$('petCharsBtn').onclick = () => petCharsOpen($('petPanel').hidden);
+/* Characters… opened (→ once its list is filled, up to date) or closed. */
+function petCharsOpen(open) {
+  $('petPanel').hidden = !open;
+  $('petCharsBtn').setAttribute('aria-expanded', String(open));
+  return open ? petPanel() : null;
+}
+/* The Characters list: each singer the pets have met (and each one asked about before they started) —
+   its picture (or plain words: no picture, not shown), its name and key; Choose picture… / Remove. */
+async function petPanel() {
+  const ul = $('petList');
+  let list = null;
+  try { list = await mapApp.petChars(); } catch (e) {}
+  ul.replaceChildren();
+  if (!Array.isArray(list) || !list.length) {
+    const li = document.createElement('li');
+    li.className = 'hint';
+    li.textContent = 'No singers yet: they show up here once you start the desktop pets with a playlist.';
+    ul.appendChild(li);
+    return;
+  }
+  for (const c of list) {
+    const li = document.createElement('li'), th = document.createElement('div'), tx = document.createElement('div');
+    th.className = 'pc-th'; tx.className = 'pc-txt';
+    if (c.url) { const im = new Image(); im.src = c.url; im.alt = ''; th.appendChild(im); }
+    const nm = document.createElement('div'), bd = document.createElement('span'), ky = document.createElement('div');
+    nm.className = 'pc-name'; nm.textContent = c.label || c.key;
+    bd.className = c.url ? 'pc-badge' : 'pc-badge off'; bd.textContent = c.url ? 'Your picture' : 'No picture — not shown';
+    nm.appendChild(bd);
+    ky.className = 'pc-key'; ky.textContent = c.key;
+    tx.append(nm, ky);
+    const bt = document.createElement('div');
+    bt.className = 'pc-btns';
+    const btn = (label, title, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.title = title; b.onclick = fn; bt.appendChild(b); };
+    btn('Choose picture…', 'Use a picture of your own for this singer', () => petChoose(c.key));
+    if (c.url) btn('Remove', "Remove this picture: the singer isn't shown any more", () => petCharDo('remove', c.key));
+    tx.appendChild(bt);
+    li.append(th, tx);
+    ul.appendChild(li);
+  }
+}
+async function petCharDo(cmd, key) {
+  let ok = false;
+  try { ok = await mapApp.petChar(cmd, key); } catch (e) {}
+  if (cmd === 'remove') say(ok ? "Picture removed — that singer isn't shown any more" : "Couldn't remove that picture", 2500);
+  petPanel();
+}
+/* A picture the user chose for a singer: made ready here (trimmed, backdrop cleared, or a card —
+   petNormalise) and kept by the app, which hands it to the pets on screen at once. → { ok, url (the
+   picture made ready, a blob: URL — the caller lets it go) }. */
+async function petUsePicture(key, file) {
+  const u = URL.createObjectURL(file);
+  let n = null, ok = false;
+  try { n = await petNormalise(u); ok = await mapApp.petSetImg(key, n.png); } catch (e) {}
+  URL.revokeObjectURL(u);
+  return { ok: !!ok, url: n ? n.pic.url : '' };
+}
+function petChoose(key) {
+  const inp = $('petPick');
+  inp.value = '';
+  inp.onchange = async () => {
+    const f = inp.files && inp.files[0];
+    if (!f) return;
+    const r = await petUsePicture(key, f);
+    if (r.url) URL.revokeObjectURL(r.url);
+    say(r.ok ? 'Picture set' : "Couldn't use that picture — choose a PNG, JPG, WebP, GIF or BMP", 2500);
+    petPanel();
+  };
+  inp.click();
+}
+
+/* ---- Desktop pet: the pictures for the singers, asked for as the pets start ----
+   Start background mode (Plays in: Desktop pet): every song's singers first — each score read on the
+   side, as the read-ahead does (what's playing isn't touched) — and every one with no picture that wasn't
+   asked about before is listed (petAskList): its songs, a frame for its picture and Choose picture… (made
+   ready here as it's chosen, and kept by the app at once). Start: the ones left out aren't shown and
+   aren't asked about again (Characters… still gives them one). Cancel: nothing starts. Nobody to ask
+   about: it starts straight away. Only singers with a picture come on, so when the playlist has singers
+   but none of them has a picture the pets don't start (petNobody): Start then says to choose at least
+   one, and with nobody to ask the player says what to do instead (Characters… opens, in sight). A
+   playlist with no singers at all starts all the same (just the little controls). → true: start. */
+const PETASK = { busy: false };
+async function petAskFirst(ids) {
+  if (PETASK.busy) return false;
+  PETASK.busy = true;
+  const btn = $('bgmStart'), was = btn.textContent;
+  btn.disabled = true;
+  try {
+    const songs = [], uniq = [...new Set(ids)];
+    for (let i = 0; i < uniq.length; i++) {
+      btn.textContent = 'Looking at the singers… (' + (i + 1) + ' / ' + uniq.length + ')';
+      try {
+        const p = await getProject(uniq[i]);
+        const keys = p ? (p.scores && p.scores.length ? p.scores : [p.score]).filter(Boolean) : [];
+        if (!keys.length) continue;
+        const recs = await getFiles(keys), files = keys.map(k => recs.get(k) && recs.get(k).file).filter(Boolean);
+        if (!files.length) continue;
+        const sc = await parseScoreFile(files, []);
+        if (sc && sc.lyr) songs.push({ name: p.name, cast: petCast(sc, p.id) });
+      } catch (e) {} // (a score that can't be read here: nobody in it is asked about)
+    }
+    const all = new Map(); // (the Chorus too: no one to ask about, but Characters… may have given it a picture)
+    for (const s of songs) for (const g of s.cast) if (!all.has(g.key)) all.set(g.key, { key: g.key, label: g.label, eng: g.eng });
+    let r = [];
+    try { const c = [...all.values()]; for (let i = 0; i < c.length; i += 300) r.push(...await mapApp.petPics(c.slice(i, i + 300))); } catch (e) { r = null; } // (300 at a time, what the app takes; a refused cast: null doesn't spread)
+    btn.textContent = was;
+    if (!Array.isArray(r)) return true; // (the app couldn't say: they start, with whoever has a picture)
+    const known = new Map(r.map(p => [p.key, p])), list = petAskList(songs, known), nobody = petNobody(songs, known);
+    if (list.length) return await petAskDialog(list, !nobody);
+    if (!nobody) return true;
+    say(nobody, 4000);
+    await petCharsOpen(true); // (Characters…, up to date: Choose picture… is there)
+    $('petCharsBtn').scrollIntoView({ block: 'start' }); // (in sight too: it opens above Start, pushing its list below what's on screen)
+    return false;
+  } finally {
+    btn.textContent = was;
+    btn.disabled = false;
+    PETASK.busy = false;
+  }
+}
+const PET_FRAME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20.2c.9-3.7 3.7-5.7 7.2-5.7s6.3 2 7.2 5.7"/></svg>';
+/* The dialog itself: list [{ key, label, songs }]; others: a singer in the playlist not in it has a picture
+   already (Start may go with none chosen here) → Promise<true: Start | false: Cancel>. */
+function petAskDialog(list, others) {
+  const d = $('petPicDlg'), ul = $('petPicList'), inp = $('petPicFile'), go = $('petPicGo'), no = $('petPicNo'), none = $('petPicNone');
+  const blobs = [], pending = new Set();
+  let closed = false;
+  const pick = row => {
+    inp.value = '';
+    inp.onchange = () => { const f = inp.files && inp.files[0]; if (f) use(row, f); };
+    inp.click();
+  };
+  const use = async (row, f) => {
+    row.b.disabled = true;
+    row.b.textContent = 'Getting it ready…';
+    row.st.className = 'pp-state'; row.st.textContent = '';
+    const job = petUsePicture(row.s.key, f);
+    pending.add(job);
+    const r = await job;
+    pending.delete(job);
+    if (closed) { if (r.url) URL.revokeObjectURL(r.url); if (!$('petPanel').hidden) petPanel(); return; } // (Cancel meanwhile: the picture is kept all the same)
+    if (r.ok) {
+      blobs.push(r.url);
+      const im = new Image();
+      im.src = r.url; im.alt = '';
+      row.th.replaceChildren(im);
+      row.th.classList.add('on');
+      row.has = true;
+      none.hidden = true;
+      row.st.className = 'pp-state on'; row.st.textContent = 'Your picture';
+    } else {
+      if (r.url) URL.revokeObjectURL(r.url);
+      row.st.className = 'pp-state bad';
+      row.st.textContent = row.has ? "Couldn't use that file — your picture stays" : "Couldn't use that file — choose a PNG, JPG, WebP, GIF or BMP picture";
+    }
+    row.b.disabled = false;
+    row.b.textContent = row.has ? 'Change…' : 'Choose picture…';
+  };
+  const rows = list.map(s => {
+    const li = document.createElement('li'), th = document.createElement('div'), tx = document.createElement('div');
+    const nm = document.createElement('div'), sg = document.createElement('div'), st = document.createElement('div'), b = document.createElement('button');
+    th.className = 'pp-th'; th.innerHTML = PET_FRAME; th.title = 'Choose a picture for ' + s.label;
+    nm.className = 'pp-name'; nm.textContent = s.label;
+    sg.className = 'pp-songs'; sg.textContent = s.songs.length ? 'Sings in ' + petSongsText(s.songs) : '';
+    st.className = 'pp-state'; st.textContent = 'No picture yet';
+    b.type = 'button'; b.className = 'pp-pick'; b.textContent = 'Choose picture…';
+    b.setAttribute('aria-label', 'Choose a picture for ' + s.label);
+    tx.append(nm, sg, st);
+    li.append(th, tx, b);
+    const row = { s, li, th, st, b, has: false };
+    b.onclick = th.onclick = () => { if (!b.disabled) pick(row); };
+    return row;
+  });
+  ul.replaceChildren(...rows.map(r => r.li));
+  ul.scrollTop = 0;
+  none.hidden = true;
+  go.disabled = no.disabled = false;
+  return new Promise(res => {
+    let done = false;
+    const end = v => {
+      if (done) return;
+      done = closed = true;
+      go.onclick = no.onclick = d.oncancel = d.onclose = inp.onchange = null;
+      if (d.open) d.close();
+      ul.replaceChildren();
+      for (const u of blobs) URL.revokeObjectURL(u);
+      if (!$('petPanel').hidden) petPanel(); // (an open Characters… list shows what was just chosen)
+      res(v);
+    };
+    go.onclick = async () => {
+      go.disabled = no.disabled = true;
+      await Promise.all([...pending]); // (a picture still being made ready is kept first)
+      if (closed) return; // (Cancel meanwhile)
+      if (!others && !rows.some(r => r.has)) { // (nobody would come on: no empty show — it says so, and waits)
+        none.hidden = false;
+        go.disabled = no.disabled = false;
+        rows[0].b.focus();
+        return;
+      }
+      const left = rows.filter(r => !r.has).map(r => r.s.key);
+      if (left.length) try { for (let i = 0; i < left.length; i += 300) await mapApp.petAsked(left.slice(i, i + 300)); } catch (e) {} // (they aren't shown, and aren't asked about again)
+      end(true);
+    };
+    no.onclick = () => end(false);
+    d.oncancel = e => { e.preventDefault(); end(false); }; // (Esc: Cancel)
+    d.onclose = () => end(false);
+    d.showModal();
+    rows[0].b.focus();
+  });
 }
 
 /* ---- Export / import: projects in one file (.mapproj) — the project(s) and every file they use, to keep
@@ -9165,7 +10757,7 @@ async function loadProject(id, pre) { // pre: { p, recs } already read (backgrou
       addTrack(f);
       props.push(t);
     }
-    if (p.video) { const f = fileOf(p.video); if (f) loadVideo(f); else missing++; }
+    if (p.video && !PET) { const f = fileOf(p.video); if (f) loadVideo(f); else missing++; } // (the pets' strip shows no video)
     if (p.scores && p.scores.length) { // .ust parts
       const fs = p.scores.map(fileOf).filter(Boolean);
       missing += p.scores.length - fs.length;
@@ -9489,10 +11081,9 @@ updateMobileMode();
 applyGq(gqAuto ? (LOW_POWER ? 1 : 0) : GQ_VALUES.indexOf(gfxSel.value));
 setUpTips();
 loadPrefs(); // the settings from last time
-if (SUBWIN) coverPage(); // (background mode's own window: no updates or opened files here)
+if (SUBWIN) { if (PET) petPage(); coverPage(); } // (background mode's own window: no updates or opened files here; the pets' strip sets up its singers and bubbles first, then plays like the others)
 else { setUpUpdates(); setUpOpenWith(); }
-setUpDiscord();
-setUpAirplay();
+setUpDiscord(); setUpAirplay();
 if (MOBILE_BUILD && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) // (see mobile/sw.js)
   addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 $('prefHint').textContent = prefsWork() ? 'Your settings are remembered on this device.'
@@ -9511,9 +11102,9 @@ adaptLoop();
 vidGlowLoop();
 glowLoop();
 requestAnimationFrame(glowFrame);
-draw();
+if (!PET) draw();
 tickSeek();
-drawRoll();
+if (PET) petFrame(); else drawRoll(); // (the desktop pets: their own frame, after tickSeek's clock, like the roll)
 tickAdapt();
 fpsLoop();
 </script>
