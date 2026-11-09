@@ -446,7 +446,7 @@ html:not(.overlay) body.bgm.bgm-low:not(.phone) #bgmBar .bgm-info{top:auto;botto
 html.corner #bgmDrag{display:block;position:fixed;z-index:29;left:0;right:52px;top:0;height:34px;-webkit-app-region:drag}
 html.corner #bgmBar button{-webkit-app-region:no-drag}
 /* the compact player: the controls, tabs and everything else step aside (not on phones) */
-body.bgm:not(.phone) :is(#rail,#lenWarn,#vizGrip,#lyrGrip,#barGrip,#updChip,#tabsToggle){display:none!important}
+body.bgm:not(.phone) :is(#rail,#lenWarn,#vizGrip,#lyrGrip,#barGrip,#tabsToggle){display:none!important}
 body.bgm:not(.phone){--viz-base:min(72px,28vh)}
 body.bgm:not(.phone) #toast{display:none} /* (the small player: its controls show the song; messages would sit on them) */
 html.overlay body.bgm:not(.phone){--viz-base:112px} /* (Cover the screen: a little taller) */
@@ -470,12 +470,12 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #petList .pc-key{color:var(--muted);font-size:.75rem;overflow-wrap:anywhere}
 #petList .pc-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 #petList .pc-btns button{font-size:.75rem;padding:2px 8px}
-/* Desktop pet: the pictures for the singers, asked for before the pets start (petAskDialog) */
-#petPicDlg{width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.4)}
-#petPicDlg[open]{display:flex;flex-direction:column}
-#petPicDlg:not([open]){display:none} /* (a browser from before <dialog> wouldn't hide it by itself) */
-#petPicDlg::backdrop{background:rgba(0,0,0,.5)}
-#petPicDlg h3{margin:0;padding:18px 20px 6px;font-size:1.05rem}
+/* Desktop pet: the pictures for the singers, asked for before the pets start (petAskDialog); App updates: the popup, in the same look (updShow) */
+#petPicDlg,#updDlg{width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+#petPicDlg[open],#updDlg[open]{display:flex;flex-direction:column}
+#petPicDlg:not([open]),#updDlg:not([open]){display:none} /* (a browser from before <dialog> wouldn't hide it by itself) */
+#petPicDlg::backdrop,#updDlg::backdrop{background:rgba(0,0,0,.5)}
+#petPicDlg h3,#updDlg h3{margin:0;padding:18px 20px 6px;font-size:1.05rem}
 #petPicDlg .pp-intro{margin:0;padding:0 20px 12px;color:var(--muted);font-size:.85rem;line-height:1.45}
 #petPicList{flex:1 1 auto;min-height:0;overflow:auto;margin:0;padding:4px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 #petPicList li{display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:6px 14px;padding:10px 0}
@@ -492,18 +492,31 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #petPicList .pp-state.bad{color:#d0473f}
 #petPicList button.pp-pick{padding:6px 12px;font-size:.85rem;white-space:nowrap}
 #petPicDlg .pp-none{margin:0;padding:10px 20px 0;color:#d0473f;font-size:.85rem;line-height:1.4}
-#petPicDlg .pp-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px 16px}
-#petPicDlg .pp-foot button{min-width:96px}
+#petPicDlg .pp-foot,#updDlg .pp-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px 16px}
+#petPicDlg .pp-foot button,#updDlg .pp-foot button{min-width:96px}
+#updDlg [hidden]{display:none}
+#updDlg .ud-body{flex:1 1 auto;min-height:0;overflow:auto;padding:2px 20px 0;font-size:.9rem;line-height:1.45}
+#updDlg .ud-body p{margin:0 0 10px}
+#updDlgFail{font-weight:600}
+#updDlgBar{display:block;width:100%;height:8px;margin:0 0 10px;border:none;border-radius:999px;overflow:hidden;-webkit-appearance:none;appearance:none;background:color-mix(in srgb,var(--fg) 14%,transparent)}
+#updDlgBar::-webkit-progress-bar{background:transparent}
+#updDlgBar::-webkit-progress-value{background:var(--accent)}
+#updDlgBar::-moz-progress-bar{background:var(--accent)}
+#updDlg .pp-foot{flex-wrap:wrap}
+#updDlgMore{margin-right:auto}
+#updDlg[data-screen=inst] .pp-foot{display:none}
+#updDlg[data-screen=inst] .ud-body{padding-bottom:10px}
 @media (max-width:480px){
-  #petPicDlg h3{padding:16px 16px 6px}
+  #petPicDlg h3,#updDlg h3{padding:16px 16px 6px}
+  #updDlg .ud-body{padding-left:16px;padding-right:16px}
   #petPicDlg .pp-intro{padding:0 16px 10px}
   #petPicList{padding:2px 16px}
   #petPicList li{grid-template-columns:56px minmax(0,1fr)}
   #petPicList .pp-th{width:56px;height:70px;grid-row:span 2}
   #petPicList button.pp-pick{justify-self:start}
   #petPicDlg .pp-none{padding:8px 16px 0}
-  #petPicDlg .pp-foot{padding:10px 16px 14px}
-  #petPicDlg .pp-foot button{flex:1}
+  #petPicDlg .pp-foot,#updDlg .pp-foot{padding:10px 16px 14px}
+  #petPicDlg .pp-foot button,#updDlg .pp-foot button{flex:1}
 }
 #dcBox .dc-more[hidden]{display:none}
 /* AirPlay (desktop app) */
@@ -593,7 +606,7 @@ html.corner #airPanel .air-fix,html.corner #airPanel .air-ip,html.corner #airPan
 /* Cover the screen (desktop app): this page in the see-through window over the whole screen — just the
    visualizer and the piano roll with its lyrics; the control bar appears once the pointer rests on it. */
 html.overlay,html.overlay body{background:transparent!important}
-html.overlay :is(#bg,#vidGlow,#amb,#seek,#toast,#loadBox,#barToggle,#lenWarn,.grip,#updChip,#dbgChip,#dbgPanel,.stageBtn,#stageTap,#rail,#railBg){display:none!important}
+html.overlay :is(#bg,#vidGlow,#amb,#seek,#toast,#loadBox,#barToggle,#lenWarn,.grip,#dbgChip,#dbgPanel,.stageBtn,#stageTap,#rail,#railBg){display:none!important}
 html.overlay :is(main,#panelBg,#tabs,#tabsToggle){visibility:hidden!important} /* (still measured for the layout) */
 html.overlay #viz{cursor:default;pointer-events:none}
 html.overlay #bgmBar{display:none!important} /* (its controls are a little window of their own, in the corner of the screen) */
@@ -670,12 +683,7 @@ body.dropping::after{content:'Drop audio, video, SVP, MIDI, VoiSona, UST or USTX
 #dbgPanel{position:fixed;left:calc(56px + var(--sal));top:calc(8px + var(--sat));z-index:20;max-width:calc(100vw - 70px);max-width:calc(100cqw - 70px);overflow:hidden;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.8);color:#9f9;font:11px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre;pointer-events:none}
 #dbgChip{position:fixed;top:calc(8px + var(--sat));left:50%;transform:translateX(-50%);z-index:21;padding:4px 12px;border-radius:999px;background:#ff9800;border-color:#ff9800;color:#000;font-size:.8rem;font-weight:600;white-space:nowrap}
 #dbgPanel[hidden],#dbgChip[hidden]{display:none}
-#updChip{position:fixed;top:calc(8px + var(--sat));right:calc(12px + var(--sar,0px));z-index:21;display:flex;align-items:center;gap:2px;padding:0;border-radius:999px;background:var(--accent);color:var(--bg);font-size:.8rem;font-weight:600;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.35)}
-#updChip[hidden],#updBox[hidden],#updTok[hidden],#updRestart[hidden],#updTokDel[hidden]{display:none}
-#updChip button{background:none;border:none;color:inherit;font:inherit;padding:5px 6px 5px 12px;border-radius:999px}
-#updChip button+button{padding:5px 10px 5px 4px;opacity:.75}
-#updChip button+button:hover{opacity:1}
-#updChip.armed,#updRestart.armed{background:#c0392b;border-color:#c0392b;color:#fff}
+#updBox[hidden],#updBox [hidden]{display:none}
 #updStatus{color:var(--fg)}
 .op .rv{display:block;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
 /* Settings explanations: a small "i" after the name; the text pops up on hover (or a tap on the "i") */
@@ -687,7 +695,6 @@ body.dropping::after{content:'Drop audio, video, SVP, MIDI, VoiSona, UST or USTX
 #setTip{position:fixed;z-index:30;box-sizing:border-box;padding:8px 11px;border-radius:8px;background:var(--fg);color:var(--bg);font-size:.8rem;line-height:1.45;box-shadow:0 6px 20px rgba(0,0,0,.28);opacity:0;transform:translateY(-3px);transition:opacity .14s,transform .14s;pointer-events:none}
 #setTip.show{opacity:1;transform:none}
 #setTip[hidden]{display:none}
-#updStatus small{display:block;color:var(--muted);margin-top:4px}
 #updBox .dbg-row{margin-bottom:12px}
 
 /* iOS 16.0/16.1 have no color-mix(): plain colours instead of see-through ones */
@@ -921,13 +928,14 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 
     <div class="sgroup" id="updBox" hidden>
       <h2>App updates</h2>
-      <p class="hint" id="updStatus">Checking for updates…</p>
-      <div class="dbg-row"><button id="updCheck">Check now</button><button id="updRestart" class="primary" hidden title="Restart the player into the new version">Restart</button><button id="updTokBtn" title="Add or change the GitHub token">Token…</button></div>
+      <p class="hint" id="updStatus"></p>
+      <div class="dbg-row"><button id="updCheck">Check for updates</button><button id="updTokBtn" title="Add or change the GitHub token">GitHub token…</button><button id="updGet" hidden>Get the installer</button></div>
+      <p class="hint" id="updGetHint" hidden>If GitHub says the page can't be found, click Sign in at the top right.</p>
+      <label class="op" id="updOnRow">Show a popup when the app starts and an update is available <input type="checkbox" class="upd-on" autocomplete="off" checked></label>
       <div id="updTok" hidden>
-        <p class="hint">The repository is private, so the app needs a GitHub token to see new versions. On github.com: your picture → Settings → Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic), tick <b>repo</b>, generate, and paste it here. It is stored encrypted on this computer and only ever sent to GitHub.</p>
+        <p class="hint">The repository is private, so the app needs a GitHub token to see new versions. On github.com: your picture → Settings → Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic), tick <b>repo</b>, generate, and paste it here. It is stored encrypted on this computer and only ever sent to GitHub. Your GitHub account needs access to the repository. Under Expiration pick the longest you're comfortable with: when it runs out the app stops finding updates until you paste a new one.</p>
         <div class="psave"><input type="password" class="tok" placeholder="Paste the GitHub token" autocomplete="off" spellcheck="false" aria-label="GitHub token"><button id="updTokSave" class="primary">Save</button><button id="updTokDel" hidden>Remove</button></div>
       </div>
-      <p class="hint">New versions come from the main branch on GitHub. One is downloaded by itself and goes in straight away when nothing is open in the player; otherwise when you click Restart, or the next time the app starts.</p>
     </div>
 
     <div class="sgroup" id="dcBox" hidden>
@@ -1012,7 +1020,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <label class="op" id="plOneLyricRow">Small player: just the main lyrics <input type="checkbox" id="plOneLyric" checked></label>
     <p class="hint" id="plOneLyricHint">In the small player (the corner window), only the main singer's lines — or, while the main singer is quiet, the line that's being sung right now. In all of background mode, the lyrics and the syllables on the notes sit on a dark caption box, and so does the time, so they stay easy to read over anything behind them; in the small player and the browser's compact player the song name and "Next" do too (on phones they stay in the bar at the top). Its opacity is the song's Caption box opacity, at least 60%.</p>
     <label class="op" id="plWhereRow" hidden>Plays in <select id="plWhere" autocomplete="off"><option value="corner">Small corner player</option><option value="cover">Cover the screen</option><option value="pet" id="plWherePet">Desktop pet</option></select></label>
-    <p class="hint" id="plPetOld" hidden>Run build.bat again to get Desktop pet mode (this copy of the desktop app is from before it).</p>
+    <p class="hint" id="plPetOld" hidden>Install the newest version to get Desktop pet mode (this copy of the app is from before it).</p>
     <div id="petSet" hidden>
       <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer left or right along the taskbar (it's remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the right, just above them) stops. Each singer is a picture of your own: when you start, the player asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
       <label class="op">Character size <select id="petSize" autocomplete="off"><option value="S">Small</option><option value="M">Medium</option><option value="L">Large</option></select></label>
@@ -1045,6 +1053,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 
 <div id="pet" aria-hidden="true"><svg class="pet-bubs"></svg></div>
 <dialog id="petPicDlg" aria-labelledby="petPicT" aria-describedby="petPicP"><h3 id="petPicT">Pictures for the singers</h3><p class="pp-intro" id="petPicP">Choose a picture of your own for each singer: it stands on your taskbar and sings their lines. A picture with see-through parts is trimmed, a plain background is cleared; other pictures become a sticker card. Singers left without a picture aren't shown. To change them later: Characters… in the Desktop pet settings.</p><ul id="petPicList"></ul><p class="pp-none" id="petPicNone" role="alert" hidden>None of the singers has a picture yet — choose at least one.</p><div class="pp-foot"><button type="button" id="petPicNo">Cancel</button><button type="button" id="petPicGo" class="primary">Start</button></div><input type="file" id="petPicFile" accept="image/*" hidden></dialog>
+<dialog id="updDlg" aria-labelledby="updDlgT" aria-describedby="updDlgP"><h3 id="updDlgT"></h3><div class="ud-body"><p id="updDlgFail" hidden></p><p id="updDlgP"></p><progress id="updDlgBar" aria-labelledby="updDlgP" max="1" value="0" hidden></progress><label class="op" id="updDlgOn" hidden>Show this when the app starts <input type="checkbox" class="upd-on" autocomplete="off" checked></label><p class="hint" id="updDlgHint" hidden>If GitHub says the page can't be found, click Sign in at the top right.</p></div><div class="pp-foot"><button type="button" id="updDlgMore" hidden>Get the installer</button><button type="button" id="updDlgNo"></button><button type="button" id="updDlgGo" class="primary"></button></div></dialog>
 <canvas id="vidGlow" width="24" height="14" aria-hidden="true"></canvas>
 <video id="bg" muted loop playsinline preload="auto" x-webkit-wirelessvideoplaybackdisabled></video>
 <div id="tabs"><button class="tab" id="allTab" style="--c:var(--fg)">All</button></div>
@@ -1116,7 +1125,6 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 <div class="grip" id="lyrGrip" role="separator" aria-orientation="horizontal" aria-label="Lyrics size (drag)" title="Drag to make the lyrics bigger or smaller · double-click: 100%" hidden></div>
 <div class="grip" id="barGrip" role="separator" aria-orientation="horizontal" aria-label="Lyrics bar height (drag)" title="Drag to resize the lyrics bar · double-click: normal size" hidden></div>
 <button id="dbgChip" hidden title="Back to automatic layout"></button>
-<div id="updChip" hidden><button id="updChipGo" title="Restart the player into the new version">Update ready · Restart</button><button id="updChipX" aria-label="Later" title="Later (it goes in the next time the app starts)">✕</button></div>
 </div>
 <script>
 'use strict';
@@ -4364,6 +4372,7 @@ document.addEventListener('pointerdown', () => { lastPointerDown = performance.n
 document.addEventListener('focusin', e => { e.target._byPointer = performance.now() - lastPointerDown < 1000; }, true);
 addEventListener('keydown', e => {
   if (MOBILE_BUILD) return; // (the mobile version has no keyboard shortcuts)
+  if (document.querySelector('dialog[open]')) return; // (a dialog is up: the player behind it leaves every key alone, and Space and Enter reach its buttons)
   const t = e.target, tag = t.tagName, k = e.key;
   if ((e.ctrlKey || e.metaKey) && !e.altKey && k.toLowerCase() === 's') { e.preventDefault(); saveProject(); return; }
   if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -7362,7 +7371,7 @@ function setUpSafariAir() {
   for (const btn of [$('airBtn'), $('bgmAir')]) { btn.hidden = false; btn.onclick = () => show(p.hidden); }
   p.querySelector('.air-x').onclick = () => show(false);
   document.addEventListener('pointerdown', e => { if (!p.hidden && !e.target.closest('#airHelp, #airBtn, #bgmAir')) show(false); }, true);
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !p.hidden) { e.stopPropagation(); e.preventDefault(); show(false); } }, true);
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !p.hidden && !document.querySelector('dialog[open]')) { e.stopPropagation(); e.preventDefault(); show(false); } }, true);
   // No-delay AirPlay (below): the switch, remembered on this device (off at first)
   const nd = p.querySelector('.air-nd input');
   try { ND.want = localStorage.getItem(ND_KEY) === '1'; } catch (e) {}
@@ -8431,7 +8440,7 @@ function setUpAirplay() {
   p.querySelector('.air-delay select').onchange = e => mapApp.airLatency(+e.target.value).catch(() => {});
   p.querySelector('.air-mlead select').onchange = e => { const st = AIR.st; if (st && st.device && mapApp.airMirrorLead) mapApp.airMirrorLead(st.device.id, +e.target.value).catch(() => {}); };
   p.querySelector('.air-msound input').onchange = e => { const st = AIR.st; if (st && st.device && mapApp.airMirrorSound) mapApp.airMirrorSound(st.device.id, e.target.checked).catch(() => {}); };
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !p.hidden) { e.stopPropagation(); e.preventDefault(); airPanel(false); } }, true); // (Esc closes the panel first — in the corner player, before leaving it)
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !p.hidden && !document.querySelector('dialog[open]')) { e.stopPropagation(); e.preventDefault(); airPanel(false); } }, true); // (Esc closes the panel first — in the corner player, before leaving it)
   const pwIn = p.querySelector('.air-pw:not(.air-pin) input'), go = () => { if (AIR.pwFor) airPlay(AIR.pwFor, pwIn.value); };
   p.querySelector('.air-pw:not(.air-pin) button').onclick = go;
   pwIn.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') go(); });
@@ -8609,111 +8618,276 @@ function checkLengths() {
 }
 
 /* =====================================================================
-   App updates — desktop app only (window.mapApp comes from its preload.js). The app downloads
-   new versions from GitHub by itself (main.js / updater.js); this shows how that's going, puts a
-   "Restart" chip up when one is ready, and tells the app when it's a good moment to switch.
+   App updates — desktop app only (window.mapApp comes from its preload.js). A new version comes as an
+   installer from GitHub Releases: the app looks for one, downloads it and starts it (main.js / updater.js),
+   and the installer closes the app. This page asks and says how that's going, in the popup (#updDlg) and
+   in Settings → App updates. Both follow the state the app sends, not the answers to its calls, so they
+   find their way again after a Ctrl+R in the middle of a download.
    ===================================================================== */
 let lastInput = 0, pickerAt = 0;
 ['pointerdown', 'keydown', 'wheel'].forEach(t => addEventListener(t, () => { lastInput = Date.now(); }, true));
 addEventListener('click', e => { if (e.target instanceof HTMLInputElement && e.target.type === 'file') pickerAt = Date.now(); }, true);
 ['change', 'cancel'].forEach(t => addEventListener(t, e => { if (e.target instanceof HTMLInputElement && e.target.type === 'file') pickerAt = 0; }, true));
 const somethingOpen = () => !!(tracks.length || svp || hasVideo || bgFile || isLoading() || LOAD.shown);
-/* Can the app switch to a new version now without anyone noticing? Nothing open or loading,
-   no file dialog up, not typing, and no input for a little while. */
+/* Desktop apps from before the installers still pull this page from GitHub, and call this by name before they
+   switch to it: can that happen now without anyone noticing? Nothing open or loading, no file dialog or
+   update popup up, not typing, and no input for a little while. */
 function mapUpdateSafe() {
   const a = document.activeElement;
-  return !PIC.on && !somethingOpen() && Date.now() - lastInput > 20000 && Date.now() - pickerAt > 600000
+  return !PIC.on && !$('updDlg').open && !somethingOpen() && Date.now() - lastInput > 20000 && Date.now() - pickerAt > 600000
     && !(a && a.matches('input:not([type=checkbox]):not([type=range]), textarea, select'));
 }
-const UPD = { s: null, armTimer: 0, later: false };
-function updText(s) {
-  const when = d => { try { return new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); } catch (e) { return ''; } };
-  const what = v => v && v.title ? '“' + v.title + '”' + (v.date ? ' (' + when(v.date) + ')' : '') : '';
-  let main;
-  if (s.ready) main = 'A new version is ready' + (what(s.latest) ? ': ' + what(s.latest) : '') + '. Restart to use it.';
-  else if (s.status === 'checking' || s.status === 'idle') main = 'Checking for updates…';
-  else if (s.status === 'current') main = 'You have the newest version.';
-  else if (s.status === 'auth') main = s.hasToken ? "Can't check for updates: the saved GitHub token can't see the repository (expired, or made without “repo”). Paste a new one below."
-    : "Can't check for updates yet: the repository is private. Add a GitHub token below.";
-  else main = "Couldn't check for updates (" + (s.message || 'no connection') + '). It tries again by itself.';
-  const extra = [];
-  extra.push('In use: ' + (s.source === 'download' ? 'update ' + (what(s.version) || '') : 'the version built into the app'));
-  if (s.ready && s.status === 'auth') extra.push("can't look for newer ones: " + (s.hasToken ? 'the GitHub token stopped working' : 'needs a GitHub token'));
-  else if (s.ready && s.status === 'error') extra.push("couldn't look for newer ones (" + (s.message || 'no connection') + ')');
-  if (s.checkedAt && s.status !== 'checking') extra.push('last checked ' + when(s.checkedAt));
-  if (s.wrapperOutdated) extra.push('the desktop app itself changed too: run build.bat again to get that part');
-  return [main, extra.join(' · ')];
+const UPD_RELEASES = '';
+const UPD_OLD = "This copy of the app can't install updates by itself, so this one is by hand, just once.";
+const UPD_OLD_STEPS = "Click Get the installer. If GitHub says the page can't be found, click Sign in at the top right; if it still can't be found, that GitHub account hasn't been given access to the app. Under Assets, click Multi-Audio-Player-Setup-….exe. If your browser says the file isn't commonly downloaded, choose Keep (in Edge: the … menu, Keep, Show more, Keep anyway). Open the downloaded file. If Windows warns you, click More info, then Run anyway. It replaces this copy; your projects and settings stay.";
+const UPD_ERR = {
+  space: "There isn't enough free space on this computer: the update needs about 1 GB.",
+  network: 'The download stopped. Check your internet connection and try again.',
+  refused: "GitHub wouldn't give the download. Your token may have expired: see Settings → App updates.",
+  damaged: "The download came through damaged, so it wasn't used.",
+  blocked: "Windows or your antivirus wouldn't start the installer.",
+  stopped: 'The installer stopped before changing anything. Close any other installer and try again.',
+};
+// s: what the app last said. screen: what the popup shows ('' = it's closed). started: the download asked for has
+// really begun (an answer sent before that says nothing about it). gen: goes up to call off a Close and install.
+// ignored: Ignore was clicked, which lasts for this start. told, failed: the news from the last update.
+// at: when the screen last changed (see aimed, in setUpUpdates).
+const UPD = { s: null, screen: '', started: false, gen: 0, ignored: false, told: false, failed: '', at: 0 };
+let dataBusy = 0; // (projects being imported or exported, and a moment after each save: see saveBlob)
+const updBusy = () => somethingOpen() || COVER.on || PIC.on || dataBusy > 0 || !!(UPD.s && UPD.s.saving);
+/* The line in Settings, for every status the app can be in */
+function updLine(s) {
+  const you = 'You have version ' + s.version + '. ', v = s.offer ? s.offer.version : '', untick = " Don't want updates? Untick the box below.";
+  const there = v ? 'Version ' + v + ' is available (you have ' + s.version + '). Click Check for updates to get it.' : '';
+  switch (s.status) {
+    case 'off': return s.kind === 'manual' ? "This copy can't update itself." : "You're running the app from its source code, so updates don't apply here.";
+    case 'idle': return you + 'Click Check for updates to look for a newer one.';
+    case 'checking': return 'Looking for updates…';
+    case 'current': return 'You have the newest version (' + s.version + ').';
+    case 'available': case 'ready': return there;
+    case 'failed': return "The last try didn't finish. " + there;
+    case 'downloading': return 'Downloading version ' + v + '…';
+    case 'installing': return 'Installing version ' + v + '…';
+    case 'token':
+      if (s.why === 'bad') return you + "GitHub didn't accept the saved token (it may have expired): paste a new one below." + untick;
+      if (s.why === 'noaccess') return you + "The saved token can't see the app's repository: paste a new one below, or ask the repository's owner to add your GitHub account." + untick;
+      return you + 'To look for updates the app needs a GitHub token: add one below.' + untick;
+    case 'offline': return you + "Couldn't reach GitHub: check your internet connection and try again.";
+    case 'busy': return you + 'GitHub is busy right now: try again in a while.';
+    default: return '';
+  }
 }
-function showUpdState(s) {
-  if (!s) return;
+/* Settings → App updates, and the news from the last update (the app gives those to its first reader only) */
+function updPaint(s) {
+  const was = UPD.s && UPD.s.status, own = s.kind === 'installed', manual = s.kind === 'manual';
   UPD.s = s;
-  const [main, extra] = updText(s);
-  const st = $('updStatus');
-  st.textContent = main;
-  const sm = document.createElement('small');
-  sm.textContent = extra;
-  st.appendChild(sm);
-  $('updRestart').hidden = !s.ready;
+  $('updStatus').textContent = updLine(s);
+  $('updCheck').hidden = $('updTokBtn').hidden = $('updOnRow').hidden = !own;
+  $('updGet').hidden = $('updGetHint').hidden = !manual;
+  $('updCheck').parentElement.hidden = !own && !manual;
   $('updCheck').disabled = s.status === 'checking';
   $('updTokDel').hidden = !s.hasToken;
-  if (s.status === 'auth') $('updTok').hidden = false;
-  $('updChip').hidden = !s.ready || UPD.later;
-  if (!s.ready) disarmUpdChip();
-  // the very first time there's no token: say once where to add one
-  if (s.status === 'auth' && !s.hasToken) {
-    let told = false;
-    try { told = !!localStorage.getItem('map-upd-told'); localStorage.setItem('map-upd-told', '1'); } catch (e) {}
-    if (!told) say('To get updates, add a GitHub token in Settings → App updates', 4000);
-  }
+  if (!own) $('updTok').hidden = true;
+  else if (s.status === 'token' && was !== 'token') $('updTok').hidden = false; // (the steps show by themselves when they're needed)
+  document.querySelectorAll('input.upd-on').forEach(c => { c.checked = !!s.showOnStart; });
+  if (s.lastFailed) UPD.failed = s.lastFailed;
+  if (s.justUpdated && !UPD.told) { UPD.told = true; say('Updated to version ' + s.justUpdated, 2500); }
 }
-function disarmUpdChip() {
-  clearTimeout(UPD.armTimer);
-  $('updChip').classList.remove('armed');
-  $('updChipGo').textContent = 'Update ready · Restart';
-  $('updRestart').classList.remove('armed');
-  $('updRestart').textContent = 'Restart';
+/* The popup: one screen at a time. The left button (and Esc) backs out, the right one goes on. */
+function updShow(screen, failLine = '') {
+  const d = $('updDlg'), no = $('updDlgNo'), go = $('updDlgGo'), more = $('updDlgMore');
+  const s = UPD.s || {}, v = s.offer ? s.offer.version : '';
+  const err = screen === 'err', blocked = err && s.why === 'blocked', getIt = err && ['network', 'refused', 'damaged'].includes(s.why);
+  const [title, text, left, right] = {
+    ask: ['An update is available', 'Version ' + v + ' is out. You have version ' + s.version + '. Update downloads it, closes the player, installs it and opens the player again. Your projects and settings stay.', 'Ignore', 'Update'],
+    down: ['Updating to version ' + v, '', 'Cancel', ''],
+    sure: ['Ready to install', "Installing closes the player, and what's open or playing in it stops. Anything you haven't saved as a project is lost.", 'Not now', 'Close and install'],
+    inst: ['Installing version ' + v, 'The player closes now and opens again by itself in about a minute.', '', ''],
+    err: ["The update didn't finish", (UPD_ERR[s.why] || UPD_ERR.network) + (blocked && s.hasInstaller ? ' You can start it yourself: click Show the installer, then double-click the file.' : ''), 'Close', 'Try again'],
+    old: ['An update is available', UPD_OLD + ' ' + UPD_OLD_STEPS, 'Ignore', 'Get the installer'],
+  }[screen];
+  if (UPD.screen !== screen) UPD.at = performance.now();
+  UPD.screen = d.dataset.screen = screen;
+  $('updDlgT').textContent = title;
+  $('updDlgP').textContent = text;
+  $('updDlgFail').textContent = failLine;
+  $('updDlgFail').hidden = !failLine;
+  $('updDlgBar').hidden = screen !== 'down';
+  $('updDlgOn').hidden = screen !== 'ask' && screen !== 'old';
+  more.textContent = blocked ? 'Show the installer' : 'Get the installer';
+  more.hidden = !getIt && !(blocked && s.hasInstaller);
+  $('updDlgHint').hidden = !getIt;
+  no.textContent = left;
+  no.hidden = !left;
+  go.textContent = right;
+  go.hidden = !right;
+  go.disabled = false;
+  if (screen === 'down') updBar(s);
+  if (!d.open) d.showModal();
+  if (left) no.focus(); // (a stray Space or Enter backs out: it can't start anything)
 }
-/* Restart into the new version. With a song open it asks first (a second click), since that closes it. */
-function updRestart(btn) {
-  const chip = btn.id === 'updChipGo', box = chip ? $('updChip') : btn;
-  const label = chip ? 'Update ready · Restart' : 'Restart';
-  if (somethingOpen() && !box.classList.contains('armed')) {
-    box.classList.add('armed');
-    btn.textContent = chip ? 'Closes what is open — click again' : 'Sure? Click again';
-    clearTimeout(UPD.armTimer);
-    UPD.armTimer = setTimeout(() => { box.classList.remove('armed'); btn.textContent = label; }, 4000);
-    return;
+function updBar(s) { // (1 MB = 1000000 bytes, as in fmtBytes)
+  const total = (s.progress && s.progress.total) || (s.offer && s.offer.size) || 0, got = s.progress ? s.progress.got : 0, bar = $('updDlgBar');
+  $('updDlgP').textContent = 'Downloading: ' + (got >= total ? Math.round(total / 1e6) : Math.floor(got / 1e6)) + ' of ' + Math.round(total / 1e6) + ' MB'; // (never "84 of 83", and all of it reads "83 of 83")
+  bar.max = total || 1;
+  bar.value = got;
+}
+function updClose() {
+  const d = $('updDlg');
+  UPD.gen++;
+  UPD.screen = '';
+  delete d.dataset.screen;
+  if (d.open) d.close();
+}
+function updLeft() {
+  if (UPD.screen === 'down') { window.mapApp.cancelDownload(); return; } // (the app then says available: back to ask)
+  if (!UPD.screen || UPD.screen === 'inst') return;
+  if (UPD.screen === 'ask' || UPD.screen === 'old') UPD.ignored = true;
+  updClose();
+}
+function updRight() {
+  if (UPD.screen === 'ask' || UPD.screen === 'err') updStart();
+  else if (UPD.screen === 'sure') { updFinishing(); updFinish(); }
+  else if (UPD.screen === 'old') window.open(UPD_RELEASES);
+}
+function updMore() { // Get the installer; Show the installer when it wouldn't start
+  if (!UPD.s || UPD.s.why !== 'blocked') { window.open(UPD_RELEASES); return; }
+  window.mapApp.showInstaller().then(shown => {
+    if (!shown && UPD.screen === 'err') { $('updDlgMore').hidden = true; $('updDlgP').textContent = UPD_ERR.blocked; } // (the file has gone: nothing to show, and the words stop pointing at it)
+  });
+}
+// (an answer to a call can overtake what the app says it did, and may be all there is: so after one it's asked how things stand)
+const updAsk = () => window.mapApp.state().catch(() => null).then(s => s || UPD.s);
+function updStart() {
+  UPD.started = false;
+  updShow('down');
+  const answered = async r => {
+    const s = await updAsk();
+    UPD.started = true;
+    if (r && r.why === 'none' && UPD.screen === 'down') updClose(); // (nothing on offer any more: Settings says how things stand)
+    updState(s);
+  };
+  window.mapApp.download().then(answered, () => answered(null));
+}
+const updNext = () => { if (updBusy()) updShow('sure'); else updFinish(); }; // (downloaded: nothing to interrupt, so on it goes)
+function updFinishing() {
+  if (UPD.screen !== 'sure') updShow('sure');
+  $('updDlgP').textContent = "Finishing what's being saved…";
+  $('updDlgGo').disabled = true;
+}
+/* On to the installer, which closes the app. What's being saved is finished first, a backup export most of all;
+   Not now still works meanwhile. With nothing being saved this goes straight through, and no screen shows for it. */
+async function updFinish() {
+  const gen = ++UPD.gen;
+  for (;;) {
+    const q = saveQ, slow = setTimeout(() => { if (gen === UPD.gen) updFinishing(); });
+    await q;
+    clearTimeout(slow);
+    if (gen !== UPD.gen) return;
+    if (q === saveQ && dataBusy <= 0 && !UPD.s.saving) break;
+    updFinishing();
+    await new Promise(r => setTimeout(r, 200));
+    if (gen !== UPD.gen) return;
   }
-  clearTimeout(UPD.armTimer);
   writePrefs(); // (settings changed a moment ago are kept)
-  window.mapApp.restart();
+  updShow('inst');
+  window.mapApp.install().catch(e => console.error(e)).then(updAsk).then(s => {
+    updState(s);
+    if (UPD.screen === 'inst' && s.status !== 'installing') updClose(); // (a screen with no button must not stay up for nothing)
+  });
+}
+/* What the app's state means for the popup */
+function updFollow() {
+  const st = UPD.s.status;
+  if (st === 'installing') { if (UPD.screen !== 'inst') updShow('inst'); return; }
+  if (UPD.screen === 'down') {
+    if (st === 'downloading') { UPD.started = true; updBar(UPD.s); }
+    else if (!UPD.started) return;
+    else if (st === 'ready') updNext();
+    else if (st === 'failed') updShow('err');
+    else if (st === 'available') updShow('ask');
+    else updClose();
+  } else if (UPD.screen === 'inst') {
+    if (st === 'failed') updShow('err');
+    else if (st === 'available') updShow('ask'); // (the downloaded file is gone: it starts over)
+  }
+}
+function updState(s) {
+  if (!s) return;
+  updPaint(s);
+  updFollow();
+}
+/* Once per run, after the app's one look for an update at the start: does the popup show? */
+function updOffer(s) {
+  updState(s);
+  const failed = UPD.failed && "The last update didn't finish, so you still have version " + s.version + '. Nothing was lost.';
+  UPD.failed = '';
+  if ((s.status === 'available' || s.status === 'ready') && s.showOnStart && !COVER.on && !UPD.screen && !UPD.ignored) { updShow('ask', failed); return; } // (background mode: the main window is its minimized remote control, which a popup would block)
+  if (failed) say(failed, 4000);
+  if (s.status === 'token' && s.showOnStart) setTimeout(() => say('Updates need a working GitHub token: see Settings → App updates', 4000), failed ? 4000 : 0);
+}
+/* A desktop app from before the installers, with this page from the main branch: its bridge can't install, so it
+   says how to do it by hand, at each real start (its own reloads of the page say justUpdated). This uses nothing
+   else of the bridge than state(), and what that answers may lack anything. */
+function updOldBridge(app) {
+  const box = $('updDlgOn').querySelector('.upd-on');
+  let quiet = false;
+  try { quiet = !!localStorage.getItem('map-upd-quiet'); } catch (e) {}
+  $('updStatus').textContent = UPD_OLD;
+  $('updCheck').hidden = $('updTokBtn').hidden = $('updOnRow').hidden = true;
+  $('updGet').hidden = $('updGetHint').hidden = false;
+  box.checked = !quiet;
+  box.onchange = () => { try { if (box.checked) localStorage.removeItem('map-upd-quiet'); else localStorage.setItem('map-upd-quiet', '1'); } catch (e) {} };
+  if (!quiet) app.state().then(s => { if (!(s && s.justUpdated)) updShow('old'); }).catch(e => console.error(e));
 }
 function setUpUpdates() {
-  const app = window.mapApp;
+  const app = window.mapApp, d = $('updDlg');
   if (!app) return; // (a browser, not the desktop app)
   $('updBox').hidden = false;
-  app.onState(showUpdState);
-  app.state().then(s => {
-    showUpdState(s);
-    if (s && s.justUpdated) say('Updated to the newest version', 2500);
-  });
-  $('updCheck').onclick = () => { $('updCheck').disabled = true; app.check().then(showUpdState); };
-  $('updRestart').onclick = e => updRestart(e.currentTarget);
-  $('updChipGo').onclick = e => updRestart(e.currentTarget);
-  $('updChipX').onclick = () => { UPD.later = true; disarmUpdChip(); $('updChip').hidden = true; };
+  // (the next screen's buttons sit in the same spots, and one of them closes the player. So a real click just after the screen
+  // changed, the second half of a double-click or one aimed at what was there a moment ago, counts for nothing, and leaves the
+  // focus where it was, on the button that backs out: a click moves it. Keys have detail 0.)
+  const aimed = f => e => {
+    if (!e.detail || e.timeStamp - UPD.at >= 500) f(); // (when it happened, not when a busy page gets to it)
+    else if (!$('updDlgNo').hidden) $('updDlgNo').focus();
+  };
+  $('updDlgNo').onclick = aimed(updLeft);
+  $('updDlgGo').onclick = aimed(updRight);
+  $('updDlgMore').onclick = updMore;
+  d.oncancel = e => { e.preventDefault(); updLeft(); }; // (Esc: the left button; none while installing)
+  d.onclose = () => { if (UPD.screen && !d.open) d.showModal(); }; // (the browser won't let Esc be refused twice in a row: only updClose really closes it)
+  $('updGet').onclick = () => window.open(UPD_RELEASES);
+  if (!app.install) { updOldBridge(app); return; }
+  app.onState(updState);
+  const first = app.state().then(updState).catch(e => console.error(e));
+  app.onOffer(s => first.then(() => updOffer(s)));
+  $('updCheck').onclick = async () => {
+    $('updCheck').disabled = true;
+    const s = await app.check().catch(e => { console.error(e); return null; });
+    $('updCheck').disabled = false;
+    updState(s);
+    if (!s || UPD.screen) return;
+    if (s.status === 'available' || s.status === 'ready') updShow('ask'); // (whatever the toggle says)
+    else if (s.status === 'downloading') { UPD.started = true; updShow('down'); } // (a Ctrl+R closed it, say)
+    else if (s.status === 'token') $('updTok').hidden = false;
+  };
+  document.querySelectorAll('input.upd-on').forEach(c => { c.onchange = () => { app.setShowOnStart(c.checked); }; }); // (both boxes follow what the app then says)
   $('updTokBtn').onclick = () => { const b = $('updTok'); b.hidden = !b.hidden; if (!b.hidden) b.querySelector('.tok').focus(); };
   const tok = $('updTok').querySelector('.tok');
   const saveTok = async value => {
+    let r = null;
     $('updTokSave').disabled = true;
     $('updStatus').textContent = value ? 'Checking the token…' : 'Removing the token…';
     try {
-      const r = await app.setToken(value);
+      r = await app.setToken(value);
       tok.value = '';
       if (r && !r.ok) say("Couldn't save the token: " + r.message, 3000);
-      else if (value && r.state.status !== 'auth') { say('Token saved', 1500); $('updTok').hidden = true; }
+      else if (value && r.state.status !== 'token') { say('Token saved', 1500); $('updTok').hidden = true; }
       else if (!value) say('Token removed', 1500);
-      showUpdState(r && r.state);
-    } finally { $('updTokSave').disabled = false; }
+    } finally {
+      $('updTokSave').disabled = false;
+      updState((r && r.state) || UPD.s);
+    }
   };
   $('updTokSave').onclick = () => { const v = tok.value.trim(); if (v) saveTok(v); else tok.focus(); };
   tok.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('updTokSave').click(); } });
@@ -9250,7 +9424,7 @@ async function bgmUI() {
    Playing something else in the main window stops it — never two players at once. ---- */
 const CAN_COVER = !SUBWIN && !!(window.mapApp && mapApp.cover && mapApp.onCover);
 const CAN_CORNER = CAN_COVER && !!mapApp.corner; // (an older desktop app moves its own window instead)
-const CAN_PET = CAN_COVER && !!(mapApp.pet && mapApp.petPics && mapApp.petCfg); // (an older desktop app: run build.bat again)
+const CAN_PET = CAN_COVER && !!(mapApp.pet && mapApp.petPics && mapApp.petCfg); // (an older desktop app: the newest version's installer brings it)
 const coverPost = s => (SUBWIN ? mapApp.coverState(s).catch(() => {}) : Promise.resolve());
 const coverCmd = c => { if (COVER.on) mapApp.coverCmd(c).catch(() => {}); };
 function coverStop() { if (COVER.on) mapApp.cover(false).catch(() => {}); } // (the app then says it ended)
@@ -10440,6 +10614,7 @@ const isProjectFile = f => /\.mapproj$/i.test(f.name || '');
 const newId = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 const safeName = n => String(n || 'Project').replace(/[\\/:*?"<>|\u0000-\u001f]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80) || 'Project';
 async function exportProjects(ids) {
+  dataBusy++;
   try {
     const all = await listProjects();
     const ps = ids ? all.filter(p => ids.includes(p.id)) : all;
@@ -10461,6 +10636,7 @@ async function exportProjects(ids) {
     say('Exported ' + (ps.length === 1 ? '“' + ps[0].name + '”' : ps.length + ' projects') + ' · ' + fmtBytes(blob.size) + (missing ? ' · ' + missing + ' file' + (missing > 1 ? 's' : '') + ' missing' : ''), 3000);
     return blob;
   } catch (e) { say("Couldn't export"); }
+  finally { dataBusy--; }
 }
 function saveBlob(blob, name) {
   const url = URL.createObjectURL(blob), a = document.createElement('a');
@@ -10469,6 +10645,7 @@ function saveBlob(blob, name) {
   document.body.appendChild(a);
   a.click();
   a.remove();
+  dataBusy++; setTimeout(() => dataBusy--, 2000); // (the app hears of this save a moment after the click, and then counts it: state().saving)
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 /* Read a .mapproj: its description, and its files cut out of it (no copying). */
@@ -10492,6 +10669,10 @@ async function readPack(file) {
   return { projects: desc.projects, files };
 }
 async function importProjects(list, openOne = true) {
+  dataBusy++;
+  try { return await importProjectsNow(list, openOne); } finally { dataBusy--; }
+}
+async function importProjectsNow(list, openOne) {
   let added = [], bad = 0, missing = 0;
   say('Importing…');
   for (const file of list) {
@@ -11082,7 +11263,10 @@ applyGq(gqAuto ? (LOW_POWER ? 1 : 0) : GQ_VALUES.indexOf(gfxSel.value));
 setUpTips();
 loadPrefs(); // the settings from last time
 if (SUBWIN) { if (PET) petPage(); coverPage(); } // (background mode's own window: no updates or opened files here; the pets' strip sets up its singers and bubbles first, then plays like the others)
-else { setUpUpdates(); setUpOpenWith(); }
+else {
+  try { setUpUpdates(); } catch (e) { console.error(e); } // (an update bug can't stop the opened files and everything below)
+  setUpOpenWith();
+}
 setUpDiscord(); setUpAirplay();
 if (MOBILE_BUILD && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) // (see mobile/sw.js)
   addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
