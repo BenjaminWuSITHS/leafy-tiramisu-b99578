@@ -149,7 +149,7 @@ body.no-controls #rail .keep{pointer-events:auto}
 #rail>*:not(.keep){transition:transform .3s var(--ease),opacity .3s,visibility 0s}
 body.no-controls #rail>*:not(.keep){transform:translateX(-72px);opacity:0;visibility:hidden;transition:transform .3s var(--ease),opacity .3s,visibility 0s .3s}
 /* Short windows: the strip scrolls (tooltips can't show outside a scrolling box) */
-@media (max-height:640px){
+@media (max-height:690px){
   #rail{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none} /* (up and down only: with just overflow-y set, browsers let it slide sideways too) */
   #rail::-webkit-scrollbar{display:none}
   #rail>*{flex:none}
@@ -354,6 +354,53 @@ h3{font-size:.9rem;margin:16px 0 6px}
 #resetAll{display:block;width:100%;margin:24px 0 8px;padding:12px 16px;font-weight:600;border-radius:8px;transition:border-color .15s,color .15s,background .15s}
 #resetAll:hover{border-color:#c0392b;color:#c0392b}
 #resetAll.armed{border-color:#c0392b;color:#fff;background:#c0392b}
+/* The Sync view: a timeline (bars placed by transforms, see syPlace), then a row for each thing loaded */
+body.loading #syWork{filter:saturate(.5) opacity(.55);cursor:progress}
+#syLine{user-select:none;-webkit-user-select:none}
+#syLine>.hint{margin:6px 0 10px;font-size:.78rem}
+#syScroll{max-height:220px;overflow:hidden auto;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--fg) 25%,transparent) transparent}
+body.phone #syScroll{max-height:176px}
+#syAxis{position:relative}
+#syRuler{position:sticky;top:0;z-index:4;height:16px;overflow:hidden;background:color-mix(in srgb,var(--bg) calc(var(--ui-bg) * 85%),transparent)}
+.sy-tick{position:absolute;top:0;font-size:.66rem;line-height:15px;color:var(--muted);font-variant-numeric:tabular-nums;transform:translateX(-50%);white-space:nowrap}
+.sy-tick.zero{color:var(--fg);font-weight:600}
+.sy-lane{position:relative;height:24px;margin-bottom:3px;overflow:hidden;border-radius:5px;background:color-mix(in srgb,var(--fg) 6%,transparent)}
+.sy-bar{position:absolute;left:0;top:0;bottom:0;box-sizing:border-box;overflow:hidden;border-radius:5px;border:1px solid color-mix(in srgb,var(--c) 75%,var(--surface));background:color-mix(in srgb,var(--c) 38%,var(--surface));cursor:grab;touch-action:pan-y}
+body.m-rot .sy-bar{touch-action:pan-x} /* (the page turned for ☰: the panel scrolls sideways on the screen, and a bar runs up and down it) */
+.sy-bar.drag{cursor:grabbing;border-color:var(--c);background:color-mix(in srgb,var(--c) 55%,var(--surface))}
+.sy-cut{position:absolute;left:0;top:0;bottom:0;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--fg) 32%,transparent) 0 2px,transparent 2px 5px);pointer-events:none}
+.sy-lab{position:absolute;z-index:3;left:5px;right:5px;top:0;bottom:0;display:flex;align-items:center;font-size:.72rem;line-height:1;pointer-events:none}
+.sy-lab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#syBefore{position:absolute;z-index:2;left:0;top:16px;bottom:0;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--fg) 20%,transparent) 0 2px,transparent 2px 6px),color-mix(in srgb,var(--bg) 50%,transparent);pointer-events:none}
+#syZero,#syHead{position:absolute;left:0;top:0;bottom:0;pointer-events:none}
+#syZero{z-index:2;width:1px;background:var(--fg);opacity:.6}
+#syHead{z-index:3;width:2px;margin-left:-1px;background:var(--accent)}
+#syHead::before{content:'';position:absolute;left:-3px;top:0;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.sy-row{padding:8px 0 6px;border-top:1px solid var(--line)}
+.sy-top{display:flex;align-items:center;gap:6px}
+.sy-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:600}
+.sy-row[data-sy=cut] .sy-name{white-space:normal}
+.sy-top input[type=number]{flex:none;width:92px;padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums}
+.sy-unit{flex:none;margin-left:-3px;font-size:.8rem;color:var(--muted)}
+.sy-back{flex:none;display:grid;place-items:center;width:28px;height:28px;padding:0}
+.sy-back svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sy-back:disabled{opacity:.35;cursor:default}
+.sy-nudges{display:flex;gap:3px;margin-top:6px}
+.sy-nudges button{flex:1 1 0;min-width:0;padding:4px 0;font-size:.76rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sy-says{margin:5px 0 0;font-size:.8rem;color:var(--muted)}
+#syRows h3{margin:0;padding:10px 0 2px;border-top:1px solid var(--line)}
+#syRows h3+.hint{margin:0 0 8px;font-size:.8rem}
+.sy-row.one{padding-left:10px;border-top:none;padding-top:4px}
+#syFoot{padding-top:12px;border-top:1px solid var(--line)}
+#syFoot .dbg-row{margin-bottom:8px}
+#syReset{transition:border-color .15s,color .15s,background .15s}
+#syReset:not(:disabled):hover{border-color:#c0392b;color:#c0392b}
+#syReset.armed,#syReset.armed:hover{border-color:#c0392b;color:#fff;background:#c0392b}
+#syReset:disabled{opacity:.45;cursor:default}
+#syDevice{margin-top:8px;padding-top:4px;border-top:1px solid var(--line)}
+#syWhoRow{flex-direction:column;align-items:stretch;gap:4px}
+#syWhoRow select{max-width:none}
+@media (pointer:coarse){.sy-nudges button{padding:9px 0}.sy-back{width:36px;height:36px}.sy-top input[type=number]{padding:7px 6px}.sy-lane{height:30px}}
 /* Projects */
 .psave{display:flex;gap:8px;margin-bottom:10px}
 .psave input,.proj-rename{flex:1;min-width:0;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 10px}
@@ -461,15 +508,27 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #plWhereRow[hidden],#plCoverHint[hidden],#plPetOld[hidden],#petSet[hidden],#petPanel[hidden],#plVisualRow[hidden],#plVisualHint[hidden],#plOneLyricRow[hidden],#plOneLyricHint[hidden]{display:none}
 #petList{list-style:none;margin:6px 0 10px;padding:0}
 #petList li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:.85rem}
-#petList .pc-th{flex:none;width:48px;height:60px;display:flex;align-items:flex-end;justify-content:center;border-radius:6px;background:color-mix(in srgb,var(--fg) 6%,transparent)}
-#petList .pc-th>*{max-width:48px;max-height:60px;object-fit:contain}
+#petList li.hint{display:block;margin:0}
+#petList .pc-th{flex:none;width:48px;height:60px;padding:2px;box-sizing:border-box;display:flex;align-items:flex-end;justify-content:center;border-radius:6px;border:1.5px dashed color-mix(in srgb,var(--fg) 28%,transparent);background:color-mix(in srgb,var(--fg) 4%,transparent);color:color-mix(in srgb,var(--fg) 35%,transparent);cursor:pointer;overflow:hidden}
+#petList .pc-th:hover{border-color:var(--accent)}
+#petList .pc-th.on{border-style:solid;border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--fg) 7%,transparent)}
+#petList .pc-th svg{width:26px;height:26px;margin:auto}
+#petList .pc-th img{max-width:100%;max-height:100%;object-fit:contain}
 #petList .pc-txt{flex:1;min-width:0}
-#petList .pc-name{font-weight:600}
-#petList .pc-badge{display:inline-block;margin-left:6px;padding:0 6px;border-radius:999px;font-size:.72rem;font-weight:500;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--fg)}
+#petList .pc-name{font-weight:600;overflow-wrap:anywhere}
+#petList .pc-songs{color:var(--muted);font-size:.78rem;line-height:1.35;overflow-wrap:anywhere}
+#petList .pc-badge{display:inline-block;margin-top:3px;padding:0 7px;border:1px solid transparent;border-radius:999px;font-size:.72rem;font-weight:500;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--fg)}
 #petList .pc-badge.off{background:color-mix(in srgb,var(--fg) 8%,transparent);color:var(--muted)}
-#petList .pc-key{color:var(--muted);font-size:.75rem;overflow-wrap:anywhere}
-#petList .pc-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+#petList .pc-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 #petList .pc-btns button{font-size:.75rem;padding:2px 8px}
+/* what the list comes to: over it, and above Start while it's closed (the warning colours are #lenWarn's) */
+.pet-sum{margin:0 0 10px;font-size:.85rem;line-height:1.4;color:var(--muted)}
+#petPanel:not([hidden])~#petWarn{display:none}
+.pet-sum.warn{padding:6px 10px;border:1px solid #e8b931;border-radius:8px;background:#fff4d6;color:#5c4300}
+#petList .pc-badge.warn{border-color:#e8b931;background:#fff4d6;color:#5c4300}
+@media (prefers-color-scheme:dark){
+  .pet-sum.warn,#petList .pc-badge.warn{border-color:#8a6a1a;background:#3a2f12;color:#ffe08a}
+}
 /* Desktop pet: the pictures for the singers, asked for before the pets start (petAskDialog); App updates: the popup, in the same look (updShow) */
 #petPicDlg,#updDlg{width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.4)}
 #petPicDlg[open],#updDlg[open]{display:flex;flex-direction:column}
@@ -705,6 +764,10 @@ body.dropping::after{content:'Drop audio, video, SVP, MIDI, VoiSona, UST or USTX
   input[type=checkbox]{background:rgba(128,128,128,.45)}
   input[type=range]{--rt:rgba(128,128,128,.35)}
   #sbar::before{background:rgba(128,128,128,.4)}
+  .sy-lane{background:rgba(128,128,128,.15)}
+  .sy-bar,.sy-bar.drag{background:var(--surface);border-color:var(--c)}
+  .sy-cut,#syBefore{background:rgba(128,128,128,.4)}
+  #syRuler{background:var(--bg)}
 }
 /* Desktop-only things are hidden on touch screens / phone layouts */
 body.touch .no-touch,body.phone .no-touch,body.phone .no-phone{display:none!important}
@@ -799,6 +862,12 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <!-- Sections are divided by lines. A setting marked data-needs="id" only shows while that
          switch is on (data-needs="id=value": while that list is set to value) -->
     <div class="sgroup">
+      <h2>Sync and timing</h2>
+      <p class="hint" id="syncSum">Everything starts together</p>
+      <div class="dbg-row"><button id="syncOpen">Open Sync…</button></div>
+    </div>
+
+    <div class="sgroup">
       <h2>Appearance</h2>
       <label class="op">Graphics quality <select autocomplete="off" id="gfxQuality">
         <option value="auto" selected>Auto</option>
@@ -871,7 +940,6 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         </div>
       </div>
       <label class="op">Play notes as synth <input autocomplete="off" type="checkbox" id="synthOn"></label>
-      <label class="op">Score starts at (seconds) <input autocomplete="off" type="number" id="scoreOffset" min="-30" max="30" step="0.05" value="0"></label>
       <label class="op">VoiSona / CeVIO timing <select autocomplete="off" id="scoreTpq">
         <option value="auto" selected>Auto</option>
         <option value="480">480 ticks / beat</option>
@@ -884,26 +952,15 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 
     <div class="sgroup">
       <h2>Video</h2>
-      <label class="op">Start video at (seconds) <input autocomplete="off" type="number" id="vidOffset" min="0" step="0.5" value="0"></label>
       <label class="op">Video fit <select autocomplete="off" id="vidFit"><option value="contain" selected>Whole video (bars)</option><option value="inset">Beside the controls</option><option value="cover">Fill the screen</option></select></label>
       <label class="op">Video bars <select autocomplete="off" id="vidBars"><option value="ambient" selected>Ambient glow</option><option value="black">Black</option></select></label>
       <p class="hint">Ambient glow: the bars around the video glow softly with its colours (like YouTube's ambient mode) — also black bars that are part of the video itself, which are found by watching the edges that never show anything. Black: plain black bars.</p>
       <p class="hint">Whole video: the picture fits on the screen behind everything (under the controls and the visualizer), with bars where its shape differs from the screen's. Beside the controls: the picture fits in the space the controls, the track tabs, the visualizer and the lyrics bar leave free — nothing is on it — and they all sit on the bars around it. (The full-screen piano roll still draws over it; its Bar layout doesn't.) Fill the screen: no bars, but the edges that don't fit are cut off.</p>
-      <label class="op">Sync <select autocomplete="off" id="syncMode">
-        <option value="auto" selected>Auto</option>
-        <option value="video">The video follows the audio</option>
-        <option value="audio">The audio follows the video</option>
-      </select></label>
-      <p class="hint">Auto: on computers the video follows the audio, so the music never speeds up, slows down or jumps to stay with the picture; on phones and tablets the audio follows the video, which copes better when their video playback stutters.</p>
       <button id="bgClear" hidden>Remove video</button>
     </div>
 
     <div class="sgroup">
       <h2>Playback</h2>
-      <label class="op">Audio starts at (seconds) <input autocomplete="off" type="number" id="audioOffset" min="0" max="600" step="0.1" value="0"></label>
-      <p class="hint">Starts all the audio this much later in the song: the video and the piano roll play their first seconds before the music comes in (e.g. a music video with an intro the audio files don't have).</p>
-      <label class="op">Skip the start of the audio (seconds) <input autocomplete="off" type="number" id="audioTrim" min="0" max="600" step="0.1" value="0"></label>
-      <p class="hint">Cuts this much off the beginning of every audio track: the song starts that far into the audio, the video and the piano roll stay where they are (e.g. audio files with a count-in or silence the video doesn't have). Works together with Audio starts at: the cut audio comes in then.</p>
       <label class="op">Audio engine <select autocomplete="off" id="audioEngine">
         <option value="auto" selected>Auto</option>
         <option value="precise">Precise</option>
@@ -912,8 +969,6 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
       <p class="hint">Precise: every track is decoded into memory and all of them play from one clock, so they can never drift apart; the whole mix follows the video by playing a tiny bit faster or slower. Standard: one player per track (uses less memory); each track corrects itself when it is quiet. Auto picks Precise when the device has enough memory.</p>
       <label class="op">Load files into memory <input autocomplete="off" type="checkbox" id="preloadMem" checked></label>
       <p class="hint">Files are read completely before they play, and nothing starts until everything is ready. Turn off if the app runs out of memory with very large files.</p>
-      <label class="op">Speaker delay (ms) <input autocomplete="off" type="number" id="spkDelay" min="0" max="5000" step="10" value="0"></label>
-      <p class="hint">How much later the sound reaches you than this device makes it — Bluetooth headphones, or AirPlay chosen on an iPhone, iPad or Mac (about 2000). The picture (visualizer, piano roll, lyrics, video) waits that long, so it stays in time with what you hear. The desktop app's own AirPlay allows for its delay by itself.</p>
       <label class="op">Separate track speeds <input autocomplete="off" type="checkbox" id="freeSpeed"></label>
       <p class="hint">Turns off all syncing — between the tracks and with the video — so every track can get its own speed: a Speed slider appears on each track. The tracks then drift apart on purpose; Sync (S) lines them all up again where you are. Turning this off puts every track back to normal speed, in sync.</p>
     </div>
@@ -990,6 +1045,51 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
       <div class="dbg-row no-touch"><button id="dbgPhoneP" title="Open a phone-sized window (portrait)">Phone window ▯</button><button id="dbgPhoneL" title="Open a phone-sized window (landscape)">Phone window ▭</button></div>
       <button id="resetAll">Reset everything</button>
     </div>
+
+    <!-- What the Sync view's numbers are stored in: in here so that projects, remembered settings and resets keep treating them
+         like any other setting. The view is what you see of them (its controls write these; see syncState). -->
+    <div id="syncKept" hidden>
+      <input autocomplete="off" type="number" id="audioOffset" step="any" value="0">
+      <input autocomplete="off" type="number" id="audioTrim" step="any" value="0">
+      <input autocomplete="off" type="number" id="vidOffset" step="any" value="0">
+      <input autocomplete="off" type="number" id="scoreOffset" step="any" value="0">
+      <input autocomplete="off" type="number" id="spkDelay" min="0" max="5000" step="10" value="0">
+      <select autocomplete="off" id="syncMode">
+        <option value="auto" selected>Auto</option>
+        <option value="video">The video follows the audio</option>
+        <option value="audio">The audio follows the video</option>
+      </select>
+    </div>
+  </section>
+
+  <section id="viewSync" hidden>
+    <h1>Sync</h1>
+    <p class="hint">Play the song and move whatever is off while you watch and listen: + is later, − is earlier. Save the project to keep it.</p>
+    <p class="hint" id="syEmpty">Open a song to line it up.</p>
+    <div id="syWork">
+      <div id="syLine" role="group" aria-label="Timeline">
+        <div id="syScroll"><div id="syAxis">
+          <div id="syRuler" aria-hidden="true"></div>
+          <div id="syLanes"></div>
+          <div id="syBefore" aria-hidden="true"></div>
+          <div id="syZero" aria-hidden="true"></div>
+          <div id="syHead" aria-hidden="true"></div>
+        </div></div>
+        <p class="hint">Drag a bar left or right, or use the numbers below. What falls left of the song's start is cut off.</p>
+      </div>
+      <div id="syRows"></div>
+      <div id="syFoot">
+        <div class="dbg-row"><button id="syReset">Reset all</button><button id="syProjSave" class="primary" hidden>Save project</button></div>
+        <p class="hint" id="syProjLine" hidden>These go with the project once it's saved: Projects → Save.</p>
+      </div>
+    </div>
+    <div class="sgroup" id="syDevice">
+      <h2>This device</h2>
+      <div class="op">Speaker delay (ms) <input autocomplete="off" type="number" id="sySpk" min="0" max="5000" step="10" value="0" aria-label="Speaker delay in milliseconds"></div>
+      <p class="hint">How much later the sound reaches you than this device makes it — Bluetooth headphones, or AirPlay chosen on an iPhone, iPad or Mac (about 2000). The picture (visualizer, piano roll, lyrics, video) waits that long, so it stays in time with what you hear. The desktop app's own AirPlay allows for its delay by itself.</p>
+      <label class="op" id="syWhoRow">Sync (who follows whom) <select autocomplete="off" id="syWho"></select></label>
+      <p class="hint">Auto: on computers the video follows the audio, so the music never speeds up, slows down or jumps to stay with the picture; on phones and tablets the audio follows the video, which copes better when their video playback stutters.</p>
+    </div>
   </section>
 
   <section id="viewProjects" hidden>
@@ -1022,11 +1122,12 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <label class="op" id="plWhereRow" hidden>Plays in <select id="plWhere" autocomplete="off"><option value="corner">Small corner player</option><option value="cover">Cover the screen</option><option value="pet" id="plWherePet">Desktop pet</option></select></label>
     <p class="hint" id="plPetOld" hidden>Install the newest version to get Desktop pet mode (this copy of the app is from before it).</p>
     <div id="petSet" hidden>
-      <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer left or right along the taskbar (it's remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the right, just above them) stops. Each singer is a picture of your own: when you start, the player asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
+      <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer left or right along the taskbar (it's remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the right, just above them) stops. Each singer is a picture of your own: Characters… lists the singers of the songs in your playlist, so you can give them their pictures before you start, and warns about any without one. When you start, the player also asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
       <label class="op">Character size <select id="petSize" autocomplete="off"><option value="S">Small</option><option value="M">Medium</option><option value="L">Large</option></select></label>
       <label class="op"><span>Height on the taskbar <span class="rv" id="petLiftTxt">50%</span></span><input autocomplete="off" type="range" id="petLift" min="0" max="150" step="5" value="50" title="0%: feet on the bottom edge of the screen · 50%: on the middle of the taskbar · 100%: on its top edge"></label>
       <div class="dbg-row"><button id="petCharsBtn" aria-expanded="false">Characters…</button></div>
-      <div id="petPanel" hidden><p class="hint">Every singer the pets have met, and its picture: only singers with a picture come on. Choose picture… sets or changes it (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more.</p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*" hidden></div>
+      <div id="petPanel" hidden><p class="hint">The singers of the songs in the playlist above: only singers with a picture come on. Choose picture… or Change… gives one its picture (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more.</p><p class="pet-sum" id="petSum" role="status" hidden></p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*" hidden></div>
+      <p class="pet-sum" id="petWarn" role="status" hidden></p>
     </div>
     <p class="hint" id="plCoverHint" hidden>Cover the screen: instead of the small window, the visualizer and the piano roll play over your whole screen, with nothing behind them — your other windows show through, and the mouse goes straight through to them. The player waits in the taskbar as the remote control. The controls are in a little window in the bottom-right corner of the screen (the song, ⏮ ⏯ ⏭, and ✕ to stop), and these keys work from any app while it plays: Ctrl+Alt+Space play / pause, Ctrl+Alt+Page Down next song, Ctrl+Alt+Page Up previous song, Ctrl+Alt+End stop — and the media keys on your keyboard.</p>
     <button id="bgmStart" class="primary bgm-big">Start background mode</button>
@@ -1043,6 +1144,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <span class="sep"></span>
   <button class="rbtn active" id="tabTracks" data-tip="Tracks" aria-label="Tracks"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
   <button class="rbtn" id="tabSettings" data-tip="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></button>
+  <button class="rbtn" id="tabSync" data-tip="Sync" aria-label="Sync"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M2 7h13M9 12h13M4 17h13"/></svg></button>
   <button class="rbtn" id="tabProjects" data-tip="Projects" aria-label="Projects"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></button>
   <button class="rbtn" id="tabPlaylist" data-tip="Background mode (playlist)" aria-label="Background mode (playlist)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h12M3 12h12M3 18h7"/><path d="M15 15.5v5l4.5-2.5z" fill="currentColor"/></svg></button>
   <span class="sep"></span>
@@ -1097,7 +1199,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <label class="air-nd"><input type="checkbox"> <span>No-delay AirPlay</span></label>
   <p class="air-nd-how">On: the speaker starts at once and stays in time with the lyrics and piano roll, as it plays a ready-made mix of the song. Changes to the mix (a track's volume or mute, tracks added) take a moment to reach the speaker.</p>
   <p class="air-nd-msg" role="status" hidden></p>
-  <label class="air-late"><input type="checkbox"> <span>Keep the lyrics and piano roll in time with an AirPlay speaker (it plays about 2 seconds late; Settings → Speaker delay)</span></label>
+  <label class="air-late"><input type="checkbox"> <span>Keep the lyrics and piano roll in time with an AirPlay speaker (it plays about 2 seconds late; Sync → Speaker delay)</span></label>
 </div>
 <div id="airPanel" role="dialog" aria-label="AirPlay" hidden>
   <div class="air-head"><b>AirPlay</b><button class="air-x" aria-label="Close" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
@@ -1311,7 +1413,7 @@ const isLoading = () => LOAD.done < LOAD.total;
 function loadBegin(kind) {
   if (!isLoading()) Object.assign(LOAD, { total: 0, done: 0, part: 0, audio: 0, video: 0, failed: [], after: null });
   if (wantPlay) { // carries on once everything has loaded — unless only some tracks were playing
-    const all = ENG.on || tracks.every(a => !a.getAttribute('src') || !a.paused || a.ended); // (standard engine: one track on its own)
+    const all = ENG.on || tracks.every(a => !a.getAttribute('src') || !a.paused || a.ended || a._held); // (standard engine: one track on its own. Waiting for its entrance, or in a lead-in, it's as good as playing)
     LOAD.resumeAt = songTime();
     pauseAll();
     LOAD.resume = all;
@@ -1360,13 +1462,14 @@ function loadEnd(failedName) {
    playback shortcuts only say why. Adding more files still works. */
 const LOCK_MSG = 'You can change the tracks once everything has loaded';
 function lockTracks(on) {
-  for (const el of [...$('list').children, ...$('tabs').children, $('allCard')]) el.inert = on;
+  for (const el of [...$('list').children, ...$('tabs').children, $('allCard'), $('syLine'), $('syRows'), $('syFoot')]) el.inert = on;
+  if (on) syUp(true);
 }
 document.addEventListener('pointerdown', e => {
   if (!isLoading() || e.button) return;
   const t = e.target;
   if (t.closest('.transport button, #sbar')) { e.preventDefault(); e.stopPropagation(); loadBlocked(t.closest('#playAll') ? null : LOCK_MSG); }
-  else if (t.closest('#list, #allCard, #tabs')) loadBlocked(LOCK_MSG); // (the cards themselves are inert: the click lands here)
+  else if (t.closest('#list, #allCard, #tabs, #syWork')) loadBlocked(LOCK_MSG); // (the cards themselves are inert: the click lands here)
 }, true);
 document.addEventListener('click', e => { // (and their click / keyboard Enter does nothing)
   if (isLoading() && e.target.closest('.transport button')) { e.preventDefault(); e.stopPropagation(); if (e.detail === 0) loadBlocked(e.target.closest('#playAll') ? null : LOCK_MSG); }
@@ -1589,7 +1692,7 @@ function attachMedia(el, file, cap) {
       if (ok && el !== bg && !wantPlay && !stale()) {
         let ref = null;
         for (const m of tracks) if (m !== el && !m._eng && isFinite(m.duration) && (!ref || m.duration > ref.duration)) ref = m;
-        if (ref) placeAt(el, ref.currentTime);
+        if (ref) placeAt(el, stdPos != null ? stdPos - audioOffset : ref.currentTime + ref._shift);
       }
       return ok;
     });
@@ -1655,11 +1758,12 @@ class EngTrack {
     if (this._node) this._node.port.postMessage({ cmd: 'loop', on: this._loop });
   }
   get paused() { return !ENG.playing || !this._on; }
-  get ended() { return !this._loop && isFinite(this.duration) && freePos(this, engNow()) >= this.duration - 0.01; }
+  get ended() { return !this._loop && isFinite(this.duration) && trackPos(this, engNow()) >= this.duration - 0.01; }
   get currentTime() {
-    const t = freePos(this, engHeard());
+    const t = trackPos(this, engHeard());
     if (!isFinite(this.duration)) return t;
-    if (this._loop && this.duration > audioTrim) return t < audioTrim ? t : audioTrim + (t - audioTrim) % (this.duration - audioTrim);
+    const fl = trackFloor(this);
+    if (this._loop && this.duration > fl) return t < fl ? t : fl + (t - fl) % (this.duration - fl);
     return Math.min(t, this.duration);
   }
   set currentTime(v) {} // one shared position: see engJump / engStart
@@ -1728,6 +1832,7 @@ function addTrack(file) {
     list.innerHTML = '';
     engChooseMode();
     if (ENG.on && !ENG.rebuilding) ENG.pausedAt = -audioOffset;
+    stdPos = null; // (from a video waiting on its own)
   }
   const an = actx.createAnalyser();
   an.fftSize = LOW_POWER ? 1024 : 2048;
@@ -1750,10 +1855,10 @@ function addTrack(file) {
     audio._src = actx.createMediaElementSource(audio);
     audio._src.connect(an);
     ['play', 'pause', 'ended'].forEach(ev => audio.addEventListener(ev, syncVideo));
-    // a loop starts again where the cut start ends ("Skip the start of the audio")
-    audio.addEventListener('seeked', () => { if (audio.loop && audioTrim > 0 && audio.currentTime < audioTrim - 0.02 && audio.duration > audioTrim) audio.currentTime = audioTrim; });
+    // a loop starts again where its cut start ends
+    audio.addEventListener('seeked', () => { const fl = trackFloor(audio); if (audio.loop && fl > 0 && audio.currentTime < fl - 0.02 && audio.duration > fl) audio.currentTime = fl; });
   }
-  Object.assign(audio, { _an: an, _gain: gain, _vol: 1, _show: true, _muted: false, _custom: false, _spd: 1, _fa: null,
+  Object.assign(audio, { _an: an, _gain: gain, _vol: 1, _show: true, _muted: false, _custom: false, _spd: 1, _fa: null, _shift: 0, _held: false,
                          _name: file.name, _color: spreadColor(0, 1), _file: file });
   tracks.push(audio);
 
@@ -1771,6 +1876,7 @@ function addTrack(file) {
   li.querySelector('.name').textContent = file.name;
   li.querySelector('[data-a=play]').onclick = () => {
     if (isLoading() && !(audio._eng ? wantPlay : !audio.paused)) { loadBlocked(); return; } // pausing is always fine
+    if (!wantPlay && allBeforeStart()) return;
     if (audio._eng) { // precise engine: one shared clock, so a track's own button switches it on / off
       if (!wantPlay) { audio._on = true; applyGain(audio); startAll(); }
       else { audio._on = !audio._on; applyGain(audio); }
@@ -1779,14 +1885,24 @@ function addTrack(file) {
     }
     if (audio.paused) {
       if (ND.el && !wantPlay) { startAll(); return; } // (No-delay AirPlay: the ready mix is the sound — the whole song plays, as with the precise engine; see ndNow)
-      if (audio.ended) audio.currentTime = 0;
+      if (trackFloor(audio) >= audio.duration) { say(audio._name + " is all before the song's start"); return; } // (nothing of it is ever heard: played, it would only go round to what's cut)
+      if (audio._held) { say(audio._name + (trackIn(audio) > songTime() ? ' comes in at ' + timeWords(trackIn(audio)) : ' has finished')); return; } // (its own shift: it isn't its turn yet. In a gap, one that's done)
+      if (stdPos != null && stdPos < trackIn(audio) - 0.05) { say(audio._name + ' comes in at ' + timeWords(trackIn(audio))); return; } // (stopped before its turn: the song's clock has nothing to go by if it plays now)
+      if (audio.ended) audio.currentTime = trackFloor(audio); // (played again: from the start of what's heard)
+      Object.assign(stdClk, { at: songTime(), t0: performance.now() }); // (looping tracks paused by hand: the clock they turn back on goes from here, not from when it last ran)
+      if (stdPos != null && stdPos >= trackIn(audio)) stdPos = null; // (on its own, while others still wait to come in: this one is the clock now)
       wantPlay = true;
       unmuteMaster();
       playEl(audio);
     } else {
       lastUserPause = performance.now();
+      const at = tracks.some(x => x._held) || stdClk.on ? songTime() : null; // (tracks still to come in, or only looping ones, can't say where the song is, once it's paused)
       audio.pause();
-      if (tracks.every(t => t.paused)) wantPlay = false;
+      if (tracks.every(x => x.paused)) {
+        wantPlay = false;
+        stdClk.on = false;
+        if (at != null) { stdPos = at; tracks.forEach(x => { x._held = false; }); }
+      }
     }
   };
   li.querySelector('[data-a=mute]').onclick = () => {
@@ -1811,7 +1927,12 @@ function addTrack(file) {
       }
     });
     // The song is over once every track has stopped
-    audio.addEventListener('ended', () => { if (!launching && tracks.every(t => t.paused || t.ended)) wantPlay = false; });
+    // (not while other tracks still wait to come in: stdTick carries on to them)
+    audio.addEventListener('ended', () => {
+      if (launching) return;
+      stdTick();
+      if (tracks.every(t => t.paused || t.ended) && !tracks.some(t => t._held)) wantPlay = false;
+    });
   }
 
   // Tab (click = hide/show this track in the mix and the visualizer)
@@ -1856,9 +1977,14 @@ function addTrack(file) {
   updateMediaSession();
   if (audio._eng) engAttach(audio, file);
   else attachMedia(audio, file);
+  syncNotify();
 }
 function removeTrack(audio) {
   audio._gone = true;
+  if (!ENG.on && wantPlay && !stdClk.on && tracks.some(x => x !== audio && x._held)) { // (the clock mustn't go by a track that's still waiting: it runs on by itself until the tick starts the lead-in)
+    const n = performance.now();
+    Object.assign(stdClk, { on: true, at: songTime(), t0: n, until: n + 400 });
+  }
   if (audio._eng) engDetach(audio);
   else {
     const u = audio.getAttribute('src') ? audio.src : null;
@@ -1876,12 +2002,13 @@ function removeTrack(audio) {
   audio._tab.remove();
   audio._crow.remove();
   audio._li.remove();
-  if (!tracks.length) { wantPlay = false; ndDrop(); engReset(); lenDismissed.clear(); } // (a new song: its warnings are new; No-delay AirPlay's mix was the old song's)
+  if (!tracks.length) { wantPlay = false; ndDrop(); engReset(); lenDismissed.clear(); stdPos = null; stdClk.on = false; } // (a new song: its warnings are new; No-delay AirPlay's mix was the old song's)
   checkLengths(); // (the length warning is about the tracks that are left, at once)
   recolorTracks(); // (also updates the All tracks card)
   updateMediaSession(); // the lock screen / Now Playing title
   showEmpty();
   syncVideo();
+  syncNotify();
 }
 /* A tab's ×: the first click arms it (turns red, for 3 s), a second click removes the track. */
 function disarmTab(tab) { clearTimeout(tab._armT); tab.classList.remove('arm'); }
@@ -2602,15 +2729,17 @@ document.addEventListener('webkitfullscreenchange', fsSync);
 /* =====================================================================
    Panel views + simple settings
    ===================================================================== */
-const VIEWS = { tracks: ['viewTracks', 'tabTracks'], settings: ['viewSettings', 'tabSettings'], projects: ['viewProjects', 'tabProjects'], playlist: ['viewPlaylist', 'tabPlaylist'] };
+const VIEWS = { tracks: ['viewTracks', 'tabTracks'], settings: ['viewSettings', 'tabSettings'], sync: ['viewSync', 'tabSync'], projects: ['viewProjects', 'tabProjects'], playlist: ['viewPlaylist', 'tabPlaylist'] };
 function showView(name) {
   hideTip();
+  if (name === 'playlist' && $('viewPlaylist').hidden) PETR.closed = false; // (Characters… may open by itself again: petFollow)
   for (const [k, [id, btn]] of Object.entries(VIEWS)) {
     $(id).hidden = k !== name;
     $(btn).classList.toggle('active', k === name);
   }
   if (name === 'projects') renderProjects();
   if (name === 'playlist') renderPlaylist();
+  syShown(name);
 }
 // On small screens the panel covers most of the screen: tapping the tab you're already on
 // closes it (not in phone portrait, where the panel can't be hidden).
@@ -2622,6 +2751,7 @@ function tabClick(name) {
 }
 $('tabTracks').onclick = () => tabClick('tracks');
 $('tabSettings').onclick = () => tabClick('settings');
+$('tabSync').onclick = () => tabClick('sync');
 $('tabProjects').onclick = () => tabClick('projects');
 $('tabPlaylist').onclick = () => tabClick('playlist');
 
@@ -2746,6 +2876,8 @@ function setUpTips() {
   document.addEventListener('scroll', () => { if (tipS.for && !placeTip(tipS.for)) hideTip(); }, true); // (follows its setting)
   addEventListener('keydown', e => { if (e.key === 'Escape' && tipS.for) hideTip(); }, true);
   addEventListener('resize', () => { if (tipS.for) hideTip(); });
+  // a short window's rail scrolls, so its own tips can't show outside it (the same height as the rule in the styles): the browser's label instead, set as the pointer arrives, since Hide / Show controls changes what they say
+  $('rail').addEventListener('pointerover', e => { const b = e.target.closest('.rbtn'); if (b) b.title = matchMedia('(max-height:690px)').matches ? b.dataset.tip || '' : ''; });
 }
 
 /* Settings that only work while another one is on (data-needs="id": that switch is on;
@@ -2784,14 +2916,17 @@ ambBox.onchange = applyAmbient;
    ===================================================================== */
 const FREE = { on: false };
 const freePos = (a, clk) => FREE.on && a._fa ? a._fa.p + (clk - a._fa.c) * a._spd : clk;
+/* Where a track is in its own file at the song's clock clk (audio time): its line, less its own shift (a._shift, Sync
+   area). Before the start of the file: nothing to hear yet, the clock runs on. */
+const trackPos = (a, clk) => freePos(a, clk) - a._shift;
 function freeReset(clk) { tracks.forEach(a => { a._fa = { c: clk, p: clk }; }); }
 /* Standard engine: the clock is read from a track at normal speed (else from the first one). */
 function freeRef() {
   const ok = a => !a.loop && isFinite(a.duration) && a.readyState >= 1;
-  const live = a => ok(a) && !a.ended && a.currentTime < a.duration - 0.05;
+  const live = a => ok(a) && !a._held && !a.ended && a.currentTime < a.duration - 0.05;
   return tracks.find(a => a._spd === 1 && live(a)) || tracks.find(live) || tracks.find(a => a._spd === 1 && ok(a)) || tracks.find(ok) || null;
 }
-const freeClockOf = a => a._fa ? a._fa.c + (a.currentTime - a._fa.p) / a._spd : a.currentTime;
+const freeClockOf = a => a._fa ? a._fa.c + (a.currentTime + a._shift - a._fa.p) / a._spd : a.currentTime + a._shift;
 function speedUI(a) {
   if (!a._li) return;
   const r = a._li.querySelector('input.tspd'), v = a._li.querySelector('.tspdv');
@@ -2816,7 +2951,8 @@ function setTrackSpeed(a, v) {
       a._spd = v; // (the node gets it with the next start)
     }
   } else {
-    a._fa = { c: songTime() - audioOffset, p: a.currentTime };
+    const c = songTime() - audioOffset;
+    a._fa = { c, p: a._held ? freePos(a, c) : a.currentTime + a._shift }; // (still waiting to come in: it isn't at its place yet)
     a._spd = v;
     a.defaultPlaybackRate = rate * v;
     setRateOf(a, rate * v);
@@ -2940,7 +3076,8 @@ class TrackPlayer extends AudioWorkletProcessor {
     // r: this track's own speed (Separate track speeds; else 1). clk: the shared song clock, which
     // runs at the common speed whatever r is — that's what gets reported back.
     this.r = 1; this.clk = 0; this.clkStop = 0;
-    this.fl = 0; // "Skip the start of the audio": everything before this sample is silent (and loops leave it out)
+    this.fl = 0; // this track's own cut start (trackFloor): everything before this sample is silent (and loops leave it out)
+    this.ofl = Infinity; // the one before it, while a crossfade from where that was heard is under way
     this.env = 0; this.envTo = 0; this.envStep = 0;
     this.old = 0; this.xf = 0; this.xfLen = 1;
     this.h = new Float64Array(512).fill(NaN); this.qi = 0; // speed of the recent render blocks
@@ -2950,7 +3087,7 @@ class TrackPlayer extends AudioWorkletProcessor {
       if (d.cmd === 'data') { this.L = new Int16Array(d.L); this.R = d.R ? new Int16Array(d.R) : null; this.ix = d.ix ? new Int32Array(d.ix) : null; this.len = d.len != null ? d.len : this.L.length; }
       else if (d.cmd === 'free') { this.dead = true; this.L = this.R = this.ix = null; this.q = []; }
       else if (d.cmd === 'loop') this.loop = !!d.on;
-      else if (d.cmd === 'floor') this.fl = Math.max(0, Math.floor(d.f) || 0);
+      else if (d.cmd === 'floor' && d.at === undefined) { this.q = this.q.filter(c => c.cmd !== 'floor'); this.fl = Math.max(0, Math.floor(d.f) || 0); } // (messages come in order: this is newer than any still waiting for its sample)
       else if (d.cmd === 'report') this.rep = !!d.on;
       else if (Number.isFinite(d.at) && (d.pos === undefined || Number.isFinite(d.pos))) this.q.push(d);
     };
@@ -2993,6 +3130,7 @@ class TrackPlayer extends AudioWorkletProcessor {
     return y1 + 0.5 * f * (y2 - y0 + f * (2 * y0 - 5 * y1 + 4 * y2 - y3 + f * (3 * (y1 - y2) + y3 - y0)));
   }
   apply(c, sp) {
+    if (c.cmd === 'floor') { this.ofl = this.fl; this.fl = Math.max(0, Math.floor(c.f) || 0); return; } // (on the same sample as the move that goes with it)
     const adv = this.adv(c.at, sp);
     if (c.seq) this.seq = c.seq;
     const clk = c.clk !== undefined ? c.clk : c.pos;
@@ -3027,6 +3165,7 @@ class TrackPlayer extends AudioWorkletProcessor {
       for (const c of this.q) { if (c.at < end) this.apply(c, sp); else keep.push(c); }
       this.q = keep;
     }
+    if (!this.xf) this.ofl = Infinity; // (no crossfade under way: a later one doesn't go by an old cut start)
     const L = this.L, R = this.R, len = this.len, spe = sp * this.r; // spe: this track's speed
     if (!this.run) { oL.fill(0); if (oR) oR.fill(0); this.report(N, sp); return true; }
     if (!L || !len || (!this.loop && !this.xf && (this.pos >= len + 4 || this.pos + N * spe < this.fl - 4))) {
@@ -3060,7 +3199,10 @@ class TrackPlayer extends AudioWorkletProcessor {
           r = R ? this.at(R, p) : l;
         }
         if (this.xf > 0) { // crossfade from the old position after a jump
+          const fl = this.fl;
+          this.fl = Math.min(fl, this.ofl); // (the old voice fades out under the cut start it was heard with: under a new one it would stop dead, a click)
           const w = this.xf / this.xfLen, ol = this.at(L, this.old), orr = R ? this.at(R, this.old) : ol;
+          this.fl = fl;
           l = l * (1 - w) + ol * w;
           r = r * (1 - w) + orr * w;
           this.old += spe;
@@ -3287,9 +3429,9 @@ function engAttach(a, file) {
     node.port.postMessage({ cmd: 'data', L: pcm.L.buffer, R: pcm.R ? pcm.R.buffer : null, ix: pcm.ix ? pcm.ix.buffer : null, len: pcm.len },
       [pcm.L.buffer, ...(pcm.R ? [pcm.R.buffer] : []), ...(pcm.ix ? [pcm.ix.buffer] : [])]); // (handed over, not copied)
     node.port.postMessage({ cmd: 'loop', on: a._loop });
-    node.port.postMessage({ cmd: 'floor', f: audioTrim * actx.sampleRate });
     node.connect(a._an);
     a._node = node;
+    engFloor(a);
     a._bytes = pcm.bytes;
     ENG.used += pcm.bytes;
     a.duration = pcm.len / actx.sampleRate;
@@ -3334,7 +3476,7 @@ function engReport(d) {
 }
 function engReset() {
   ENG.playing = false;
-  ENG.pausedAt = -audioOffset; // the start of the song (audio time 0 only when there's no Audio starts at / Skip)
+  ENG.pausedAt = -audioOffset; // the start of the song (audio time 0 only when the audio isn't moved)
   ENG.rep = null;
   ENG.from = null;
   ENG.sync = 1;
@@ -3349,6 +3491,8 @@ function engOutOfMemory() {
   setTimeout(() => rebuildTracks(false), 0);
 }
 const engPost = msg => tracks.forEach(a => { if (a._node) a._node.port.postMessage(msg); });
+/* A track's own cut start, on its node: at once, or (at: a frame) on the same sample as the move that goes with it. */
+const engFloor = (a, at) => { if (a._node) a._node.port.postMessage({ cmd: 'floor', f: trackFloor(a) * actx.sampleRate, at }); };
 const engFrame = t => Math.round(t * actx.sampleRate);
 /* Song position (s) at the point the engine is processing (context time ctxT, default now). */
 function engNow(ctxT) {
@@ -3356,8 +3500,9 @@ function engNow(ctxT) {
   const r = ENG.rep, t = ctxT === undefined ? actx.currentTime : ctxT, F = ENG.from;
   // Before the latest start / jump has happened, the position is where it starts. (The first
   // report after a start comes from after it: extrapolating it back to the moment you hear made
-  // the position run backwards for a moment, and the piano roll stumble at every start.)
-  if (F && t < F.t) return F.pos;
+  // the position run backwards for a moment, and the piano roll stumble at every start. A move of the audio on
+  // the timeline, F.move, is no jump in the song: the song's time just carries on.)
+  if (F && t < F.t && !F.move) return F.pos;
   if (r.start && t < r.t) return r.pos;
   return r.pos + (t - r.t) * r.sp;
 }
@@ -3371,7 +3516,7 @@ function heardCtxTime() {
   return actx.currentTime - (actx.baseLatency || 0) - (actx.outputLatency || 0) - late;
 }
 /* Seconds the sound reaches you later than the page plays it: the limiter's look-ahead (~4 ms), AirPlay from the
-   desktop app (it says how long), plus Settings → Speaker delay (Bluetooth, AirPlay chosen on an iPhone / Mac). */
+   desktop app (it says how long), plus Sync → Speaker delay (Bluetooth, AirPlay chosen on an iPhone / Mac). */
 function heardDelay() { return LIM.d + (PIC.on || ND.el ? 0 : (AIR.on ? AIR.lat : 0) + Math.max(0, Math.min(5000, +spkDelayIn.value || 0)) / 1000); } // (the TV's picture: filmed as it happens here, with its sound; No-delay AirPlay: what its <audio> plays is what's heard)
 /* Seconds between scheduling sound and hearing it (on this device; the extra delay above is separate). */
 const outLatency = () => Math.max(0, Math.min(0.5, actx.currentTime - heardCtxTime() - heardDelay()));
@@ -3422,22 +3567,44 @@ function engJump(pos, xf) {
   ENG.rep = { pos, t, sp: ENG.speed, seq: ENG.seq, start: true };
   ENG.from = { pos, t };
 }
+/* The audio moved on the song's timeline while it plays (by d s). The song's time stays where it is: the clock (audio time)
+   takes d off and every track crossfades to its new place, with its new cut start, all on one sample. Nothing restarts, and
+   however many of these come, each simply goes on from where the last one put things. */
+function engMove(d) {
+  const F = ENG.from, at = engFrame(Math.max(actx.currentTime + 0.03, F ? F.t : 0)), t = at / actx.sampleRate;
+  const heard = !F || F.move || heardCtxTime() >= F.t; // (a start or a seek still on its way stays one: until it's heard, the song is where it goes)
+  const pos = engNow(t) - d;
+  ENG.seq++;
+  tracks.forEach(a => engFloor(a, at));
+  freePost('jump', pos, at, true, 0.02);
+  ENG.rep = { pos, t, sp: ENG.speed, seq: ENG.seq, start: !heard };
+  ENG.from = { pos, t, move: heard };
+}
+/* One track's own shift changed while it plays: just its node crossfades to its new place, with its new cut start (the clock it reports stays). */
+function engMoveTrack(a) {
+  if (!a._node) return;
+  const sr = actx.sampleRate, F = ENG.from, at = engFrame(Math.max(actx.currentTime + 0.03, F ? F.t : 0)), clk = engNow(at / sr);
+  engFloor(a, at);
+  a._node.port.postMessage({ cmd: 'jump', pos: trackPos(a, clk) * sr, clk: clk * sr, r: FREE.on ? a._spd : 1, at, xf: 0.02, seq: ENG.seq });
+}
 function engJoin(a) { // a track that finished decoding while playing joins on the shared clock
-  const t = Math.max(actx.currentTime + 0.05, ENG.rep && ENG.rep.start ? ENG.rep.t : 0);
+  const t = Math.max(actx.currentTime + 0.05, ENG.rep && ENG.rep.start ? ENG.rep.t : 0, ENG.from ? ENG.from.t : 0);
   a._node.parameters.get('speed').setValueAtTime(ENG.speed, actx.currentTime);
   const clk = engNow(t);
-  a._node.port.postMessage({ cmd: 'play', pos: freePos(a, clk) * actx.sampleRate, clk: clk * actx.sampleRate, r: FREE.on ? a._spd : 1, at: engFrame(t), seq: ENG.seq });
+  a._node.port.postMessage({ cmd: 'play', pos: trackPos(a, clk) * actx.sampleRate, clk: clk * actx.sampleRate, r: FREE.on ? a._spd : 1, at: engFrame(t), seq: ENG.seq });
 }
 /* Play / jump on every node at song clock `pos`. Separate track speeds: each track goes to its own
-   position (where it is on its own line, or — after a seek / Sync — to `pos` too) at its own speed. */
+   position (where it is on its own line, or — after a seek / Sync — to `pos` too) at its own speed.
+   A track with a shift of its own goes that much before it: the nodes keep the same clock either way. */
 function freePost(cmd, pos, at, keep, xf) {
   const sr = actx.sampleRate;
-  if (!FREE.on) { engPost({ cmd, pos: pos * sr, r: 1, at, xf, seq: ENG.seq }); return; }
-  if (!keep) freeReset(pos);
-  tracks.forEach(a => { if (a._node) a._node.port.postMessage({ cmd, pos: freePos(a, pos) * sr, clk: pos * sr, r: a._spd, at, xf, seq: ENG.seq }); });
+  if (!FREE.on && !tracks.some(a => a._shift)) { engPost({ cmd, pos: pos * sr, r: 1, at, xf, seq: ENG.seq }); return; }
+  if (FREE.on && !keep) freeReset(pos);
+  tracks.forEach(a => { if (a._node) a._node.port.postMessage({ cmd, pos: trackPos(a, pos) * sr, clk: pos * sr, r: FREE.on ? a._spd : 1, at, xf, seq: ENG.seq }); });
 }
 /* Switch engines: the same files, volumes and settings, re-added under the other engine. */
 function restoreTrack(a, k) {
+  setTrackShift(a, syncNum(k.shift));
   a._vol = k.vol;
   a._li.querySelector('input.tvol').value = k.vol;
   if (FREE.on) setTrackSpeed(a, k.spd || 1);
@@ -3453,7 +3620,7 @@ function restoreTrack(a, k) {
   updateAllCard();
 }
 function rebuildTracks(useEng) {
-  const keep = tracks.map(a => ({ file: a._file, vol: a._vol, loop: a.loop, muted: a._muted, show: a._show, color: a._color, custom: a._custom, spd: a._spd }));
+  const keep = tracks.map(a => ({ file: a._file, vol: a._vol, loop: a.loop, muted: a._muted, show: a._show, color: a._color, custom: a._custom, spd: a._spd, shift: a._shift }));
   const at = nowT;
   pauseAll();
   ENG.rebuilding = true;
@@ -3492,7 +3659,8 @@ $('audioEngine').onchange = () => {
      jumps per 30 s; after that only the speed is used, so jumps can never repeat endlessly.
    - Video stalled or too slow to keep up: the audio just keeps playing; if the video ends up
      more than 1 s behind, the VIDEO jumps to the audio instead.
-   - Right after a start or jump, and while the sound system is interrupted (calls etc.), it waits. */
+   - Right after a start or jump, and while the sound system is interrupted (calls etc.), it waits.
+   - A video that comes in late (Sync area: V > 0): until then there's nothing to follow, see videoWaiting. */
 const evs = { e: null, lastJump: 0, farSince: 0, lastSet: 0, lastVidSeek: 0, lastPlayTry: 0, err: null, jumps: [],
               leadUntil: 0 }; // until then (just after a start) the video follows the audio
 function engHold() { setSync(1); evs.e = null; evs.err = null; evs.farSince = 0; }
@@ -3502,6 +3670,7 @@ function engVideoSync() {
   if (!hasVideo || !bg.getAttribute('src') || bg.readyState < 1) { engHold(); return; }
   const F0 = ENG.from;
   if (F0 && heardCtxTime() < F0.t + 0.05) return; // the latest start / jump isn't audible yet
+  if (videoWaiting(engHeard() + audioOffset)) { engHold(); return; } // (it comes in later: the audio is the clock until then)
   if (FREE.on) { // Separate track speeds: no syncing at all — the video just plays on
     engHold();
     setVideoRate(rate);
@@ -3510,7 +3679,7 @@ function engVideoSync() {
   }
   const now = performance.now(), d = vidDur(), A = engHeard() + audioOffset; // (song time)
   if (d && A + videoOffset >= d - 0.3) { engHold(); return; } // past the end of the video
-  if (!audioFollowsVideo()) { engHold(); videoFollow(A); return; }
+  if (!audioFollowsVideo()) { engHold(); videoFollow(A, now < evs.leadUntil); return; } // (just started, or moved: it closes in firmly)
   if (now < evs.leadUntil) { engHold(); videoFollow(A, true); return; } // just started: the video catches up with the audio
   if (bg.paused && !bg.ended && now - evs.lastPlayTry > 1000) { evs.lastPlayTry = now; playEl(bg); } // keep the video going
   const V = videoClock() - videoOffset;
@@ -3577,15 +3746,18 @@ async function engLaunch(start, keep) {
   }
   if (!tracks.some(a => a._node)) { wantPlay = false; say("Couldn't prepare the audio"); return done(); }
   ENG.pausedAt = start - audioOffset;
-  const useVid = hasVideo && !!bg.getAttribute('src') && (!vidDur() || start + videoOffset < vidDur() - 0.3);
+  const vid = hasVideo && !!bg.getAttribute('src'), late = vid && videoWaits(start); // (late: it comes in later; the audio starts without it)
+  const useVid = vid && !late && (!vidDur() || start + videoOffset < vidDur() - 0.3);
   if (useVid) {
+    VW.on = false;
     // The audio is heard ~0.1 s after it's started (scheduling, the limiter + output delay), the video
     // shows at once: start the video that much earlier so both are at `start` together.
     videoSeekTo(Math.max(0, start + videoOffset - (0.06 + LIM.d + outLatency()) * rate));
     await waitVideoReady(tok, 3000);
     if (tok !== playToken) return done();
     playEl(bg);
-  } else if (hasVideo && bg.getAttribute('src')) { videoAt(start); playEl(bg); } // past a shorter video's end: it loops on
+  } else if (late) videoAt(start);
+  else if (vid) { videoAt(start); playEl(bg); } // past a shorter video's end: it loops on
   ENG.sync = 1;
   evs.e = null;
   evs.farSince = 0;
@@ -3611,48 +3783,98 @@ async function waitVideoReady(tok, ms) {
    ===================================================================== */
 const bg = $('bg');
 const bgClear = $('bgClear');
-/* Settings → Video → Sync. Auto: on computers the video follows the audio (one simple system —
+/* Sync area → Sync. Auto: on computers the video follows the audio (one simple system —
    the precise engine's tracks share one clock, so nothing ever corrects the sound); on phones /
    tablets the audio follows the video, as their video playback is the one that stutters. */
 const syncSel = $('syncMode');
 syncSel.options[0].textContent = 'Auto (' + (IS_TOUCH ? 'audio follows the video' : 'video follows the audio') + ')';
 const audioFollowsVideo = () => syncSel.value === 'audio' || (syncSel.value === 'auto' && IS_TOUCH);
-/* Settings → Playback → "Audio starts at" (audioStart): all the audio comes in this much later in
-   the song. "Skip the start of the audio" (audioTrim): that much is cut off the beginning of every
-   audio track. Audio time = the position in the files; song time (progress bar, video, score) =
-   audio time + audioOffset, with audioOffset = audioStart − audioTrim. Audio before audioTrim is
-   never heard. The precise engine plays from a (silent) position before that, its clock running;
-   the standard engine has a lead-in (pre) in which the video and score run on a clock of their own
-   until the audio comes in, and its players wait at audioTrim. */
+/* Everything sits on one song timeline, each thing with one signed number in seconds: + later, − earlier (what falls
+   before the song's start is cut off, never played). Audio S, on top of it each track's own a._shift, video V, score O.
+   Stored as ever: audioStart and audioTrim (S = audioStart − audioTrim = audioOffset), videoOffset (= −V), scoreOffset (O).
+   Audio time, the song's clock in the engines = song time (progress bar, video, score) − audioOffset; a track's place in
+   its file = audio time − a._shift (trackPos). Audio before its own cut start, trackFloor (audioTrim, for a track with no shift
+   of its own), is never heard. The precise engine plays from a (silent) position before that, its clock running; the standard
+   engine has a lead-in (pre) in which the video and score run on a clock of their own until the first audio comes in, and its
+   players wait at their cut start (a track with a later entrance waits on its own, a._held, while the others play: stdTick). */
+/* @pure:sync begin */
+/* The numbers of the Sync area: S and the optional cut C ("Cut the start of the audio") as they're stored, and back.
+   A count-in in the file plus a late entrance still works: start 3, trim 2 is S = +1, C = 2. Earlier than the song's start
+   (S < 0) is a cut too, so a C within it means nothing. */
+const SYNC_MAX = 86400; // (24 hours, for all of them: a video or a recording can be long, and a song can start well into it)
+const syncRound = v => Math.round(v * 1000) / 1000 || 0; // (to the millisecond; never −0)
+function syncNum(v, lo = -SYNC_MAX, hi = SYNC_MAX) { return syncRound(Math.max(lo, Math.min(hi, +v || 0))); }
+function syncRead(start, trim) { return { S: syncRound(start - trim), C: start > 0 ? trim : 0 }; }
+function syncStore(S, C) {
+  const trim = Math.max(C, -S);
+  return { start: syncRound(S + trim), trim: syncRound(trim) };
+}
+/* Where a track's own sound starts, in its file (s: its own shift): what falls before the song's start for that track
+   (S + s) is cut, and the cut C, and nothing else. With no shift of its own that's what's stored: trim. */
+function syncFloor(start, trim, s) {
+  return s ? syncRound(Math.max(syncRead(start, trim).C, -(start - trim + s))) : trim;
+}
+/* @pure:sync end */
+const syncListeners = []; // (see syncState)
 let audioOffset = 0, audioStart = 0, audioTrim = 0;
+const trackFloor = a => syncFloor(audioStart, audioTrim, a._shift); // (s in its file: before that, this track is never heard)
+let syncCut = 0; // (C: it stays what you set while S moves about, what a project brought until you change it)
+/* The audio's place on the timeline changed. The song position stays where it is, whatever's going on; the audio moves
+   (the video and the score don't: they're on the song's time, not the audio's). */
 function setAudioShift(start, trim) {
   if (start === audioStart && trim === audioTrim) return false;
-  const t = songTime(); // the song position stays where it is; the audio moves
+  const t = songNow(), d = start - trim - audioOffset;
   audioStart = start;
   audioTrim = trim;
   audioOffset = start - trim;
-  engPost({ cmd: 'floor', f: trim * actx.sampleRate });
-  if (wantPlay) startAll(t);
-  else if (ENG.on) { ENG.pausedAt = t - audioOffset; if (FREE.on) freeReset(ENG.pausedAt); }
-  else placeSong(t);
+  if (ENG.on && ENG.playing && d && !ND.pend) { engMove(d); return true; }
+  tracks.forEach(a => engFloor(a));
+  if (ND.pend) ndHold(t);
+  else if (!ENG.on) stdMoved(t);
+  else if (wantPlay && !launching && !ENG.playing) startAll(t);
+  else if (!ENG.playing) { // (getting ready to start: it starts with the new numbers)
+    ENG.pausedAt = t - audioOffset;
+    if (FREE.on && t < 0.001) freeReset(ENG.pausedAt); // (at the song's start each track's line starts there too, as a seek back or a reopened project has it. Further on, each stays where it is)
+  }
+  return true;
+}
+/* One track's own shift changed: that track moves, nothing else does. */
+function setTrackShift(a, s) {
+  if (s === a._shift) return false;
+  const t = a._eng ? 0 : songNow();
+  a._shift = s;
+  if (a._eng) { if (ENG.playing) engMoveTrack(a); else engFloor(a); }
+  else if (ND.pend) ndHold(t);
+  else stdMoved(t, a);
   return true;
 }
 const pre = { on: false, at: 0, t0: 0, timer: 0 }; // standard engine lead-in
-let stdPos = null; // standard engine, paused before the audio starts: the song position (the players sit at 0)
+let stdPos = null; // standard engine, paused where a track isn't in yet (before the audio starts, its own entrance): the song position (those players sit at their start)
 const preTime = () => pre.at + (performance.now() - pre.t0) / 1000 * rate;
+/* Standard engine, playing: the song's clock is read from a playing track, and while none can say (they're on their way
+   to a new place, or only looping tracks play — their time goes round — with others still to come) it runs on its own, from
+   where the tracks last had it. until: not read from the tracks before then. */
+const stdClk = { on: false, at: 0, t0: 0, until: 0, timer: 0 };
+const stdClkTime = () => stdClk.at + (performance.now() - stdClk.t0) / 1000 * rate;
 const vidOffset = $('vidOffset');
 let videoOffset = 0;
 let bgFile = null; // kept so projects can save it
 const vidDur = () => (isFinite(bg.duration) && bg.duration > 0 ? bg.duration : 0);
 $('audioOffset').onchange = e => {
-  const v = Math.max(0, Math.min(600, +e.target.value || 0));
+  const v = syncNum(e.target.value, 0, 2 * SYNC_MAX);
   e.target.value = v;
-  if (setAudioShift(v, audioTrim)) say(v ? 'Audio starts at ' + v.toFixed(1) + 's' : 'Audio starts with the song');
+  const on = setAudioShift(v, audioTrim);
+  syncCut = syncRead(audioStart, audioTrim).C;
+  if (on) say(v ? 'Audio comes in at ' + v.toFixed(1) + 's' : 'Audio starts with the song');
+  syncNotify();
 };
 $('audioTrim').onchange = e => {
-  const v = Math.max(0, Math.min(600, Math.round((+e.target.value || 0) * 1000) / 1000));
+  const v = syncNum(e.target.value, 0);
   e.target.value = v;
-  if (setAudioShift(audioStart, v)) say(v ? 'Audio skips its first ' + v.toFixed(1) + 's' : 'Audio plays from its start');
+  const on = setAudioShift(audioStart, v);
+  syncCut = syncRead(audioStart, audioTrim).C;
+  if (on) say(v ? 'Audio skips its first ' + v.toFixed(1) + 's' : 'Audio plays from its start');
+  syncNotify();
 };
 $('vidFit').onchange = e => {
   document.body.classList.toggle('vid-fill', e.target.value === 'cover');
@@ -3660,34 +3882,94 @@ $('vidFit').onchange = e => {
   if (document.body.classList.contains('vid-inset') !== inset) { document.body.classList.toggle('vid-inset', inset); if (inset) requestAnimationFrame(vidBoxLoop); else placeVidBox(null); }
 };
 vidOffset.onchange = () => {
-  videoOffset = Math.max(0, +vidOffset.value || 0);
-  vidOffset.value = videoOffset;
-  videoAt(nowT);
-  say('Video starts at ' + fmt(videoOffset));
+  const v = syncNum(vidOffset.value);
+  vidOffset.value = v;
+  setVideoShift(v);
+  say(v < 0 ? 'Video comes in at ' + fmt(-v) : v ? 'Video starts ' + fmt(v) + ' in' : 'Video starts with the song');
+  syncNotify();
 };
-/* Jump the video to its own time t (s). */
+/* The video's place on the timeline changed (v: the new videoOffset). The song's time stays; the video goes to its new
+   place: far, by one seek at once (several in a row: the last one when the one under way lands); near, it closes in by its
+   speed, as after a start. While it follows the audio for that, the audio doesn't chase it. */
+function setVideoShift(v) {
+  if (v === videoOffset) return false;
+  const d = Math.abs(v - videoOffset), t = tracks.length ? heardNow() : nowT, now = performance.now();
+  videoOffset = v;
+  if (!bg.getAttribute('src')) return true;
+  if (!wantPlay || launching || VW.on || videoWaits(t) || !tracks.length) videoAt(t);
+  else if (FREE.on || (ENG.on ? vidDur() && t + v >= vidDur() - 0.3 : !elemTarget(true))) { // (nothing will follow it — Separate track speeds, every track loops, or past a shorter video's end — so it goes right to its number: no lead, nothing would take that out again)
+    videoSeekTo(t + v);
+    vsync.lastSeek = now;
+  } else if (d >= 0.15) {
+    if (bg.seeking) vsync.again = true;
+    else videoSeekTo(t + v + Math.min(0.5, vsync.lead));
+    vsync.lastSeek = now;
+  }
+  if (wantPlay) { evs.leadUntil = sync.vidAfter = now + 3000; evs.e = null; evs.farSince = 0; }
+  return true;
+}
+/* Jump the video to its own time t (s). (Before its start: its first frame, never round to its end.) */
 function videoSeekTo(t) {
   if (!bg.getAttribute('src') || bg.readyState < 1) return;
   const d = vidDur();
-  bg.currentTime = d ? ((t % d) + d) % d : Math.max(0, t);
+  t = Math.max(0, t);
+  bg.currentTime = d ? t % d : t;
   vh.hist = [];
 }
 /* Jump the video to song time t. */
-function videoAt(t) { videoSeekTo(t + videoOffset); }
+function videoAt(t) {
+  videoSeekTo(t + videoOffset);
+  if (!tracks.length) stdPos = videoWaits(t) ? t : null; // (nothing but a video: waiting, it can't say where the song is)
+  if (videoOffset < 0 || VW.on) videoWaiting(t);
+}
+/* A video that comes in late (V > 0, videoOffset < 0) waits, paused on its first frame, until song time V. Nothing may
+   follow it meanwhile: the audio is the clock. Then it starts (a timer, for the exact moment), and for the first seconds it
+   lines itself up with the audio, as after any start. videoWaiting(t): is it waiting at song time t, as heard? It sees to all
+   that: pauses it, starts it, or does nothing at all for a video that isn't late. */
+const VW = { on: false, timer: 0 };
+const videoWaits = t => videoOffset < 0 && t < -videoOffset;
+function videoWaiting(t) {
+  const src = !!bg.getAttribute('src');
+  if (!src || !videoWaits(t)) {
+    if (VW.on) {
+      VW.on = false;
+      clearTimeout(VW.timer);
+      if (src && wantPlay && !launching) videoEnter(t);
+    }
+    return false;
+  }
+  VW.on = true;
+  if (!bg.paused) bg.pause();
+  setVideoRate(rate);
+  if (bg.readyState >= 1 && bg.currentTime > 0) videoSeekTo(0);
+  clearTimeout(VW.timer);
+  const left = (-videoOffset - t) / rate;
+  if (wantPlay && left < 0.3) VW.timer = setTimeout(() => { if (wantPlay && !launching) videoWaiting(heardNow()); }, left * 1000);
+  return true;
+}
+function videoEnter(t) {
+  evs.leadUntil = sync.vidAfter = performance.now() + 3000;
+  evs.e = null;
+  evs.farSince = 0;
+  vsync.lastSeek = 0; // (a seek is allowed straight away)
+  if (Math.abs(t + videoOffset - bg.currentTime) > 0.25) videoSeekTo(t + videoOffset + Math.min(0.5, vsync.lead)); // (well past its entrance by now: a window that was away)
+  playEl(bg);
+}
 function syncVideo() {
   if (!bg.getAttribute('src') || launching) return;
-  if (ENG.on ? ENG.playing : (pre.on || tracks.some(a => !a.paused))) playEl(bg);
+  if (ENG.on ? ENG.playing : (pre.on || tracks.some(a => !a.paused || a._held))) { if (!videoWaiting(heardNow())) playEl(bg); }
   else bg.pause();
 }
 function loadVideo(f) {
   bgFile = f;
   bg.classList.remove('on');
   bg.addEventListener('loadeddata', () => bg.classList.add('on'), { once: true });
-  bg.addEventListener('loadedmetadata', () => { if (vidDur()) vidOffset.max = Math.floor(vidDur()); videoAt(nowT); }, { once: true });
+  bg.addEventListener('loadedmetadata', () => { videoAt(nowT); syncNotify(); }, { once: true });
   hasVideo = true;
   applyAmbient();
   bgClear.hidden = false;
   attachMedia(bg, f, IS_TOUCH ? 100e6 : 200e6).then(() => syncVideo()); // (a bigger video plays straight from its file: no copy in memory)
+  syncNotify();
 }
 bgClear.onclick = () => {
   bgFile = null;
@@ -3695,6 +3977,9 @@ bgClear.onclick = () => {
   if (bg._mem) { MEM.used -= bg._mem; bg._mem = 0; }
   bg.classList.remove('on');
   hasVideo = false;
+  VW.on = false;
+  clearTimeout(VW.timer);
+  syncNotify();
   applyAmbient();
   bgClear.hidden = true;
   const old = bg.src;
@@ -3720,6 +4005,7 @@ bg.addEventListener('seeked', () => {
   const took = (performance.now() - vsync.seekAt) / 1000 * rate;
   vsync.lead = Math.min(1, Math.max(0.05, vsync.lead * 0.5 + took * 0.5));
   vsync.seekAt = 0;
+  if (vsync.again) { vsync.again = false; if (wantPlay && !launching && !VW.on) videoSeekTo(heardNow() + videoOffset + Math.min(0.5, vsync.lead)); } // (it moved again meanwhile)
 });
 function setVideoRate(v) { if (Math.abs(bg.playbackRate - v) > 0.001) bg.playbackRate = v; }
 function videoClock() {
@@ -3764,6 +4050,7 @@ function videoFollow(refT, settling) {
   if (!bg.getAttribute('src')) return;
   const playing = ENG.on ? ENG.playing : tracks.some(a => !a.paused);
   if (dragging || !playing) { setVideoRate(rate); return; } // (in a lead-in the video just plays)
+  if (videoWaits(refT)) return; // (it comes in later)
   if (bg.paused) { playEl(bg); return; }
   if (bg.seeking || bg.readyState < 3) return;
   const d = vidDur(), now = performance.now();
@@ -3798,6 +4085,7 @@ function checkVideoSync() { // every 150 ms
   const now = performance.now();
   if (now - vsTick < (LOW_POWER ? 400 : 200)) return;
   vsTick = now;
+  if (videoWaiting(heardNow())) return; // (it comes in later: nothing to line up yet)
   if (FREE.on) { setVideoRate(rate); return; } // Separate track speeds: no syncing
   const T = elemTarget(true);
   if (!T) return;
@@ -3865,16 +4153,17 @@ function median(arr) {
 function elemTarget(forVideo) {
   const ref = refMedia();
   if (audioFollowsVideo() && performance.now() >= sync.vidAfter && videoHealthy() && ref) {
-    const d = vidDur(), V = videoClock() - videoOffset - audioOffset; // (in the tracks' own time)
-    if (V >= audioTrim && V < ref.duration - 0.3 && (!d || ref.currentTime + audioOffset + videoOffset < d - 0.5)) return { t: V, src: 'video' };
+    const d = vidDur(), V = videoClock() - videoOffset - audioOffset, s = ref._shift || 0; // (in the tracks' own time, but for a shift of their own)
+    if (V >= audioTrim && V < ref.duration + s - 0.3 && (!d || ref.currentTime + s + audioOffset + videoOffset < d - 0.5)) return { t: V, src: 'video' };
   }
   const on = tracks.filter(a => !a._eng && !a.paused && !a.seeking && !a._fixing && a.readyState >= 3 && !a.loop && isFinite(a.duration));
   if (!on.length || (on.length < 2 && !forVideo)) return null;
-  return { t: median(on.map(a => a.currentTime)), src: 'tracks' };
+  return { t: median(on.map(a => a.currentTime + a._shift)), src: 'tracks' };
 }
 // First guess of how late a jumped track restarts (Safari freezes a track ~0.3 s after a jump); learned from then on
 const DEF_LEAD = IS_WEBKIT ? 0.2 : IS_TOUCH ? 0.08 : 0.04;
 const sync = { src: '', fixes: 0, last: '', calmUntil: 0, lastFixAt: 0, lead: null,
+               join: IS_WEBKIT ? 0.15 : IS_TOUCH ? 0.05 : 0.01, // how early a waiting track is started to come in on time: a first guess, learned from then on (stdJoin)
                vidAfter: 0 }; // standard engine: the video only leads again from then on (after a start)
 /* A track's jump lead: its own once learned, else what this device has shown so far, else a first guess. */
 const leadOf = a => a._lead != null ? a._lead : sync.lead != null ? sync.lead : DEF_LEAD;
@@ -3907,7 +4196,7 @@ function fixTrack(a, down, up) {
     if (src) setTimeout(() => { // learn where this track really landed (same clock as when it jumped)
       const T = elemTarget();
       if (!T || T.src !== src || a.paused || a.seeking || a._fixing || dragging) return;
-      const e = (a.currentTime - T.t) / rate; // + = landed ahead
+      const e = (a.currentTime + a._shift - T.t) / rate; // + = landed ahead
       if (Math.abs(e) >= 0.4) return;
       const used = leadOf(a);
       a._lead = Math.max(-0.1, Math.min(0.6, used - 0.5 * e));
@@ -3916,10 +4205,10 @@ function fixTrack(a, down, up) {
   }
   setTimeout(() => {
     const T = elemTarget(true); // (true: with only two tracks, the other one alone is the clock — this one is _fixing)
-    if (a.paused || !T || !wantPlay || launching || dragging) { finish(); return; }
+    if (a.paused || !T || !wantPlay || launching || dragging || a._mv) { finish(); return; }
     src = T.src;
     a.addEventListener('seeked', onSeeked, { once: true });
-    a.currentTime = Math.max(audioTrim, T.t + leadOf(a) * rate);
+    a.currentTime = Math.max(trackFloor(a), T.t - a._shift + leadOf(a) * rate);
     setTimeout(finish, 1200); // never stay silent
   }, down * 1000 + 10);
 }
@@ -3940,10 +4229,11 @@ function checkAudioSync() {
   // Standard engine: every track has stopped (they reached the end — also while a start was still being
   // set up, when their "ended" was ignored) → the song is over. It used to stay "playing" with nothing
   // playing (the play button showing pause, the clock standing still). (No-delay AirPlay: its <audio> says when.)
-  if (!ENG.on && !ND.el && !launching && !pre.on && tracks.length && tracks.every(a => a.paused || a.ended)) {
+  if (!ENG.on && !ND.el && !launching && !pre.on && tracks.length && tracks.every(a => (a.paused || a.ended) && !a._held)) {
     if (!sync.stoppedAt) sync.stoppedAt = tNow;
     else if (tNow - sync.stoppedAt > 600) { sync.stoppedAt = 0; wantPlay = false; refreshTrackStates(); return; }
   } else sync.stoppedAt = 0;
+  stdTick();
   if (FREE.on) { // Separate track speeds: no syncing — every track just plays at its own speed
     tracks.forEach(a => { if (!a._eng && !a._fixing) setRateOf(a, rate * a._spd); });
     return;
@@ -3955,11 +4245,12 @@ function checkAudioSync() {
   if (!T) { tracks.forEach(a => { if (!a._fixing) setRateOf(a, rate); }); return; }
   for (const a of tracks) {
     if (a._fixing) continue;
-    if (a.paused || a.loop || a.seeking || a.readyState < 3 || !isFinite(a.duration) || T.t < audioTrim || T.t >= a.duration - 0.3) {
+    const pos = T.t - a._shift; // (where the clock has this track)
+    if (a.paused || a.loop || a.seeking || a.readyState < 3 || !isFinite(a.duration) || pos < trackFloor(a) || pos >= a.duration - 0.3) {
       a._err = undefined; a._wait = 0; setRateOf(a, rate); continue;
     }
     if (tNow - (a._fixedAt || 0) < 1500) { a._err = undefined; setRateOf(a, rate); continue; } // settling after its fix
-    const d = a.currentTime - T.t; // positive = this track is ahead
+    const d = a.currentTime - pos; // positive = this track is ahead
     a._err = (a._err === undefined || Math.abs(d - a._err) > 0.5) ? d : 0.7 * a._err + 0.3 * d;
     const e = a._err, ae = Math.abs(e);
     setRateOf(a, canRate && ae > 0.015 ? rate * (1 - Math.max(-0.003, Math.min(0.003, 0.15 * e))) : rate);
@@ -3993,18 +4284,21 @@ function mediaList() {
   if (tracks.length) return tracks.slice();
   return bg.getAttribute('src') ? [bg] : [];
 }
-function total() {
-  let T = Math.max(0, Math.max(0, ...mediaList().map(m => isFinite(m.duration) ? m.duration : 0)) + (tracks.length ? audioOffset : 0));
+/* What a medium's own time needs to be song time: a track's place on the timeline, or (with nothing but a video) the video's. */
+const mediaOff = m => (m === bg ? -videoOffset : audioOffset + m._shift);
+function total() { // (the end of the last thing: a track ends at its length + S + its own shift)
+  let T = Math.max(0, tracks.length ? audioOffset : 0, ...mediaList().map(m => isFinite(m.duration) ? m.duration + mediaOff(m) : 0));
   if (FREE.on) for (const a of tracks) { // a slowed-down track takes longer: the song lasts until it's done
     if (a._spd >= 1 || a.loop || !isFinite(a.duration)) continue;
     const f = a._fa || { c: 0, p: 0 };
-    T = Math.max(T, a.duration / a._spd + audioOffset, f.c + (a.duration - f.p) / a._spd + audioOffset);
+    T = Math.max(T, audioTrim + (a.duration + a._shift - audioTrim) / a._spd + audioOffset, f.c + (a.duration + a._shift - f.p) / a._spd + audioOffset); // (a start from the song's beginning goes from where the audio's cut ends)
   }
   return T;
 }
+/* The one that ends last (the longest, unless a track's own shift says otherwise). */
 function refMedia() {
-  let best = null, len = 0;
-  for (const m of mediaList()) if (isFinite(m.duration) && m.duration > len) { len = m.duration; best = m; }
+  let best = null, end = -Infinity;
+  for (const m of mediaList()) if (isFinite(m.duration) && m.duration > 0 && m.duration + (m._shift || 0) > end) { end = m.duration + (m._shift || 0); best = m; }
   return best;
 }
 /* Standard engine: the track the song clock is read from — the longest one that is playing (a
@@ -4013,7 +4307,8 @@ function refMedia() {
    played on its own.) */
 function clockMedia() {
   let best = null, len = 0;
-  for (const a of tracks) if (!a._eng && !a.paused && !a.ended && isFinite(a.duration) && a.duration > len) { len = a.duration; best = a; }
+  const shifted = tracks.some(a => a._shift); // (with tracks at different places, a track that goes round can't say where the song is: stdClock)
+  for (const a of tracks) if (!a._eng && !a.paused && !a.ended && !(shifted && a.loop) && isFinite(a.duration) && a.duration > len) { len = a.duration; best = a; }
   return best || refMedia();
 }
 /* Song time you are hearing. */
@@ -4021,17 +4316,158 @@ function songTime() {
   if (ND.el) return ndTime(); // (No-delay AirPlay: what its <audio> plays)
   if (ENG.on && tracks.length) return engHeard() + audioOffset;
   if (pre.on) return preTime();
-  if (stdPos != null && tracks.length) return stdPos;
-  if (FREE.on && tracks.length) { const a = freeRef(); return a ? Math.max(0, freeClockOf(a) + audioOffset) : 0; }
+  if (stdPos != null) return stdPos;
+  if (stdClk.on) return stdClkTime();
+  if (FREE.on && tracks.length) { const a = freeRef(); return a ? (a._held ? stdClkTime() : Math.max(0, freeClockOf(a) + audioOffset)) : 0; }
   const r = clockMedia();
-  return r ? Math.max(0, r.currentTime + (tracks.length ? audioOffset : 0)) : 0;
+  return r ? (r._held ? stdClkTime() : Math.max(0, r.currentTime + mediaOff(r))) : 0; // (one still waiting sits at its entrance: that's no clock. The moment a track has ended and stdTick hasn't heard yet)
 }
-/* Standard engine, not playing: put everything at song time t (before the audio: the players wait at 0). */
+/* The song time to keep when the numbers change: where a start that's getting ready starts, else where the song is. */
+let launchAt = 0, launchPre = false;
+const songNow = () => (ND.pend ? ND.pend.start : !ENG.on && launching ? launchAt : songTime());
+/* The same as heard (the standard engine's tracks are heard later than they say). */
+const heardNow = () => Math.max(0, songNow() - (wantPlay && !ENG.on && !ND.el ? heardDelay() : 0));
+/* Standard engine, not playing: put everything at song time t (before a track comes in: it waits at its start). */
 function placeSong(t) {
   if (FREE.on) freeReset(Math.max(audioTrim, t - audioOffset));
-  stdPos = audioStart && t < audioStart ? t : null;
-  tracks.forEach(a => placeAt(a, Math.max(audioTrim, t - audioOffset)));
+  stdPlace(t);
   videoAt(t);
+}
+function stdPlace(t, only) {
+  stdPos = (tracks.length ? tracks.some(a => t < trackIn(a)) || t > total() + 0.01 : videoWaits(t)) ? t : null; // (nobody can say where the song is: before an entrance, or past every end after a move)
+  (only ? [only] : tracks).forEach(a => placeAt(a, freePos(a, t - audioOffset)));
+}
+/* Song time a track comes in at: where its own position reaches the end of its cut start. */
+function trackIn(a) {
+  if (!a._shift) return audioStart;
+  const fl = trackFloor(a);
+  return FREE.on && a._fa ? audioOffset + a._fa.c + (fl + a._shift - a._fa.p) / a._spd : syncRound(audioOffset + a._shift + fl);
+}
+/* Song time a track ends at. */
+const trackEnd = a => audioOffset + (FREE.on && a._fa ? a._fa.c + (a.duration + a._shift - a._fa.p) / a._spd : a.duration + a._shift);
+/* Standard engine, about to play at song time t: if nothing sounds there, the next track to come in (a lead-in waits for it:
+   before all the audio, or in a gap between tracks) — else null. */
+function stdGate(t) {
+  let next = Infinity;
+  for (const a of tracks) {
+    const at = trackIn(a);
+    if (t < at - 0.05) next = Math.min(next, at);
+    else if ((a.loop && a.duration > trackFloor(a)) || !isFinite(a.duration) || trackPos(a, t - audioOffset) < a.duration - 0.05) return null; // (a loop wholly before the song's start has nothing to go round)
+  }
+  return next < Infinity ? next : null;
+}
+/* Standard engine: the numbers changed (only: one track's own shift), song time t stays. Paused: the tracks go to their new
+   places. Playing, nothing restarts: only what moved moves, each track on its own (stdMove), or it waits or stops if that's
+   what its new place means, and the song's clock runs on by itself until they've landed. If that leaves nothing to hear, or
+   there was nothing to hear: a lead-in, or the end of one. Starting up: it starts again with the new numbers. */
+function stdMoved(t, only) {
+  if (launching) { launch(t, null, launchPre); return; }
+  if (!wantPlay) {
+    if (!only && FREE.on && t < 0.001) freeReset(Math.max(audioTrim, t - audioOffset)); // (at the song's start each track's line starts there too, as a seek back or a reopened project has it)
+    stdPlace(t, only);
+    return;
+  }
+  const now = performance.now();
+  Object.assign(stdClk, { on: true, at: t, t0: now, until: now + 400 });
+  sync.calmUntil = Math.max(sync.calmUntil, now + 2000);
+  sync.vidAfter = Math.max(sync.vidAfter, now + 2000);
+  if (pre.on || stdGate(t) != null) { launch(t, null, true); return; }
+  const clk = t - audioOffset;
+  lastUserPause = now; // (these pauses are ours)
+  for (const a of only ? [only] : tracks) {
+    if (a._eng || !isFinite(a.duration)) continue;
+    if (t < trackIn(a) - 0.05) { // it comes in later now
+      if (!a.paused) a.pause();
+      a._held = true;
+      placeAt(a, freePos(a, clk));
+    } else if ((!a.loop || a.duration <= trackFloor(a)) && trackPos(a, clk) >= a.duration - 0.05) { // it's over by now (a loop wholly before the song's start: it has nothing to go round)
+      a._held = false;
+      if (!a.paused) a.pause();
+      placeAt(a, freePos(a, clk));
+    } else if (a.paused && !a._held && !a.ended && !(a.loop && a.currentTime >= a.duration)) placeAt(a, freePos(a, clk)); // (off, with its own button: it stays off, in its place. A loop stopped at its end: that wasn't its button, it comes back)
+    else if (a.paused || a._mv || Math.abs(a.currentTime - placeOf(a, freePos(a, clk))) >= 0.02) stdMove(a); // (no audible seek for what's in its place by now)
+  }
+  stdTick();
+}
+/* Standard engine, playing: one track goes where the numbers now put it — a quick fade, a seek, back up — and the others don't
+   notice. Moved again meanwhile: when this seek lands it goes straight on to the newest place. */
+function stdMove(a) {
+  if (a._mv) { a._mv.again = true; return; }
+  const m = a._mv = { again: false }, g = a._gain.gain, tok = playToken, play = a._held || a.paused;
+  a._held = false;
+  a._fixing = true;
+  a._err = undefined;
+  const t0 = actx.currentTime;
+  g.cancelScheduledValues(t0);
+  g.setValueAtTime(g.value, t0);
+  g.linearRampToValueAtTime(0, t0 + 0.012);
+  const go = async () => {
+    await sleep(15);
+    do {
+      m.again = false;
+      if (tok === playToken && wantPlay && !a._held) placeAt(a, freePos(a, songTime() - audioOffset) + (a._lead != null || sync.lead != null || IS_WEBKIT ? leadOf(a) : 0) * rate); // (how late a jump lands: as learned; only Safari is known to be late before that)
+      if (a.seeking) await Promise.race([new Promise(r => a.addEventListener('seeked', r, { once: true })), sleep(800)]);
+    } while (m.again);
+    if (tok === playToken && wantPlay && play && !a._held && a.paused) await playP(a);
+    a._mv = null;
+    a._fixing = false;
+    a._fixedAt = performance.now();
+    const t = actx.currentTime;
+    g.cancelScheduledValues(t);
+    g.setValueAtTime(0, t);
+    g.linearRampToValueAtTime(a._show && !a._muted ? a._vol : 0, t + 0.03);
+  };
+  go();
+}
+/* Standard engine, playing, in the sync tick (and at the moment it matters: a timer). Its clock: read from the tracks while one
+   can say, kept running on its own too, for when none can. Tracks with a later entrance (a._held) come in: a moment early, as
+   getting them going takes that long (sync.join). All that were in have ended and others are still to come: a lead-in to them. */
+function stdClock(now) {
+  if (now < stdClk.until || tracks.some(a => a._mv)) return;
+  if (tracks.some(a => !a.paused && !a.ended && !a.loop && isFinite(a.duration))) {
+    stdClk.on = false;
+    stdClk.at = songTime();
+    stdClk.t0 = now;
+  } else stdClk.on = tracks.some(a => a._shift) && tracks.some(a => a.loop && !a.paused);
+}
+function stdTick() {
+  if (ENG.on || !wantPlay || launching || pre.on || dragging || !tracks.length) return;
+  stdClock(performance.now());
+  const held = tracks.filter(a => a._held);
+  if (!held.length) return;
+  if (tracks.every(a => (a.paused || a.ended) && !a._mv)) { // nobody left to read the clock from
+    const ended = tracks.filter(a => a.ended).map(trackEnd);
+    Object.assign(stdClk, { on: true, at: stdClk.on ? stdClkTime() : ended.length ? Math.max(...ended) : songTime(), t0: performance.now() });
+    launch(stdClkTime(), null, true);
+    return;
+  }
+  const t = songTime();
+  let next = Infinity;
+  for (const a of held) {
+    const at = trackIn(a), early = sync.join * rate;
+    if (t >= at - early) stdJoin(a, t, at);
+    else next = Math.min(next, at - early);
+  }
+  clearTimeout(stdClk.timer);
+  if (next - t < 0.35 * rate) stdClk.timer = setTimeout(stdTick, (next - t) / rate * 1000);
+}
+/* One track comes in, the others play on. From its start, or (a window that was away: timers hardly run) where it should be by
+   now. A moment later it's compared with the others: that says how early the next one should go, and it's put right once,
+   under a quick fade, if it's off. */
+function stdJoin(a, t, at) {
+  a._held = false;
+  if (a.duration <= trackFloor(a)) return; // (a cut past its length: its turn has nothing in it. A loop played from its end would go round to what's cut)
+  a._err = undefined;
+  const tok = playToken, fresh = t <= at + 0.03;
+  if (!fresh) placeAt(a, freePos(a, t - audioOffset) + leadOf(a) * rate);
+  playP(a).then(() => sleep(250)).then(() => {
+    if (tok !== playToken || a.paused || a.seeking || a._fixing || FREE.on) return;
+    const on = tracks.filter(o => o !== a && !o.paused && !o.seeking && !o._fixing && o.readyState >= 3 && !o.loop && isFinite(o.duration));
+    if (!on.length) return;
+    const d = (a.currentTime + a._shift - median(on.map(o => o.currentTime + o._shift))) / rate; // (+: it's ahead)
+    if (fresh && Math.abs(d) < 0.3) sync.join = Math.max(0, Math.min(0.3, sync.join - 0.5 * d));
+    if (Math.abs(d) > 0.04) fixTrack(a, 0.01, 0.04);
+  });
 }
 const primed = new WeakSet(); // elements that have played once (iOS then lets the app start them)
 function playP(m) {
@@ -4053,10 +4489,16 @@ function unmuteMaster() {
   g.setValueAtTime(g.value, t);
   g.setTargetAtTime(masterMuted ? 0 : masterVol, t, 0.05);
 }
+/* A standard-engine track, to where the song's clock t (audio time) has it: less its own shift, not before the end of its cut
+   start, which is never played. */
+function placeOf(a, t) {
+  t -= a._shift;
+  const lo = Math.min(trackFloor(a), a.duration);
+  return a.loop && a.duration > lo ? (t < lo ? lo : lo + (t - lo) % (a.duration - lo)) : Math.min(Math.max(t, lo), a.duration);
+}
 function placeAt(a, t) {
   if (a._eng || !isFinite(a.duration)) return;
-  const lo = Math.min(audioTrim, a.duration); // (the cut start is never played)
-  const x = a.loop && a.duration > lo ? (t < lo ? lo : lo + (t - lo) % (a.duration - lo)) : Math.min(Math.max(t, lo), a.duration);
+  const x = placeOf(a, t);
   if (Math.abs(a.currentTime - x) > 0.015) a.currentTime = x;
   a._err = undefined;
 }
@@ -4069,6 +4511,8 @@ const seekedAll = els => withTimeout(Promise.all(els.filter(m => m.seeking).map(
 async function launch(start, first, fromPre, keep) {
   const tok = ++playToken;
   launching = tok;
+  launchAt = start;
+  launchPre = !!fromPre;
   wantPlay = true;
   clearTimeout(pre.timer);
   rampMaster(0, 0.04);
@@ -4076,19 +4520,23 @@ async function launch(start, first, fromPre, keep) {
   if (first && first.length) await withTimeout(Promise.all(first), 1500); // let the tap unlock them first
   await sleep(50);
   if (tok !== playToken) return done();
-  if (start < audioStart - 0.05) { // before the audio comes in (Audio starts at): a lead-in
+  if (keep) keep = FREE.on; // (resuming with Separate track speeds: every track carries on where it is)
+  if (FREE.on && !keep) freeReset(start - audioOffset);
+  const gate = stdGate(start);
+  if (gate != null) { // nothing to hear yet (before the audio comes in, or between tracks with shifts of their own): a lead-in
     // (these pauses are ours: their 'pause' events come after launching has ended, and were taken
     // for a pause by the system — a call, headphones — which paused everything)
     lastUserPause = performance.now();
-    tracks.forEach(a => { if (!a._eng) a.pause(); placeAt(a, audioTrim); });
-    videoAt(start);
-    if (hasVideo && bg.getAttribute('src')) playEl(bg);
+    tracks.forEach(a => { if (!a._eng) a.pause(); placeAt(a, freePos(a, start - audioOffset)); a._held = true; });
+    if (!fromPre) videoAt(start);
+    if (hasVideo && bg.getAttribute('src') && !videoWaiting(Math.max(0, start - heardDelay()))) playEl(bg);
     stdPos = null;
-    Object.assign(pre, { on: true, at: start, t0: performance.now() });
+    if (!(fromPre && pre.on)) Object.assign(pre, { on: true, at: fromPre && stdClk.on ? stdClkTime() : start, t0: performance.now() }); // (already in one: its clock goes on. Coming from the running clock: it's that clock's time. A seek: where you went)
+    stdClk.on = false;
     unmuteMaster();
     // the tracks are started a moment early: getting them going takes a little while
-    pre.timer = setTimeout(() => { if (tok === playToken && pre.on) launch(audioStart, null, true); },
-                           Math.max(0, (audioStart - start) / rate * 1000 - 150));
+    pre.timer = setTimeout(() => { if (tok === playToken && pre.on) launch(gate, null, true); },
+                           Math.max(0, (gate - preTime()) / rate * 1000 - 150));
     return done();
   }
   pre.on = false;
@@ -4096,8 +4544,10 @@ async function launch(start, first, fromPre, keep) {
   // (from a lead-in the video is already running there: it isn't paused or moved)
   lastUserPause = performance.now(); // (our own pauses, see above)
   mediaEls().forEach(m => { if (!(fromPre && m === bg)) m.pause(); });
-  if (keep) keep = FREE.on; // (resuming with Separate track speeds: every track carries on where it is)
-  if (!keep) { tracks.forEach(a => placeAt(a, start - audioOffset)); if (FREE.on) freeReset(start - audioOffset); }
+  if (!keep) tracks.forEach(a => placeAt(a, start - audioOffset));
+  const shifted = tracks.some(a => a._shift);
+  tracks.forEach(a => { a._held = shifted && start < trackIn(a) - 0.05; }); // (a later entrance: it waits at its start, the others go)
+  if (tracks.some(a => a._held)) stdPos = start;
   if (!fromPre) videoAt(start);
   const t0 = performance.now();
   let shown = false;
@@ -4114,36 +4564,42 @@ async function launch(start, first, fromPre, keep) {
   }
   if (shown) { if (!fromPre) videoAt(start); await seekedAll(mediaEls()); }
   if (tok !== playToken) return done();
-  const go = tracks.filter(a => a.loop || !isFinite(a.duration) || (keep ? a.currentTime : start - audioOffset) < a.duration - 0.05);
+  const go = tracks.filter(a => !a._held && ((a.loop && a.duration > trackFloor(a)) || !isFinite(a.duration) || (keep ? a.currentTime : start - audioOffset - a._shift) < a.duration - 0.05));
   if (!go.length) { wantPlay = false; unmuteMaster(); return done(); } // already at the end
+  // (from here on the clock reads the tracks that play; with only looping ones, on its own: stdClock)
+  Object.assign(stdClk, { on: shifted && !go.some(a => !a.loop), at: start, t0: performance.now(), until: 0 });
+  const heldAt = tracks.some(a => a._held) ? start : null;
+  stdPos = null;
   const errs = (await withTimeout(Promise.all(go.map(playP)), 3000)) || [];
   if (tok !== playToken) return done();
   if (errs.some(e => e && e.name === 'NotAllowedError')) {
-    tracks.forEach(a => a.pause());
+    tracks.forEach(a => { a.pause(); a._held = false; });
+    stdPos = heldAt;
+    stdClk.on = false;
     wantPlay = false;
     unmuteMaster();
     say('Tap play again to start the audio');
     return done();
   }
-  if (bg.getAttribute('src') && hasVideo) playEl(bg);
+  if (bg.getAttribute('src') && hasVideo && !videoWaiting(Math.max(0, start - heardDelay()))) playEl(bg); // (the picture waits for the sound: as heard)
   await sleep(150);
   if (tok !== playToken) return done();
   // Line up any that started late (still muted). The first pass also measures how late a jump
   // really lands on this device; a second pass then uses that, so everything starts together.
   const on = tracks.filter(a => !a.paused && !a.loop && isFinite(a.duration));
   for (let pass = 0; pass < 2 && on.length > 1 && !FREE.on; pass++) { // (Separate track speeds: nothing is lined up)
-    const t = median(on.map(a => a.currentTime));
-    const off = on.filter(a => Math.abs(a.currentTime - t) > 0.04 && t < a.duration);
+    const t = median(on.map(a => a.currentTime + a._shift));
+    const off = on.filter(a => Math.abs(a.currentTime + a._shift - t) > 0.04 && t - a._shift < a.duration);
     if (!off.length) break;
     const lead = sync.lead != null ? sync.lead : 0;
-    off.forEach(a => { a.currentTime = t + lead * rate; });
+    off.forEach(a => { a.currentTime = t - a._shift + lead * rate; });
     await seekedAll(off);
     await sleep(300);
     if (tok !== playToken) return done();
     const keep = on.filter(a => !off.includes(a) && !a.paused);
     if (!keep.length) break;
-    const m = median(keep.map(a => a.currentTime));
-    const es = off.map(a => (a.currentTime - m) / rate).filter(e => Math.abs(e) < 0.6);
+    const m = median(keep.map(a => a.currentTime + a._shift));
+    const es = off.map(a => (a.currentTime + a._shift - m) / rate).filter(e => Math.abs(e) < 0.6);
     if (es.length) sync.lead = Math.max(-0.1, Math.min(0.6, lead - median(es)));
   }
   if (tok !== playToken) return done();
@@ -4154,6 +4610,7 @@ async function launch(start, first, fromPre, keep) {
   sync.vidAfter = performance.now() + 3000;
   if (shown) say('Playing');
   done();
+  stdTick();
 }
 function startAll(from) {
   if (!tracks.length) return false;
@@ -4180,6 +4637,9 @@ function startAll(from) {
 }
 function pauseAll() {
   if (pre.on) { stdPos = preTime(); pre.on = false; } // paused in the lead-in: remember where
+  else if (!ENG.on && (stdClk.on || tracks.some(a => a._held))) stdPos = songTime(); // (tracks still to come in, or none that can say)
+  stdClk.on = false;
+  tracks.forEach(a => { a._held = false; });
   clearTimeout(pre.timer);
   wantPlay = false;
   LOAD.resume = false;
@@ -4246,8 +4706,8 @@ function tickSeek() {
   if (dragging) cur = dragFrac * T;
   else if (ND.el) { const h = ndTime(); cur = T ? Math.min(T, h) : h; } // (No-delay AirPlay: its <audio>, as heard)
   else if (ENG.on) { const h = engHeard() + audioOffset; cur = T ? Math.min(T, h) : h; }
-  else if (pre.on || stdPos != null || (FREE.on && tracks.length)) cur = T ? Math.min(T, songTime()) : songTime();
-  else { const r = clockMedia(); cur = r ? (r.ended ? T : Math.max(0, r.currentTime + (tracks.length ? audioOffset : 0))) : 0; }
+  else if (pre.on || stdPos != null || stdClk.on || (FREE.on && tracks.length)) cur = T ? Math.min(T, songTime()) : songTime();
+  else { const r = clockMedia(); cur = r ? (r.ended ? T : r._held ? stdClkTime() : Math.max(0, r.currentTime + mediaOff(r))) : 0; } // (held: as in songTime)
   if (!ENG.on && !ND.el && wantPlay) cur = Math.max(0, cur - heardDelay()); // (standard engine: the picture waits for the sound; precise: already in its clock)
   nowT = cur;
   // precise engine: the song is over (No-delay AirPlay: its <audio> says when)
@@ -4290,11 +4750,20 @@ function airPause(fn) {
   if (ENG.on) { ENG.pausedAt = Math.max(-audioOffset, heard - audioOffset); if (FREE.on) freeReset(ENG.pausedAt); videoAt(heard); }
   else placeSong(heard);
 }
+/* All the audio moved to before the song's start, or cut: there's nothing to play (a track whose length isn't known yet might still have some).
+   Play says so, with a video or a score loaded too: they'd only run on in silence. */
+function allBeforeStart() {
+  if (isLoading() || !tracks.every(a => isFinite(a.duration) && a.duration > 0)) return false;
+  if (!total()) say("All the audio is before the song's start: move Audio later to hear it");
+  else if (tracks.every(a => trackFloor(a) >= a.duration)) say("All the audio is cut or before the song's start: there's nothing to hear");
+  else return false;
+  return true;
+}
 function togglePlay() {
   if (COVER.on) { coverCmd('play'); return; } // (covering the screen: play / pause is the cover window's)
   if (!tracks.length) return;
   if (wantPlay) { airPause(pauseAll); say('Paused'); }
-  else if (startAll() && wantPlay) say('Playing');
+  else if (!allBeforeStart() && startAll() && wantPlay) say('Playing');
 }
 function syncAll() {
   const T = total();
@@ -4306,6 +4775,8 @@ function syncAll() {
   say(FREE.on ? 'Tracks lined up' : 'Synced');
 }
 function setRate(r) {
+  stdClk.at = stdClkTime();
+  stdClk.t0 = performance.now();
   rate = r;
   ENG.user = r;
   if (ENG.on) engSpeedNow();
@@ -4316,7 +4787,7 @@ function setRate(r) {
   say('Speed ' + r + 'x');
 }
 $('playPause').onclick = () => { if (!tracks.length) { say('Add some audio first'); return; } togglePlay(); };
-$('playAll').onclick = () => { if (tracks.length) startAll(0); };
+$('playAll').onclick = () => { if (tracks.length && !allBeforeStart()) startAll(0); };
 $('syncAll').onclick = () => { if (tracks.length) syncAll(); };
 $('stopAll').onclick = () => { airPause(pauseAll); ndSeek(0); if (ENG.on) { ENG.pausedAt = -audioOffset; if (FREE.on) freeReset(-audioOffset); videoAt(0); } else placeSong(0); };
 
@@ -4346,7 +4817,7 @@ function afterHidden() {
   sync.calmUntil = Math.max(sync.calmUntil, now + 2500);
   vsync.lastSeek = 0; // (a seek is allowed straight away)
   tracks.forEach(a => { a._err = undefined; a._wait = 0; });
-  if (wantPlay && hasVideo && bg.getAttribute('src') && bg.paused) playEl(bg);
+  if (wantPlay && hasVideo && bg.getAttribute('src') && !videoWaiting(heardNow()) && bg.paused) playEl(bg);
 }
 /* Lock-screen / headset controls */
 function updateMediaSession() {
@@ -4468,7 +4939,7 @@ const syncCapCss = () => document.documentElement.style.setProperty('--cap-a', c
 lyricBoxAlpha.addEventListener('input', syncCapCss); // (a project's settings come in with an 'input' event too)
 const rollStyleSel = $('rollStyle');
 const scoreTpqSel = $('scoreTpq');
-let scoreOffset = 0; // Settings → "Score starts at": shifts the whole score against the audio
+let scoreOffset = 0; // Sync → Score: shifts the whole score against the audio
 
 function fitRoll() { // (as fit(): only when the size really changed)
   const r = pxRatio();
@@ -4964,13 +5435,24 @@ function timeTicks(raw, tpq) {
    longest audio track (or the video): ending well after it, or before a third of it. */
 function chooseTpq(raw, forceAuto) {
   if (!forceAuto && scoreTpqSel.value !== 'auto') return +scoreTpqSel.value;
-  let ref = 0;
-  tracks.forEach(a => { if (isFinite(a.duration) && a.duration + audioOffset > ref) ref = a.duration + audioOffset; });
+  let ref = 0, own = 0;
+  tracks.forEach(a => {
+    if (!isFinite(a.duration)) return;
+    if (a.duration + audioOffset + (a._shift || 0) > ref) ref = a.duration + audioOffset + (a._shift || 0);
+    if (a.duration > own) own = a.duration;
+  });
   if (!ref && hasVideo && vidDur()) ref = vidDur() - videoOffset;
-  if (!ref) return 960;
-  const fits = c => { const end = raw.endAt1 / c + scoreOffset; return end <= ref * 1.05 + 1 && end >= ref * 0.35; };
-  for (const c of [960, 1920, 480, 3840]) if (fits(c)) return c;
-  return 960;
+  if (!own && hasVideo && vidDur()) own = vidDur();
+  if (!own) return 960;
+  if (raw.saved && raw.saved.own === own) raw.auto = raw.saved; // (what the project had decided, for when all its lengths are known: its tracks loading one by one decide on the way there)
+  // (once decided, moving things along the timeline can't change the score's tempo: moves don't change own, a new length decides again)
+  if (raw.auto && raw.auto.own === own) return raw.auto.c;
+  // (fitting without anything moved counts too)
+  const fit = (end, r) => end <= r * 1.05 + 1 && end >= r * 0.35;
+  const fits = c => fit(raw.endAt1 / c + scoreOffset, ref) || fit(raw.endAt1 / c, own);
+  const c = [960, 1920, 480, 3840].find(fits) || 960;
+  raw.auto = { own, c };
+  return c;
 }
 /* Re-time a VoiSona/CeVIO score when the choice changes (audio lengths arrive, setting changed). */
 function retimeScore(announce) {
@@ -4989,12 +5471,17 @@ function retimeScore(announce) {
   if (announce) say('Score timing: ' + tpq + ' ticks per beat');
 }
 scoreTpqSel.onchange = () => retimeScore(true);
-$('scoreOffset').onchange = e => {
-  scoreOffset = Math.max(-30, Math.min(30, +e.target.value || 0));
-  e.target.value = scoreOffset;
+function setScoreShift(v) { // (at once: every frame draws at song time − scoreOffset)
+  scoreOffset = v;
   glow.prev = null;
   retimeScore(true);
-  say('Score starts at ' + scoreOffset.toFixed(2) + 's');
+}
+$('scoreOffset').onchange = e => {
+  const v = syncNum(e.target.value);
+  e.target.value = v;
+  setScoreShift(v);
+  say(v ? 'Score moved by ' + v.toFixed(2) + 's' : 'Score starts with the song');
+  syncNotify();
 };
 async function parseVoiSona(buf) {
   let u8 = new Uint8Array(buf);
@@ -7383,7 +7870,7 @@ function setUpSafariAir() {
 /* ---- No-delay AirPlay (the switch in the panel above). AirPlay takes a page's sound only as it's made, and a speaker
    plays that about 2 s late. A music app hands AirPlay a finished file instead, which the speaker reads ahead: it starts
    at once and stays in time. With the switch on, the player does that too: it mixes the whole song ahead — every track's
-   volume, mute and loop, Audio starts at and Skip the start, through the same limiter — into a WAV file (44.1 kHz,
+   volume, mute and loop, its place on the timeline (Sync) and the cut start, through the same limiter — into a WAV file (44.1 kHz,
    16-bit: what AirPlay carries), and a hidden <audio> plays that. The live sound goes quiet (the engine plays on
    silently, following it, for the visualizer), and the song's clock — progress bar, piano roll, lyrics, video — is that
    <audio>'s time, with no Speaker delay: AirPlay keeps it in step with what the speaker plays. A change to the mix is
@@ -7391,15 +7878,20 @@ function setUpSafariAir() {
    track is decoded once, at 44.1 kHz, and kept while the switch is on: mixing again takes a moment, not a decode. ---- */
 /* @pure:nodelay begin */
 /* The mix made ahead, in plain code (no Web Audio): the tests run it as it is. ndPlan: from the song's length T (s),
-   Audio starts at and Skip the start of the audio (start, trim), the master volume and every track's gain (its volume;
+   where Sync puts the audio (start, trim, each track's shift), the master volume and every track's gain (its volume;
    0 when it's muted, hidden or switched off) and loop — what each audible track adds: at song frame s its own frame
-   k = s − off, from fl (the cut start) to its end, or round again from fl when it loops. The live engine's rules
-   (TrackPlayer), on whole frames. lead: the song frame where the audio comes in (a song whose tracks all loop goes
-   round again from there, as they do: Audio starts at isn't played again). */
+   k = s − off, from fl (its own cut start: trackFloor) to its end, or round again from fl when it loops. The live engine's rules
+   (TrackPlayer), on whole frames. A track's own shift goes in its off, and in its fl: what falls before the song's start for
+   that track is cut, and the cut, and nothing else. lead: the song frame where the first audio comes in.
+   last, when that's another frame: where the last track comes in. A song whose tracks all loop goes round again from there,
+   as they do (the start of the song isn't played again): only from there on does each round sound the same. */
 function ndPlan(m) {
-  const off = Math.round((m.start - m.trim) * m.sr), fl = Math.round(m.trim * m.sr);
-  return { sr: m.sr, frames: Math.max(0, Math.round(m.T * m.sr)), master: m.master, lead: Math.max(0, off + fl),
-           parts: m.tracks.map((t, k) => ({ k, gain: t.gain, loop: !!t.loop, off, fl })).filter(p => p.gain > 0) };
+  const off0 = Math.round((m.start - m.trim) * m.sr), fl0 = Math.round(m.trim * m.sr), cut = m.start > 0 ? fl0 : 0;
+  const at = m.tracks.map(t => { const off = t.shift ? Math.round((m.start - m.trim + t.shift) * m.sr) : off0; return { off, fl: t.shift ? Math.max(cut, -off) : fl0 }; });
+  const ins = at.length ? at.map(x => x.off + x.fl) : [off0 + fl0];
+  const lead = Math.max(0, Math.min(...ins)), last = Math.max(0, Math.max(...ins));
+  return { sr: m.sr, frames: Math.max(0, Math.round(m.T * m.sr)), master: m.master, lead, ...(last !== lead ? { last } : {}),
+           parts: m.tracks.map((t, k) => ({ k, gain: t.gain, loop: !!t.loop, ...at[k] })).filter(p => p.gain > 0) };
 }
 /* One track's sound for song frames s0 … s0 + n − 1, added (× its gain) to L and R. st: the sound as toPCM16 keeps it
    (16-bit; R null for mono; ix: where each block of 4096 frames is kept, −1 for silence; len: frames). */
@@ -7472,13 +7964,13 @@ function ndNow() {
   const ts = tracks.filter(a => !a._failed && isFinite(a.duration)), files = ts.map(a => a._file);
   const solo = !ENG.on && wantPlay && !launching && !pre.on; // (standard engine, playing: a track paused with its own button is out of the mix, as it is out of the live sound)
   const plan = ndPlan({ sr: ND_SR, T: total(), start: audioStart, trim: audioTrim, master: masterVol,
-    tracks: ts.map(a => ({ gain: a._show && !a._muted && a._on !== false && !(solo && a.paused && !a.ended) ? a._vol : 0, loop: a.loop })) });
+    tracks: ts.map(a => ({ gain: a._show && !a._muted && a._on !== false && !(solo && a.paused && !a.ended && !a._held) ? a._vol : 0, loop: a.loop, shift: a._shift })) }); // (_held: waiting for its entrance, it's in the mix)
   if (!plan.frames) return null;
-  // (every track looping, each goes round on its own length: one file can only go round as a whole — a tenth of a
-  // second apart is near enough. Only some looping, they go round in the mix till the song's end, and the song ends
-  // there — live, they would play on after the others end, till a pause)
-  const loop = ts.every(a => a.loop), len = Math.max(...ts.map(a => a.duration));
-  if (loop && plan.parts.some(p => len - ts[p.k].duration > 0.1)) return { bad: "Tracks of different lengths loop, so the mix can't be made ahead" + ND_LIVE };
+  // (every track looping, each goes round on its own length, from its own cut start: one file can only go round as a whole
+  // — a tenth of a second apart is near enough. Only some looping, they go round in the mix till the song's end, and the
+  // song ends there — live, they would play on after the others end, till a pause)
+  const round = a => a.duration - trackFloor(a), loop = ts.every(a => a.loop), len = Math.max(...ts.map(round));
+  if (loop && plan.parts.some(p => len - round(ts[p.k]) > 0.1)) return { bad: "Tracks of different lengths loop, so the mix can't be made ahead" + ND_LIVE };
   // (the memory it takes, with what the page holds already — the precise engine's own copy, background mode's next
   // song, files read in: each track's sound as it's kept (made already, or as the precise engine keeps it — mono and
   // silence take less — else 16-bit stereo), the file twice while it's handed over, and one track being decoded
@@ -7493,7 +7985,7 @@ function ndNow() {
     if (!st) dec = Math.max(dec, a.duration * ND_SR * 8 + f.size);
   });
   if (need + dec > ND_MEM) return { bad: 'This song is too big to get ready ahead on this device' + ND_LIVE };
-  const id = f => ND.ids.get(f) || (ND.ids.set(f, ++ND.n), ND.n), lp = loop ? plan.lead / ND_SR : null;
+  const id = f => ND.ids.get(f) || (ND.ids.set(f, ++ND.n), ND.n), lp = loop ? (plan.last !== undefined ? plan.last : plan.lead) / ND_SR : null;
   return { plan, files, lp, sig: JSON.stringify([plan.frames, plan.master, lp, plan.parts.map(p => [id(files[p.k]), p.gain, p.loop, p.off, p.fl])]) };
 }
 /* Every ¼ s with the switch on: is the mix that plays the mix as it is? A change is mixed again once it has settled for
@@ -7637,7 +8129,7 @@ async function ndSwap(B, m, gen) {
   if (go) { if (at < end) ndGo(B); else pauseAll(); }
 }
 /* Every track looping, the song goes round from lp (ndNow): from its very start, by the <audio>'s own loop; from where
-   Audio starts at puts the audio in, once it has ended (see ndSpare). */
+   Sync puts the audio in, once it has ended (see ndSpare). */
 function ndLoop(el, lp) { el._lp = lp; el.loop = lp === 0; }
 /* Song time t in the mix el plays: at or past its end (within 0.05 s of it: play() there would start it over from the
    beginning), round again from lp when every track loops — else null: the song is over there. */
@@ -7794,7 +8286,7 @@ function ndRate(el) { el.defaultPlaybackRate = el.playbackRate = rate; el.preser
 function ndFollow() {
   if (!wantPlay || launching || dragging || document.hidden || !tracks.length) return;
   const t = ndTime(), now = performance.now();
-  if (hasVideo && bg.getAttribute('src')) videoFollow(t, now < Math.max(evs.leadUntil, sync.vidAfter));
+  if (hasVideo && bg.getAttribute('src') && !videoWaiting(t)) videoFollow(t, now < Math.max(evs.leadUntil, sync.vidAfter));
   if (!ENG.on || !ENG.playing || !ND.go) return;
   setSync(1);
   if (Math.abs(engHeard() + audioOffset - t) > 0.05 && now - ND.fixAt > 1000) {
@@ -8578,12 +9070,20 @@ lenWarn.querySelector('button').onclick = lenClose;
 lenWarn.addEventListener('animationend', e => { if (e.animationName === 'lenTime') lenClose(); }); // (8 seconds up: closed, as with ×)
 function checkLengths() {
   retimeScore(true); // VoiSona/CeVIO Auto timing follows the audio lengths as they become known
+  syncWatch();
   const items = [];
-  tracks.forEach(a => { if (isFinite(a.duration) && a.duration > 0) items.push({ name: a._name, len: a.duration + audioOffset, track: a }); });
+  // (len: where it ends on the song's time. name: what a warning you've closed goes by; label: what it says, a moved thing saying so)
+  const moved = (name, by) => (by ? { name, label: name + ' (moved ' + syOff(by) + ')', moved: true } : { name, label: name });
+  tracks.forEach(a => {
+    if (!isFinite(a.duration) || !(a.duration > 0)) return;
+    const own = FREE.on && a._spd !== 1 ? 0 : a._shift; // (at a speed of its own a track's number doesn't say where it ends: it's taken as its file, as with none)
+    items.push({ ...moved(a._name, syncRound(audioOffset + own)), len: Math.max(0.01, a.duration + audioOffset + own), track: a });
+  });
   if (hasVideo && vidDur()) {
-    items.push({ name: 'Background video' + (videoOffset ? ' (from ' + fmt(videoOffset) + ')' : ''), len: Math.max(0.01, vidDur() - videoOffset) });
+    const name = 'Background video' + (videoOffset > 0 ? ' (from ' + fmt(videoOffset) + ')' : videoOffset < 0 ? ' (comes in at ' + fmt(-videoOffset) + ')' : '');
+    items.push({ name, label: 'Background video' + (videoOffset > 0 ? ' (from ' + timeWords(videoOffset) + ')' : videoOffset < 0 ? ' (comes in at ' + timeWords(-videoOffset) + ')' : ''), len: Math.max(0.01, vidDur() - videoOffset), moved: videoOffset < 0 }); // (coming in late, it's where it ends that's later, not its length. From further in, it really is that short)
   }
-  if (svp && svp.end > 0) items.push({ name: svp.fileName || 'Score', len: Math.max(0.01, svp.end + scoreOffset) });
+  if (svp && svp.end > 0) items.push({ ...moved(svp.fileName || 'Score', scoreOffset), len: Math.max(0.01, svp.end + scoreOffset) });
   let ref = null;
   for (const it of items) if (it.track && (!ref || it.len > ref.len)) ref = it;
   if (!ref) ref = items[0];
@@ -8592,7 +9092,7 @@ function checkLengths() {
     ? items.filter(it => it !== ref && Math.max(it.len, ref.len) / Math.min(it.len, ref.len) > 1 + tol) : [];
   const describe = it => {
     const pct = Math.round(Math.abs(it.len - ref.len) / ref.len * 100);
-    return fmt(it.len) + ' — ' + pct + '% ' + (it.len < ref.len ? 'shorter' : 'longer') + ' than ' + ref.name + ' (' + fmt(ref.len) + ')';
+    return (it.moved ? 'ends at ' : '') + fmt(it.len) + ' — ' + pct + '% ' + (it.len < ref.len ? 'shorter' : 'longer') + ' than ' + ref.label + (ref.moved ? ', which ends at ' + fmt(ref.len) : ' (' + fmt(ref.len) + ')');
   };
   tracks.forEach(a => {
     const b = bad.find(it => it.track === a), title = b ? 'Length mismatch: ' + describe(b) : '';
@@ -8603,14 +9103,15 @@ function checkLengths() {
   const keys = bad.map(it => it.name + ':' + Math.round(it.len) + '/' + Math.round(ref.len));
   const sig = keys.join('|') + '#' + ref.name;
   if (sig === lenSig) return;
+  if (!$('viewSync').hidden && !(document.body.classList.contains('no-controls') && mobileMode() !== 'portrait')) return; // (no new popup over the rows you're nudging: it comes once they're off the screen, the view or the panel closed. The tracks' own warnings above are up to date)
   lenSig = sig;
   lenShown = keys;
   if (keys.every(k => lenDismissed.has(k))) { if (!lenWarn.hidden) lenWarn.hidden = true; return; } // (nothing you haven't closed already)
   lenWarnList.innerHTML = '';
   for (const it of bad) {
     const li = document.createElement('li'), b = document.createElement('b');
-    b.textContent = it.name;
-    li.append(b, ' is ' + describe(it));
+    b.textContent = it.label;
+    li.append(b, (it.moved ? ' ' : ' is ') + describe(it));
     lenWarnList.appendChild(li);
   }
   lenWarn.hidden = false;
@@ -8947,6 +9448,7 @@ function resetAll(keepDevice) {
   applyMaster();
   clearCurrentProject();
   if (!keepDevice) { setVizK(1, true); say('Everything reset'); }
+  syncNotify();
 }
 /* The player emptied — no tracks, video or score — while the settings stay as they are. */
 function clearMixer() {
@@ -8961,6 +9463,7 @@ function clearMixer() {
   applyAmbient();
   applyRoll();
   clearCurrentProject();
+  syncNotify();
 }
 resetBtn.onclick = () => {
   if (!resetBtn.classList.contains('armed')) {
@@ -9722,24 +10225,55 @@ function petStep(pic, state, inSong) {
   if (state && state !== 'leaving') return 'swap';
   return inSong ? 'come' : '';
 }
-/* Before the desktop pets start: who in the playlist needs a picture. songs: [{ name, cast }] in playlist
-   order, each cast as petCast gives it; known: key → { url, asked } (what the app has: petpics' pics()).
-   A singer with a picture, or one the user started without before (asked), isn't asked about again; the
-   "Chorus" (the rest of a big cast, past PETL.max) is no one to ask about. Merged per key: a singer in
-   several songs comes once, with each song it sings in (once each), in the order the singers first sing,
-   named as its first song names it. → [{ key, label, songs: [names] }] */
-function petAskList(songs, known) {
+/* A playlist's singers merged per key: songs [{ name, cast }] in playlist order, each cast as petCast gives
+   it. A singer in several songs comes once, with each song it sings in (once each), in the order the singers
+   first sing, named as its first song names it. → [{ key, label, songs: [names], chorus? }] */
+function petMerged(songs) {
   const out = new Map();
   for (const s of songs || []) for (const g of (s && s.cast) || []) {
-    if (!g || typeof g.key !== 'string' || !g.key || g.chorus) continue;
-    const k = known && known.get(g.key);
-    if (k && (k.url || k.asked)) continue;
+    if (!g || typeof g.key !== 'string' || !g.key) continue;
     let o = out.get(g.key);
-    if (!o) out.set(g.key, (o = { key: g.key, label: String(g.label || '').trim() || g.key.replace(/^[a-z]+:/, ''), songs: [] }));
+    if (!o) out.set(g.key, (o = { key: g.key, label: String(g.label || '').trim() || g.key.replace(/^[a-z]+:/, ''), songs: [], ...(g.chorus ? { chorus: true } : {}) }));
     const n = String((s && s.name) || '').trim();
     if (n && !o.songs.includes(n)) o.songs.push(n);
   }
   return [...out.values()];
+}
+/* Before the desktop pets start: who in the playlist needs a picture. songs as for petMerged; known: key →
+   { url, asked } (what the app has: petpics' pics()). A singer with a picture, or one the user started
+   without before (asked), isn't asked about again; the "Chorus" (the rest of a big cast, past PETL.max) is
+   no one to ask about. → [{ key, label, songs: [names] }] */
+function petAskList(songs, known) {
+  return petMerged(songs).filter(o => {
+    const k = known && known.get(o.key);
+    return !o.chorus && !(k && (k.url || k.asked));
+  });
+}
+/* Why a song has no singers, in the words of the Characters list. */
+const PET_WHY = { none: 'no score', bad: "its score can't be read", quiet: 'nobody sings in its score' };
+/* The Characters list: every singer of the songs in the playlist, picture or not (asked or not: the user
+   may well have changed their mind), merged as petMerged has it. songs as for petMerged, each with why when
+   it has no singers (PET_WHY); known as for petAskList. The Chorus comes last: it can have a picture, but it
+   isn't one of the singers, so it isn't counted and gets no warning. → { rows: [{ key, label, songs, url,
+   chorus? }], named: how many singers, need: how many of them have no picture, lines: one for each song
+   with no singers } */
+function petRoster(songs, known) {
+  const rows = petMerged(songs).map(o => { const k = known && known.get(o.key); return { ...o, url: (k && k.url) || '' }; });
+  const named = rows.filter(r => !r.chorus), lines = [];
+  for (const s of songs || []) {
+    if (!s || (s.cast || []).some(g => g && g.key)) continue;
+    const L = (String(s.name || '').trim() || 'A song') + ' has no singers (' + (PET_WHY[s.why] || PET_WHY.quiet) + ')';
+    if (!lines.includes(L)) lines.push(L);
+  }
+  return { rows: [...named, ...rows.filter(r => r.chorus)], named: named.length, need: named.filter(r => !r.url).length, lines };
+}
+/* What a roster comes to, in one line: at the top of the list, and with the list closed when it's a
+   warning. Only singers with a picture come on. → { text ('': no singers at all), warn } */
+function petRosterSum(R) {
+  const n = R.named, m = R.need, one = m === 1;
+  if (!n) return { text: '', warn: false };
+  if (m) return { text: '⚠ ' + (n === 1 ? 'The singer has' : m + ' of ' + n + ' singers ' + (one ? 'has' : 'have')) + ' no picture, so ' + (one ? 'it' : 'they') + " won't appear on the taskbar.", warn: true };
+  return { text: n === 1 ? 'The singer has a picture.' : 'All ' + n + ' singers have a picture.', warn: false };
 }
 /* Would anyone come on? songs and known as for petAskList. → '' to start: a singer in the playlist (the
    Chorus too) has a picture of its own — or there are no singers at all, and it plays with just the
@@ -10367,7 +10901,7 @@ function petWhereUI() {
   const pet = CAN_PET && where === 'pet';
   $('petSet').hidden = !pet;
   for (const id of ['plVisualRow', 'plVisualHint', 'plOneLyricRow', 'plOneLyricHint']) $(id).hidden = pet; // (the pets show no visuals and no lyric roll)
-  if (pet) petCfgUI();
+  if (pet) { petCfgUI(); petFollow(); }
 }
 async function petCfgUI() {
   let c = null;
@@ -10391,50 +10925,90 @@ function petCfgSet(c) { // (one at a time; the slider's newest value wins — it
 $('petSize').onchange = e => petCfgSet({ size: e.target.value });
 $('petLift').oninput = e => { $('petLiftTxt').textContent = e.target.value + '%'; petCfgSet({ lift: e.target.value / 100 }); };
 $('petLift').ondblclick = e => { e.target.value = 50; e.target.dispatchEvent(new Event('input', { bubbles: true })); };
-$('petCharsBtn').onclick = () => petCharsOpen($('petPanel').hidden);
+/* The Characters list follows the playlist. closed: the user closed it, which holds until the view next
+   opens (showView) · painted: what the list shows now, so that nothing's redrawn for nothing. */
+const PETR = { gen: 0, timer: 0, closed: false, job: null, painted: '' };
+$('petCharsBtn').onclick = () => { const open = $('petPanel').hidden; PETR.closed = !open; petCharsOpen(open); };
 /* Characters… opened (→ once its list is filled, up to date) or closed. */
 function petCharsOpen(open) {
   $('petPanel').hidden = !open;
   $('petCharsBtn').setAttribute('aria-expanded', String(open));
   return open ? petPanel() : null;
 }
-/* The Characters list: each singer the pets have met (and each one asked about before they started) —
-   its picture (or plain words: no picture, not shown), its name and key; Choose picture… / Remove. */
-async function petPanel() {
-  const ul = $('petList');
-  let list = null;
-  try { list = await mapApp.petChars(); } catch (e) {}
-  ul.replaceChildren();
-  if (!Array.isArray(list) || !list.length) {
-    const li = document.createElement('li');
-    li.className = 'hint';
-    li.textContent = 'No singers yet: they show up here once you start the desktop pets with a playlist.';
-    ul.appendChild(li);
-    return;
-  }
-  for (const c of list) {
-    const li = document.createElement('li'), th = document.createElement('div'), tx = document.createElement('div');
-    th.className = 'pc-th'; tx.className = 'pc-txt';
-    if (c.url) { const im = new Image(); im.src = c.url; im.alt = ''; th.appendChild(im); }
-    const nm = document.createElement('div'), bd = document.createElement('span'), ky = document.createElement('div');
-    nm.className = 'pc-name'; nm.textContent = c.label || c.key;
-    bd.className = c.url ? 'pc-badge' : 'pc-badge off'; bd.textContent = c.url ? 'Your picture' : 'No picture — not shown';
-    nm.appendChild(bd);
-    ky.className = 'pc-key'; ky.textContent = c.key;
-    tx.append(nm, ky);
-    const bt = document.createElement('div');
-    bt.className = 'pc-btns';
-    const btn = (label, title, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.title = title; b.onclick = fn; bt.appendChild(b); };
-    btn('Choose picture…', 'Use a picture of your own for this singer', () => petChoose(c.key));
-    if (c.url) btn('Remove', "Remove this picture: the singer isn't shown any more", () => petCharDo('remove', c.key));
-    tx.appendChild(bt);
-    li.append(th, tx);
-    ul.appendChild(li);
-  }
+/* The playlist or where it plays changed, or the view opened (both come through petWhereUI): the list
+   opens by itself when there are songs and it wasn't closed on purpose, and catches up, a moment later so
+   a burst of changes reads once. Out of view there's nothing to show: it catches up as the view opens. */
+function petFollow() {
+  if ($('viewPlaylist').hidden) return;
+  if ($('petPanel').hidden && PL.ids.length && !PETR.closed) { petCharsOpen(true); return; }
+  clearTimeout(PETR.timer);
+  PETR.timer = setTimeout(petPanel, 200);
+}
+/* The line over the list, and the one above Start that stands in for it while the list is closed (the
+   style sheet hides that one while the list is open). closedToo: this one's worth showing with the list
+   closed — a warning, or how far the reading is; that all is well isn't. */
+function petSay(text, warn, closedToo) {
+  const sum = $('petSum'), w = $('petWarn');
+  sum.textContent = text; sum.hidden = !text; sum.classList.toggle('warn', !!warn);
+  w.textContent = text; w.hidden = !(text && closedToo); w.classList.toggle('warn', !!warn);
+}
+/* Who's in the playlist now, and what the app has for them (asking registers them as met, which a picture
+   needs: so Choose picture… is only offered after this). → once it's on screen. The newest call wins; an
+   older one still on its way waits for it. */
+function petPanel() {
+  clearTimeout(PETR.timer);
+  const gen = ++PETR.gen, stale = () => gen !== PETR.gen;
+  return (PETR.job = (async () => {
+    const songs = await petSongs(PL.ids, (i, n) => { if (!stale()) petSay('Looking at the singers… (' + i + ' / ' + n + ')', false, true); }, stale);
+    const r = stale() ? null : await petKnownPics(songs);
+    if (stale()) return PETR.job;
+    petPaint(songs, r);
+  })());
+}
+/* The list itself: a row per singer, then a line per song with no singers. */
+function petPaint(songs, r) {
+  const ul = $('petList'), R = Array.isArray(r) ? petRoster(songs, new Map(r.map(p => [p.key, p]))) : null, S = R ? petRosterSum(R) : { text: '', warn: false };
+  petSay(S.text, S.warn, S.warn);
+  const sig = JSON.stringify(R);
+  if (sig === PETR.painted) return;
+  PETR.painted = sig;
+  const line = t => { const li = document.createElement('li'); li.className = 'hint'; li.textContent = t; return li; };
+  const items = !R ? [line("Couldn't ask the app about the singers' pictures. Close this list and open it again to try once more.")]
+    : !songs.length ? [line('Add songs to the playlist above: their singers show up here.')]
+    : [...R.rows.map(petRow), ...R.lines.map(line)];
+  const had = ul.contains(document.activeElement) ? document.activeElement.closest('li').dataset.key : ''; // (a keyboard stays on the same singer)
+  ul.replaceChildren(...items);
+  const li = had && items.find(x => x.dataset.key === had), fb = li && li.querySelector('button');
+  if (fb) fb.focus();
+}
+/* One singer's row: a frame for its picture, its name, the songs it sings in, whether it has a picture
+   (no picture: a warning; the Chorus has no warning of its own), Choose picture… or Change…, and Remove. */
+function petRow(c) {
+  const li = document.createElement('li'), th = document.createElement('div'), tx = document.createElement('div');
+  const nm = document.createElement('div'), sg = document.createElement('div'), bd = document.createElement('div'), bt = document.createElement('div');
+  const who = c.chorus ? 'the Chorus' : 'this singer';
+  li.dataset.key = c.key;
+  th.className = c.url ? 'pc-th on' : 'pc-th'; tx.className = 'pc-txt';
+  if (c.url) { const im = new Image(); im.src = c.url; im.alt = ''; th.appendChild(im); } else th.innerHTML = PET_FRAME;
+  nm.className = 'pc-name'; nm.textContent = c.label;
+  sg.className = 'pc-songs'; sg.textContent = c.songs.length ? (c.chorus ? 'The rest of the singers in ' : 'Sings in ') + petSongsText(c.songs) : '';
+  bd.className = 'pc-badge' + (c.url ? '' : c.chorus ? ' off' : ' warn');
+  bd.textContent = c.url ? 'Your picture' : c.chorus ? 'No picture (optional)' : "⚠ No picture: won't be shown";
+  bt.className = 'pc-btns';
+  const btn = (label, title, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.title = title; b.onclick = () => fn(b); bt.appendChild(b); return b; };
+  const pick = btn(c.url ? 'Change…' : 'Choose picture…', c.url ? 'Use another picture for ' + who : 'Use a picture of your own for ' + who, b => petChoose(c.key, b));
+  pick.setAttribute('aria-label', (c.url ? 'Change the picture for ' : 'Choose a picture for ') + c.label);
+  if (c.url) btn('Remove', c.chorus ? "Remove this picture: the Chorus isn't shown any more" : "Remove this picture: the singer isn't shown any more", () => petCharDo('remove', c.key)).setAttribute('aria-label', 'Remove the picture for ' + c.label);
+  th.title = (c.url ? 'Change the picture for ' : 'Choose a picture for ') + c.label;
+  th.onclick = () => { if (!pick.disabled) pick.click(); };
+  tx.append(nm, sg, bd, bt);
+  li.append(th, tx);
+  return li;
 }
 async function petCharDo(cmd, key) {
   let ok = false;
-  try { ok = await mapApp.petChar(cmd, key); } catch (e) {}
+  // (met just now: with more than the app keeps, this one may have dropped out. It needn't hold up the singer leaving: the app hears the two in this order)
+  try { mapApp.petPics([{ key }]).catch(() => {}); ok = await mapApp.petChar(cmd, key); } catch (e) {}
   if (cmd === 'remove') say(ok ? "Picture removed — that singer isn't shown any more" : "Couldn't remove that picture", 2500);
   petPanel();
 }
@@ -10444,34 +11018,90 @@ async function petCharDo(cmd, key) {
 async function petUsePicture(key, file) {
   const u = URL.createObjectURL(file);
   let n = null, ok = false;
-  try { n = await petNormalise(u); ok = await mapApp.petSetImg(key, n.png); } catch (e) {}
+  try { n = await petNormalise(u); await mapApp.petPics([{ key }]); ok = await mapApp.petSetImg(key, n.png); } catch (e) {} // (met just now, as for Remove)
   URL.revokeObjectURL(u);
   return { ok: !!ok, url: n ? n.pic.url : '' };
 }
-function petChoose(key) {
+function petChoose(key, b) {
   const inp = $('petPick');
   inp.value = '';
   inp.onchange = async () => {
     const f = inp.files && inp.files[0];
     if (!f) return;
+    if (b) { b.disabled = true; b.textContent = 'Getting it ready…'; }
     const r = await petUsePicture(key, f);
     if (r.url) URL.revokeObjectURL(r.url);
     say(r.ok ? 'Picture set' : "Couldn't use that picture — choose a PNG, JPG, WebP, GIF or BMP", 2500);
+    PETR.painted = ''; // (it failed and nothing changed: that button still goes back to how it was)
     petPanel();
   };
   inp.click();
 }
 
+/* ---- Desktop pet: the singers of the songs in the playlist ----
+   Each song's score is read on the side, as the read-ahead does (what's playing isn't touched), and what's
+   in it is kept per project and the score it has saved: Characters… and Start share one reading (also one
+   still under way), and a song is read again only once it's saved with another score. A song's name is
+   looked up each time (a project can be renamed). A score that can't be read stays that way, so that's kept
+   too; only trouble with the storage itself (nothing to do with the score) is tried again next time. */
+const PET_READ = new Map(); // project id → { sig: its score's files, job: → { cast, why }, done }
+async function petReadScore(id, keys) {
+  const recs = await getFiles(keys), files = keys.map(k => recs.get(k) && recs.get(k).file).filter(Boolean);
+  let sc = null;
+  if (files.length) try { sc = await parseScoreFile(files, []); } catch (e) {}
+  if (!sc || !sc.notes || !sc.notes.length) return { cast: [], why: 'bad' };
+  const cast = sc.lyr ? petCast(sc, id) : [];
+  return { cast: cast.map(g => ({ key: g.key, label: g.label, eng: g.eng, ...(g.chorus ? { chorus: true } : {}) })), why: cast.length ? '' : 'quiet' };
+}
+/* One song → { name, cast, why (PET_WHY) }, null if it's been deleted. reading(): called when its score
+   really has to be read (not when it's known already). */
+async function petSongRead(id, reading) {
+  const p = await getProject(id);
+  if (!p) return null;
+  const keys = (p.scores && p.scores.length ? p.scores : [p.score]).filter(Boolean);
+  if (!keys.length) return { name: p.name, cast: [], why: 'none' };
+  const sig = keys.join('\n');
+  let c = PET_READ.get(id);
+  if (!c || c.sig !== sig) {
+    const mine = (c = { sig, done: false, job: null });
+    c.job = petReadScore(id, keys).catch(() => { if (PET_READ.get(id) === mine) PET_READ.delete(id); return { cast: [], why: 'bad' }; }).then(r => { mine.done = true; return r; });
+    PET_READ.set(id, c);
+  }
+  if (!c.done) reading();
+  return { name: p.name, ...(await c.job) };
+}
+/* The playlist's songs, each once, in order. step(i, n): the i-th of n is being read · stop(): no need to go
+   on (the playlist has changed again: songs taken out aren't read for nothing). */
+async function petSongs(ids, step, stop) {
+  const out = [], uniq = [...new Set(ids)];
+  for (let i = 0; i < uniq.length && !(stop && stop()); i++) {
+    let s = null;
+    try { s = await petSongRead(uniq[i], () => step(i + 1, uniq.length)); } catch (e) {} // (its project can't be looked up now: left out, as a deleted one is)
+    if (s) out.push(s);
+  }
+  return out;
+}
+/* What the app has for these songs' singers; they're kept as met (so a picture can be saved for them). The
+   Chorus too: no one to ask about, but Characters… may give it a picture. → [{ key, url, asked, … }], null
+   if the app couldn't say. 300 at a time, what the app takes; a refused cast: null doesn't spread. */
+async function petKnownPics(songs) {
+  const all = new Map(), r = [];
+  for (const s of songs) for (const g of s.cast) if (!all.has(g.key)) all.set(g.key, { key: g.key, label: g.label, eng: g.eng });
+  const c = [...all.values()];
+  try { for (let i = 0; i < c.length; i += 300) r.push(...await mapApp.petPics(c.slice(i, i + 300))); } catch (e) { return null; }
+  return r;
+}
+
 /* ---- Desktop pet: the pictures for the singers, asked for as the pets start ----
-   Start background mode (Plays in: Desktop pet): every song's singers first — each score read on the
-   side, as the read-ahead does (what's playing isn't touched) — and every one with no picture that wasn't
-   asked about before is listed (petAskList): its songs, a frame for its picture and Choose picture… (made
-   ready here as it's chosen, and kept by the app at once). Start: the ones left out aren't shown and
-   aren't asked about again (Characters… still gives them one). Cancel: nothing starts. Nobody to ask
-   about: it starts straight away. Only singers with a picture come on, so when the playlist has singers
-   but none of them has a picture the pets don't start (petNobody): Start then says to choose at least
-   one, and with nobody to ask the player says what to do instead (Characters… opens, in sight). A
-   playlist with no singers at all starts all the same (just the little controls). → true: start. */
+   Start background mode (Plays in: Desktop pet): every song's singers first (petSongs: nothing's read again
+   that Characters… has read already), and every one with no picture that wasn't asked about before is
+   listed (petAskList): its songs, a frame for its picture and Choose picture… (made ready here as it's
+   chosen, and kept by the app at once). Start: the ones left out aren't shown and aren't asked about again
+   (Characters… still gives them one). Cancel: nothing starts. Nobody to ask about: it starts straight
+   away. Only singers with a picture come on, so when the playlist has singers but none of them has a
+   picture the pets don't start (petNobody): Start then says to choose at least one, and with nobody to ask
+   the player says what to do instead (Characters… opens, in sight). A playlist with no singers at all
+   starts all the same (just the little controls). → true: start. */
 const PETASK = { busy: false };
 async function petAskFirst(ids) {
   if (PETASK.busy) return false;
@@ -10479,23 +11109,8 @@ async function petAskFirst(ids) {
   const btn = $('bgmStart'), was = btn.textContent;
   btn.disabled = true;
   try {
-    const songs = [], uniq = [...new Set(ids)];
-    for (let i = 0; i < uniq.length; i++) {
-      btn.textContent = 'Looking at the singers… (' + (i + 1) + ' / ' + uniq.length + ')';
-      try {
-        const p = await getProject(uniq[i]);
-        const keys = p ? (p.scores && p.scores.length ? p.scores : [p.score]).filter(Boolean) : [];
-        if (!keys.length) continue;
-        const recs = await getFiles(keys), files = keys.map(k => recs.get(k) && recs.get(k).file).filter(Boolean);
-        if (!files.length) continue;
-        const sc = await parseScoreFile(files, []);
-        if (sc && sc.lyr) songs.push({ name: p.name, cast: petCast(sc, p.id) });
-      } catch (e) {} // (a score that can't be read here: nobody in it is asked about)
-    }
-    const all = new Map(); // (the Chorus too: no one to ask about, but Characters… may have given it a picture)
-    for (const s of songs) for (const g of s.cast) if (!all.has(g.key)) all.set(g.key, { key: g.key, label: g.label, eng: g.eng });
-    let r = [];
-    try { const c = [...all.values()]; for (let i = 0; i < c.length; i += 300) r.push(...await mapApp.petPics(c.slice(i, i + 300))); } catch (e) { r = null; } // (300 at a time, what the app takes; a refused cast: null doesn't spread)
+    const songs = await petSongs(ids, (i, n) => { btn.textContent = 'Looking at the singers… (' + i + ' / ' + n + ')'; });
+    const r = await petKnownPics(songs);
     btn.textContent = was;
     if (!Array.isArray(r)) return true; // (the app couldn't say: they start, with whoever has a picture)
     const known = new Map(r.map(p => [p.key, p])), list = petAskList(songs, known), nobody = petNobody(songs, known);
@@ -10531,7 +11146,7 @@ function petAskDialog(list, others) {
     pending.add(job);
     const r = await job;
     pending.delete(job);
-    if (closed) { if (r.url) URL.revokeObjectURL(r.url); if (!$('petPanel').hidden) petPanel(); return; } // (Cancel meanwhile: the picture is kept all the same)
+    if (closed) { if (r.url) URL.revokeObjectURL(r.url); petPanel(); return; } // (Cancel meanwhile: the picture is kept all the same)
     if (r.ok) {
       blobs.push(r.url);
       const im = new Image();
@@ -10577,7 +11192,7 @@ function petAskDialog(list, others) {
       if (d.open) d.close();
       ul.replaceChildren();
       for (const u of blobs) URL.revokeObjectURL(u);
-      if (!$('petPanel').hidden) petPanel(); // (an open Characters… list shows what was just chosen)
+      petPanel(); // (the Characters… list and its warning show what was just chosen)
       res(v);
     };
     go.onclick = async () => {
@@ -10595,8 +11210,8 @@ function petAskDialog(list, others) {
       end(true);
     };
     no.onclick = () => end(false);
-    d.oncancel = e => { e.preventDefault(); end(false); }; // (Esc: Cancel)
-    d.onclose = () => end(false);
+    d.oncancel = e => { if (e.target !== d) return; e.preventDefault(); end(false); }; // (Esc: Cancel. A file picker closed without a choice sends a cancel of its own, which bubbles up to here: the dialog stays)
+    d.onclose = () => { if (!d.open) end(false); }; // (a close still on its way from the last time this dialog was up isn't about this time)
     d.showModal();
     rows[0].b.focus();
   });
@@ -10761,6 +11376,7 @@ async function editProject(id) {
       row.innerHTML = '<input type="color" aria-label="Track colour"><span class="pe-name"></span><button class="pe-auto" type="button" title="Back to the automatic colour">Auto</button>' +
         '<div class="pe-row"><span aria-hidden="true">Vol</span><input type="range" class="pe-vol" min="0" max="1" step="0.01" aria-label="Volume">' +
         '<label><input type="checkbox" class="pe-mute"> Muted</label><label><input type="checkbox" class="pe-show"> Shown</label><label><input type="checkbox" class="pe-loop"> Loop</label>' +
+        '<label title="This track on its own, on top of Audio in Sync below: + later, − earlier">Own shift (s) <input type="number" class="pe-shift" step="0.001" style="width:5.5em"></label>' +
         (p.settings && p.settings.freeSpeed ? '<label>Speed <input type="number" class="pe-spd" min="0.25" max="3" step="0.05" style="width:4.5em"></label>' : '') + '</div>';
       row.querySelector('.pe-name').textContent = t.name;
       const col = row.querySelector('input[type=color]');
@@ -10776,6 +11392,7 @@ async function editProject(id) {
       row.querySelector('.pe-mute').checked = !!t.muted;
       row.querySelector('.pe-show').checked = t.show !== false;
       row.querySelector('.pe-loop').checked = !!t.loop;
+      row.querySelector('.pe-shift').value = syncNum(t.shift);
       const spd = row.querySelector('.pe-spd');
       if (spd) spd.value = t.spd || 1;
       el.appendChild(row);
@@ -10783,6 +11400,33 @@ async function editProject(id) {
   }
   // settings: the Settings view's own rows, filled with the project's values (inert copies)
   const S = p.settings || {};
+  // Sync: the numbers as they mean now, for what the project has (they're stored as ever: saveProjectEdits)
+  const au = syncRead(+S.audioOffset || 0, +S.audioTrim || 0);
+  const nums = [...(p.tracks.length ? [['S', 'Audio (seconds)', au.S], ['C', 'Cut the start of the audio (seconds)', au.C]] : []),
+    ...(p.video ? [['V', 'Video (seconds)', syncNum(-(+S.vidOffset || 0))]] : []),
+    ...(p.score || (p.scores && p.scores.length) ? [['O', 'Score (seconds)', syncNum(S.scoreOffset)]] : [])];
+  if (nums.length) {
+    const h = document.createElement('h2');
+    h.textContent = 'Sync';
+    el.appendChild(h);
+    const note = document.createElement('p');
+    note.className = 'hint';
+    note.textContent = '+ is later, − is earlier. To line things up by ear, open the project and use Sync.';
+    el.appendChild(note);
+    for (const [k, name, v] of nums) {
+      const row = document.createElement('label');
+      row.className = 'op';
+      row.textContent = name + ' ';
+      const inp = document.createElement('input');
+      inp.type = 'number';
+      inp.step = '0.001';
+      inp.dataset.sync = k;
+      inp.style.width = '5.5em';
+      inp.value = v;
+      row.appendChild(inp);
+      el.appendChild(row);
+    }
+  }
   for (const g of document.querySelectorAll('#viewSettings .sgroup')) {
     const ctrls = [...g.querySelectorAll('input[id], select[id]')].filter(c => c.id in S && c.id !== 'mainLyrics'); // (main lyrics depends on the loaded score)
     if (!ctrls.length) continue;
@@ -10826,6 +11470,12 @@ async function saveProjectEdits() {
     if (p.settings[c.dataset.key] !== v) changed[c.dataset.key] = v;
     p.settings[c.dataset.key] = v;
   });
+  // Sync's numbers go back to what they're stored as (only what really changed counts as changed)
+  const num = k => { const c = projEditEl.querySelector('[data-sync=' + k + ']'); return c ? c.value : null; };
+  const put = (id, v) => { if ((+p.settings[id] || 0) !== v) changed[id] = p.settings[id] = String(v); };
+  if (num('S') !== null) { const m = syncStore(syncNum(num('S')), syncNum(num('C'), 0)); put('audioOffset', m.start); put('audioTrim', m.trim); }
+  if (num('V') !== null) put('vidOffset', syncNum(-syncNum(num('V'))));
+  if (num('O') !== null) put('scoreOffset', syncNum(num('O')));
   projEditEl.querySelectorAll('.pe-track').forEach(row => {
     const t = p.tracks[+row.dataset.i];
     if (!t) return;
@@ -10835,6 +11485,8 @@ async function saveProjectEdits() {
     t.muted = row.querySelector('.pe-mute').checked;
     t.show = row.querySelector('.pe-show').checked;
     t.loop = row.querySelector('.pe-loop').checked;
+    const shift = syncNum(row.querySelector('.pe-shift').value);
+    if (shift) t.shift = shift; else delete t.shift;
     const spd = row.querySelector('.pe-spd');
     if (spd) { const v = Math.min(3, Math.max(0.25, +spd.value || 1)); if (v !== 1) t.spd = v; else delete t.spd; }
   });
@@ -10867,6 +11519,7 @@ function describeProject(p) {
    the first one's project and updates it. */
 let saveQ = Promise.resolve();
 function saveProject() {
+  if (document.activeElement && document.activeElement.closest('#viewSync')) document.activeElement.blur(); // (Ctrl+S with a number still being typed in Sync: it counts)
   const run = saveQ.then(saveProjectNow);
   saveQ = run.catch(() => {});
   return run;
@@ -10894,7 +11547,7 @@ async function saveProjectNow() {
       created: existing ? existing.created : now,
       updated: now,
       tracks: tracks.map(a => ({ key: keep(a._file), name: a._name, vol: a._vol, loop: a.loop, muted: !!a._muted,
-                                 show: a._show, color: a._color, custom: !!a._custom, ...(a._spd !== 1 ? { spd: a._spd } : {}) })),
+                                 show: a._show, color: a._color, custom: !!a._custom, ...(a._spd !== 1 ? { spd: a._spd } : {}), ...(a._shift ? { shift: a._shift } : {}) })),
       video: bgFile ? keep(bgFile) : null,
       videoName: bgFile ? bgFile.name : null,
       score: svp && svp.srcFile ? keep(svp.srcFile) : null,
@@ -10903,7 +11556,7 @@ async function saveProjectNow() {
       scoreNames: svp && svp.srcFiles ? svp.srcFiles.map(f => f.name) : null,
       settings: collectSettings(),
       state: { rate, masterVol, masterMuted, noVisuals: visToggle.on, barHidden: view.hidden,
-               noTabs: document.body.classList.contains('no-tabs') },
+               noTabs: document.body.classList.contains('no-tabs'), ...(svp && svp.raw && svp.raw.auto ? { tpqAuto: svp.raw.auto } : {}) },
     };
     p.bytes = [...files.values()].reduce((s, f) => s + f.file.size, 0);
     say('Saving…');
@@ -10912,6 +11565,8 @@ async function saveProjectNow() {
     currentProject = { id: p.id, name };
     projName.value = name;
     renderProjects();
+    if (!$('viewPlaylist').hidden) renderPlaylist(); // (Ctrl+S with the playlist showing: a song's name, and Characters…, may have changed)
+    syncNotify();
     say((existing ? 'Updated “' : 'Saved “') + name + '”');
   } catch (err) {
     say(err && err.name === 'QuotaExceededError' ? 'Not enough storage space' : "Couldn't save project");
@@ -10945,8 +11600,13 @@ async function loadProject(id, pre) { // pre: { p, recs } already read (backgrou
       if (fs.length) await loadScore(fs);
     } else if (p.score) { const f = fileOf(p.score); if (f) await loadScore(f); else missing++; }
     if (my !== projGen) return; // another project (or Reset) took over meanwhile
+    if (svp && svp.raw && p.state && p.state.tpqAuto) svp.raw.saved = p.state.tpqAuto; // (the Auto tempo decided before, so the moved numbers don't decide again. Before the settings: they re-time)
     applySettings(p.settings); // after the score, so the "Main lyrics" choice exists
     props.forEach((t, i) => restoreTrack(tracks[i], t));
+    if (!ENG.on && FREE.on) { // (Separate track speeds: every track at its place and on its line, as a seek back has them: going on from a pause keeps them where they are)
+      const place = () => { if (my !== projGen || wantPlay) return; if (isLoading()) { setTimeout(place, 50); return; } placeSong(0); };
+      place();
+    }
     recolorTracks();
     const s = p.state || {};
     if (s.rate && s.rate !== rate) setRate(s.rate);
@@ -10964,6 +11624,7 @@ async function loadProject(id, pre) { // pre: { p, recs } already read (backgrou
     projName.value = p.name;
     updateMediaSession();
     renderProjects();
+    syncNotify();
     sayWhenLoaded('Loaded “' + p.name + '”' + (missing ? ' · ' + missing + ' file' + (missing > 1 ? 's' : '') + ' missing' : ''));
   } catch (err) {
     say("Couldn't open project");
@@ -11064,7 +11725,7 @@ function paintAllRanges() { document.querySelectorAll('input[type=range]').forEa
 document.addEventListener('input', e => { if (e.target.type === 'range') paintRange(e.target); }, true);
 document.addEventListener('change', e => { if (e.target.type === 'range') paintRange(e.target); }, true);
 // Number fields → − value + steppers (a <label> would forward taps on its text to a button)
-document.querySelectorAll('#viewSettings input[type=number]').forEach(inp => {
+function numField(inp) {
   const lab = inp.closest('label');
   if (lab) {
     const div = document.createElement('div');
@@ -11084,7 +11745,9 @@ document.querySelectorAll('#viewSettings input[type=number]').forEach(inp => {
     return b;
   };
   wrap.append(mk('−', -1, 'Decrease'), inp, mk('+', 1, 'Increase'));
-});
+}
+document.querySelectorAll('#viewSettings input[type=number]').forEach(inp => { if (!inp.closest('#syncKept')) numField(inp); }); // (those aren't seen: the Sync view is what you see of them)
+numField($('sySpk')); // (the view's other numbers have their nudges)
 // The panel and strip end exactly where the tab row begins: measure it (depends on zoom/fonts)
 if (window.ResizeObserver) new ResizeObserver(() => { document.body.style.setProperty('--tabs-h', tabsEl.offsetHeight + 'px'); markLayout(400); }).observe(tabsEl);
 // Mouse wheel scrolls the tab row sideways (it has no scrollbar)
@@ -11218,9 +11881,9 @@ function debugText() {
     L.push('— each track vs the clock · speed · own level · learned jump lead');
     for (const a of tracks) {
       const lv = a._lv || {};
-      L.push('  ' + (a._name || '').slice(0, 16).padEnd(16) + ' ' + (T ? ms(a.currentTime - T.t) : '—').padStart(7) + '  ×' + a.playbackRate.toFixed(4) +
+      L.push('  ' + (a._name || '').slice(0, 16).padEnd(16) + ' ' + (T ? ms(a.currentTime + a._shift - T.t) : '—').padStart(7) + '  ×' + a.playbackRate.toFixed(4) +
              '  ' + db(lv.rms || 0).padStart(5) + (lv.silent ? ' silent' : lv.quiet ? ' quiet ' : '       ') +
-             '  lead ' + Math.round(leadOf(a) * 1000) + 'ms' + (a.paused ? '  paused' : '') + (a._fixing ? '  fixing' : '') +
+             '  lead ' + Math.round(leadOf(a) * 1000) + 'ms' + (a._shift ? '  shift ' + a._shift + 's' : '') + (a._held ? '  waiting' : a.paused ? '  paused' : '') + (a._fixing ? '  fixing' : '') +
              (performance.now() < (a._fixOff || 0) ? '  (left alone)' : ''));
     }
   }
@@ -11230,6 +11893,382 @@ function debugText() {
   if (svp) L.push('— score  ' + svp.notes.length + ' notes · ' + (svp.mainLines ? svp.mainLines.length : 0) + ' top lines · ' + parts.length + ' particles' +
                   (svp.tpq ? ' · ' + svp.tpq + ' ticks/beat' : '') + (scoreOffset ? ' · offset ' + scoreOffset + 's' : ''));
   return L.join('\n');
+}
+/* ---- The Sync area's way in: plain functions for the view (tests use them too). Each takes the number as it is (it's clamped
+   and rounded here), writes it to the kept input without a change event, applies it at once and tells syncListeners — every
+   function in that list is called after any change of these numbers or of what's loaded (a project opened, Reset everything,
+   tracks added or removed, a video or score coming or going, a length becoming known). The inputs' own change handlers end
+   in the same state by the same code: projects, resets and the project editor arrive that way. ---- */
+function syncNotify() { for (const f of syncListeners) { try { f(); } catch (e) { console.error(e); } } }
+let syncSig = '';
+function syncWatch() { // (what changes without one of the above: in the half-second tick)
+  if (!syncListeners.length) return;
+  const sig = [total().toFixed(3), hasVideo, vidDur(), !!svp, svp && svp.end, ...tracks.map(a => a._show + ':' + a.duration + ':' + a._color)].join('|');
+  if (sig !== syncSig) { syncSig = sig; syncNotify(); }
+}
+function syncState() {
+  return { S: syncRound(audioOffset), C: syncCut, V: videoOffset ? -videoOffset : 0, O: scoreOffset,
+           tracks: tracks.map(a => ({ a, name: a._name, s: a._shift, show: a._show })),
+           hasAudio: tracks.length > 0, hasVideo: !!hasVideo, hasScore: !!svp, T: total() };
+}
+function syncApplyAudio(m) {
+  $('audioOffset').value = m.start;
+  $('audioTrim').value = m.trim;
+  setAudioShift(m.start, m.trim);
+  syncNotify();
+}
+function syncSetAudio(S) { syncApplyAudio(syncStore(syncNum(S), syncCut)); }
+function syncSetCut(C) {
+  syncCut = syncNum(C, 0);
+  syncApplyAudio(syncStore(syncRound(audioOffset), syncCut));
+}
+function syncSetVideo(V) {
+  const v = syncNum(-syncNum(V));
+  vidOffset.value = v;
+  setVideoShift(v);
+  syncNotify();
+}
+function syncSetScore(O) {
+  const v = syncNum(O);
+  $('scoreOffset').value = v;
+  setScoreShift(v);
+  syncNotify();
+}
+function syncSetTrack(a, s) {
+  if (!tracks.includes(a)) return;
+  setTrackShift(a, syncNum(s));
+  syncNotify();
+}
+/* =====================================================================
+   The Sync view (its button on the rail, or Open Sync… in Settings): a timeline with a bar for each thing loaded, then a row
+   with its number for each. Every change goes through syncSet* and comes back through syncListeners, which it's on only
+   while this view or Settings (the summary line) is open; the playhead runs only while the view is open. So when neither is,
+   none of this runs at all.
+   ===================================================================== */
+const SY = { open: false, things: [], tracks: [], lone: null, sig: null, raf: 0, ro: null, w: 0, lo: 0, hi: 1, ticks: '', headX: NaN, drag: null, armT: 0 };
+const SY_NUDGES = [-1, -0.1, -0.01, 0.01, 0.1, 1];
+const syFmt = v => { const a = Math.abs(v); return a.toFixed(Math.abs(a * 100 - Math.round(a * 100)) > 1e-6 ? 3 : 2); }; // (2.00, or 0.005 when it takes that)
+const syOff = v => (v < 0 ? '−' : '+') + syFmt(v) + ' s';
+const timeWords = v => (Number.isInteger(v) ? fmt(v) : syFmt(v) + ' s'); // (whole seconds on the clock's way, 0:04; part of a second as it is, 0.50 s: fmt alone would read it early)
+const syName = a => a._name.replace(/\.[^.]+$/, ''); // (as on its tab)
+/* What a number means, in words. */
+function sySays(what, v) {
+  return v > 0 ? 'The ' + what + ' comes in ' + syFmt(v) + ' s after the song starts'
+    : v < 0 ? 'The song starts ' + syFmt(v) + ' s into the ' + what
+    : 'The ' + what + ' starts with the song';
+}
+/* The first track there is to hear, where its own shift and cut put it. (A cut start is silent: it's heard later than the number alone says.) */
+function syAudioSays() {
+  const all = tracks.map(syTrackNow), some = all.filter(e => e.to > e.from + e.cut); // (what's left of it, past its cut start: what falls before the song's start is in that)
+  if (!some.length) { if (all.every(e => e.to > e.from)) return all.every(e => e.to <= 0) ? "All the audio is before the song's start: there's nothing to hear" : "All the audio is cut: there's nothing to hear"; some.push(...all); }
+  const first = some.reduce((x, y) => (y.from < x.from ? y : x)), at = syncRound(first.from + first.cut);
+  return at > 0 ? sySays('audio', at) + (first.fl > 0 ? ', with its first ' + syFmt(first.fl) + ' s cut' : '') : sySays('audio', -first.fl);
+}
+/* The cut, and when it does nothing: Audio's − number covers it (stored, a cut within that isn't kept either). */
+function syCutSays(C) {
+  const S = SY.drag && SY.drag.o.key === 'audio' ? SY.drag.v : syncRound(audioOffset);
+  return "Cuts this much off the beginning of every audio track: it's never heard, and the rest stays where it is (e.g. a count-in you don't want to hear). If the video doesn't have that part, give Audio a − number instead: it's cut off the same way and the rest moves up with it." +
+    (C > 0 && S <= -C ? " Right now this does nothing: Audio's − number already cuts that much or more." : '');
+}
+/* The line in Settings. */
+function sySummary() {
+  const st = syncState(), bits = [], moved = st.tracks.filter(k => k.s), spk = +spkDelayIn.value || 0;
+  if (st.S) bits.push('Audio ' + syOff(st.S));
+  if (st.C) bits.push('Audio cut by ' + syFmt(st.C) + ' s');
+  if (moved.length) bits.push(moved.length > 1 ? moved.length + ' tracks moved' : (syName(moved[0].a).length > 16 ? '1 track' : syName(moved[0].a)) + ' ' + syOff(moved[0].s));
+  if (st.V) bits.push('Video ' + syOff(st.V));
+  if (st.O) bits.push('Score ' + syOff(st.O));
+  $('syncSum').textContent = (bits.join(' · ') || 'Everything starts together') + (spk ? ' · Speaker delay ' + spk + ' ms' : '');
+}
+/* A row (name, number, ↺, nudges, and what it means) and, for what has a place on the timeline, its bar. */
+function syThing(o) {
+  const row = document.createElement('div');
+  row.className = 'sy-row' + (o.a ? ' one' : '');
+  row.dataset.sy = o.key;
+  row.innerHTML = '<div class="sy-top"><span class="sy-name"></span><input type="number" step="0.001" autocomplete="off"><span class="sy-unit">s</span>' +
+    '<button type="button" class="sy-back" title="Back to 0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div><div class="sy-nudges"></div>';
+  o.nameEl = row.querySelector('.sy-name');
+  o.nameEl.title = o.nameEl.textContent = o.name;
+  const inp = o.inp = row.querySelector('input'), back = o.back = row.querySelector('.sy-back'), nudges = row.querySelector('.sy-nudges');
+  inp.setAttribute('aria-label', o.name + ', in seconds');
+  back.setAttribute('aria-label', o.name + ' back to 0');
+  /* While you type, the number stays yours; it counts from Enter or leaving the field. An empty field changes nothing. */
+  const commit = () => {
+    inp._typing = false;
+    if (inp.value !== '') o.set(+inp.value);
+    syPaint();
+  };
+  inp.addEventListener('input', () => { inp._typing = true; });
+  inp.addEventListener('change', commit);
+  inp.addEventListener('blur', () => { if (inp._typing) commit(); });
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    else if (e.key === 'Escape') { e.stopPropagation(); inp._typing = false; syPaint(); inp.blur(); }
+  });
+  back.onclick = () => { inp._typing = false; o.set(0); };
+  for (const d of SY_NUDGES) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = (d < 0 ? '−' : '+') + Math.abs(d);
+    b.setAttribute('aria-label', o.name + ' ' + Math.abs(d) + ' s ' + (d < 0 ? 'earlier' : 'later'));
+    b.onclick = () => { if (inp._typing) commit(); o.set(syncRound(o.get() + d)); };
+    nudges.appendChild(b);
+  }
+  if (o.says !== undefined) {
+    o.saysEl = document.createElement('p');
+    o.saysEl.className = 'sy-says';
+    o.saysEl.textContent = o.says;
+    row.appendChild(o.saysEl);
+  }
+  $('syRows').appendChild(row);
+  if (!o.c) return o;
+  const lane = document.createElement('div');
+  lane.className = 'sy-lane';
+  lane.dataset.sy = o.key;
+  lane.innerHTML = '<div class="sy-bar"><div class="sy-cut"></div></div><div class="sy-lab"><span></span></div>';
+  lane.querySelector('.sy-lab span').textContent = o.name;
+  o.bar = lane.querySelector('.sy-bar');
+  o.cutEl = lane.querySelector('.sy-cut');
+  o.bar.title = 'Drag to move: ' + o.name;
+  o.bar.addEventListener('pointerdown', e => syDown(e, o));
+  o.bar.addEventListener('pointermove', e => syMove(e, o));
+  const end = ok => e => { if (SY.drag && SY.drag.id === e.pointerId) syUp(ok); };
+  o.bar.addEventListener('pointerup', end(true));
+  o.bar.addEventListener('pointercancel', end(false)); // (the browser took the gesture, to scroll: it was no drag)
+  o.bar.addEventListener('lostpointercapture', () => syUp(true));
+  $('syLanes').appendChild(lane);
+  return o;
+}
+/* Each track: with two or more; and for a lone track with a shift of its own (its partner removed), which mustn't be stuck there unseen. Then it stays until the view next opens, so a click that brings it to 0 doesn't pull the rows from under the pointer. */
+const syEach = st => st.tracks.length > 1 || st.tracks.some(k => k.s) || (st.tracks.length === 1 && st.tracks[0].a === SY.lone);
+/* The rows and bars for what's loaded. Only when that changes: a change of a number must leave them be (the bar being dragged, the field you're in). */
+function syBuild(st, sig) {
+  if (SY.drag) { clearTimeout(SY.drag.timer); SY.drag = null; } // (what it was moving may have gone)
+  SY.sig = sig;
+  SY.tracks = st.tracks.map(k => k.a);
+  SY.lone = SY.tracks.length === 1 && syEach(st) ? SY.tracks[0] : null;
+  $('syRows').textContent = '';
+  $('syLanes').textContent = '';
+  SY.things = [];
+  const add = o => SY.things.push(syThing(o));
+  if (st.hasAudio) {
+    add({ key: 'audio', name: 'Audio', c: 'var(--accent)', get: () => syncRound(audioOffset), set: syncSetAudio, says: '', sayIt: syAudioSays });
+    if (syEach(st)) {
+      const h = document.createElement('h3');
+      h.textContent = 'Each track';
+      const p = document.createElement('p');
+      p.className = 'hint';
+      p.id = 'syEach';
+      $('syRows').append(h, p);
+      for (const a of SY.tracks) add({ key: 'track', a, name: syName(a), c: a._color || 'var(--accent)', get: () => a._shift, set: v => syncSetTrack(a, v) });
+    }
+    add({ key: 'cut', name: 'Cut the start of the audio', get: () => syncCut, set: syncSetCut, says: '', sayIt: syCutSays });
+  }
+  if (st.hasVideo) add({ key: 'video', name: 'Video', c: '#b06fd8', get: () => (videoOffset ? -videoOffset : 0), set: syncSetVideo, says: '', sayIt: v => sySays('video', v) });
+  if (st.hasScore) add({ key: 'score', name: 'Score', c: '#3fa77a', get: () => scoreOffset, set: syncSetScore, says: '', sayIt: v => sySays('score', v) });
+}
+/* Everything shown, from how things are now. Called on a change only, never per frame. */
+function syPaint() {
+  if ($('viewSync').hidden) return;
+  const st = syncState(), loaded = st.hasAudio || st.hasVideo || st.hasScore;
+  const sig = +st.hasVideo + '|' + +st.hasScore + '|' + st.tracks.length + '|' + syEach(st);
+  if (sig !== SY.sig || st.tracks.some((k, i) => k.a !== SY.tracks[i])) syBuild(st, sig);
+  for (const o of SY.things) {
+    const v = SY.drag && SY.drag.o === o ? SY.drag.v : o.get();
+    if (!o.inp._typing && o.inp.value !== v.toFixed(3)) o.inp.value = v.toFixed(3);
+    o.back.disabled = !v;
+    if (o.sayIt) { const t = o.sayIt(v); if (o.saysEl.textContent !== t) o.saysEl.textContent = t; }
+    if (o.a) { const name = o.name + (o.a._show ? '' : ' (hidden)'); if (o.nameEl.textContent !== name) o.nameEl.title = o.nameEl.textContent = name; }
+    if (o.bar) { const c = (o.a && o.a._color) || o.c; if (o.barC !== c) { o.barC = c; o.bar.style.setProperty('--c', c); } }
+  }
+  const each = $('syEach');
+  if (each) each.textContent = 'One track against the others, on top of Audio.' + (FREE.on ? " With Separate track speeds on, its number counts in the track's own time: +1 s at 2× moves it half a second." : '');
+  const any = !!(st.S || st.C || st.V || st.O || st.tracks.some(k => k.s)), reset = $('syReset');
+  $('syEmpty').hidden = loaded;
+  $('syLine').hidden = $('syRows').hidden = !loaded;
+  $('syFoot').hidden = !loaded && !any;
+  reset.disabled = !any;
+  if (!any) syDisarm();
+  $('syProjSave').hidden = !currentProject || !loaded;
+  $('syProjLine').hidden = !!currentProject || !loaded;
+  syDevicePaint();
+  if (loaded) syPlace(st);
+}
+/* Where a track's file starts on the song's time, and ends (Separate track speeds: along its own line). */
+const syTrackAt = a => (FREE.on && a._fa ? audioOffset + a._fa.c + (a._shift - a._fa.p) / a._spd : audioOffset + a._shift);
+const syTrackLen = a => (isFinite(a.duration) && a.duration > 0 ? trackEnd(a) - syTrackAt(a) : 0);
+/* A track as it's shown: a bar being dragged counts as under the pointer, whatever the engine has heard of it yet.
+   from, to: on the song's time. fl: where its sound starts in its file (trackFloor), cut: how long that is on the song's time. */
+function syTrackNow(a) {
+  const d = SY.drag, all = d && d.o.key === 'audio', own = d && d.o.a === a;
+  const from = syTrackAt(a) + (all ? d.v - d.o.get() : 0) + (own ? (d.v - a._shift) / d.k : 0);
+  const m = all ? syncStore(d.v, syncCut) : { start: audioStart, trim: audioTrim }, fl = syncFloor(m.start, m.trim, own ? d.v : a._shift);
+  return { from, to: from + syTrackLen(a), fl, cut: fl / (FREE.on ? a._spd : 1) };
+}
+/* The timeline: the axis takes in everything, with a little room; it holds still while a bar is being dragged (it would pull the bar from under the pointer) and takes in where that went at the end. */
+function syPlace(st) {
+  const w = $('syAxis').clientWidth, d = SY.drag;
+  if (!w) return;
+  const ext = o => {
+    if (o.a) return syTrackNow(o.a);
+    if (o.key === 'video') { const from = d && d.o === o ? d.v : o.get(); return { from, to: from + vidDur(), cut: 0 }; }
+    if (o.key === 'score') { const from = d && d.o === o ? d.v : o.get(); return { from, to: from + ((svp && svp.end) || 0), cut: 0 }; }
+    const all = tracks.map(syTrackNow); // (all the audio)
+    return { from: Math.min(...all.map(e => e.from)), to: Math.max(...all.map(e => e.to)), cut: tracks.length === 1 ? all[0].cut : 0 };
+  };
+  const bars = SY.things.filter(o => o.bar).map(o => [o, ext(o)]);
+  if (!d) {
+    let lo = 0, hi = Math.max(1, st.T);
+    for (const [, e] of bars) { lo = Math.min(lo, e.from); hi = Math.max(hi, e.to); }
+    const room = (hi - lo) * 0.04;
+    SY.lo = lo - room;
+    SY.hi = hi + room;
+    SY.w = w;
+    SY.headX = NaN;
+  }
+  const k = SY.w / (SY.hi - SY.lo), px = t => (t - SY.lo) * k;
+  for (const [o, e] of bars) {
+    o.bar.style.transform = 'translateX(' + px(e.from).toFixed(1) + 'px)';
+    o.bar.style.width = Math.max(10, (e.to - e.from) * k).toFixed(1) + 'px';
+    o.cutEl.style.width = (e.cut * k).toFixed(1) + 'px';
+  }
+  $('syZero').style.transform = 'translateX(' + px(0).toFixed(1) + 'px)';
+  $('syBefore').style.width = Math.max(0, px(0)).toFixed(1) + 'px';
+  const key = SY.lo.toFixed(2) + '|' + SY.hi.toFixed(2) + '|' + SY.w;
+  if (key === SY.ticks) return;
+  SY.ticks = key;
+  const span = SY.hi - SY.lo, step = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 14400, 28800, 43200].find(n => span / n <= 4.5) || 86400, ruler = $('syRuler');
+  ruler.textContent = '';
+  for (let t = Math.ceil(SY.lo / step) * step; t < SY.hi; t += step) {
+    const x = px(t);
+    if (t && (x < 14 || x > SY.w - 14)) continue; // (no room for its label)
+    const tick = document.createElement('span');
+    tick.className = 'sy-tick' + (t ? '' : ' zero');
+    tick.style.left = x.toFixed(1) + 'px';
+    tick.textContent = (t < 0 ? '−' : '') + fmt(Math.abs(t));
+    ruler.appendChild(tick);
+  }
+}
+/* The playhead: each frame while the view is open, and the page touched only when it moved. (A frame: nowT is the progress bar's own, as heard.) */
+function syTick() {
+  if (!SY.open) { SY.raf = 0; return; }
+  SY.raf = requestAnimationFrame(syTick);
+  if (SY.drag) sySend(); // (a bar held still: the song going on can reach where that value would end it)
+  if (!SY.w || (document.body.classList.contains('no-controls') && mobileMode() !== 'portrait')) return; // (the panel's away, H)
+  const x = Math.round(Math.max(0, Math.min(SY.w, (nowT - SY.lo) / (SY.hi - SY.lo) * SY.w)) * 2) / 2;
+  if (x !== SY.headX) { SY.headX = x; $('syHead').style.transform = 'translateX(' + x + 'px)'; }
+}
+/* Dragging a bar: it follows the pointer at once; what it moves hears of it a dozen times a second, and of the last place on letting go.
+   A small move is a click or a shaky finger. Values fall on what a pixel is worth (nudges do finer), and within a few pixels of 0 they stick to 0
+   (but no more than a quarter of a second's worth: on a long song, a few pixels are seconds you may want. Still, the closest pixel always gets there). */
+function syDown(e, o) {
+  if (e.button || SY.drag || isLoading() || !SY.w) return;
+  try { o.bar.setPointerCapture(e.pointerId); } catch (x) {}
+  const v = o.get(), k = FREE.on && o.a ? o.a._spd : 1, per = (SY.hi - SY.lo) / SY.w * k;
+  SY.drag = { o, id: e.pointerId, x0: lpoint(e).x, from: v, v, sent: v, k, per, step: Math.max(0.001, Math.pow(10, Math.floor(Math.log10(per)))), moved: false, at: 0, timer: 0 };
+  o.bar.classList.add('drag');
+}
+function syMove(e, o) {
+  const d = SY.drag;
+  if (!d || d.o !== o || e.pointerId !== d.id) return;
+  const dx = lpoint(e).x - d.x0;
+  if (!d.moved && Math.abs(dx) < 3) return;
+  d.moved = true;
+  const at = d.from + dx * d.per, near = Math.round(at / d.step) * d.step, v = Math.abs(at) < Math.max(Math.min(d.per * 4, 0.25), d.per * 0.6) ? 0 : syncNum(near);
+  if (v === d.v) return;
+  d.v = v;
+  syPaint();
+  sySend();
+}
+/* Playing: would the audio or this track, moved to where the bar is now, have the song over by now? */
+function syOverAt(d) {
+  if (!wantPlay || (d.o.key !== 'audio' && !d.o.a) || tracks.some(a => a.loop)) return false; // (a track that goes round never ends)
+  const now = songNow(), a = d.o.a, was = a ? a._shift : audioOffset;
+  if (a) a._shift = d.v; else audioOffset = d.v;
+  const T = total();
+  if (a) a._shift = was; else audioOffset = was;
+  return T <= now + 0.1;
+}
+/* While the button's down the song doesn't end: where a value would end it, the sound goes back to how it was before the drag until the bar comes back
+   (staying on the last place heard wouldn't do: that one would soon end the song too). Letting go there does end it: that's the number. */
+function sySend() {
+  const d = SY.drag;
+  if (!d) return;
+  clearTimeout(d.timer);
+  const v = syOverAt(d) ? d.from : d.v;
+  if (v === d.sent) return;
+  const wait = d.at + 80 - performance.now();
+  if (wait > 0) { d.timer = setTimeout(sySend, wait); return; }
+  d.at = performance.now();
+  d.sent = v;
+  d.o.set(v);
+}
+function syUp(ok) {
+  const d = SY.drag;
+  if (!d) return;
+  clearTimeout(d.timer);
+  SY.drag = null;
+  d.o.bar.classList.remove('drag');
+  if (d.moved) { d.o.set(ok ? d.v : d.from); syPaint(); }
+}
+/* Reset all: the first click arms it, as Reset everything's does. Speaker delay is this device's: it stays. */
+function syDisarm() {
+  clearTimeout(SY.armT);
+  const b = $('syReset');
+  b.classList.remove('armed');
+  b.textContent = 'Reset all';
+}
+$('syReset').onclick = () => {
+  const b = $('syReset');
+  if (!b.classList.contains('armed')) {
+    b.classList.add('armed');
+    b.textContent = 'Click again to confirm';
+    SY.armT = setTimeout(syDisarm, 3000);
+    return;
+  }
+  syDisarm();
+  syncCut = 0;
+  for (const a of tracks) syncSetTrack(a, 0);
+  syncSetAudio(0);
+  syncSetVideo(0);
+  syncSetScore(0);
+  say('Everything starts together');
+};
+$('syReset').addEventListener('blur', syDisarm);
+$('syProjSave').onclick = () => saveProject();
+$('syncOpen').onclick = () => showView('sync');
+/* This device: its two settings stay what they are (and remembered as ever, by the change reaching Settings); these show them. */
+const sySpk = $('sySpk'), syWho = $('syWho');
+syWho.innerHTML = syncSel.innerHTML;
+function syDevicePaint() {
+  if (document.activeElement !== sySpk) sySpk.value = spkDelayIn.value;
+  syWho.value = syncSel.value;
+}
+sySpk.addEventListener('change', () => {
+  const v = Math.max(0, Math.min(5000, Math.round(+sySpk.value || 0)));
+  sySpk.value = v;
+  spkDelayIn.value = v;
+  spkDelayIn.dispatchEvent(new Event('change', { bubbles: true }));
+});
+syWho.onchange = () => { syncSel.value = syWho.value; syncSel.dispatchEvent(new Event('change', { bubbles: true })); };
+for (const el of [spkDelayIn, syncSel]) el.addEventListener('change', () => { if (!$('viewSync').hidden) syDevicePaint(); else if (!$('viewSettings').hidden) sySummary(); });
+function syChanged() {
+  if (!$('viewSettings').hidden) sySummary();
+  syPaint();
+}
+if (SUBWIN) { $('tabSync').style.display = 'none'; $('syncOpen').closest('.sgroup').hidden = true; } // (background mode's own windows don't show it: a touch screen's corner player, small enough to count as a phone, has the rail)
+/* Which view is showing now: on the list only while one of ours is. */
+function syShown(name) {
+  const open = name === 'sync', i = syncListeners.indexOf(syChanged);
+  if ((open || name === 'settings') && i < 0) syncListeners.push(syChanged);
+  else if (!open && name !== 'settings' && i >= 0) syncListeners.splice(i, 1);
+  if (!open) { syUp(true); syDisarm(); }
+  SY.open = open;
+  if (name === 'settings') sySummary();
+  if (!open) { SY.lone = null; return; }
+  if (!SY.ro && window.ResizeObserver) { SY.ro = new ResizeObserver(() => { if (SY.open && !SY.drag && $('syAxis').clientWidth !== SY.w) requestAnimationFrame(syPaint); }); SY.ro.observe($('syAxis')); } // (only when its width changes: a turned phone, say; the next frame, as what it does can change sizes again)
+  syPaint();
+  if (!SY.raf) SY.raf = requestAnimationFrame(syTick);
 }
 function openPhoneWindow(layout) {
   const [w, h] = layout === 'portrait' ? [390, 844] : [844, 390];
