@@ -351,6 +351,13 @@ h3{font-size:.9rem;margin:16px 0 6px}
 .keys dd{margin:0;color:var(--muted)}
 .dbg-row{display:flex;gap:6px;margin-bottom:14px}
 .dbg-row button{flex:1;padding:7px 8px;font-size:.85rem}
+/* Remove all files: the look of Reset everything, right above it (its explanation in between). With nothing loaded it's off, and so is Export current… in Projects */
+#filesClear{display:block;width:100%;margin:24px 0 8px;padding:12px 16px;font-weight:600;border-radius:8px;transition:border-color .15s,color .15s,background .15s}
+#filesClear:hover{border-color:#c0392b;color:#c0392b}
+#filesClear.armed{border-color:#c0392b;color:#fff;background:#c0392b}
+#filesClear:disabled,#projExportNow:disabled{opacity:.45;cursor:default;border-color:var(--line);color:var(--fg)}
+#filesHint{margin-bottom:8px}
+#filesHint+#resetAll{margin-top:0}
 #resetAll{display:block;width:100%;margin:24px 0 8px;padding:12px 16px;font-weight:600;border-radius:8px;transition:border-color .15s,color .15s,background .15s}
 #resetAll:hover{border-color:#c0392b;color:#c0392b}
 #resetAll.armed{border-color:#c0392b;color:#fff;background:#c0392b}
@@ -385,8 +392,11 @@ body.m-rot .sy-bar{touch-action:pan-x} /* (the page turned for ☰: the panel sc
 .sy-back{flex:none;display:grid;place-items:center;width:28px;height:28px;padding:0}
 .sy-back svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sy-back:disabled{opacity:.35;cursor:default}
-.sy-nudges{display:flex;gap:3px;margin-top:6px}
-.sy-nudges button{flex:1 1 0;min-width:0;padding:4px 0;font-size:.76rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* (under the number, at the right: the step, then − and +. Each as wide as its longest text needs, so nothing moves when the step changes) */
+.sy-nudges{display:flex;justify-content:flex-end;gap:5px;margin-top:6px}
+.sy-nudges button{flex:none;min-width:30px;height:26px;padding:0 6px;font-size:1.05rem;line-height:1;white-space:nowrap;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.sy-nudges button:active{background:color-mix(in srgb,var(--fg) 12%,var(--surface))}
+.sy-nudges .sy-step{min-width:46px;font-size:.76rem;font-variant-numeric:tabular-nums}
 .sy-says{margin:5px 0 0;font-size:.8rem;color:var(--muted)}
 #syRows h3{margin:0;padding:10px 0 2px;border-top:1px solid var(--line)}
 #syRows h3+.hint{margin:0 0 8px;font-size:.8rem}
@@ -400,7 +410,7 @@ body.m-rot .sy-bar{touch-action:pan-x} /* (the page turned for ☰: the panel sc
 #syDevice{margin-top:8px;padding-top:4px;border-top:1px solid var(--line)}
 #syWhoRow{flex-direction:column;align-items:stretch;gap:4px}
 #syWhoRow select{max-width:none}
-@media (pointer:coarse){.sy-nudges button{padding:9px 0}.sy-back{width:36px;height:36px}.sy-top input[type=number]{padding:7px 6px}.sy-lane{height:30px}}
+@media (pointer:coarse){.sy-nudges{gap:8px}.sy-nudges button{min-width:44px;height:40px}.sy-nudges .sy-step{min-width:60px;font-size:.85rem}.sy-back{width:36px;height:36px}.sy-top input[type=number]{padding:7px 6px}.sy-lane{height:30px}}
 /* Projects */
 .psave{display:flex;gap:8px;margin-bottom:10px}
 .psave input,.proj-rename{flex:1;min-width:0;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 10px}
@@ -429,19 +439,34 @@ li.renaming .proj-pen{display:none}
 .proj-btns .proj-del:hover{color:#c0392b;border-color:color-mix(in srgb,#c0392b 55%,var(--line))}
 .proj-btns .proj-del.armed{display:inline-flex;align-items:center;gap:6px;width:auto;padding:0 12px;background:#c0392b;border-color:#c0392b;color:#fff}
 .proj-del.armed .lbl{display:inline;font-size:.85rem}
+/* Import… / Export all / Export current…: side by side at the width their words take; one that doesn't fit goes below */
+.proj-io{flex-wrap:wrap}
+.proj-io button{flex:1 1 auto}
 /* Background mode (the playlist) */
 #bgmNow[hidden],#bgmBar[hidden]{display:none}
 #bgmNow{border:1px solid var(--accent);border-radius:8px;padding:10px 12px 2px;margin:0 0 12px}
 #bgmNow .bgm-title{font-weight:600}
 #bgmNow .bgm-next{margin:2px 0 8px}
 #plList{list-style:none;margin:0 0 10px;padding:0;counter-reset:pl}
-#plList li{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--line);font-size:.9rem;counter-increment:pl}
+#plList li{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--line);font-size:.9rem;counter-increment:pl;cursor:grab;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #plList li::before{content:counter(pl);min-width:1.4em;color:var(--muted);font-variant-numeric:tabular-nums}
 #plList li.now{color:var(--accent);font-weight:600}
 #plList li.gone{color:var(--muted);text-decoration:line-through}
-#plList li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#plList li .pl-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #plList li button{padding:2px 8px;font-size:.8rem}
 #plList:empty::before{content:'No songs yet: add saved projects below.';color:var(--muted);font-size:.9rem}
+/* A song is dragged up or down to change the order (see plDragDown). Its grip, at the left of its number, is where a finger
+   takes hold: the browser leaves a touch that starts there alone (touch-action), and one anywhere else on the row scrolls
+   the panel as ever. In the hand the row floats over the others, which slide aside to show where it would land. */
+.pl-grip{order:-1;flex:none;display:grid;place-items:center;width:18px;height:24px;color:var(--muted);touch-action:none}
+.pl-grip svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;pointer-events:none}
+#plList li:hover .pl-grip,#plList li.drag .pl-grip{color:var(--fg)}
+#plList li:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:4px}
+#plList.sorting li{transition:transform .15s var(--ease)}
+#plList li.drag{position:relative;z-index:2;transition:none;border-radius:6px;border-bottom-color:transparent;background:var(--surface);box-shadow:0 4px 14px rgba(0,0,0,.3)}
+body.pl-drag,body.pl-drag *{cursor:grabbing!important}
+@media (pointer:coarse){.pl-grip{width:36px;height:44px;margin:-5px 0 -5px -4px}#plList li button{padding:7px 12px}} /* (a finger's worth: the grip takes the row's whole height) */
+@media (prefers-reduced-motion:reduce){#plList.sorting li{transition:none}}
 #plAdd{flex:1;min-width:0;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 8px}
 .bgm-big{display:block;width:100%;margin:16px 0 8px;padding:12px 16px;font-weight:600;border-radius:8px}
 /* The compact player's controls (the corner window's too): over the picture while the mouse moves on
@@ -506,6 +531,8 @@ body.bgm-visual #viz{--ui-bg:0;border-top-color:transparent;box-shadow:none}
 body.bgm.bgm-fill:not(.phone){--viz-h:100vh}
 body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-shadow:none}
 #plWhereRow[hidden],#plCoverHint[hidden],#plPetOld[hidden],#petSet[hidden],#petPanel[hidden],#plVisualRow[hidden],#plVisualHint[hidden],#plOneLyricRow[hidden],#plOneLyricHint[hidden]{display:none}
+#petFreeRow[hidden],#petFreeHint[hidden],#petWinRow[hidden],#petWinHint[hidden]{display:none}
+#petWanderRow[hidden],#petWanderHint[hidden],#petMergeRow[hidden],#petMergeHint[hidden]{display:none}
 #petList{list-style:none;margin:6px 0 10px;padding:0}
 #petList li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:.85rem}
 #petList li.hint{display:block;margin:0}
@@ -521,6 +548,24 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #petList .pc-badge.off{background:color-mix(in srgb,var(--fg) 8%,transparent);color:var(--muted)}
 #petList .pc-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 #petList .pc-btns button{font-size:.75rem;padding:2px 8px}
+/* a song's name over its singers; a selected card (Ctrl / Shift + click, or the keyboard): a clear outline, not just a tint */
+#petList li.pc-song{display:block;padding:12px 0 4px;font-size:.78rem;font-weight:600;color:var(--muted);overflow-wrap:anywhere}
+#petList li.pc-song:first-child{padding-top:2px}
+#petList li[data-key]{padding-left:6px;padding-right:6px;user-select:none;-webkit-user-select:none}
+#petList li[data-key]:focus-visible{outline:2px dashed var(--accent);outline-offset:-2px;border-radius:8px}
+#petList li[data-key].sel{outline:2px solid var(--accent);outline-offset:-2px;border-radius:8px;border-bottom-color:transparent;background:color-mix(in srgb,var(--accent) 14%,transparent)}
+#petList li[data-key].sel:focus-visible{outline-width:3px}
+/* over the list: Voicebank pictures; with several cards selected, what to do with them all; and what those last did */
+.pet-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 10px}
+.pet-tools button{font-size:.8rem;padding:5px 10px}
+.pet-tools button.armed,.pet-tools button.armed:hover{border-color:#c0392b;color:#fff;background:#c0392b}
+#petSelBar{padding:6px 8px;border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);border-radius:8px;background:color-mix(in srgb,var(--accent) 10%,transparent)}
+#petSelN{flex:1 0 100%;font-size:.82rem;font-weight:600}
+#petSelBar button{font-size:.75rem;padding:3px 8px}
+.pet-note{margin:0 0 10px;font-size:.82rem;line-height:1.4;color:var(--muted)}
+#petTools[hidden],#petBankHint[hidden],#petSelBar[hidden],#petNote[hidden],#petPicBank[hidden]{display:none}
+#petPicBank{margin-right:auto}
+#petPicDlg .pp-foot{flex-wrap:wrap}
 /* what the list comes to: over it, and above Start while it's closed (the warning colours are #lenWarn's) */
 .pet-sum{margin:0 0 10px;font-size:.85rem;line-height:1.4;color:var(--muted)}
 #petPanel:not([hidden])~#petWarn{display:none}
@@ -557,6 +602,16 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #updDlg .ud-body{flex:1 1 auto;min-height:0;overflow:auto;padding:2px 20px 0;font-size:.9rem;line-height:1.45}
 #updDlg .ud-body p{margin:0 0 10px}
 #updDlgFail{font-weight:600}
+/* What's new (the update popup): a box of its own that scrolls, so a long list never pushes the buttons out of the window */
+#updDlgNew h4{margin:2px 0 6px;font-size:.9rem;font-weight:600}
+#updDlgNotes{max-height:min(34vh,260px);overflow:auto;overflow-wrap:anywhere;margin:0 0 12px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--fg) 5%,transparent)}
+#updDlgNotes ul{margin:0 0 6px;padding-left:18px}
+#updDlgNotes li{margin:0 0 2px}
+#updDlgNotes .un-v{margin:8px 0 3px;font-weight:600}
+#updDlgNotes .un-h{margin:6px 0 2px;font-weight:600;font-size:.85rem;opacity:.85}
+#updDlgNotes .un-p{margin:0 0 6px}
+#updDlgNotes > :first-child{margin-top:0}
+#updDlgNotes > :last-child{margin-bottom:0}
 #updDlgBar{display:block;width:100%;height:8px;margin:0 0 10px;border:none;border-radius:999px;overflow:hidden;-webkit-appearance:none;appearance:none;background:color-mix(in srgb,var(--fg) 14%,transparent)}
 #updDlgBar::-webkit-progress-bar{background:transparent}
 #updDlgBar::-webkit-progress-value{background:var(--accent)}
@@ -669,16 +724,17 @@ html.overlay :is(#bg,#vidGlow,#amb,#seek,#toast,#loadBox,#barToggle,#lenWarn,.gr
 html.overlay :is(main,#panelBg,#tabs,#tabsToggle){visibility:hidden!important} /* (still measured for the layout) */
 html.overlay #viz{cursor:default;pointer-events:none}
 html.overlay #bgmBar{display:none!important} /* (its controls are a little window of their own, in the corner of the screen) */
-/* Desktop pet (desktop app): this page in the see-through strip along the bottom of the screen — only the
-   singers and their speech bubbles show; only the singers take the mouse (main lets it through elsewhere) */
+/* Desktop pet (desktop app): this page in the see-through window over the screen (or a strip along its bottom) —
+   only the singers and their speech bubbles show; only the singers take the mouse (main lets it through
+   elsewhere), and a press is theirs wherever in the window it lands (petDown: no touch gesture takes it away) */
 #pet{display:none}
-html.pet,html.pet body{background:transparent!important;overflow:hidden}
+html.pet,html.pet body{background:transparent!important;overflow:hidden;touch-action:none}
 html.pet body>:not(#app),html.pet #app>:not(#pet){display:none!important}
 html.pet #pet{display:block;position:fixed;inset:0;pointer-events:none;overflow:hidden;contain:strict;-webkit-user-select:none;user-select:none}
 #pet .pet-ch{position:absolute;left:0;top:0;will-change:transform}
 #pet .pet-fig{position:absolute;inset:0;transform-origin:50% 100%;will-change:transform}
 #pet .pet-fig>img{position:absolute;inset:0;width:100%;height:100%;pointer-events:auto;cursor:grab;-webkit-user-drag:none;user-select:none;touch-action:none}
-#pet .pet-ch.held .pet-fig>*{cursor:grabbing}
+#pet .pet-ch.held .pet-fig,#pet .pet-ch.held .pet-fig>*{cursor:grabbing} /* (the fig holds the pointer while it's dragged) */
 #pet .pet-ch.held{z-index:5}
 #pet .pet-fig.poof{animation:petPoof .42s ease-out}
 @keyframes petPoof{0%{filter:brightness(2.2) saturate(.3);transform:scale(.6)}55%{filter:brightness(1.4);transform:scale(1.08)}100%{filter:none;transform:scale(1)}}
@@ -1043,11 +1099,14 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
       </select></label>
       <label class="op">Show debug overlay <input autocomplete="off" type="checkbox" id="dbgOverlay"></label>
       <div class="dbg-row no-touch"><button id="dbgPhoneP" title="Open a phone-sized window (portrait)">Phone window ▯</button><button id="dbgPhoneL" title="Open a phone-sized window (landscape)">Phone window ▭</button></div>
+      <button id="filesClear" title="Nothing is loaded" disabled>Remove all files</button>
+      <p class="hint" id="filesHint">Remove all files takes away what you added — every audio track, the video and the score — and nothing else: your settings, saved projects and playlist stay as they are.</p>
       <button id="resetAll">Reset everything</button>
     </div>
 
     <!-- What the Sync view's numbers are stored in: in here so that projects, remembered settings and resets keep treating them
-         like any other setting. The view is what you see of them (its controls write these; see syncState). -->
+         like any other setting. The view is what you see of them (its controls write these; see syncState). syncStep is how
+         much its − and + move a number: this device's, like the two before it. -->
     <div id="syncKept" hidden>
       <input autocomplete="off" type="number" id="audioOffset" step="any" value="0">
       <input autocomplete="off" type="number" id="audioTrim" step="any" value="0">
@@ -1058,6 +1117,11 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <option value="auto" selected>Auto</option>
         <option value="video">The video follows the audio</option>
         <option value="audio">The audio follows the video</option>
+      </select>
+      <select autocomplete="off" id="syncStep">
+        <option value="1" selected>1</option>
+        <option value="0.1">0.1</option>
+        <option value="0.01">0.01</option>
       </select>
     </div>
   </section>
@@ -1075,7 +1139,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
           <div id="syZero" aria-hidden="true"></div>
           <div id="syHead" aria-hidden="true"></div>
         </div></div>
-        <p class="hint">Drag a bar left or right, or use the numbers below. What falls left of the song's start is cut off.</p>
+        <p class="hint">Drag a bar left or right, or use the numbers below: − and + move one by the step beside them, and a click on the step changes it. What falls left of the song's start is cut off.</p>
       </div>
       <div id="syRows"></div>
       <div id="syFoot">
@@ -1098,8 +1162,8 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <div class="psave"><input type="text" id="projName" placeholder="Project name" maxlength="80" aria-label="Project name"><button id="projSave" class="primary">Save</button></div>
     <p id="projStatus" class="hint"></p>
     <ul id="projList"></ul>
-    <div class="dbg-row proj-io"><button id="projImport" title="Add the projects from a .mapproj file (made with Export)">Import…</button><button id="projExportAll" title="All your projects and their files in one .mapproj file — a backup, or to move them to another computer">Export all</button><input type="file" id="projImportFile" accept=".mapproj" multiple hidden></div>
-    <p class="hint" id="projIoHint">Export makes one <b>.mapproj</b> file with the project and all its files (audio, video, score) — keep it as a backup, or open it on another computer or phone with Import (or by dropping it on the player). Importing never replaces a project: one with the same name comes in as “… (2)”.</p>
+    <div class="dbg-row proj-io"><button id="projImport" title="Add the projects from a .mapproj file (made with Export)">Import…</button><button id="projExportAll" title="All your projects and their files in one .mapproj file — a backup, or to move them to another computer">Export all</button><button id="projExportNow" title="Nothing is loaded yet: add files or open a project first" disabled>Export current…</button><input type="file" id="projImportFile" accept=".mapproj" multiple hidden></div>
+    <p class="hint" id="projIoHint">Export makes one <b>.mapproj</b> file with the project and all its files (audio, video, score) — keep it as a backup, or open it on another computer or phone with Import (or by dropping it on the player). Importing never replaces a project: one with the same name comes in as “… (2)”. Export current… makes one of what's loaded right now, as it is at this moment, whether or not it's saved as a project: nothing is saved and no project changes.</p>
     <div id="projEdit" hidden></div>
   </section>
 
@@ -1111,6 +1175,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     </div>
     <h2>Playlist</h2>
     <ol id="plList"></ol>
+    <p class="hint" id="plOrderHint" hidden>To change the order, drag a song up or down: with a mouse anywhere on its row, on a touch screen by the dots at its left.<span class="no-touch"> With the keyboard: Alt+↑ or Alt+↓ on a song.</span></p>
     <div class="psave"><select id="plAdd" aria-label="Project to add"></select><button id="plAddBtn">Add</button></div>
     <div class="dbg-row"><button id="plAddAll">Add all projects</button><button id="plClear">Clear the list</button></div>
     <label class="op">Loop the playlist <input type="checkbox" id="plLoop" checked></label>
@@ -1122,11 +1187,19 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <label class="op" id="plWhereRow" hidden>Plays in <select id="plWhere" autocomplete="off"><option value="corner">Small corner player</option><option value="cover">Cover the screen</option><option value="pet" id="plWherePet">Desktop pet</option></select></label>
     <p class="hint" id="plPetOld" hidden>Install the newest version to get Desktop pet mode (this copy of the app is from before it).</p>
     <div id="petSet" hidden>
-      <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer left or right along the taskbar (it's remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the right, just above them) stops. Each singer is a picture of your own: Characters… lists the singers of the songs in your playlist, so you can give them their pictures before you start, and warns about any without one. When you start, the player also asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
+      <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer to move it (where you leave it is remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the top of the screen, in the middle) stops. Each singer is a picture of your own: Characters… lists the singers of the songs in your playlist, so you can give them their pictures before you start, and warns about any without one. When you start, the player also asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
       <label class="op">Character size <select id="petSize" autocomplete="off"><option value="S">Small</option><option value="M">Medium</option><option value="L">Large</option></select></label>
       <label class="op"><span>Height on the taskbar <span class="rv" id="petLiftTxt">50%</span></span><input autocomplete="off" type="range" id="petLift" min="0" max="150" step="5" value="50" title="0%: feet on the bottom edge of the screen · 50%: on the middle of the taskbar · 100%: on its top edge"></label>
+      <label class="op" id="petFreeRow" hidden>Pets can go anywhere on the screen <input type="checkbox" id="petFree" autocomplete="off" checked></label>
+      <p class="hint" id="petFreeHint" hidden>Drag a singer up off the taskbar and it stays where you leave it, in the air; let it go near the taskbar and it stands on it again. Off: the singers stay on the taskbar and only move left and right.</p>
+      <label class="op" id="petWinRow" hidden>Pets can stand on windows <input type="checkbox" id="petWindows" autocomplete="off" checked></label>
+      <p class="hint" id="petWinHint" hidden>Let go of a singer just over the top edge of a window and it stands on it: it rides along when you move the window, and drops to the taskbar when the window closes, is minimised or gets covered there.</p>
+      <label class="op" id="petWanderRow" hidden>Singers with nothing to sing wander <input type="checkbox" id="petWander" autocomplete="off" checked></label>
+      <p class="hint" id="petWanderHint" hidden>With two or more singers on screen, one that has no line for a while strolls along the taskbar (or the window it stands on) and is standing still again before its next line. It never walks into the others, it stays put for a while after you move it, and the place you gave it is still the one that's remembered.</p>
+      <label class="op" id="petMergeRow" hidden>As few pets as possible <input type="checkbox" id="petMerge" autocomplete="off"></label>
+      <p class="hint" id="petMergeHint" hidden>Singers who never sing at the same time share one pet, which sings all their lines; singers who do sing together stay separate pets. The pet is the one of them with a picture who sings most. A singer without a picture joins a pet when it can, so its lines show too.</p>
       <div class="dbg-row"><button id="petCharsBtn" aria-expanded="false">Characters…</button></div>
-      <div id="petPanel" hidden><p class="hint">The singers of the songs in the playlist above: only singers with a picture come on. Choose picture… or Change… gives one its picture (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more.</p><p class="pet-sum" id="petSum" role="status" hidden></p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*" hidden></div>
+      <div id="petPanel" hidden><p class="hint">The singers of the songs in the playlist above: only singers with a picture come on. Choose picture… or Change… gives one its picture (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more. The list goes song by song, in the playlist's order. To change several singers at once, select their cards (click one; Ctrl+click adds one or takes it out; Shift+click takes all in between), then Choose picture… on any of them: one file goes to all of them, several files are handed out down the list, in the order of their names.</p><p class="pet-sum" id="petSum" role="status" hidden></p><div class="pet-tools" id="petTools" hidden><button type="button" id="petBankBtn">Voicebank pictures</button></div><p class="hint" id="petBankHint" hidden>Voicebank pictures gives each singer the picture that comes with its voicebank, if that voicebank is installed on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona). Singers who have a picture keep it unless you press again; with cards selected, only those change.</p><div class="pet-tools" id="petSelBar" hidden><span id="petSelN"></span><button type="button" id="petSelPick" title="One file for all of them, or several files: one each, down the list, in the order of their names">Choose picture for all…</button><button type="button" id="petSelDel" title="Remove the selected singers' pictures: they aren't shown any more">Remove pictures</button><button type="button" id="petSelNone" title="Select nothing (Esc)">Clear selection</button></div><p class="pet-note" id="petNote" role="status" hidden></p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*" hidden></div>
       <p class="pet-sum" id="petWarn" role="status" hidden></p>
     </div>
     <p class="hint" id="plCoverHint" hidden>Cover the screen: instead of the small window, the visualizer and the piano roll play over your whole screen, with nothing behind them — your other windows show through, and the mouse goes straight through to them. The player waits in the taskbar as the remote control. The controls are in a little window in the bottom-right corner of the screen (the song, ⏮ ⏯ ⏭, and ✕ to stop), and these keys work from any app while it plays: Ctrl+Alt+Space play / pause, Ctrl+Alt+Page Down next song, Ctrl+Alt+Page Up previous song, Ctrl+Alt+End stop — and the media keys on your keyboard.</p>
@@ -1154,8 +1227,8 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 </nav>
 
 <div id="pet" aria-hidden="true"><svg class="pet-bubs"></svg></div>
-<dialog id="petPicDlg" aria-labelledby="petPicT" aria-describedby="petPicP"><h3 id="petPicT">Pictures for the singers</h3><p class="pp-intro" id="petPicP">Choose a picture of your own for each singer: it stands on your taskbar and sings their lines. A picture with see-through parts is trimmed, a plain background is cleared; other pictures become a sticker card. Singers left without a picture aren't shown. To change them later: Characters… in the Desktop pet settings.</p><ul id="petPicList"></ul><p class="pp-none" id="petPicNone" role="alert" hidden>None of the singers has a picture yet — choose at least one.</p><div class="pp-foot"><button type="button" id="petPicNo">Cancel</button><button type="button" id="petPicGo" class="primary">Start</button></div><input type="file" id="petPicFile" accept="image/*" hidden></dialog>
-<dialog id="updDlg" aria-labelledby="updDlgT" aria-describedby="updDlgP"><h3 id="updDlgT"></h3><div class="ud-body"><p id="updDlgFail" hidden></p><p id="updDlgP"></p><progress id="updDlgBar" aria-labelledby="updDlgP" max="1" value="0" hidden></progress><label class="op" id="updDlgOn" hidden>Show this when the app starts <input type="checkbox" class="upd-on" autocomplete="off" checked></label><p class="hint" id="updDlgHint" hidden>If GitHub says the page can't be found, click Sign in at the top right.</p></div><div class="pp-foot"><button type="button" id="updDlgMore" hidden>Get the installer</button><button type="button" id="updDlgNo"></button><button type="button" id="updDlgGo" class="primary"></button></div></dialog>
+<dialog id="petPicDlg" aria-labelledby="petPicT" aria-describedby="petPicP"><h3 id="petPicT">Pictures for the singers</h3><p class="pp-intro" id="petPicP">Choose a picture of your own for each singer: it stands on your taskbar and sings their lines. A picture with see-through parts is trimmed, a plain background is cleared; other pictures become a sticker card. Singers left without a picture aren't shown. To change them later: Characters… in the Desktop pet settings.</p><ul id="petPicList"></ul><p class="pp-none" id="petPicNone" role="alert" hidden>None of the singers has a picture yet — choose at least one.</p><div class="pp-foot"><button type="button" id="petPicBank" title="Give each of these singers the picture that comes with its voicebank, if that voicebank is installed on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona)" hidden>Voicebank pictures</button><button type="button" id="petPicNo">Cancel</button><button type="button" id="petPicGo" class="primary">Start</button></div><input type="file" id="petPicFile" accept="image/*" hidden></dialog>
+<dialog id="updDlg" aria-labelledby="updDlgT" aria-describedby="updDlgP"><h3 id="updDlgT"></h3><div class="ud-body"><p id="updDlgFail" hidden></p><p id="updDlgP"></p><progress id="updDlgBar" aria-labelledby="updDlgP" max="1" value="0" hidden></progress><div id="updDlgNew" hidden><h4 id="updDlgNewT">What's new</h4><div id="updDlgNotes" tabindex="0" role="region" aria-labelledby="updDlgNewT"></div></div><label class="op" id="updDlgOn" hidden>Show this when the app starts <input type="checkbox" class="upd-on" autocomplete="off" checked></label><p class="hint" id="updDlgHint" hidden>If GitHub says the page can't be found, click Sign in at the top right.</p></div><div class="pp-foot"><button type="button" id="updDlgMore" hidden>Get the installer</button><button type="button" id="updDlgNo"></button><button type="button" id="updDlgGo" class="primary"></button></div></dialog>
 <canvas id="vidGlow" width="24" height="14" aria-hidden="true"></canvas>
 <video id="bg" muted loop playsinline preload="auto" x-webkit-wirelessvideoplaybackdisabled></video>
 <div id="tabs"><button class="tab" id="allTab" style="--c:var(--fg)">All</button></div>
@@ -6088,9 +6161,20 @@ async function loadScore(f) { // f: a score file, or a list of .ust files (one p
    step / pad – the next one stands this far to the left (× width + DIP: what's drawn never touches) ·
    bump – a saved spot closer than this (× width) to another character moves aside · edge / gap –
    bubbles keep this far from the screen's sides / from each other (DIP) · rows – bubble rows before
-   the text shrinks · round / tail – a bubble's corner radius / half its tail's root (DIP)
+   the text shrinks · round / tail – a bubble's corner radius / half its tail's root (DIP) · keep –
+   singers standing on one line stay this far apart (DIP between what's drawn of them) · glide – how
+   fast one steps aside to get there (DIP/s) · floor / ledge – a singer let go this near the taskbar
+   line / a window's top edge (DIP) stands on it · fall – one with nothing under it speeds up this much
+   (DIP/s²) · lag / reach – the mouse rectangles lead a moving singer by this long (s), at most this
+   far (DIP) · idle / soon / far – a singer with nothing to sing wanders once its last line ended
+   this long ago (s), stands still from this long before its next one starts (s: its bubble comes
+   `early` before that, and it is on its feet well before), and only sets off with this long to go
+   (s) · walk / pace – it walks this fast (× its height a second), a step this long (× its height) ·
+   shy – walking, it keeps this much further off the others than they must keep apart (DIP)
    ===================================================================== */
-const PETL = { early: 0.25, unison: 0.3, appear: 1, jump: 1, max: 6, at: 0.7, step: 1, pad: 16, bump: 0.6, edge: 8, gap: 6, rows: 3, round: 12, tail: 7 };
+const PETL = { early: 0.25, unison: 0.3, appear: 1, jump: 1, max: 100, at: 0.7, step: 1, pad: 16, bump: 0.6, edge: 8, gap: 6, rows: 3, round: 12, tail: 7,
+  keep: 6, glide: 140, floor: 40, ledge: 28, fall: 3000, lag: 0.2, reach: 160,
+  idle: 1.5, soon: 1.25, far: 4, walk: 0.34, pace: 0.15, shy: 12 };
 /* A track named after its singer plus a harmony word ("Lumi_harm", "Lumi (chorus)", "Lumiハモリ",
    "ルミ（ハモリ）", "ルミ・ハモ") is that singer. Latin words need a separator before them ("Echo" stays
    "Echo"). NFKC first: Japanese typing gives full-width brackets （ ）［ ］. */
@@ -6173,7 +6257,10 @@ function petCast(svp, projectId) {
 }
 /* Who sings now. Per character: on each of its tracks (most notes first) the last line starting by
    now + early, while now ≤ its end + hold; the first such track wins (the lead over its own
-   harmony). Characters singing the same words together share one bubble: in start order, a line
+   harmony). A pet that sings for several singers (petFewest: its tracks say whose they are, [t, Ls,
+   m]) has each singer's line found so, and shows the newest of them: a finished line that's only
+   lingering gives way to the next singer's, as it does to that singer's own next line. Characters
+   singing the same words together share one bubble: in start order, a line
    joins the bubble whose latest start is within PETL.unison before it (so 0 / 0.2 / 0.4 s is one
    bubble, whatever order the cast is in). → [{ L (the earliest line), who: [characters], lines:
    [each one's line], s, e }], earliest first. Nothing is kept between calls, so seeks and jumps
@@ -6182,10 +6269,15 @@ function petActive(cast, svp, now, hold) {
   const P = svp && svp.pet, h = hold == null ? LY.hold : hold, on = [], out = [];
   if (!P) return out;
   for (const g of cast) {
-    for (const [, Ls] of P.lines.get(g.key) || []) {
-      const M = Ls[nUpTo(Ls, now + PETL.early) - 1];
-      if (M && now <= M.e + h) { on.push([g, M]); break; }
+    let M = null, own = -1; // (own: the singer whose line was found last — the rest of its tracks are its own harmony)
+    for (const [, Ls, m = 0] of P.lines.get(g.key) || []) {
+      if (m === own) continue;
+      const N = Ls[nUpTo(Ls, now + PETL.early) - 1];
+      if (!N || now > N.e + h) continue;
+      own = m;
+      if (!M || N.s > M.s) M = N;
     }
+    if (M) on.push([g, M]);
   }
   on.sort((a, b) => a[1].s - b[1].s); // (stable: the cast's order on a tie)
   for (const [g, L] of on) {
@@ -6256,6 +6348,89 @@ function petAppearNow(cast, svp, was, started) {
   const first = petFirstLineAt(cast, svp);
   for (const [k, s] of at) if (s === -Infinity && was && isFinite(was.get(k))) at.set(k, first.get(k) - PETL.appear);
   return at;
+}
+/* A singer's lines as stretches of time: tracks as svp.pet's lines have them for one key ([[t, Ls], …]),
+   each line from pre s before it starts to post s after its end; stretches that touch or overlap are one.
+   → [{ s, e }] in time order. */
+function petSpans(tracks, pre = 0, post = 0) {
+  const all = [], out = [];
+  for (const [, Ls] of tracks || []) for (const L of Ls) all.push({ s: L.s - pre, e: L.e + post });
+  all.sort((a, b) => a.s - b.s);
+  for (const o of all) {
+    const p = out[out.length - 1];
+    if (p && o.s <= p.e) p.e = Math.max(p.e, o.e); else out.push(o);
+  }
+  return out;
+}
+/* How long a singer has had nothing to sing, and how long until it has (spans: petSpans of its lines).
+   → { since: s since its last line ended (Infinity: none yet), until: s to its next one (Infinity: none
+   left) }; both 0 while a line is on. */
+function petIdle(spans, now) {
+  const i = nUpTo(spans, now), p = spans[i - 1], n = spans[i];
+  if (p && now < p.e) return { since: 0, until: 0 };
+  return { since: p ? now - p.e : Infinity, until: n ? n.s - now : Infinity };
+}
+/* "As few pets as possible": the song's singers in the fewest groups in which no two clash; each group is
+   ONE pet, which sings all its singers' lines. Two singers clash when a line of one would have to give way
+   to a line of the other while it's still being sung — the other's bubble comes PETL.early before that line
+   starts; any of their tracks counts. (A finished line that's only lingering does give way: to that singer's
+   own next line as to anyone's, see petActive.) Two who sing the same words together clash, so they stay two
+   pets and keep their shared bubble. cast as petCast gives it, pet its lines and notes (svp.pet), has(key):
+   that singer has a picture.
+   Only a singer with a picture can be a pet, so those are grouped first — whoever clashes with most first,
+   each into the first group it fits; then the smallest groups are emptied into the others, where every one
+   of theirs fits one — and a group's pet is the one of them who sings most. Then each singer without a
+   picture joins the first group it clashes with nobody in: its lines are seen there, which they aren't on
+   its own. One that fits none stays on its own (not shown, as ever). Never two who clash in one group.
+   → { cast: the pets and the singers left on their own, in the cast's order, as petCast's — a pet with the
+   tracks and n of its whole group, and also: the keys of the others it sings for ([]: none) —, lines,
+   notes: per key of that cast, as svp.pet's: { pet: { lines, notes } } stands in for the score with
+   petActive / petOnsets / petFirstLineAt } */
+function petFewest(cast, pet, has) {
+  const P = pet || { lines: new Map(), notes: new Map() };
+  // who clashes with whom: worked out once for a score's cast (it's the same whoever has a picture). A line counts from
+  // when its bubble comes to its last note's end — not on through its lingering and fading (LY.hold + LY.fade more, as
+  // petSpans' third argument, would keep singers apart whose lines follow each other within a second)
+  if (!P._x || P._x.cast !== cast) {
+    const sp = cast.map(g => petSpans(P.lines.get(g.key), PETL.early));
+    const meet = (a, b) => {
+      for (let i = 0, j = 0; i < a.length && j < b.length;) {
+        if (a[i].s < b[j].e && b[j].s < a[i].e) return true;
+        if (a[i].e <= b[j].e) i++; else j++;
+      }
+      return false;
+    };
+    P._x = { cast, m: sp.map((a, i) => sp.map((b, j) => i !== j && meet(a, b))) };
+  }
+  const X = P._x.m, fits = (G, i) => G.every(j => !X[i][j]), pics = [], rest = [];
+  cast.forEach((g, i) => (has(g.key) ? pics : rest).push(i));
+  const deg = new Map(pics.map(i => [i, pics.filter(j => X[i][j]).length]));
+  let groups = [];
+  for (const i of pics.slice().sort((a, b) => deg.get(b) - deg.get(a) || a - b)) {
+    const G = groups.find(G => fits(G, i));
+    if (G) G.push(i); else groups.push([i]);
+  }
+  for (let again = groups.length > 1; again;) {
+    again = false;
+    for (const G of groups.slice().sort((a, b) => a.length - b.length)) {
+      const others = groups.filter(o => o !== G).map(o => o.slice());
+      if (!G.every(i => { const o = others.find(o => fits(o, i)); if (o) o.push(i); return !!o; })) continue;
+      groups = others; again = groups.length > 1;
+      break;
+    }
+  }
+  const most = G => G.reduce((a, i) => (cast[i].n > cast[a].n || (cast[i].n === cast[a].n && i < a) ? i : a));
+  const teams = groups.map(G => ({ pet: most(G), mem: G })).sort((a, b) => a.pet - b.pet), alone = [];
+  for (const i of rest) { const T = teams.find(T => fits(T.mem, i)); if (T) T.mem.push(i); else alone.push(i); }
+  const lines = new Map(), notes = new Map(), by = new Map(), own = k => P.lines.get(k) || [], sung = k => P.notes.get(k) || [];
+  for (const T of teams) {
+    const g = cast[T.pet], mem = [T.pet, ...T.mem.filter(i => i !== T.pet).sort((a, b) => a - b)];
+    lines.set(g.key, [].concat(...mem.map((i, m) => own(cast[i].key).map(([t, Ls]) => [t, Ls, m]))));
+    notes.set(g.key, mem.length > 1 ? [].concat(...mem.map(i => sung(cast[i].key))).sort((a, b) => a.s - b.s) : sung(g.key));
+    by.set(T.pet, { ...g, tracks: [...new Set([].concat(...mem.map(i => cast[i].tracks || [])))], n: mem.reduce((a, i) => a + (cast[i].n || 0), 0), also: mem.slice(1).map(i => cast[i].key) });
+  }
+  for (const i of alone) { const g = cast[i]; lines.set(g.key, own(g.key)); notes.set(g.key, sung(g.key)); by.set(i, { ...g, also: [] }); }
+  return { cast: cast.map((g, i) => by.get(i)).filter(Boolean), lines, notes };
 }
 /* A line cut into bubble-wide pieces. splitLine measures with '600 <base>px system-ui, sans-serif':
    the bubble must use that font. Kept on the line until the width or size changes. */
@@ -6331,22 +6506,135 @@ function petSpot(W, on, out, span, saved) {
   const y = at([...on, ...out]);
   return hit(y) ? null : y;
 }
-/* Bubble places: items { cx, w, tips } in start order (as petActive gives them; tips = its singers'
-   x). Each is centred over its character(s) and kept PETL.edge from the strip's sides; one that would
-   overlap an earlier one goes up a row. A tail from a higher row runs down past the lower bubbles: one
+/* A singer's remembered place (map-pet.pos): { x: its centre as a share of the width, h: how high its
+   standing line is over the taskbar line as a share of the room above that line (0: on the taskbar),
+   on: it stood on a window } — shares, so it holds on another screen size. An entry from before pets
+   could leave the taskbar is a bare number: x, on the taskbar. → null: none. */
+function petPosOf(v) {
+  if (typeof v === 'number') return Number.isFinite(v) ? { x: v, h: 0, on: false } : null;
+  if (!v || typeof v !== 'object' || !Number.isFinite(v.x)) return null;
+  const h = Number.isFinite(v.h) ? Math.max(0, Math.min(1, v.h)) : 0;
+  return { x: v.x, h, on: !!v.on && h > 0 };
+}
+/* Where a singer let go at centre x, its standing line alt above the taskbar line, comes to stand when
+   pets can go anywhere: { ledge: i } — on the window top edge under it that's nearest in height, if
+   within PETL.ledge; { floor: true } — on the taskbar, if within PETL.floor of its line (and no ledge
+   is nearer); null — it stays where it was put, in the air. ledges [{ x0, x1, y }] and feetY (the
+   taskbar line) in the pet window's DIP, y down; a ledge above room (the singer wouldn't fit under
+   the top of the screen) or not above the taskbar line is nowhere to stand. */
+function petLandAt(x, alt, feetY, ledges, room = 0) {
+  let best = -1, d = Infinity;
+  (ledges || []).forEach((L, i) => {
+    const dy = Math.abs(feetY - L.y - alt);
+    if (x >= L.x0 && x <= L.x1 && L.y >= room && L.y < feetY && dy <= PETL.ledge && dy < d) { d = dy; best = i; }
+  });
+  if (alt <= PETL.floor && alt < d) return { floor: true };
+  return best >= 0 ? { ledge: best } : null;
+}
+/* The part of a window's top edge that a singer riding on it stands on now: window id, the singer off
+   DIP from its left edge (each part's wx). → its index in ledges, or -1: the window is gone or covered
+   just there, or it is too near the top of the screen for the singer now (room, as for petLandAt), or
+   down at the taskbar line — it comes down. */
+function petLedgeOf(ledges, id, off, room = 0, feetY = Infinity) {
+  return (ledges || []).findIndex(L => L.id === id && L.wx + off >= L.x0 && L.wx + off <= L.x1 && L.y >= room && L.y < feetY);
+}
+/* Singers on one line keep apart: items { x (centre), span (petSpan), lo, hi (where its centre may be),
+   held (the user holds it: it stays, the others make room) } in any order. → where each should stand:
+   as near as can be to where they are, with PETL.keep between what's drawn of neighbours — two that
+   overlap move half each; one at the line's end stays there and the other moves the rest. Nobody
+   changes sides. With more singers than fit side by side between two ends (the line's, or a held one),
+   they share that room evenly. Where they stand already is the answer once they are apart, and every
+   step towards the answer brings them nearer to it: gliding there comes to rest, with no jitter. */
+function petApart(items, pad = PETL.keep) {
+  const out = items.map(o => o.x);
+  const order = items.map((o, i) => i).sort((a, b) => items[a].x - items[b].x || a - b);
+  const gap = (a, b) => (items[a].span + items[b].span) / 2 + pad;
+  // the singers between two ends: a held one (L, R: which) or the line's own (null)
+  const run = (ids, L, R) => {
+    const n = ids.length;
+    if (!n) return;
+    const A = L == null ? items[ids[0]].lo : Math.max(items[ids[0]].lo, items[L].x + gap(L, ids[0]));
+    const B = R == null ? items[ids[n - 1]].hi : Math.min(items[ids[n - 1]].hi, items[R].x - gap(ids[n - 1], R));
+    const G = [0]; // (how far each stands from the first, side by side)
+    for (let k = 1; k < n; k++) G[k] = G[k - 1] + gap(ids[k - 1], ids[k]);
+    const need = G[n - 1], room = B - A;
+    if (need > room) { // not room for them all: they share what there is (none: at the line's end, or half way between two held)
+      const P = room >= 0 || (L == null && R != null) ? A : R == null && L != null ? B : (A + B) / 2, k = room > 0 ? room / need : 0;
+      ids.forEach((i, j) => { out[i] = P + k * G[j]; });
+      return;
+    }
+    // each as near as it can be to where it is, in order, at least side by side: singers that would overlap form
+    // a run that stands side by side around its middle (least squares: pool adjacent violators), kept between the ends
+    const runs = []; // [the sum of where each of its singers would put the run's start, how many]
+    ids.forEach((i, j) => {
+      let s = items[i].x - G[j], m = 1;
+      while (runs.length && runs[runs.length - 1][0] / runs[runs.length - 1][1] > s / m) { const p = runs.pop(); s += p[0]; m += p[1]; }
+      runs.push([s, m]);
+    });
+    let j = 0;
+    for (const [s, m] of runs) {
+      const z = Math.max(A, Math.min(B - need, s / m));
+      for (let k = 0; k < m; k++, j++) out[ids[j]] = z + G[j];
+    }
+  };
+  let ids = [], L = null;
+  for (const i of order) {
+    if (!items[i].held) { ids.push(i); continue; }
+    run(ids, L, i);
+    ids = []; L = i;
+  }
+  run(ids, L, null);
+  // (its own picture on the line: one with wide see-through sides can't go as near the end as its neighbour)
+  items.forEach((o, i) => { if (!o.held) out[i] = o.lo > o.hi ? (o.lo + o.hi) / 2 : Math.max(o.lo, Math.min(o.hi, out[i])); });
+  return out;
+}
+/* Where a singer with nothing to sing walks to next, along the line it stands on: x its centre, span what's
+   drawn of it (petSpan), lo…hi where its centre may be on that line; others [{ x, span, to }] the others
+   standing on it (to: where one of them is walking to, else null). It never walks through anyone, and nobody
+   has to step aside for it: its room ends PETL.shy short of where it would have to keep apart from the nearest
+   one on each side — one who is walking counts from where it is to where it's going. Somewhere in that room
+   (rnd: 0…1), no further than reach (it has to be there, standing, in time for its next line). → the spot, or
+   null: nowhere worth the walk. */
+function petStroll(x, span, lo, hi, others, rnd, reach = Infinity) {
+  let A = lo, B = hi;
+  for (const o of others) {
+    const g = (span + o.span) / 2 + PETL.keep + PETL.shy, to = o.to == null ? o.x : o.to;
+    if (o.x < x) A = Math.max(A, Math.min(x, Math.max(o.x, to)) + g); else B = Math.min(B, Math.max(x, Math.min(o.x, to)) - g);
+  }
+  A = Math.max(Math.min(A, x), x - reach); B = Math.min(Math.max(B, x), x + reach);
+  const to = A + rnd * (B - A);
+  return Math.abs(to - x) < Math.max(24, span / 2) ? null : to;
+}
+/* One frame of a walk: from x towards to, d at most, and never nearer to a singer ahead of it than the two
+   must keep apart (others [{ x, span }]; 1 DIP more than that, so the rule that keeps singers apart — petApart
+   — never has to act on a walker: no shoving). → { x: where it is now, end: it's there, or someone is in its
+   way — the walk is over } */
+function petStride(x, to, d, span, others) {
+  const dir = to < x ? -1 : 1;
+  let far = Math.abs(to - x);
+  for (const o of others) {
+    const ahead = (o.x - x) * dir;
+    if (ahead > 0) far = Math.min(far, ahead - (span + o.span) / 2 - PETL.keep - 1);
+  }
+  return { x: x + dir * Math.max(0, Math.min(d, far)), end: far <= d };
+}
+/* Bubble places: items { cx, w, tips } in the order they take their places (petLay: the lowest first;
+   tips = its singers' x). Each is centred over its character(s) and kept PETL.edge from the strip's
+   sides; one that would overlap earlier ones goes a row above the highest of them — never into a row
+   under one it overlaps: bubbles one above the other keep that order, so none ever has to pass another.
+   A tail from a higher row runs down past the lower bubbles: one
    it would cross (and so seem to point at that singer too) moves sideways off it, as far as it still
    stands over its own singers. → { x: left edges, row: 0 = lowest, over: more than PETL.rows rows
    were needed (shrink the text to 85 % and place them again) }. */
 function petRows(items, W) {
-  const E = PETL.edge, G = PETL.gap, x = [], row = [], taken = [];
+  const E = PETL.edge, G = PETL.gap, x = [], row = [];
   const fit = (b, v) => (b.w >= W - 2 * E ? E : Math.max(E, Math.min(W - E - b.w, v)));
   let over = false;
   items.forEach((b, i) => {
     x[i] = fit(b, b.cx - b.w / 2);
     let r = 0;
-    while (r < PETL.rows && (taken[r] || []).some(([a, z]) => x[i] < z + G && a < x[i] + b.w + G)) r++;
-    if (r === PETL.rows) { over = true; r = PETL.rows - 1; }
-    (taken[r] = taken[r] || []).push([x[i], x[i] + b.w]);
+    for (let j = 0; j < i; j++) if (x[i] < x[j] + items[j].w + G && x[j] < x[i] + b.w + G) r = Math.max(r, row[j] + 1);
+    if (r >= PETL.rows) { over = true; r = PETL.rows - 1; }
     row[i] = r;
   });
   const M = PETL.tail + G, R = PETL.round + PETL.tail; // (clear of a tail by the gap; its own tail's root off the corners)
@@ -9152,8 +9440,8 @@ const UPD_ERR = {
 // s: what the app last said. screen: what the popup shows ('' = it's closed). started: the download asked for has
 // really begun (an answer sent before that says nothing about it). gen: goes up to call off a Close and install.
 // ignored: Ignore was clicked, which lasts for this start. told, failed: the news from the last update.
-// at: when the screen last changed (see aimed, in setUpUpdates).
-const UPD = { s: null, screen: '', started: false, gen: 0, ignored: false, told: false, failed: '', at: 0 };
+// at: when the screen last changed (see aimed, in setUpUpdates). notes: what's new, as last read, and for which version.
+const UPD = { s: null, screen: '', started: false, gen: 0, ignored: false, told: false, failed: '', at: 0, notes: null };
 let dataBusy = 0; // (projects being imported or exported, and a moment after each save: see saveBlob)
 const updBusy = () => somethingOpen() || COVER.on || PIC.on || dataBusy > 0 || !!(UPD.s && UPD.s.saving);
 /* The line in Settings, for every status the app can be in */
@@ -9224,8 +9512,57 @@ function updShow(screen, failLine = '') {
   go.hidden = !right;
   go.disabled = false;
   if (screen === 'down') updBar(s);
+  if (screen === 'ask' || screen === 'down') updNotes(v); // (what's new: to read before deciding, and while it downloads)
+  else $('updDlgNew').hidden = true;
   if (!d.open) d.showModal();
   if (left) no.focus(); // (a stray Space or Enter backs out: it can't start anything)
+}
+/* What's new, in the popup while it asks and while it downloads: the notes of the version on offer and of any before it
+   that this copy never had, as the app read them from GitHub with the list of releases (updater.js: whatsNew). They are
+   shown as text, and nothing in them is taken for HTML. A line that starts with - or * is a point in a list (an indented
+   line under it goes on with it), # a small heading, anything else a line of its own. */
+function updNoteRows(text) {
+  const rows = [];
+  for (const raw of String(text || '').split('\n')) {
+    const line = raw.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\*\*|__|`/g, '').trim(), last = rows[rows.length - 1];
+    if (!line || /^[-*•]$/.test(line)) continue;
+    const m = /^[-*•]\s+(.+)$/.exec(line);
+    if (m) rows.push({ li: m[1] });
+    else if (/^#{1,6}\s+\S/.test(line)) rows.push({ h: line.replace(/^#+\s+/, '') });
+    else if (/^\s/.test(raw) && last && last.li != null) last.li += ' ' + line;
+    else rows.push({ p: line });
+  }
+  return rows;
+}
+function updNotesPaint(list) {
+  const wrap = $('updDlgNew'), box = $('updDlgNotes'), was = wrap.hidden;
+  const shown = list.map(n => ({ version: n.version, rows: updNoteRows(n.text) })).filter(n => n.rows.length);
+  box.textContent = '';
+  for (const n of shown) {
+    let ul = null;
+    if (shown.length > 1) { const h = box.appendChild(document.createElement('div')); h.className = 'un-v'; h.textContent = 'Version ' + n.version; }
+    for (const r of n.rows) {
+      if (r.li != null) { if (!ul) ul = box.appendChild(document.createElement('ul')); ul.appendChild(document.createElement('li')).textContent = r.li; continue; }
+      ul = null;
+      const row = box.appendChild(document.createElement('div'));
+      row.className = r.h != null ? 'un-h' : 'un-p';
+      row.textContent = r.h != null ? r.h : r.p;
+    }
+  }
+  $('updDlgNewT').textContent = shown.length === 1 ? "What's new in version " + shown[0].version : "What's new";
+  wrap.hidden = !shown.length;
+  if (was && shown.length) { box.scrollTop = 0; UPD.at = performance.now(); } // (the buttons have just moved down: a click aimed at where they were counts for nothing, as after a change of screen)
+}
+function updNotes(v) {
+  const app = window.mapApp;
+  if (v && UPD.notes && UPD.notes.v === v) { updNotesPaint(UPD.notes.list); return; }
+  $('updDlgNew').hidden = true;
+  if (!v || !app || !app.notes) return; // (a desktop app from before these: the popup is as it was)
+  app.notes().then(list => {
+    if (!Array.isArray(list)) return;
+    UPD.notes = { v, list: list.filter(n => n && typeof n.version === 'string' && typeof n.text === 'string').slice(0, 10) };
+    if ((UPD.screen === 'ask' || UPD.screen === 'down') && UPD.s && UPD.s.offer && UPD.s.offer.version === v) updNotesPaint(UPD.notes.list);
+  }, () => {});
 }
 function updBar(s) { // (1 MB = 1000000 bytes, as in fmtBytes)
   const total = (s.progress && s.progress.total) || (s.offer && s.offer.size) || 0, got = s.progress ? s.progress.got : 0, bar = $('updDlgBar');
@@ -9417,21 +9754,27 @@ function resetSettings(keepDevice) {
   syncDeps();
   savePrefs(); // (Reset everything: the remembered settings go back to the defaults too)
 }
-function resetAll(keepDevice) {
-  if (!keepDevice && BGM.on) bgmStop(); // (Reset everything ends background mode; its songs loading reset the rest)
-  if (!keepDevice && COVER.on) coverStop();
-  if (!keepDevice && ND.want) ndSwitch(false); // (No-delay AirPlay is this device's too, like Speaker delay)
+/* What was added goes — every audio track, the video and the score, also one that's still being read in — and nothing
+   else is touched. Reset everything, a project opening, background mode and Remove all files each do the rest of what
+   they do themselves. */
+function dropFiles() {
   pauseAll();
   tracks.slice().forEach(removeTrack);
   if (bgFile || bg.getAttribute('src')) bgClear.click(); // (also a video still waiting to be read in)
   scoreGen++; // a score still being read is dropped
-  vsync.lead = 0.15;
   svp = null;
   stopVoices();
   parts.length = 0;
+  fillMainSelect();
+}
+function resetAll(keepDevice) {
+  if (!keepDevice && BGM.on) bgmStop(); // (Reset everything ends background mode; its songs loading reset the rest)
+  if (!keepDevice && COVER.on) coverStop();
+  if (!keepDevice && ND.want) ndSwitch(false); // (No-delay AirPlay is this device's too, like Speaker delay)
+  dropFiles();
+  vsync.lead = 0.15;
   glow.prev = null;
   glow.flash = 0;
-  fillMainSelect();
   resetSettings(keepDevice);
   applyAmbient();
   applyRoll();
@@ -9452,14 +9795,7 @@ function resetAll(keepDevice) {
 }
 /* The player emptied — no tracks, video or score — while the settings stay as they are. */
 function clearMixer() {
-  pauseAll();
-  tracks.slice().forEach(removeTrack);
-  if (bgFile || bg.getAttribute('src')) bgClear.click();
-  scoreGen++;
-  svp = null;
-  stopVoices();
-  parts.length = 0;
-  fillMainSelect();
+  dropFiles();
   applyAmbient();
   applyRoll();
   clearCurrentProject();
@@ -9477,6 +9813,51 @@ resetBtn.onclick = () => {
   resetAll();
 };
 resetBtn.addEventListener('blur', disarmReset);
+/* Remove all files (right above Reset everything): what you added goes — every audio track, the video and the score — and
+   that's all. Every setting stays as it is, and so do the saved projects and the playlist: afterwards the player is as it
+   is when it has just been opened. It arms as Reset everything does: the first click asks, the second does. */
+const filesBtn = $('filesClear');
+let filesTimer = null;
+function disarmFiles() {
+  clearTimeout(filesTimer);
+  filesTimer = null;
+  filesBtn.classList.remove('armed');
+  filesBtn.textContent = 'Remove all files';
+}
+filesBtn.onclick = () => {
+  if (nothingLoaded()) { filesUI(); return; } // (it all went meanwhile: the button is off from here on)
+  if (!filesBtn.classList.contains('armed')) {
+    filesBtn.classList.add('armed');
+    filesBtn.textContent = 'Click again to confirm';
+    filesTimer = setTimeout(disarmFiles, 3000);
+    return;
+  }
+  disarmFiles();
+  const had = [tracks.length ? tracks.length + ' audio' : '', bgFile ? 'video' : '', svp ? 'score' : ''].filter(Boolean).join(' · ');
+  projGen++; // a project still opening stops
+  if (BGM.on) bgmStop(); // (the playlist's song is what's loaded: background mode ends with it, as Reset everything ends it)
+  clearMixer();
+  filesUI();
+  say('Removed ' + had, 2000);
+};
+filesBtn.addEventListener('blur', disarmFiles);
+/* The two buttons that need something loaded — this one, and Export current… in Projects — are off, with the reason as
+   their tooltip, while there's nothing for them to work on. What's loaded changes in many places (files dropped on the
+   player, a load finishing, a project opening, background mode moving on), so they're simply looked at a few times a second. */
+function nothingLoaded() { return !tracks.length && !bgFile && !svp; }
+function needsFiles(b, off, tip) {
+  if (off && document.activeElement === b) b.blur(); // (not left holding the focus: a switched-off button there can swallow the keyboard's shortcuts)
+  if (b.disabled !== off) b.disabled = off;
+  if (b.title !== tip) b.title = tip;
+}
+function filesUI() {
+  const none = nothingLoaded(), busy = !none && isLoading();
+  if (none && filesBtn.classList.contains('armed')) disarmFiles();
+  needsFiles(filesBtn, none, none ? 'Nothing is loaded' : 'Takes away every audio track, the video and the score. Your settings, saved projects and playlist stay');
+  needsFiles($('projExportNow'), none || busy, none ? 'Nothing is loaded yet: add files or open a project first' : busy ? 'The files are still loading' :
+    "What's loaded right now — the audio, video and score with all their settings — as one .mapproj file. Nothing is saved, and no project changes");
+}
+setInterval(filesUI, 300);
 
 /* =====================================================================
    Projects: save & reopen combinations (IndexedDB). A project = the audio tracks (volume,
@@ -9487,7 +9868,7 @@ resetBtn.addEventListener('blur', disarmReset);
    ===================================================================== */
 const projName = $('projName'), projList = $('projList'), projStatus = $('projStatus');
 let currentProject = null;
-const DEVICE_SETTINGS = ['gfxQuality', 'preloadMem', 'audioEngine', 'syncMode', 'spkDelay'];
+const DEVICE_SETTINGS = ['gfxQuality', 'preloadMem', 'audioEngine', 'syncMode', 'spkDelay', 'syncStep'];
 const deviceSetting = id => id.startsWith('dbg') || DEVICE_SETTINGS.includes(id);
 function clearCurrentProject() {
   currentProject = null;
@@ -9676,20 +10057,25 @@ async function renderPlaylist() {
   let ps = [];
   try { ps = await listProjects(); } catch (e) {}
   const byId = new Map(ps.map(p => [p.id, p]));
-  const ol = $('plList');
+  const ol = $('plList'), act = document.activeElement, at = act && act.parentNode === ol ? [...ol.children].indexOf(act) : -1; // (a row that has the focus keeps it: Alt+↑ / Alt+↓ go on from there)
+  plDragEnd(false); // (a row in the hand goes back first: what it was moving may have gone)
   ol.innerHTML = '';
   PL.ids.forEach((id, k) => {
     const li = document.createElement('li'), p = byId.get(id);
-    li.innerHTML = '<span></span><button data-a="up" aria-label="Move up" title="Move up">↑</button><button data-a="down" aria-label="Move down" title="Move down">↓</button><button data-a="del" aria-label="Remove from the playlist" title="Remove">✕</button>';
-    li.querySelector('span').textContent = p ? p.name : 'Deleted project';
+    li.innerHTML = '<span class="pl-grip" aria-hidden="true">' + PL_GRIP + '</span><span class="pl-name"></span><button data-a="del" aria-label="Remove from the playlist" title="Remove">✕</button>';
+    li._id = id;
+    li._name = p ? p.name : 'Deleted project';
+    li.tabIndex = 0; // (it takes the focus: Alt+↑ / Alt+↓ move it, see plMove)
+    li.querySelector('.pl-name').textContent = li._name;
+    li.querySelector('.pl-grip').title = kh('Drag to change the order', 'Alt+↑ / Alt+↓');
+    plLabel(li, k);
     if (!p) li.classList.add('gone');
     if (BGM.on && BGM.order[BGM.i] === id && PL.ids.indexOf(id) === k) li.classList.add('now');
-    const move = d => { const j = k + d; if (j < 0 || j >= PL.ids.length) return; [PL.ids[k], PL.ids[j]] = [PL.ids[j], PL.ids[k]]; savePL(); bgmSync(); renderPlaylist(); };
-    li.querySelector('[data-a=up]').onclick = () => move(-1);
-    li.querySelector('[data-a=down]').onclick = () => move(1);
-    li.querySelector('[data-a=del]').onclick = () => { PL.ids.splice(k, 1); savePL(); bgmSync(); renderPlaylist(); };
+    li.querySelector('[data-a=del]').onclick = () => { const i = plIndex(li); if (i < 0) return; PL.ids.splice(i, 1); savePL(); bgmSync(); renderPlaylist(); }; // (where the row is now: rows change places)
     ol.appendChild(li);
   });
+  if (at >= 0 && ol.children[at]) ol.children[at].focus({ preventScroll: true });
+  $('plOrderHint').hidden = PL.ids.length < 2; // (nothing to put in order yet)
   const sel = $('plAdd');
   sel.innerHTML = '';
   ps.sort((a, b) => a.name.localeCompare(b.name)).forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name; sel.appendChild(o); });
@@ -9704,6 +10090,163 @@ async function renderPlaylist() {
   $('bgmStart').classList.toggle('primary', !BGM.on && !COVER.on);
   bgmUI();
 }
+/* ---- The playlist's order: a song is dragged up or down — by its grip or, with a mouse or pen, by the row itself (a finger
+   on the row scrolls the panel as ever: the grip is what a finger moves it by). In the hand the row follows the pointer, the
+   rows it passes stand aside to show where it would land, and the panel scrolls when the pointer nears its top or bottom
+   edge. Nothing changes until it's let go; Esc, a gesture the browser takes over, or the list being drawn again puts it back.
+   With the keyboard: Alt+↑ / Alt+↓ on a row. Either way the song then moves once, through plMove. ---- */
+/* @pure:list begin */
+/* Where a dragged row would land. tops, hs: every row's top and height as they were before the drag (one unit, downwards) ·
+   from: the row in the hand · by: how far it has been moved (+ is down). It changes places with the next row once its
+   leading edge is past that row's middle, so rows of any height swap half-way, and the same place always gives the same
+   answer. → its new place, 0 … n − 1. */
+function plDropAt(tops, hs, from, by) {
+  const top = tops[from] + by, bottom = top + hs[from];
+  let to = from;
+  if (by > 0) while (to < tops.length - 1 && bottom > tops[to + 1] + hs[to + 1] / 2) to++;
+  else while (to > 0 && top < tops[to - 1] + hs[to - 1] / 2) to--;
+  return to;
+}
+/* How far row i stands aside while the row from `from` would land at `to`: the rows in between move over by its height h,
+   into the room it left. */
+const plAside = (i, from, to, h) => (i > from && i <= to ? -h : i < from && i >= to ? h : 0);
+/* The list with the song at `from` moved to `to` (a new list: the one given is left as it was). */
+const plMoved = (ids, from, to) => { const a = ids.slice(); a.splice(to, 0, a.splice(from, 1)[0]); return a; };
+/* How fast the panel scrolls (px a second, − is up) with the pointer at y and the panel's edges at top and bottom: not at
+   all until the pointer is within 48 px of an edge, then faster the nearer it gets, fastest at the edge and beyond. */
+function plEdgeSpeed(y, top, bottom) {
+  const over = y < top + 48 ? y - top - 48 : y > bottom - 48 ? y - bottom + 48 : 0;
+  return Math.sign(over) * Math.min(720, 90 + Math.abs(over) * 13);
+}
+/* @pure:list end */
+const PL_GRIP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"/></svg>';
+const plOl = $('plList');
+let plDrag = null; // the row in the hand: { li, id (its pointer), y0, y (the pointer, in #app's own coordinates), moved }, and what plDragStart adds once it has really moved
+/* A row's name for a screen reader: the song, its place, and how the keyboard moves it (touch screens get no keyboard hints). */
+function plLabel(li, k) { li.setAttribute('aria-label', li._name + ', song ' + (k + 1) + ' of ' + PL.ids.length + (touchUI() ? '' : '. Alt+Up or Alt+Down moves it')); }
+/* Where a row is in the playlist — or -1 while the list on the page is behind the playlist (it's drawn again a moment after
+   every change): what's asked of such a row is left undone rather than done to another song. */
+function plIndex(li) {
+  const k = [...plOl.children].indexOf(li);
+  return k >= 0 && plOl.children.length === PL.ids.length && PL.ids[k] === li._id ? k : -1;
+}
+/* A song goes from place `from` to place `to`: in the playlist and on the page at once (the row itself is moved, so nothing
+   jumps back for a moment and the keyboard can go straight on), and then what a change of order has always done happens,
+   once — it's kept, a running background mode's order follows, and the list is drawn again, which the pets' Characters
+   list follows. byKey: the keyboard moved it, so the row keeps the focus and stays in sight. */
+function plMove(from, to, byKey) {
+  const li = plOl.children[from];
+  if (!li || to === from || to < 0 || to >= PL.ids.length) return;
+  const focus = byKey || document.activeElement === li;
+  PL.ids = plMoved(PL.ids, from, to);
+  plOl.insertBefore(li, plOl.children[to > from ? to + 1 : to] || null);
+  for (let i = Math.min(from, to); i <= Math.max(from, to); i++) plLabel(plOl.children[i], i);
+  if (focus) li.focus({ preventScroll: !byKey });
+  savePL(); bgmSync(); renderPlaylist();
+}
+plOl.addEventListener('keydown', e => {
+  if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+  const li = e.target.closest('#plList > li');
+  if (!li) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const k = plDrag ? -1 : plIndex(li); // (not with a row in the hand)
+  if (k >= 0) plMove(k, k + (e.key === 'ArrowUp' ? -1 : 1), true);
+});
+function plDragDown(e) {
+  if (e.button || !e.isPrimary) return;
+  if (plDrag) plDragEnd(false); // (one whose end was never heard)
+  const li = e.target.closest('#plList > li');
+  if (!li || PL.ids.length < 2 || e.target.closest('button')) return; // (nothing to change places with; and its ✕ stays a button)
+  if (e.pointerType === 'touch' && !e.target.closest('.pl-grip')) return; // (a finger on the row scrolls the panel: its grip is what moves it)
+  try { plOl.setPointerCapture(e.pointerId); } catch (x) { return; } // (every move and the release then come here, wherever the pointer goes)
+  const y = lpoint(e).y;
+  plDrag = { li, id: e.pointerId, y0: y, y, moved: false };
+}
+function plDragMove(e) {
+  const d = plDrag;
+  if (!d || e.pointerId !== d.id) return;
+  d.y = lpoint(e).y;
+  if (!d.moved && (Math.abs(d.y - d.y0) < 4 || !plDragStart())) return; // (under 4 px: a click, or a shaky hand)
+  plDragPlace();
+}
+/* The pointer has really moved: the row is in the hand. Where every row is now (in #app's own coordinates, like the pointer),
+   how far this one can go — the list's two ends — and where the panel's edges are; from here its place is counted from
+   this moment's pointer and scroll position. */
+function plDragStart() {
+  const d = plDrag, from = plIndex(d.li);
+  if (from < 0) { plDragEnd(false); return false; }
+  const rows = [...plOl.children], rc = rows.map(lrect), box = lrect(mainEl);
+  Object.assign(d, { moved: true, rows, from, to: from, tops: rc.map(r => r.top), hs: rc.map(r => r.height), y0: d.y, scroll0: mainEl.scrollTop, raw: 0,
+    min: rc[0].top - rc[from].top, max: rc[rc.length - 1].bottom - rc[from].bottom, top: box.top, bottom: box.bottom, acc: 0, last: performance.now() });
+  d.li.classList.add('drag');
+  plOl.classList.add('sorting');
+  document.body.classList.add('pl-drag');
+  mainEl.addEventListener('scroll', plDragPlace); // (the wheel, or the edges below: the row stays under the pointer)
+  d.raf = requestAnimationFrame(plDragFrame);
+  return true;
+}
+/* The row in the hand goes where the pointer is — by how far the pointer has moved and the panel has scrolled since the
+   drag started, within the list — and the rows between its old place and where it would land now stand aside. */
+function plDragPlace() {
+  const d = plDrag;
+  if (!d || !d.moved) return;
+  d.raw = d.y - d.y0 + mainEl.scrollTop - d.scroll0;
+  const by = Math.max(d.min, Math.min(d.max, d.raw)), to = plDropAt(d.tops, d.hs, d.from, by), h = d.hs[d.from];
+  d.li.style.transform = 'translateY(' + by.toFixed(1) + 'px)';
+  if (to === d.to) return;
+  for (let i = Math.min(d.from, d.to, to); i <= Math.max(d.from, d.to, to); i++) {
+    if (i === d.from) continue;
+    const s = plAside(i, d.from, to, h);
+    d.rows[i].style.transform = s ? 'translateY(' + s.toFixed(1) + 'px)' : '';
+  }
+  d.to = to;
+}
+/* Each frame while a row is in the hand: with the pointer near the panel's top or bottom edge the panel scrolls
+   (plEdgeSpeed), as long as the row still has somewhere to go that way. */
+function plDragFrame(now) {
+  const d = plDrag;
+  if (!d || !d.moved) return;
+  d.raf = requestAnimationFrame(plDragFrame);
+  const v = plEdgeSpeed(d.y, d.top, d.bottom), dt = Math.min(50, Math.max(0, now - d.last));
+  d.last = now;
+  if (!v || (v < 0 ? d.raw <= d.min : d.raw >= d.max)) { d.acc = 0; return; }
+  d.acc += v * dt / 1000;
+  const px = Math.trunc(d.acc); // (whole pixels, the rest kept for the next frame: a panel may only scroll by whole ones)
+  if (!px) return;
+  d.acc -= px;
+  mainEl.scrollTop += px;
+  plDragPlace();
+}
+function plDragUp(e) {
+  const d = plDrag;
+  if (!d || e.pointerId !== d.id) return;
+  if (d.moved) { d.y = lpoint(e).y; plDragPlace(); }
+  plDragEnd(true);
+}
+/* The row leaves the hand. ok: it was let go, and goes where the others made room for it (plMove), if that's another
+   place. Otherwise it's back where it was and nothing has changed. */
+function plDragEnd(ok) {
+  const d = plDrag;
+  if (!d) return;
+  plDrag = null;
+  try { plOl.releasePointerCapture(d.id); } catch (x) {}
+  if (!d.moved) return;
+  cancelAnimationFrame(d.raf);
+  mainEl.removeEventListener('scroll', plDragPlace);
+  document.body.classList.remove('pl-drag');
+  plOl.classList.remove('sorting'); // (with this gone nothing slides: every row is in its place at once)
+  d.li.classList.remove('drag');
+  for (const r of d.rows) r.style.transform = '';
+  if (ok && d.to !== d.from && plIndex(d.li) === d.from) plMove(d.from, d.to);
+}
+plOl.addEventListener('pointerdown', plDragDown);
+plOl.addEventListener('pointermove', plDragMove);
+plOl.addEventListener('pointerup', plDragUp);
+plOl.addEventListener('pointercancel', e => { if (plDrag && e.pointerId === plDrag.id) plDragEnd(false); }); // (the browser took the gesture over — to scroll, say: it was no drag)
+// (the pointer got away from the list itself. Not the grip's: a finger is the grip's own for a moment, until the capture above takes over, and that loss is heard here too)
+plOl.addEventListener('lostpointercapture', e => { if (plDrag && e.pointerId === plDrag.id && e.target === plOl) plDragEnd(false); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && plDrag) { e.preventDefault(); e.stopPropagation(); plDragEnd(false); } }, true); // (Esc puts the row back, and is nothing else's then)
 $('plAddBtn').onclick = () => { const id = $('plAdd').value; if (id) { PL.ids.push(id); savePL(); bgmSync(); renderPlaylist(); } };
 $('plAddAll').onclick = async () => { const ps = await listProjects().catch(() => []); ps.sort((a, b) => a.name.localeCompare(b.name)).forEach(p => { if (!PL.ids.includes(p.id)) PL.ids.push(p.id); }); savePL(); bgmSync(); renderPlaylist(); };
 $('plClear').onclick = () => { PL.ids = []; savePL(); renderPlaylist(); };
@@ -10132,8 +10675,8 @@ function petBubblePath(x, y, w, h, r, tips, half = 7) {
    along). A bubble not shown yet goes where petRows starts it (centred over cx, kept off the sides); a held
    one of other singers there would push it up a row, and back down once it fades — so that one goes now
    (it fades out quickly) and the new one comes where it will stay. The same for a shown one whose singer
-   is dragged over there: a bubble never goes back down, so it would stay up a row, on a long tail, for the
-   rest of its line. A line still being sung never gives way. → indices (ascending). */
+   is dragged over there: it would go up a row, on a long tail, only to come back down a moment later.
+   A line still being sung never gives way. → indices (ascending). */
 function petYields(items, W) {
   const E = PETL.edge, G = PETL.gap, out = new Set();
   const fit = b => (b.w >= W - 2 * E ? E : Math.max(E, Math.min(W - E - b.w, b.cx - b.w / 2)));
@@ -10197,9 +10740,10 @@ const petArc = (k, h) => (k >= 0 && k < 1 ? h * 4 * k * (1 - k) : 0);
    lifts a singer into its own bubble (its bottom 18 DIP above that). */
 const petLift = (bob, note, click, top) => bob * (1 - Math.min(1, click / top)) + Math.max(click, note);
 /* How high bubbles stand, with x and row from petRows: lowest row first, each one's bottom at its own
-   `bottom` (above its singers' heads) or higher — above every bubble of a lower row it would overlap,
-   and above any `fixed` box { x, y, w, h } it would overlap (a bubble still fading out where it was).
-   → tops. */
+   `bottom` (just above its singers' heads: as low as it may be) or higher — above every bubble of a lower
+   row it would overlap, and above any `fixed` box { x, y, w, h } it would overlap (a bubble of singers
+   standing lower, placed already). One that is showing (at: its top now) also stays above a `soft` box
+   under it — a bubble fading out where it was: the room it leaves is free only once it has gone. → tops. */
 function petStack(items, x, row, gap = PETL.gap, fixed = []) {
   const top = [], order = items.map((b, i) => i).sort((i, j) => row[i] - row[j] || i - j);
   const across = (x0, w0, x1, w1) => x0 < x1 + w1 + gap && x1 < x0 + w0 + gap;
@@ -10207,13 +10751,80 @@ function petStack(items, x, row, gap = PETL.gap, fixed = []) {
     const b = items[i];
     let bottom = b.bottom;
     for (const j of order) if (top[j] != null && row[j] < row[i] && across(x[i], b.w, x[j], items[j].w)) bottom = Math.min(bottom, top[j] - gap);
+    if (b.at != null) for (const f of fixed) if (f.soft && across(x[i], b.w, f.x, f.w) && f.y >= b.at + b.h - 1) bottom = Math.min(bottom, f.y - gap);
     for (let moved = true, n = 0; moved && n < 8; n++) { // (above one box can be into the next: again until clear)
       moved = false;
-      for (const f of fixed) if (across(x[i], b.w, f.x, f.w) && bottom - b.h < f.y + f.h + gap && bottom > f.y - gap) { bottom = f.y - gap; moved = true; }
+      for (const f of fixed) if (!f.soft && across(x[i], b.w, f.x, f.w) && bottom - b.h < f.y + f.h + gap && bottom > f.y - gap) { bottom = f.y - gap; moved = true; }
     }
     top[i] = bottom - b.h;
   }
   return top;
+}
+/* Where the bubbles of singers standing on one line go: items in start order { cx, w, h, tips (as for petRows),
+   bottom (as for petStack), y (its top now — one that has a place already; null: a new one), shown (it is
+   showing) }; fixed as for petStack (a `soft` one: a bubble fading out where it was).
+   The ones with a place first, the lowest first: each sits as low as it can — just over its singers, or just
+   above the bubbles under it — and comes down as the room under it gets free, never past another; one that
+   shows waits for a bubble fading out under it to be gone. A new one then comes where it will stay: the lowest
+   place where it fits among the others where they are going (and the fixed ones; not the fading ones: it waits
+   for those, petGate) — just over its own singers when that's free, in a gap further up, else on top. The ones
+   above the place it takes stay where they are. → { x: left edges, top: tops, over (petRows) }, per item. */
+function petLay(items, W, fixed = []) {
+  const E = PETL.edge, G = PETL.gap, low = i => items[i].y + items[i].h; // (its bottom edge now)
+  const lay = order => {
+    const its = order.map(i => items[i]), R = petRows(its.map(b => ({ cx: b.cx, w: b.w, tips: b.tips })), W);
+    const tops = petStack(its.map(b => ({ w: b.w, h: b.h, bottom: b.bottom, at: b.shown && b.y != null ? b.y : null })), R.x, R.row, G, fixed), x = [], top = [];
+    order.forEach((i, k) => { x[i] = R.x[k]; top[i] = tops[k]; });
+    return { x, top, over: R.over };
+  };
+  const old = items.map((b, i) => i).filter(i => items[i].y != null).sort((a, b) => low(b) - low(a) || a - b);
+  const L = lay(old);
+  if (old.length === items.length) return L;
+  // the ones with a place, by where they are going (for two that overlap, that's the order they are in now)
+  const going = i => L.top[i] + items[i].h, seq = old.slice().sort((a, b) => going(b) - going(a) || low(b) - low(a) || a - b);
+  const boxes = fixed.filter(f => !f.soft).concat(seq.map(i => ({ x: L.x[i], y: L.top[i], w: items[i].w, h: items[i].h })));
+  const slots = Array.from({ length: seq.length + 1 }, () => []), order = [];
+  items.forEach((b, i) => {
+    if (b.y != null) return;
+    const x = b.w >= W - 2 * E ? E : Math.max(E, Math.min(W - E - b.w, b.cx - b.w / 2)); // (where petRows starts it)
+    let bottom = b.bottom;
+    for (let moved = true, n = 0; moved && n < 16; n++) { // (above one can be into the next: again until it fits)
+      moved = false;
+      for (const f of boxes) if (x < f.x + f.w + G && f.x < x + b.w + G && bottom - b.h < f.y + f.h + G && bottom > f.y - G) { bottom = f.y - G; moved = true; }
+    }
+    let k = 0; // (its turn: before the first one that is going to be wholly above that place)
+    while (k < seq.length && going(seq[k]) + G > bottom - b.h + 1) k++;
+    slots[k].push(i);
+  });
+  slots.forEach((s, k) => { order.push(...s); if (k < seq.length) order.push(seq[k]); });
+  return lay(order);
+}
+/* Which singer a press at (x, y) means: boxes { x, y, w, h, slop } = what's drawn of each, where it is
+   now. Of those whose box holds the point, the one whose middle is nearest — with singers overlapping,
+   the one aimed at, not whichever happens to be drawn on top (whose see-through part may be all that's
+   under the pointer). A press that misses them all goes to the nearest box no further off than its
+   slop (main lets the mouse in a little around each, more ahead of one that moves). → its index, or -1. */
+function petPick(boxes, x, y, slop = 6) {
+  let best = -1, bd = Infinity, near = -1, nd = Infinity;
+  boxes.forEach((b, i) => {
+    if (!(b.w > 0 && b.h > 0)) return; // (nothing of it shows)
+    const off = Math.hypot(Math.max(b.x - x, 0, x - b.x - b.w), Math.max(b.y - y, 0, y - b.y - b.h)); // (how far outside the box; 0: inside)
+    if (off === 0) { const d = Math.hypot(x - b.x - b.w / 2, y - b.y - b.h / 2); if (d < bd) { bd = d; best = i; } }
+    else if (off <= (b.slop == null ? slop : b.slop) && off < nd) { nd = off; near = i; }
+  });
+  return best >= 0 ? best : near;
+}
+/* The rectangle main lets the mouse in over, for one singer: what's drawn of it where it stands (b: { x,
+   y, w, h }), up more above (a note's hop lifts it that far), and as far ahead as it gets before main
+   next looks — vx, vy: its speed now (DIP/s), for PETL.lag s (the rectangles go at most 10 times a
+   second, and main looks every 33 ms), at most PETL.reach. A singer standing still gets no more than
+   what's drawn: the mouse goes through right beside it. Whole DIP, outwards. → { x, y, w, h }, or null:
+   nothing of it shows. */
+function petGrab(b, vx, vy, up = 0) {
+  if (!(b.w > 0 && b.h > 0 && Number.isFinite(b.x) && Number.isFinite(b.y))) return null;
+  const lead = v => Math.max(-PETL.reach, Math.min(PETL.reach, (Number.isFinite(v) ? v : 0) * PETL.lag));
+  const ax = lead(vx), ay = lead(vy), x0 = Math.floor(b.x + Math.min(0, ax)), y0 = Math.floor(b.y - up + Math.min(0, ay));
+  return { x: x0, y: y0, w: Math.ceil(b.x + b.w + Math.max(0, ax)) - x0, h: Math.ceil(b.y + b.h + Math.max(0, ay)) - y0 };
 }
 /* What one singer does on the strip as its picture or the song changes (petSync): only a singer with a
    picture of its own is ever on it. pic – it has one now; state – where it is ('wait': not on yet, 'rising',
@@ -10252,20 +10863,34 @@ function petAskList(songs, known) {
 /* Why a song has no singers, in the words of the Characters list. */
 const PET_WHY = { none: 'no score', bad: "its score can't be read", quiet: 'nobody sings in its score' };
 /* The Characters list: every singer of the songs in the playlist, picture or not (asked or not: the user
-   may well have changed their mind), merged as petMerged has it. songs as for petMerged, each with why when
-   it has no singers (PET_WHY); known as for petAskList. The Chorus comes last: it can have a picture, but it
-   isn't one of the singers, so it isn't counted and gets no warning. → { rows: [{ key, label, songs, url,
-   chorus? }], named: how many singers, need: how many of them have no picture, lines: one for each song
-   with no singers } */
+   may well have changed their mind), merged as petMerged has it and listed by the playlist: the first
+   song's singers in the order that song has them, then the next song's who weren't listed yet, and so on —
+   a singer in several songs comes once, under the first of them (with every song it sings in). songs as for
+   petMerged, each with why when it has no singers (PET_WHY); known as for petAskList. The Chorus comes last
+   within its song: it can have a picture, but it isn't one of the singers, so it isn't counted and gets no
+   warning. → { rows: [{ key, label, songs, url, chorus? }] in the list's order, groups: [{ song: the name
+   over them, n: how many rows, in order, stand under it }] (a song that adds nobody has none), named: how
+   many singers, need: how many of them have no picture, lines: one for each song with no singers } */
 function petRoster(songs, known) {
-  const rows = petMerged(songs).map(o => { const k = known && known.get(o.key); return { ...o, url: (k && k.url) || '' }; });
-  const named = rows.filter(r => !r.chorus), lines = [];
+  const left = new Map(petMerged(songs).map(o => { const k = known && known.get(o.key); return [o.key, { ...o, url: (k && k.url) || '' }]; }));
+  const rows = [], groups = [], lines = [];
   for (const s of songs || []) {
-    if (!s || (s.cast || []).some(g => g && g.key)) continue;
-    const L = (String(s.name || '').trim() || 'A song') + ' has no singers (' + (PET_WHY[s.why] || PET_WHY.quiet) + ')';
+    if (!s) continue;
+    const mine = [], name = String(s.name || '').trim() || 'A song';
+    for (const g of s.cast || []) {
+      const r = g && left.get(g.key);
+      if (r) { left.delete(g.key); mine.push(r); }
+    }
+    if (mine.length) {
+      groups.push({ song: name, n: mine.length });
+      rows.push(...mine.filter(r => !r.chorus), ...mine.filter(r => r.chorus));
+    }
+    if ((s.cast || []).some(g => g && g.key)) continue;
+    const L = name + ' has no singers (' + (PET_WHY[s.why] || PET_WHY.quiet) + ')';
     if (!lines.includes(L)) lines.push(L);
   }
-  return { rows: [...named, ...rows.filter(r => r.chorus)], named: named.length, need: named.filter(r => !r.url).length, lines };
+  const named = rows.filter(r => !r.chorus);
+  return { rows, groups, named: named.length, need: named.filter(r => !r.url).length, lines };
 }
 /* What a roster comes to, in one line: at the top of the list, and with the list closed when it's a
    warning. Only singers with a picture come on. → { text ('': no singers at all), warn } */
@@ -10296,24 +10921,126 @@ function petSongsText(names) {
   if (n <= 3) return a.slice(0, -1).join(', ') + ' and ' + a[n - 1];
   return a.slice(0, 2).join(', ') + ' and ' + (n - 2) + ' more';
 }
+/* What the scores say about each singer, for finding its voicebank (Characters… → Voicebank pictures):
+   songs as for petMerged, each cast entry with the id and alt petCast gives it. A singer in several songs
+   has what each of them says; the Chorus is nobody. → Map key → { key, label, eng, ids: the scores' own
+   ids for it as written (≤ 4), names: its other spellings (≤ 8) } */
+function petBankWho(songs) {
+  const out = new Map(), add = (a, v, max, len) => { if (typeof v === 'string' && v && v.length <= len && !a.includes(v) && a.length < max) a.push(v); };
+  for (const s of songs || []) for (const g of (s && s.cast) || []) {
+    if (!g || typeof g.key !== 'string' || !g.key || g.chorus) continue;
+    const label = String(g.label || '').trim();
+    let o = out.get(g.key);
+    if (!o) out.set(g.key, (o = { key: g.key, label, eng: String(g.eng || ''), ids: [], names: [] }));
+    else if (label !== o.label) add(o.names, label, 8, 200); // (another song's name for it)
+    add(o.ids, g.id, 4, 300);
+    for (const a of Array.isArray(g.alt) ? g.alt : []) add(o.names, a, 8, 200);
+  }
+  return out;
+}
+/* What Voicebank pictures did, in one line: set – pictures set · none – singers it found no voicebank
+   picture for · bad – voicebank pictures that couldn't be used · kept – singers with a voicebank picture
+   who kept their own (pressed again in time, it replaces those too). */
+function petBankText(r) {
+  const n = (k, one, many) => k + ' ' + (k === 1 ? one : many), parts = [];
+  if (r.set) parts.push(n(r.set, 'picture', 'pictures') + ' set from ' + (r.set === 1 ? 'its voicebank' : 'voicebanks'));
+  if (r.none) parts.push('no voicebank picture found for ' + r.none);
+  if (r.bad) parts.push(n(r.bad, "voicebank picture couldn't", "voicebank pictures couldn't") + ' be used');
+  if (r.kept) parts.push(r.kept + (r.kept === 1 ? ' already has a picture (press again to replace it too)' : ' already have a picture (press again to replace those too)'));
+  const t = parts.join(' · ') || 'Nothing to change: every singer has a picture already';
+  return t[0].toUpperCase() + t.slice(1);
+}
+/* What giving several selected singers their pictures at once came to: ok – pictures set · bad – files
+   that couldn't be used · singers – how many were selected · files – how many were chosen (1: the same
+   one for all of them; more: one each down the list, and whoever or whatever is left over stays). */
+function petGiveText(r) {
+  const n = (k, one, many) => k + ' ' + (k === 1 ? one : many), d = Math.abs(r.singers - r.files);
+  if (r.files === 1) return r.ok ? 'Picture set for ' + n(r.ok, 'singer', 'singers') + (r.bad ? " · it couldn't be used for " + r.bad : '') : "Couldn't use that picture — choose a PNG, JPG, WebP, GIF or BMP";
+  const parts = [r.ok ? n(r.ok, 'picture', 'pictures') + ' set' : 'No pictures set'], count = ' (' + r.files + ' files for ' + r.singers + ' singers)';
+  if (r.bad) parts.push(n(r.bad, "file couldn't", "files couldn't") + ' be used');
+  if (r.singers > r.files) parts.push((d === 1 ? 'the last singer stays as it is' : 'the last ' + d + ' singers stay as they are') + count);
+  if (r.files > r.singers) parts.push((d === 1 ? "the last file wasn't used" : 'the last ' + d + " files weren't used") + count);
+  return parts.join(' · ');
+}
+/* What Remove pictures (several selected singers) came to: n of `of` pictures went. */
+function petGoneText(n, of) {
+  if (!n) return of === 1 ? "Couldn't remove that picture" : "Couldn't remove those pictures";
+  return (n === 1 ? "Picture removed — that singer isn't shown any more" : n + " pictures removed — those singers aren't shown any more") + (n < of ? ' · ' + (of - n) + " couldn't be removed" : '');
+}
+/* Files in the order of their names, numbers by their value ("2.png" before "10.png"): the order several
+   pictures chosen at once are handed out in (a file chooser gives them in an order of its own). */
+function petByName(files) {
+  return [...files].sort((a, b) => String(a.name).localeCompare(String(b.name), undefined, { numeric: true, sensitivity: 'base' }));
+}
+/* Which file goes to which of several selected singers (keys, in the list's order). One file: each of
+   them gets it. Several: one each down the list, the files in the order of their names; whoever, or
+   whatever, is left over gets nothing. → [[key, file], …] */
+function petHandOut(keys, files) {
+  if (files.length === 1) return keys.map(k => [k, files[0]]);
+  const sorted = petByName(files);
+  return keys.slice(0, sorted.length).map((k, i) => [k, sorted[i]]);
+}
+/* The Characters list's selection after a click on the card of singer `key`. order – the cards' keys as
+   listed · sel – the keys selected now · anchor – the card last clicked ('': none) · ctrl / shift – the
+   keys held. A plain click selects just that card; Ctrl adds it or takes it out; Shift selects everything
+   from the anchor to it (with Ctrl: as well as what's selected) and leaves the anchor where it is, so the
+   next Shift+click goes from the same card — with no anchor in the list, Shift is as without it.
+   → { sel: [keys, in the list's order], anchor } */
+function petSelNext(order, sel, anchor, key, ctrl, shift) {
+  const a = order.indexOf(anchor), b = order.indexOf(key), now = new Set(ctrl ? sel : []);
+  if (b < 0) return { sel: order.filter(k => sel.includes(k)), anchor };
+  if (shift && a >= 0) for (const k of order.slice(Math.min(a, b), Math.max(a, b) + 1)) now.add(k);
+  else {
+    if (ctrl && sel.includes(key)) now.delete(key); else now.add(key);
+    anchor = key;
+  }
+  return { sel: order.filter(k => now.has(k)), anchor };
+}
+/* Who Voicebank pictures works on. rows – the list's (petRoster's) · sel – the keys selected (a Set) ·
+   again – the keys the last press armed it for (null: not armed) · has(key) – a voicebank here has a
+   picture for that singer. With cards selected: those, replacing. Armed and pressed again: the singers
+   who kept their own picture the first time. Else every singer without a picture — the ones with one are
+   left alone, and kept says which of them a voicebank picture is there for (the next press replaces
+   those). → { todo: [keys that get one], none: how many it has nothing for, kept: [keys] } */
+function petBankPlan(rows, sel, again, has) {
+  const picked = rows.filter(c => sel.has(c.key));
+  const targets = picked.length ? picked : again ? rows.filter(c => again.includes(c.key)) : rows.filter(c => !c.chorus && !c.url);
+  const todo = targets.filter(c => has(c.key)).map(c => c.key);
+  return { todo, none: targets.length - todo.length, kept: picked.length || again ? [] : rows.filter(c => c.url && has(c.key)).map(c => c.key) };
+}
 /* @pure:pet end */
 
 /* =====================================================================
-   Desktop pet (desktop app, ?overlay=pet): this page in a see-through strip along the bottom of the
-   screen plays the playlist (as Cover the screen does) and shows only the singers, standing on the
-   taskbar, with what they sing in speech bubbles. Who sings when, the hops and the places: the
-   @pure:pet blocks. main.js (petwin.js) puts the strip there and lets the mouse through everywhere but
-   over a singer (the rectangles sent from here); each singer's picture is the user's own (petpics.js),
-   chosen in the main window — asked for before the pets start. Only singers with a picture come on.
+   Desktop pet (desktop app, ?overlay=pet): this page in a see-through window (main.js, petwin.js: a strip
+   along the bottom of the screen, or — pets that can go anywhere — nearly all of the screen) plays the
+   playlist (as Cover the screen does) and shows only the singers, standing on the taskbar, with what
+   they sing in speech bubbles. Who sings when, the hops and the places: the @pure:pet blocks. main lets
+   the mouse through everywhere but over a singer (the rectangles sent from here); each singer's picture
+   is the user's own (petpics.js), chosen in the main window — asked for before the pets start. Only
+   singers with a picture come on.
+   Where a singer stands: c.fx, its centre as a share of the window's width, and c.alt, how far its
+   standing line is above the taskbar line (DIP; 0: on the taskbar — always, in the strip). One with
+   c.on = { id, off } stands on the top edge of another app's window (id; off DIP from its left edge) and
+   goes where that goes; one with c.fall is on its way down to the taskbar. Everything that shows a
+   singer goes by petFeet / petHead / petBox; petMove moves them (windows, falls, keeping apart).
    ===================================================================== */
 const PETS = {
-  G: { feetY: 0, charH: 190, scale: 1, txt: 1, W: 0, H: 0, T: 48 }, // where the feet go (main's pet:geom; DIP = CSS px; txt: the bubble text's scale)
+  // where the feet go (main's pet:geom; DIP = CSS px; txt: the bubble text's scale; feetY: the taskbar line; free: the
+  // window is the whole screen and singers can be anywhere in it; top: how far down the work area starts)
+  G: { feetY: 0, charH: 190, scale: 1, txt: 1, W: 0, H: 0, T: 48, free: false, top: 0 },
   chars: new Map(),  // key → a singer on the strip (petNew): only singers with a picture (petSync)
   cast: [], svp: null, songId: null, song: '', on: null, cur: new Map(), appear: new Map(), ready: false, started: false,
+  // the song's singers, every one, as petCast gives them (raw); cast is who the pets are — the same, or with "As few pets
+  // as possible" one for each group of them (petGroup) — and sc what petActive / petOnsets / petFirstLineAt read for the
+  // cast: the score (svp), or the groups' lines and notes; spans: key → when that pet has lines (petSpans: wandering)
+  raw: [], sc: null, spans: new Map(), have: '', // (have: which of them had a picture as the groups were made — petHave)
   pics: new Map(),   // key → its picture, ready to show: { url, w, h, box, from, id }; null: none (that singer isn't shown)
   bubs: new Map(), small: false, rectSig: '', rectAt: 0, first: true, at: 0, now: 0, playing: false, pos: {}, seq: 0,
   yielded: new Set(), // bubbles of lines that gave way to a new one (petYields): not shown again
-  next: null,         // the next song's singers, from the read-ahead: { id, cast } (petBye)
+  next: null,         // the next song's singers, from the read-ahead: { id, cast, pet: their lines and notes } (petBye)
+  cfg: null,          // the pets' settings as main keeps them ({ size, lift, free, windows, … }: pet:msg { cfg }); null: not told (an app from before that)
+  ledges: null,       // the window top edges a singer can stand on: [{ id, x0, x1, y, wx }] in this window's DIP (pet:msg { ledges }); null: not heard yet
+  held: null,         // the singer the user is holding (one at a time)
 };
 /* ---- the strip ---- */
 function petPage() {
@@ -10324,26 +11051,60 @@ function petPage() {
   mapApp.onPet(m => {
     if (!m) return;
     if (m.geom) petGeom(m.geom);
+    if (m.cfg && typeof m.cfg === 'object') petCfgNow(m.cfg);
+    if (Array.isArray(m.ledges)) petLedges(m.ledges);
     if (m.img && typeof m.img.key === 'string' && typeof m.img.url === 'string') petNewPic(m.img);
   });
   mapApp.petGeom().then(petGeom).catch(() => {});
+  // the mouse: every press in the window comes here (main only lets it in over a singer), and petDown says whose it is
+  document.addEventListener('pointerdown', petDown);
+  document.addEventListener('pointermove', petDragTo);
+  for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) document.addEventListener(ev, petUp);
   // (for tests: what's on the strip, read-only — a copy each time)
   Object.defineProperty(window, '__pet', { get: petSnapshot });
 }
 function petGeom(g) {
   if (!g || ![g.feetY, g.charH, g.scale, g.W, g.H].every(Number.isFinite)) return;
   const was = PETS.G.charH;
-  // (txt: a full strip makes the bubble text smaller first — petwin.geom; an older app sends none)
-  PETS.G = { feetY: g.feetY, charH: g.charH, scale: g.scale, txt: Number.isFinite(g.txt) ? g.txt : g.scale, W: g.W, H: g.H, T: +g.T || 0 };
-  for (const c of PETS.chars.values()) petSize(c);
+  // (txt: a full strip makes the bubble text smaller first — petwin.geom; an older app sends none, and no free or top: the strip)
+  PETS.G = { feetY: g.feetY, charH: g.charH, scale: g.scale, txt: Number.isFinite(g.txt) ? g.txt : g.scale, W: g.W, H: g.H, T: +g.T || 0,
+    free: g.free === true, top: Number.isFinite(g.top) ? Math.max(0, g.top) : 0 };
+  for (const c of PETS.chars.values()) {
+    petSize(c);
+    if (!PETS.G.free) Object.assign(c, { alt: 0, on: null, ride: null, fall: null, seek: 0 }); // (the strip: everyone is on the taskbar)
+    else if (!c.on) c.alt = Math.min(c.alt, petTop(c)); // (still on the screen, whatever its size now)
+  }
   if (was !== g.charH) petRespace(); // (bubbles are measured again by petBubText: its font size changed)
 }
+/* main: the pets' settings (as it keeps them), as the page loads and whenever one changes. */
+function petCfgNow(c) {
+  const was = PETS.cfg;
+  PETS.cfg = { ...c };
+  if (c.free === false || c.windows === false) PETS.ledges = []; // (nobody stands on a window any more: petMove lets them down)
+  if ((!!was && was.merge === true) !== (c.merge === true) && PETS.ready) petGroup(); // ("As few pets as possible" on or off: who the pets are)
+}
+/* main: the top edges of the other apps' windows on this screen, whenever they change (about 5 times a
+   second while one is dragged). A singer standing on one eases to where it is now (petMove), from where
+   the singer is at this moment. */
+function petLedges(list) {
+  const ok = L => !!L && typeof L.id === 'string' && [L.x0, L.x1, L.y, L.wx].every(Number.isFinite) && L.x1 > L.x0;
+  PETS.ledges = list.filter(ok).slice(0, 64).map(L => ({ id: L.id, x0: L.x0, x1: L.x1, y: L.y, wx: L.wx }));
+  const t = performance.now();
+  for (const c of PETS.chars.values()) if (c.on && c.fx != null) c.ride = { x0: c.fx * PETS.G.W, a0: c.alt, t0: t };
+}
 /* A singer with a picture: an element on the strip (its picture inside .pet-fig, which hops and tilts), not
-   shown yet. */
+   shown yet. Its place: fx, alt, on, fall (see PETS above); ride: it is easing to where its window is now
+   ({ x0, a0, t0 }: from there, since then); seek: it was left on a window and waits to hear whether that's
+   there (until this time); vx, vy: how fast it's moving (DIP/s, for the mouse rectangles); keep: the user
+   put it where it is, so where it comes to rest is remembered.
+   walk: how it is walking, while it wanders with nothing to sing (petRoam) — null: it stands; else { to: where
+   to (its centre, x in the window), dir: -1 left / 1 right, v: how fast just now (DIP/s), k: how far through
+   the step it's taking (0…1), foot: 0 / 1 in turn, a step each, done: it has stopped and is only finishing
+   that step where it stands }; rest: it stands at least until then (the frame clock, ms). */
 function petNew(g) {
-  const c = { key: g.key, label: g.label, g, state: 'wait', t0: 0, fx: null, w: 0, h: 0, y: 0, phase: Math.random(),
+  const c = { key: g.key, label: g.label, g, state: 'wait', t0: 0, fx: null, alt: 0, on: null, fall: null, ride: null, seek: 0, w: 0, h: 0, y: 0, phase: Math.random(),
     hopAt: -1e9, hopH: 0, hopMs: 240, clickAt: -1e9, tilt: 0, tiltTo: 0, side: 1, sing: false, drag: null, landAt: -1e9, say: null,
-    tf: '', ff: '', picUrl: null, pic: null, box: null };
+    tf: '', ff: '', cp: '', vx: 0, vy: 0, lx: null, ly: null, keep: false, walk: null, rest: 0, picUrl: null, pic: null, box: null };
   const el = document.createElement('div'), fig = document.createElement('div');
   el.className = 'pet-ch';
   fig.className = 'pet-fig';
@@ -10352,9 +11113,6 @@ function petNew(g) {
   PETS.layer.insertBefore(el, PETS.svg); // (under the bubbles)
   c.el = el; c.fig = fig;
   petPic(c, false);
-  fig.addEventListener('pointerdown', e => petDown(c, e));
-  fig.addEventListener('pointermove', e => petDragTo(c, e));
-  for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) fig.addEventListener(ev, e => petUp(c, e));
   fig.addEventListener('dragstart', e => e.preventDefault()); // (no drag picture of the image)
   return c;
 }
@@ -10387,7 +11145,7 @@ function petPoof(c) {
   void f.offsetWidth; // (the animation starts again)
   f.classList.add('poof');
   setTimeout(() => f.classList.remove('poof'), 450);
-  const cx = c.fx * G.W, cy = G.feetY - c.h * 0.45;
+  const cx = c.fx * G.W, cy = petFeet(c) - c.h * 0.45;
   for (let i = 0; i < 9; i++) {
     const p = document.createElement('div'), a = (i / 9) * 2 * Math.PI;
     p.className = 'pet-puff';
@@ -10402,32 +11160,48 @@ function petPoof(c) {
 function petShow(c, t) {
   if (c.fx == null && !petPlace(c)) return false;
   c.state = 'rising'; c.t0 = t; c.seq = ++PETS.seq;
+  c.rest = t + 2000 + Math.random() * 4000; // (it stands a while where it came on before it wanders off: petRoam)
   c.el.style.visibility = '';
   return true;
 }
-const petSaved = c => (Number.isFinite(PETS.pos[c.key]) ? PETS.pos[c.key] : null);
-/* Its spot: where the user last left it (map-pet.pos), else the next free one (petSlots); the ones
-   already standing never move for it, and it never comes up where one is still going down (petSpot). */
+const petSaved = c => petPosOf(PETS.pos[c.key]); // (where the user last left it: { x, h, on }, or null)
+const petFloor = c => !c.on && !(c.alt > 0); // (it stands on the taskbar line)
+/* Its spot: where the user last left it (map-pet.pos), else the next free one on the taskbar (petSlots);
+   it's chosen around the ones already standing there (two that still overlap step apart afterwards:
+   petMove), and it never comes up where one is still going down (petSpot). One left up off the taskbar
+   comes on up there again — on its window, if it was left on one and that is still under the spot; with
+   that window gone, on the taskbar. */
 function petPlace(c) {
-  const W = PETS.G.W, all = [...PETS.chars.values()].filter(o => o !== c && o.fx != null);
+  const G = PETS.G, W = G.W, sv = petSaved(c), fit = x => Math.max(c.w / 2, Math.min(W - c.w / 2, x));
+  const alt = G.free && sv ? Math.min(petTop(c), sv.h * G.feetY) : 0;
+  if (alt > 0) {
+    const x = fit(sv.x * W);
+    if (!sv.on) { c.fx = x / W; c.alt = alt; return true; }
+    // (as the pets start, main hasn't said yet where the windows are — its helper takes a few seconds to: it comes on up
+    // there, and petMove sees to it once that's known)
+    if (!PETS.ledges) { c.fx = x / W; c.alt = alt; c.seek = performance.now() + 8000; return true; }
+    const at = petLandAt(x, alt, G.feetY, PETS.ledges, petRoom(c)), L = at && at.ledge != null ? PETS.ledges[at.ledge] : null;
+    if (L) { c.fx = x / W; c.alt = G.feetY - L.y; c.on = { id: L.id, off: x - L.wx }; return true; }
+  }
+  const all = [...PETS.chars.values()].filter(o => o !== c && o.fx != null && petFloor(o));
   const at = st => all.filter(o => st.includes(o.state)).map(o => ({ x: o.fx * W, span: petSpan(o.w, o.box) }));
-  const x = petSpot(W, at(['rising', 'in']), at(['leaving']), petSpan(c.w, c.box), petSaved(c));
+  const x = petSpot(W, at(['rising', 'in']), at(['leaving']), petSpan(c.w, c.box), sv ? sv.x : null);
   if (x == null) return false;
-  c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, x)) / W;
+  c.fx = fit(x) / W;
   return true;
 }
-/* A new size (Settings, live): the singers standing take their spots again at it, in the order they
-   came on (the ones dragged somewhere keep theirs), so bigger ones don't overlap. */
+/* A new size (Settings, live): the singers standing on the taskbar take their spots again at it, in the
+   order they came on (the ones dragged somewhere keep theirs), so bigger ones don't overlap. */
 function petRespace() {
-  const W = PETS.G.W, on = [...PETS.chars.values()].filter(c => c.fx != null && petVis(c)).sort((a, b) => a.seq - b.seq);
+  const W = PETS.G.W, on = [...PETS.chars.values()].filter(c => c.fx != null && petVis(c) && petFloor(c)).sort((a, b) => a.seq - b.seq);
   if (!on.length) return;
-  const xs = petSlots(W, on.map(c => petSpan(c.w, c.box)), on.map(petSaved));
+  const xs = petSlots(W, on.map(c => petSpan(c.w, c.box)), on.map(c => { const s = petSaved(c); return s ? s.x : null; }));
   on.forEach((c, i) => { if (!c.drag) c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, xs[i])) / W; });
 }
 function petLeave(c, t) {
   if (c.state === 'leaving') return; // (going already)
   if (c.state === 'wait') { petDrop(c); return; }
-  if (c.drag) { c.drag = null; mapApp.petDrag(false).catch(() => {}); }
+  if (c.drag) { c.drag = null; if (PETS.held === c) PETS.held = null; mapApp.petDrag(false).catch(() => {}); }
   c.y0 = c.y || 0; c.state = 'leaving'; c.t0 = t; // (it sinks from where it is: one still rising is partway up)
 }
 function petDrop(c) { c.el.remove(); if (PETS.chars.get(c.key) === c) PETS.chars.delete(c.key); }
@@ -10449,33 +11223,54 @@ function petSync(key) {
    singer is there as it starts). Only singers with a picture come on: one the user gave none — or one who
    first turns up now, a song re-saved with another score — isn't shown, and nothing is asked here. */
 async function petSong(gen) {
-  const id = BGM.order[BGM.i], t = performance.now();
-  const cast = svp && svp.lyr ? petCast(svp, id) : [];
-  Object.assign(PETS, { songId: id, svp, cast, ready: true, started: false, song: currentProject && currentProject.id === id ? currentProject.name : '' });
-  petTimes();
-  if (cast.length) for (const c of [...PETS.chars.values()]) if (!cast.some(g => g.key === c.key)) petLeave(c, t);
-  for (const g of cast) {
-    const c = PETS.chars.get(g.key);
-    if (c && c.state !== 'leaving') { c.g = g; c.label = g.label; } else petSync(g.key); // (a picture not known yet: petPics below brings it on)
-  }
-  const P = petPics(cast, true);
+  const id = BGM.order[BGM.i];
+  const raw = svp && svp.lyr ? petCast(svp, id) : [];
+  Object.assign(PETS, { songId: id, svp, raw, ready: true, started: false, song: currentProject && currentProject.id === id ? currentProject.name : '' });
+  petGroup(); // (a picture not known yet: petPics below brings its singer on)
+  const P = petPics(raw, true);
   await Promise.race([P, new Promise(r => setTimeout(r, PETS.first ? 2000 : 1000))]);
   PETS.first = false;
 }
+/* The pets for a song's singers (raw: every one of them, as petCast gives them; pet: their lines and notes, its
+   score's svp.pet), with "As few pets as possible": one for each group of singers who never have to sing over
+   each other, by who has a picture now (petFewest → { cast, lines, notes }). null: every singer is its own. */
+const petPets = (raw, pet) => (PETS.cfg && PETS.cfg.merge === true && pet && raw.length > 1 ? petFewest(raw, pet, k => !!PETS.pics.get(k)) : null);
+const petHave = () => JSON.stringify(PETS.raw.filter(g => PETS.pics.get(g.key)).map(g => g.key)); // (which of the song's singers have a picture)
+/* Who the pets are (PETS.cast, PETS.sc) for the song's singers (PETS.raw), the times that go with them (petTimes),
+   and the strip follows: singers who are pets still stay where they are, the others sink away (a song without
+   words keeps everyone), and new ones come on as their pictures say (petSync). For a new song, a score timed
+   again, and — as few pets as possible — whenever the setting changes or a singer gets or loses its picture: the
+   groups go by who has one. */
+function petGroup() {
+  const sc = PETS.svp, m = petPets(PETS.raw, sc && sc.pet), t = performance.now();
+  PETS.cast = m ? m.cast : PETS.raw;
+  PETS.sc = m ? { pet: { lines: m.lines, notes: m.notes } } : sc;
+  PETS.have = petHave();
+  petTimes();
+  if (PETS.cast.length) for (const c of [...PETS.chars.values()]) if (!PETS.cast.some(g => g.key === c.key)) petLeave(c, t);
+  for (const g of PETS.cast) {
+    const c = PETS.chars.get(g.key);
+    if (c && c.state !== 'leaving') { c.g = g; c.label = g.label; } else petSync(g.key);
+  }
+}
 /* The song changes to id (bgmPlay, as it starts loading it): when the read-ahead knows its singers, the
    ones not in it start sinking away now, while it loads, rather than once it's ready — so they're gone,
-   or nearly, as it starts and its first singer comes on. */
+   or nearly, as it starts and its first singer comes on. (As few pets as possible: the ones who won't be
+   pets in it — once every one of its singers' pictures has been looked at; till then, only those who don't
+   sing in it at all.) */
 function petBye(id) {
   const n = PETS.next;
   if (!n || n.id !== id || !n.cast.length) return;
-  const t = performance.now();
-  for (const c of [...PETS.chars.values()]) if (!n.cast.some(g => g.key === c.key)) petLeave(c, t);
+  const m = n.cast.every(g => PETS.pics.has(g.key)) ? petPets(n.cast, n.pet) : null, cast = m ? m.cast : n.cast, t = performance.now();
+  for (const c of [...PETS.chars.values()]) if (!cast.some(g => g.key === c.key)) petLeave(c, t);
 }
-/* Onsets and when each one comes on: again whenever the score is replaced (its timing changed). */
+/* Onsets, when each one has lines and when each one comes on: again whenever the score is replaced (its
+   timing changed) or the pets are other singers (petGroup). */
 function petTimes() {
-  const sc = PETS.svp;
+  const sc = PETS.sc;
   PETS.on = sc ? petOnsets(PETS.cast, sc) : null;
   PETS.cur = new Map(PETS.cast.map(g => [g.key, {}]));
+  PETS.spans = new Map(PETS.cast.map(g => [g.key, petSpans(sc && sc.pet ? sc.pet.lines.get(g.key) : null)]));
   petWhen();
 }
 /* When each one comes on, worked out over the singers with a picture (only they're shown): the first of
@@ -10483,13 +11278,12 @@ function petTimes() {
    a picture comes or goes (petSync — the first song's pictures always come after its timing); once the song
    has started, nobody already waiting for his own line comes on early (petAppearNow). */
 function petWhen() {
-  PETS.appear = PETS.svp ? petAppearNow(PETS.cast.filter(g => PETS.pics.get(g.key)), PETS.svp, PETS.appear, PETS.started) : new Map();
+  PETS.appear = PETS.sc ? petAppearNow(PETS.cast.filter(g => PETS.pics.get(g.key)), PETS.sc, PETS.appear, PETS.started) : new Map();
 }
 function petRecast() {
   PETS.svp = svp;
-  PETS.cast = petCast(svp, PETS.songId);
-  petTimes();
-  for (const g of PETS.cast) { const c = PETS.chars.get(g.key); if (c) c.g = g; else petSync(g.key); }
+  PETS.raw = petCast(svp, PETS.songId);
+  petGroup();
 }
 /* While a song plays: the next one's singers, so their pictures are ready before it starts (its
    score is read on the side: the playing one isn't touched). */
@@ -10501,14 +11295,14 @@ async function petAhead(id, p, recs, stale) {
   try { sc = await parseScoreFile(fs, []); } catch (e) { return; }
   if (stale() || !sc || !sc.lyr) return;
   const cast = petCast(sc, id);
-  PETS.next = { id, cast }; // (who's in it: petBye)
+  PETS.next = { id, cast, pet: sc.pet }; // (who's in it, and when they sing: petBye)
   await petPics(cast, false);
 }
 /* ---- pictures ---- */
 /* The cast's pictures from the app (the user's own: petpics.js; a singer with none isn't shown), each
    looked at once here. apply: the strip follows them now (petSync; not for the next song's read-ahead). */
 async function petPics(cast, apply) {
-  const list = (cast || []).filter(g => g && g.key).slice(0, 12);
+  const list = (cast || []).filter(g => g && g.key).slice(0, 300); // (a whole cast: up to PETL.max singers; the app takes 300)
   if (!list.length || !mapApp.petPics) return;
   let r = null;
   try { r = await mapApp.petPics(list.map(g => ({ key: g.key, label: g.label, eng: g.eng }))); } catch (e) {}
@@ -10526,7 +11320,14 @@ async function petTake(p, apply) {
     else try { pic = { ...(await petProbe(url)), from: url, id }; } catch (e) { pic = null; } // (one that can't be read: not shown)
   }
   PETS.pics.set(p.key, pic);
-  if (apply) petSync(p.key);
+  if (apply) petPicNow(p.key);
+}
+/* A singer's picture came, changed or went: with as few pets as possible, who the pets are goes by who has a
+   picture, so when that is no longer as the groups were made, they are made again (petGroup); then that singer
+   follows its picture (petSync). */
+function petPicNow(key) {
+  if (PETS.cfg && PETS.cfg.merge === true && PETS.ready && petHave() !== PETS.have) petGroup();
+  petSync(key);
 }
 /* A picture's size and where it's drawn (fractions of it): looked at no more than 160 px tall. */
 async function petProbe(url) {
@@ -10608,11 +11409,12 @@ async function petNewPic(m) {
   let pic = null;
   if (url) try { pic = { ...(await petProbe(url)), from: url, id }; } catch (e) { return; }
   PETS.pics.set(m.key, pic);
-  petSync(m.key);
+  petPicNow(m.key);
 }
 /* ---- every frame ---- */
 /* The clock (smoothTime: only called here, once a frame — it keeps state between frames), the guide
-   synth, then the singers, their bubbles and the rectangles main hit-tests the mouse against. */
+   synth, then where the singers stand (petMove), the singers, their bubbles and the rectangles main
+   hit-tests the mouse against. */
 function petFrame() {
   requestAnimationFrame(petFrame);
   const t = performance.now();
@@ -10625,6 +11427,7 @@ function petFrame() {
   if (same && svp && svp !== PETS.svp) petRecast();
   const sc = same && !!svp && svp === PETS.svp; // (this song's own score is the one playing)
   if (sc && playing) PETS.started = true;
+  petMove(t, dt, same && (sc || !PETS.cast.length)); // (a song without words: everyone still there has nothing to sing)
   for (const c of [...PETS.chars.values()]) {
     if (c.state === 'wait') {
       const at = PETS.appear.get(c.key);
@@ -10639,7 +11442,9 @@ function petFrame() {
 }
 const petOut = k => 1 - (1 - k) * (1 - k) * (1 - k);
 function petAnim(c, now, t, dt, sc) {
-  const G = PETS.G, s = G.scale, low = c.h + (G.H - G.feetY) + 8; // (that far down: below the strip, out of sight)
+  // coming on and going — on the taskbar: up from below the screen's edge and back down there, as ever; higher up:
+  // from behind its own standing line and back behind it (cut off there: never a slide up the whole screen)
+  const G = PETS.G, s = G.scale, feet = petFeet(c), air = c.alt > 0, low = c.h + (air ? 0 : G.H - G.feetY) + 8; // (that far down: out of sight)
   let y = 0;
   if (c.state === 'rising') { const k = Math.min(1, (t - c.t0) / 500); y = (1 - petOut(k)) * low; if (k >= 1) c.state = 'in'; }
   else if (c.state === 'leaving') { const k = Math.min(1, (t - c.t0) / 400); y = c.y0 + k * k * (low - c.y0); if (k >= 1) { petDrop(c); return; } }
@@ -10654,9 +11459,12 @@ function petAnim(c, now, t, dt, sc) {
     if (hit && !c.drag && t - c.hopAt > 120) { c.hopAt = t; c.hopH = (hit.d < 0.15 ? 3 : 6) * s; c.hopMs = 240; c.side = -c.side; }
     sing = petSounding(cur, on, now);
   }
-  c.tiltTo = c.drag ? 4 * c.drag.dir : sing ? 2 * c.side : 0;
-  // (a click's big hop runs its whole course, the notes' hops over it only where higher: petLift)
-  up = petLift(up, petArc((t - c.hopAt) / c.hopMs, c.hopH), petArc((t - c.clickAt) / 420, 14), 14);
+  // walking (petRoam; it has nothing to sing then): a little hop for each step, leaning the way it goes — a touch
+  // more on every other step, so it waddles
+  const wk = c.walk;
+  c.tiltTo = c.drag ? 4 * c.drag.dir : wk && !wk.done ? (2 + wk.foot) * wk.dir : sing ? 2 * c.side : 0;
+  // (a click's big hop runs its whole course, the notes' hops — or a step's — over it only where higher: petLift)
+  up = petLift(up, Math.max(petArc((t - c.hopAt) / c.hopMs, c.hopH), wk ? petArc(wk.k, 4 * s) : 0), petArc((t - c.clickAt) / 420, 14), 14);
   const kq = (t - Math.max(c.hopAt, c.clickAt)) / 120;
   if (kq >= 0 && kq < 1) { sx *= 1 + 0.03 * (1 - kq); sy *= 1 - 0.04 * (1 - kq); }
   // held: lifted a little; let go: it lands with a small bounce
@@ -10664,26 +11472,179 @@ function petAnim(c, now, t, dt, sc) {
   else { const kl = (t - c.landAt) / 450; if (kl >= 0 && kl < 1) up += 8 * Math.abs(Math.cos(kl * Math.PI * 1.5)) * (1 - kl); }
   c.tilt += (c.tiltTo - c.tilt) * Math.min(1, dt * 14);
   c.sing = sing; c.y = y; c.up = up;
-  const tf = 'translate(' + (c.fx * G.W - c.w / 2).toFixed(1) + 'px,' + (G.feetY - c.h + y).toFixed(1) + 'px)';
+  const cp = air && y > 0 ? 'inset(-999px -999px ' + y.toFixed(1) + 'px -999px)' : ''; // (nothing shows below its standing line)
+  if (cp !== c.cp) c.el.style.clipPath = c.cp = cp;
+  const px = c.fx * G.W, py = feet + y;
+  if (c.lx != null && dt > 0) { c.vx = (px - c.lx) / dt; c.vy = (py - c.ly) / dt; } // (how fast it's going: petRects)
+  c.lx = px; c.ly = py;
+  const tf = 'translate(' + (px - c.w / 2).toFixed(1) + 'px,' + (feet - c.h + y).toFixed(1) + 'px)';
   if (tf !== c.tf) c.el.style.transform = c.tf = tf;
   const ff = 'translateY(' + (-up).toFixed(2) + 'px) rotate(' + c.tilt.toFixed(2) + 'deg) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')';
   if (ff !== c.ff) c.fig.style.transform = c.ff = ff;
 }
 const petVis = c => !!c && (c.state === 'rising' || c.state === 'in');
-const petHead = c => PETS.G.feetY - c.h + c.box.y0 * c.h; // (the top of what's drawn)
+/* ---- where a singer stands ---- */
+const petFeet = c => PETS.G.feetY - c.alt; // its standing line (y in the window): the taskbar line, or higher up
+const petHead = c => petFeet(c) - c.h + c.box.y0 * c.h; // (the top of what's drawn)
+const petTop = c => Math.max(0, PETS.G.feetY - PETS.G.top - c.h - 14); // the highest its standing line may be (alt): the whole picture on the screen, a hop too
+const petRoom = c => PETS.G.top + c.h + 14; // …so a window's top edge above this (y in the window) is no place for it
+const petHeldAlt = c => Math.min(petTop(c), c.alt + 8); // (held, it is lifted a little: where it comes down from)
+const petLs = () => (PETS.G.free && PETS.ledges) || []; // the window top edges there are to stand on
+/* What's drawn of a singer, where it is now ({ x, y, w, h } in the window): lifted — with its hop, as it
+   shows this instant (what a press is tested against); else where it stands (main's rectangles). Of one
+   coming up from behind its standing line, only what's above that. */
+function petBox(c, lifted) {
+  const b = c.box, x = c.fx * PETS.G.W - c.w / 2 + b.x0 * c.w, y = petFeet(c) - c.h + c.y - (lifted ? c.up || 0 : 0) + b.y0 * c.h;
+  const cut = c.alt > 0 && c.y > 0 ? petFeet(c) : Infinity;
+  return { x, y, w: (b.x1 - b.x0) * c.w, h: Math.min(y + (b.y1 - b.y0) * c.h, cut) - y };
+}
+/* From now on it stands on a window's top edge (L: the part of it under x), easing onto it from where it is. */
+function petStandOn(c, L, x, t) {
+  c.on = { id: L.id, off: x - L.wx };
+  c.ride = { x0: c.fx * PETS.G.W, a0: c.alt, t0: t };
+  c.fall = null; c.seek = 0;
+}
+/* Where a singer stands now is remembered (map-pet.pos, the newest 200), for one the user put there: x and
+   height as shares (petPosOf). On its way somewhere — down to the taskbar, onto a window — it's where it will be. */
+function petRemember(c) {
+  const G = PETS.G, Ls = petLs(), L = (c.on && Ls[petLedgeOf(Ls, c.on.id, c.on.off)]) || null;
+  const alt = L ? G.feetY - L.y : c.fall ? 0 : c.alt, r4 = v => Math.round(Math.max(0, Math.min(1, v)) * 1e4) / 1e4;
+  PETS.pos[c.key] = { x: r4(c.fx), h: G.free && G.feetY > 0 ? r4(alt / G.feetY) : 0, ...(L ? { on: 1 } : {}) };
+  const ks = Object.keys(PETS.pos);
+  for (const k of ks.slice(0, Math.max(0, ks.length - 200))) delete PETS.pos[k];
+  try { localStorage.setItem('map-pet.pos', JSON.stringify(PETS.pos)); } catch (x) {}
+}
+/* Where everyone stands this frame, before they're drawn. A singer on a window goes where that is now (over a
+   quarter of a second: main says where the windows are only 5 times a second); one whose window has gone, or
+   is covered just there, falls to the taskbar, faster and faster, and lands with a drop's bounce. Singers
+   standing on one line — the taskbar, or one window's edge — that are in each other's way glide apart
+   (petApart), each moving half, and make room for one the user holds over their line; that one is left alone
+   while it's held, and once it's let go they all settle. Then the ones with nothing to sing wander along their
+   line (petRoam; live: this song is the one that's on — its own score, or a song with nobody singing in it). */
+function petMove(t, dt, live) {
+  const G = PETS.G, W = G.W, Ls = petLs(), lines = new Map(), glid = new Set(), where = new Map(); // (where: the line each one is on)
+  const join = (k, c, x, lo, hi, L) => { if (!lines.has(k)) lines.set(k, []); lines.get(k).push({ c, x, lo, hi, L }); where.set(c, k); };
+  let seen = 0; // (how many singers are on screen)
+  for (const c of PETS.chars.values()) {
+    if (c.fx == null || !petVis(c)) continue;
+    seen++;
+    const x = c.fx * W, lo = c.w / 2, hi = W - c.w / 2;
+    if (c.drag && c.drag.moved) { // held, it's wherever the pointer has it; the ones on the line it's over make room
+      const at = G.free ? petLandAt(x, petHeldAlt(c), G.feetY, Ls, petRoom(c)) : { floor: true };
+      if (at && at.ledge != null) join('w' + at.ledge, c, x, lo, hi, Ls[at.ledge]); else if (at) join('t', c, x, lo, hi);
+      continue;
+    }
+    if (c.seek && (PETS.ledges || t > c.seek)) { // it was left on a window: is that there? (asked only so long: main may never say)
+      const at = petLandAt(x, c.alt, G.feetY, Ls, petRoom(c));
+      c.seek = 0;
+      if (at && at.ledge != null) petStandOn(c, Ls[at.ledge], x, t); else c.fall = { v: 0 };
+    }
+    if (c.on) {
+      const i = petLedgeOf(Ls, c.on.id, c.on.off, petRoom(c), G.feetY), L = Ls[i], ax = L ? Math.max(lo, Math.min(hi, L.wx + c.on.off)) : 0;
+      if (L && ax >= L.x0 && ax <= L.x1) { join('w' + i, c, ax, Math.max(lo, L.x0), Math.min(hi, L.x1), L); continue; }
+      c.on = null; c.ride = null; c.fall = { v: 0 }; // (nothing under it any more)
+    }
+    if (c.fall) {
+      c.fall.v += PETL.fall * dt;
+      c.alt -= c.fall.v * dt;
+      if (c.alt <= 0) { c.alt = 0; c.fall = null; c.landAt = t - 150; } // (down: the bounce a drop has, from where it touches)
+      continue;
+    }
+    if (petFloor(c)) join('t', c, x, lo, hi);
+  }
+  // singers with nothing to sing wander: with two or more on screen, and while the song plays (paused, everyone stands)
+  const roam = !!PETS.cfg && PETS.cfg.wander === true && !!live && PETS.playing && seen > 1;
+  // (a walker keeps off those not on its line too, where their pictures are level with its own: one left in the air just
+  // over the taskbar, one the user holds there, one coming down)
+  const aside = (c, k) => [...PETS.chars.values()].filter(o => o !== c && o.fx != null && petVis(o) && where.get(o) !== k && petFeet(o) - o.h < petFeet(c) && petFeet(c) - c.h < petFeet(o))
+    .map(o => ({ x: o.fx * W, span: petSpan(o.w, o.box), to: null }));
+  for (const [key, on] of lines) {
+    if (on.length > 1 && on.some(m => !m.c.drag)) {
+      const to = petApart(on.map(m => ({ x: m.x, span: petSpan(m.c.w, m.c.box), lo: m.lo, hi: m.hi, held: !!m.c.drag })));
+      on.forEach((m, i) => {
+        const d = to[i] - m.x;
+        if (m.c.drag || Math.abs(d) < 0.25) return; // (held, or there near enough: it stands)
+        m.x += Math.sign(d) * Math.min(Math.abs(d), PETL.glide * dt);
+        if (m.c.on) m.c.on.off = m.x - m.L.wx; else m.c.fx = m.x / W;
+        glid.add(m.c);
+      });
+    }
+    for (const m of on) petRoam(m, on, roam, t, dt, () => aside(m.c, key));
+    for (const m of on) { // on a window: there — or on the way there, since main last said where it is
+      const c = m.c;
+      if (!c.on) continue;
+      const k = c.ride ? Math.min(1, (t - c.ride.t0) / 260) : 1, ta = G.feetY - m.L.y;
+      c.fx = (c.ride ? c.ride.x0 + (m.x - c.ride.x0) * k : m.x) / W;
+      c.alt = c.ride ? c.ride.a0 + (ta - c.ride.a0) * k : ta;
+      if (k >= 1) c.ride = null;
+    }
+  }
+  for (const c of PETS.chars.values()) {
+    // a walk is over for one that is picked up or going; one no longer on a line (it fell) stops; and a walker that has
+    // stopped finishes the step it was taking where it stands (0.3 s for a whole one), then stands
+    const wk = c.walk;
+    if (wk && (c.drag || !petVis(c))) c.walk = null;
+    else if (wk) {
+      if (!wk.done && wk.at !== t) { wk.done = true; wk.v = 0; c.rest = Math.max(c.rest, t + 1500); }
+      if (wk.done && (wk.k < 0.1 || (wk.k += dt / 0.3) >= 1)) c.walk = null;
+    }
+    // one the user put somewhere: what's remembered is where it came to rest (the others' are as the user left them)
+    if (c.keep && petVis(c) && !c.drag && !c.fall && !c.ride && !c.seek && !glid.has(c)) { c.keep = false; petRemember(c); }
+  }
+}
+/* One singer on its line (m: petMove's { c, x, lo, hi, L }; on: everyone on that line; aside(): the others whose
+   pictures are level with it though they aren't on the line) wanders while it has nothing to sing (roam: singers
+   wander at all just now): it picks a spot with room along the line (petStroll), walks there in small steps at
+   an easy pace (petStride: never into anyone, so nobody is shoved and the rule that keeps singers apart has
+   nothing to do), stands a random while, and picks another. It has no line then: its last one ended PETL.idle
+   ago, and it stops PETL.soon before its next one starts — so it is standing still well before that line's
+   bubble comes — and never sets off with less than PETL.far to go. One the user holds doesn't walk; one the
+   user has just put somewhere, or clicked, stands a good while first (c.rest). How it walks is c.walk (petNew),
+   which petAnim draws. Wandering never touches what's remembered (map-pet.pos): that stays where the user
+   left it. */
+function petRoam(m, on, roam, t, dt, aside) {
+  const c = m.c, wk = c.walk, span = petSpan(c.w, c.box);
+  const q = roam && c.state === 'in' && !c.drag && !c.ride && !c.sing && !(c.say && t < c.say.until) ? petIdle(PETS.spans.get(c.key) || [], PETS.now) : null;
+  const free = !!q && q.since >= PETL.idle && q.until >= PETL.soon;
+  if (wk && !wk.done) {
+    wk.at = t; // (still on a line this frame: petMove stops one that isn't)
+    if (!free) { wk.done = true; wk.v = 0; c.rest = Math.max(c.rest, t + 1500); return; }
+    const others = on.filter(o => o !== m).map(o => ({ x: o.x, span: petSpan(o.c.w, o.c.box) })).concat(aside());
+    // (it sets off gently: over half a second — the mouse rectangles, sent 10 times a second at most, are with it before it has gone 4 px)
+    const v = PETL.walk * c.h * wk.f * Math.min(1, 0.1 + (t - wk.t0) / 600);
+    const s = petStride(m.x, Math.max(m.lo, Math.min(m.hi, wk.to)), v * dt, span, others), d = Math.abs(s.x - m.x);
+    wk.v = dt > 0 ? d / dt : 0;
+    if (d > 0) wk.dir = s.x < m.x ? -1 : 1;
+    wk.k += d / (PETL.pace * c.h);
+    while (wk.k >= 1) { wk.k -= 1; wk.foot ^= 1; }
+    m.x = s.x;
+    if (c.on) c.on.off = m.x - m.L.wx; else c.fx = m.x / PETS.G.W;
+    if (s.end) { wk.done = true; wk.v = 0; c.rest = t + 2500 + Math.random() * 5500; }
+    return;
+  }
+  if (wk || !free || t < c.rest || q.until < PETL.far) return;
+  const others = on.filter(o => o !== m).map(o => ({ x: o.x, span: petSpan(o.c.w, o.c.box), to: o.c.walk && !o.c.walk.done ? o.c.walk.to : null })).concat(aside());
+  const f = 0.85 + Math.random() * 0.3, to = petStroll(m.x, span, m.lo, m.hi, others, Math.random(), (q.until - PETL.soon - 0.5) * PETL.walk * c.h * f);
+  if (to == null) { c.rest = t + 1500 + Math.random() * 2500; return; } // (no room worth a walk just now: it looks again in a moment)
+  c.walk = { to, dir: to < m.x ? -1 : 1, v: 0, k: 0, foot: 0, f, t0: t, at: t, done: false };
+}
 /* The speech bubbles: who sings now (petActive) — one bubble per line, one shared by singers singing the
    same words together, with a tail to each; a long line in bubble-wide pieces with the karaoke wipe; on
    0.25 s early at 0.7, then held and faded as the lyrics are (LY); stacked up to 3 rows (then smaller
    text). A click's song name is a bubble too. Paused: the song's clock stands still, so they do too.
-   A bubble never jumps: it comes where it will stay (a finished line of another singer's that's only
-   lingering where it would go gives way: petYields), and once shown it only ever moves up (to make room)
-   or sideways, never back down. A new one never draws over one fading out (petGate): it waits until that
-   one has gone (quickly, 0.1 s), then fades in. */
+   A bubble never jumps. It comes where it will stay: the lowest place where it fits among the others (petLay)
+   — just over its own singers when nothing is in the way there, also under one that was pushed up earlier
+   and is still up (that one stays up meanwhile), else above the ones in its way; a finished line of another
+   singer's that's only lingering where it would go gives way (petYields). Once shown it sits as low as it
+   can, just above its singers: it glides up or sideways to make room, and back down as soon as the room
+   under it is free — which it is only once a bubble fading out there has gone (petStack) —, never passing
+   another on the way. It goes along with a singer that is dragged, rides a window or comes down. A new one
+   never draws over one fading out (petGate): it waits until that one has gone (quickly, 0.1 s), then fades in. */
 function petBubbles(now, t, dt, sc) {
   const G = PETS.G, W = G.W, act = [];
   if (sc) {
     const cast = PETS.cast.filter(g => petVis(PETS.chars.get(g.key)));
-    for (const b of petActive(cast, PETS.svp, now)) act.push({ id: b.who.map(g => g.key).join('+') + '@' + b.L.s.toFixed(3) + '#' + b.L.t, b, who: b.who.map(g => PETS.chars.get(g.key)) });
+    for (const b of petActive(cast, PETS.sc, now)) act.push({ id: b.who.map(g => g.key).join('+') + '@' + b.L.s.toFixed(3) + '#' + b.L.t, b, who: b.who.map(g => PETS.chars.get(g.key)) });
   }
   for (const c of PETS.chars.values()) if (c.say && t < c.say.until && petVis(c)) act.push({ id: 'say@' + c.key, say: c.say, who: [c] });
   // (a line that gave way stays gone until petActive lets it go)
@@ -10699,28 +11660,47 @@ function petBubbles(now, t, dt, sc) {
     petBubText(B, it, now, base, maxW);
     B.a = it.say ? 1 : now < it.b.s ? 0.7 * Math.max(0, Math.min(1, (now - (it.b.s - PETL.early)) / 0.1)) : 1;
   }
+  // Singers stand at different heights: the bubbles of each line — the taskbar's, one window's, a place in the air —
+  // give way, share rows and stack among themselves as ever (petYields, petRows, petStack), the lowest line's first; a
+  // bubble of another line is only in the way where the two would really overlap (it goes above that one).
+  const lines = list => {
+    const m = new Map();
+    for (const it of list) {
+      const c = it.who.reduce((a, b) => (petHead(b) < petHead(a) ? b : a)), k = c.on ? 'w' + c.on.id : c.alt > 0 ? 'a' + Math.round(c.alt) : 't';
+      if (!m.has(k)) m.set(k, { y: petFeet(c), its: [] });
+      m.get(k).its.push(it);
+    }
+    return [...m.values()].sort((a, b) => b.y - a.y).map(g => g.its);
+  };
   if (items.length > 1) {
-    const yi = petYields(items.map(it => ({ cx: cxOf(it), w: it.B.w, x: it.B.x, shown: it.B.shown, keys: it.who.map(c => c.key), held: !it.say && now > it.b.e,
-      drag: it.who.some(c => c.drag && c.drag.moved) })), W);
-    for (const i of yi) { items[i].B.live = false; PETS.yielded.add(items[i].id); }
-    if (yi.length) items = items.filter((it, i) => !yi.includes(i));
+    const out = new Set();
+    for (const its of lines(items)) {
+      if (its.length < 2) continue;
+      for (const i of petYields(its.map(it => ({ cx: cxOf(it), w: it.B.w, x: it.B.x, shown: it.B.shown, keys: it.who.map(c => c.key), held: !it.say && now > it.b.e,
+        drag: it.who.some(c => c.drag && c.drag.moved) })), W)) out.add(its[i]);
+    }
+    for (const it of out) { it.B.live = false; PETS.yielded.add(it.id); }
+    if (out.size) items = items.filter(it => !out.has(it));
   }
   if (items.length) {
-    const R = petRows(items.map(it => ({ cx: cxOf(it), w: it.B.w, tips: it.who.map(c => c.fx * W) })), W);
-    if (R.over) PETS.small = true; // (more than 3 rows: smaller text from the next frame)
-    // (one shown already: no lower than it is — ty, where it was put last frame)
-    const tops = petStack(items.map(it => {
-      const B = it.B, own = Math.min(...it.who.map(petHead)) - 18;
-      return { w: B.w, h: B.h, bottom: B.shown && B.ty != null ? Math.min(own, B.ty + B.h) : own };
-    }), R.x, R.row, PETL.gap);
-    items.forEach((it, i) => {
-      const B = it.B, y = Math.max(2, tops[i]);
-      const k = B.shown ? Math.min(1, dt * 16) : 1; // (one shown that moves up a row, or aside for another's tail, glides there)
-      B.ty = y;
-      B.x += (R.x[i] - B.x) * k;
-      B.y += (y - B.y) * k;
-      B.tips = it.who.map(c => ({ x: c.fx * W, y: petHead(c) - 8 }));
-    });
+    const placed = []; // (the bubbles of the lines below, where they're put)
+    // (the ones fading out where they were: a bubble that shows stays above them until they've gone — petStack)
+    const fading = [...PETS.bubs.values()].filter(B => !B.live && B.da > 0.001).map(B => ({ x: B.x, y: B.y, w: B.w, h: B.h, soft: true }));
+    for (const its of lines(items)) {
+      // (bottom: as low as a bubble may be, just over its singers' heads; ty: where it was put last frame — none: a new one)
+      const L = petLay(its.map(it => ({ cx: cxOf(it), w: it.B.w, h: it.B.h, tips: it.who.map(c => c.fx * W), bottom: Math.min(...it.who.map(petHead)) - 18,
+        y: it.B.ty == null ? null : it.B.y, shown: !!it.B.shown })), W, placed.concat(fading));
+      if (L.over) PETS.small = true; // (more than 3 rows: smaller text from the next frame)
+      its.forEach((it, i) => {
+        const B = it.B, y = Math.max(2, L.top[i]);
+        const k = B.shown ? Math.min(1, dt * 16) : 1; // (one that shows glides: up a row or aside to make room, back down once the room under it is free)
+        B.ty = y;
+        B.x += (L.x[i] - B.x) * k;
+        B.y += (y - B.y) * k;
+        B.tips = it.who.map(c => ({ x: c.fx * W, y: petHead(c) - 8 }));
+        placed.push({ x: L.x[i], y, w: B.w, h: B.h });
+      });
+    }
   }
   if (items.length < 2) PETS.small = false;
   const gone = [...PETS.bubs.values()].filter(B => !B.live);
@@ -10817,75 +11797,109 @@ function petBubSet(B, L, toks) {
   });
 }
 let petInkCx = null;
-/* The singers' rectangles (what's drawn of each, where it stands) for main's mouse test: when they
-   change, at most 10 times a second. Bubbles let the mouse through. */
+/* The singers' rectangles for main's mouse test (petGrab: what's drawn of each where it stands, and room
+   for where a moving one gets to meanwhile): when they change, at most 10 times a second. Every singer on
+   screen has one — an app from before the pets' settings came here (no PETS.cfg) takes 8 at most, and
+   none at all if it's sent more. Bubbles let the mouse through. */
+const petHop = () => Math.ceil(9 * PETS.G.scale); // (how far the idle bob and a note's hop lift a singer, at most)
 function petRects(t) {
   if (t - PETS.rectAt < 100) return;
-  const G = PETS.G, r = [];
+  const r = [], cap = PETS.cfg ? 128 : 8;
   for (const c of PETS.chars.values()) {
-    if (!petVis(c) || r.length >= 8) continue;
-    const left = c.fx * G.W - c.w / 2, top = G.feetY - c.h + c.y - (c.drag ? 8 : 0), b = c.box;
-    r.push({ x: Math.round(left + b.x0 * c.w), y: Math.round(top + b.y0 * c.h), w: Math.round((b.x1 - b.x0) * c.w), h: Math.round((b.y1 - b.y0) * c.h) });
+    if (!petVis(c) || c.fx == null || r.length >= cap) continue;
+    const g = petGrab(petBox(c), c.vx, c.vy, petHop());
+    if (g) r.push(g);
   }
   const sig = JSON.stringify(r);
   if (sig === PETS.rectSig) return;
   PETS.rectSig = sig; PETS.rectAt = t;
   mapApp.petRects(r);
 }
-/* ---- the mouse: drag a singer along the taskbar, or click it ---- */
-function petDown(c, e) {
-  if (e.button !== 0 || c.drag || !petVis(c)) return;
+/* ---- the mouse: drag a singer, or click it ---- */
+/* A press anywhere in the window (main only lets the mouse in over a singer): whose it is goes by where the
+   singers are drawn, not by which picture happens to lie on top (petPick). One singer is held at a time. */
+function petDown(e) {
+  if (e.button !== 0) return;
+  const h = PETS.held;
+  if (h && h.drag && h.drag.id !== e.pointerId) return; // (another finger meanwhile: it holds the one)
+  if (h && h.drag) petLetGo(h, false); // (the same pointer, down again: its letting go never got here)
+  PETS.held = null;
+  const on = [...PETS.chars.values()].filter(o => petVis(o) && o.fx != null);
+  // (a press just beside one is its too, as far as main lets the mouse in round it: a little, the room for its hop, and ahead of one that moves)
+  const round = o => 6 + petHop() + Math.min(PETL.reach, Math.hypot(o.vx, o.vy) * PETL.lag);
+  const c = on[petPick(on.map(o => ({ ...petBox(o, true), slop: round(o) })), e.clientX, e.clientY)];
+  if (!c) return;
   e.preventDefault();
   try { c.fig.setPointerCapture(e.pointerId); } catch (x) {}
-  c.drag = { id: e.pointerId, px: e.clientX, x0: c.fx * PETS.G.W, lastX: e.clientX, moved: false, dir: 1 };
+  c.drag = { id: e.pointerId, sx: e.screenX, sy: e.screenY, x0: c.fx * PETS.G.W, a0: c.alt, lastX: e.screenX, moved: false, dir: 1 };
+  PETS.held = c;
   c.el.classList.add('held'); // (on top of the others)
   mapApp.petDrag(true).catch(() => {}); // (main keeps the mouse even when a quick drag leaves the rectangle)
 }
-function petDragTo(c, e) {
-  const d = c.drag;
+/* It goes with the pointer: along the taskbar — and, where pets can go anywhere, up off it, as far as the whole
+   picture stays on the screen. By the pointer's place on the screen, not in the window: the window itself can
+   move under it (a setting changed meanwhile, another screen). */
+function petDragTo(e) {
+  const c = PETS.held, d = c && c.drag;
   if (!d || e.pointerId !== d.id) return;
-  const dx = e.clientX - d.px;
-  if (!d.moved && Math.abs(dx) < 4) return; // (less than that is a click)
-  d.moved = true;
-  if (e.clientX !== d.lastX) { d.dir = e.clientX > d.lastX ? 1 : -1; d.lastX = e.clientX; }
-  const W = PETS.G.W;
-  c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, d.x0 + dx)) / W; // (only sideways: the feet stay on the taskbar)
+  if (e.pointerType === 'mouse' && !(e.buttons & 1)) { petLetGo(c, false); return; } // (the button is up: its letting go never got here)
+  const G = PETS.G, W = G.W, dx = e.screenX - d.sx, dy = G.free ? e.screenY - d.sy : 0;
+  if (!d.moved && Math.hypot(dx, dy) < 4) return; // (less than that is a click)
+  if (!d.moved) { d.moved = true; c.on = null; c.ride = null; c.fall = null; c.seek = 0; } // (picked up: off whatever it stood on)
+  if (e.screenX !== d.lastX) { d.dir = e.screenX > d.lastX ? 1 : -1; d.lastX = e.screenX; }
+  c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, d.x0 + dx)) / W;
+  if (G.free) c.alt = Math.max(0, Math.min(petTop(c), d.a0 - dy));
 }
-function petUp(c, e) {
-  const d = c.drag;
-  if (!d || e.pointerId !== d.id) return;
+function petUp(e) {
+  const c = PETS.held, d = c && c.drag;
+  if (!d || e.pointerId !== d.id || (e.type === 'lostpointercapture' && e.target !== c.fig)) return; // (another singer's lost hold isn't this one's)
+  petLetGo(c, e.type === 'pointerup');
+}
+/* The held singer is let go. Dragged: it comes to stand — on the taskbar when it's near that, on a window's top
+   edge when one is just under it, else where it was left, in the air — and is there next time. Not moved, and
+   click: that was a click. */
+function petLetGo(c, click) {
+  const d = c.drag, t = performance.now(), G = PETS.G;
   c.drag = null;
+  if (PETS.held === c) PETS.held = null;
   c.el.classList.remove('held');
-  try { c.fig.releasePointerCapture(e.pointerId); } catch (x) {}
+  try { c.fig.releasePointerCapture(d.id); } catch (x) {}
   mapApp.petDrag(false).catch(() => {});
-  const t = performance.now();
-  if (d.moved) { // it lands, and stays there next time (as a share of the strip's width)
-    c.landAt = t;
-    PETS.pos[c.key] = Math.round(c.fx * 1e4) / 1e4;
-    const ks = Object.keys(PETS.pos);
-    for (const k of ks.slice(0, Math.max(0, ks.length - 200))) delete PETS.pos[k];
-    try { localStorage.setItem('map-pet.pos', JSON.stringify(PETS.pos)); } catch (x) {}
-  } else if (e.type === 'pointerup') { // a click: a big hop, and the song's name for 2 s
+  if (d.moved) {
+    const Ls = petLs(), x = c.fx * G.W, up = petHeldAlt(c), at = G.free ? petLandAt(x, up, G.feetY, Ls, petRoom(c)) : null;
+    if (at) c.alt = up; // (from where it was held, a little up…)
+    if (at && at.ledge != null) petStandOn(c, Ls[at.ledge], x, t); // …onto the window's top edge under it,
+    else if (at) c.fall = { v: 0 }; // or down onto the taskbar;
+    else c.landAt = t; // along the taskbar (the strip), or left in the air: it settles there with a small bounce
+    c.keep = true; // (where it comes to rest is what's remembered: petMove)
+    c.rest = t + 10000 + Math.random() * 6000; // (and it stays where it was put a good while before it wanders off again: petRoam)
+    petRemember(c);
+  } else if (click) { // a click: a big hop, and the song's name for 2 s
     c.clickAt = t;
+    c.rest = Math.max(c.rest, t + 4000); // (it stands for that, and a little longer)
     const name = PETS.song || (currentProject && currentProject.name) || '';
     if (name) c.say = { text: '♪ ' + name, until: t + 2000 };
   }
 }
-/* What's on the strip now, for tests (window.__pet): a plain copy. Places in strip DIP; rect = what
-   main hit-tests. */
+/* What's on the strip now, for tests (window.__pet): a plain copy. Places in the window's DIP; alt: how far its
+   standing line is above the taskbar line, on: the window it stands on (its id), rect: what's drawn of it where it
+   stands (main lets the mouse in over that: petGrab); walking: it's wandering just now, also: the other singers
+   whose lines it sings too (as few pets as possible). */
 function petSnapshot() {
   const G = PETS.G;
   return JSON.parse(JSON.stringify({
     characters: [...PETS.chars.values()].map(c => {
-      const x = c.fx == null ? null : c.fx * G.W, b = c.box;
-      return { key: c.key, label: c.label, x, y: G.feetY - c.h + c.y, w: c.w, h: c.h,
-        feet: G.feetY + c.y, up: c.up || 0, visible: c.state === 'rising' || c.state === 'in' || c.state === 'leaving', state: c.state, held: !!c.drag, singing: c.sing,
-        rect: x == null ? null : { x: x - c.w / 2 + b.x0 * c.w, y: G.feetY - c.h + c.y + b.y0 * c.h, w: (b.x1 - b.x0) * c.w, h: (b.y1 - b.y0) * c.h } };
+      const x = c.fx == null ? null : c.fx * G.W, b = c.box, top = petFeet(c) - c.h + c.y;
+      return { key: c.key, label: c.label, x, y: top, w: c.w, h: c.h,
+        feet: petFeet(c) + c.y, up: c.up || 0, alt: c.alt, on: c.on ? c.on.id : null, falling: !!c.fall,
+        walking: !!c.walk && !c.walk.done, also: (c.g && c.g.also) || [],
+        visible: c.state === 'rising' || c.state === 'in' || c.state === 'leaving', state: c.state, held: !!c.drag, singing: c.sing,
+        rect: x == null ? null : { x: x - c.w / 2 + b.x0 * c.w, y: top + b.y0 * c.h, w: (b.x1 - b.x0) * c.w, h: (b.y1 - b.y0) * c.h } };
     }),
     bubbles: [...PETS.bubs.values()].filter(B => B.live).map(B => ({ text: B.text, line: B.line, singers: B.who.map(c => c.key), labels: B.who.map(c => c.label),
       rect: { x: B.x, y: B.y, w: B.w, h: B.h }, alpha: B.a, tails: B.tips.length, say: B.say })),
     fading: [...PETS.bubs.values()].filter(B => !B.live).map(B => ({ text: B.text, singers: B.who.map(c => c.key), rect: { x: B.x, y: B.y, w: B.w, h: B.h } })),
-    geom: G, song: { id: PETS.songId, name: PETS.song, i: BGM.i }, time: PETS.now, playing: PETS.playing, small: PETS.small,
+    geom: G, cfg: PETS.cfg, ledges: PETS.ledges, song: { id: PETS.songId, name: PETS.song, i: BGM.i }, time: PETS.now, playing: PETS.playing, small: PETS.small,
   }));
 }
 
@@ -10911,6 +11925,21 @@ async function petCfgUI() {
   $('petLift').value = Math.round(c.lift * 100);
   $('petLiftTxt').textContent = Math.round(c.lift * 100) + '%';
   paintRange($('petLift'));
+  // (an app from before pets could leave the taskbar says nothing about these two: they aren't offered)
+  const can = typeof c.free === 'boolean' && typeof c.windows === 'boolean';
+  $('petFree').checked = can && c.free;
+  $('petWindows').checked = can && c.windows;
+  petFreeUI(can);
+  // (nor about wandering and "As few pets as possible", if it's from before those)
+  const more = typeof c.wander === 'boolean' && typeof c.merge === 'boolean';
+  $('petWander').checked = more && c.wander;
+  $('petMerge').checked = more && c.merge;
+  for (const id of ['petWanderRow', 'petWanderHint', 'petMergeRow', 'petMergeHint']) $(id).hidden = !more;
+}
+/* "Pets can stand on windows" is only offered while they can go anywhere. */
+function petFreeUI(can) {
+  $('petFreeRow').hidden = $('petFreeHint').hidden = !can;
+  $('petWinRow').hidden = $('petWinHint').hidden = !(can && $('petFree').checked);
 }
 let petCfgBusy = null, petCfgNext = null;
 function petCfgSet(c) { // (one at a time; the slider's newest value wins — it moves the pets live)
@@ -10925,14 +11954,24 @@ function petCfgSet(c) { // (one at a time; the slider's newest value wins — it
 $('petSize').onchange = e => petCfgSet({ size: e.target.value });
 $('petLift').oninput = e => { $('petLiftTxt').textContent = e.target.value + '%'; petCfgSet({ lift: e.target.value / 100 }); };
 $('petLift').ondblclick = e => { e.target.value = 50; e.target.dispatchEvent(new Event('input', { bubbles: true })); };
+$('petFree').onchange = e => { petCfgSet({ free: e.target.checked }); petFreeUI(true); };
+$('petWindows').onchange = e => petCfgSet({ windows: e.target.checked });
+$('petWander').onchange = e => petCfgSet({ wander: e.target.checked });
+$('petMerge').onchange = e => petCfgSet({ merge: e.target.checked });
 /* The Characters list follows the playlist. closed: the user closed it, which holds until the view next
-   opens (showView) · painted: what the list shows now, so that nothing's redrawn for nothing. */
-const PETR = { gen: 0, timer: 0, closed: false, job: null, painted: '' };
+   opens (showView) · painted: what the list shows now, so that nothing's redrawn for nothing · songs / rows:
+   what it shows (petSongs' songs; petRoster's rows, in the list's order) · sel: the cards selected, by
+   singer key, and anchor: the one last clicked (Shift+click selects from it) · busy: several pictures are
+   being set or removed · again / armT: Voicebank pictures is armed (pressed again in time, it replaces
+   these singers' pictures too) · delT: Remove pictures is armed. */
+const PETR = { gen: 0, timer: 0, closed: false, job: null, painted: '', songs: [], rows: [], sel: new Set(), anchor: '', busy: false, again: null, armT: 0, delT: 0 };
+const CAN_BANKS = CAN_PET && !!(mapApp.petBanks && mapApp.petBankPic); // (an older desktop app: no Voicebank pictures)
 $('petCharsBtn').onclick = () => { const open = $('petPanel').hidden; PETR.closed = !open; petCharsOpen(open); };
-/* Characters… opened (→ once its list is filled, up to date) or closed. */
+/* Characters… opened (→ once its list is filled, up to date) or closed (nothing stays selected out of sight). */
 function petCharsOpen(open) {
   $('petPanel').hidden = !open;
   $('petCharsBtn').setAttribute('aria-expanded', String(open));
+  if (!open) { petSelSet([]); petNote(''); }
   return open ? petPanel() : null;
 }
 /* The playlist or where it plays changed, or the view opened (both come through petWhereUI): the list
@@ -10965,29 +12004,44 @@ function petPanel() {
     petPaint(songs, r);
   })());
 }
-/* The list itself: a row per singer, then a line per song with no singers. */
+/* The list itself, by the playlist: under each song's name a row ("card") per singer first listed there, then
+   a line per song with no singers. The selection goes by singer: it stays through a repaint, and a singer
+   who left the list leaves it too. */
 function petPaint(songs, r) {
   const ul = $('petList'), R = Array.isArray(r) ? petRoster(songs, new Map(r.map(p => [p.key, p]))) : null, S = R ? petRosterSum(R) : { text: '', warn: false };
   petSay(S.text, S.warn, S.warn);
+  PETR.songs = songs; // (what Voicebank pictures goes by: the songs the list shows)
   const sig = JSON.stringify(R);
   if (sig === PETR.painted) return;
   PETR.painted = sig;
+  PETR.rows = R ? R.rows : [];
+  for (const k of [...PETR.sel]) if (!PETR.rows.some(c => c.key === k)) PETR.sel.delete(k);
   const line = t => { const li = document.createElement('li'); li.className = 'hint'; li.textContent = t; return li; };
-  const items = !R ? [line("Couldn't ask the app about the singers' pictures. Close this list and open it again to try once more.")]
-    : !songs.length ? [line('Add songs to the playlist above: their singers show up here.')]
-    : [...R.rows.map(petRow), ...R.lines.map(line)];
-  const had = ul.contains(document.activeElement) ? document.activeElement.closest('li').dataset.key : ''; // (a keyboard stays on the same singer)
+  const head = t => { const li = document.createElement('li'); li.className = 'pc-song'; li.textContent = t; return li; };
+  let items = [], at = 0;
+  if (!R) items = [line("Couldn't ask the app about the singers' pictures. Close this list and open it again to try once more.")];
+  else if (!songs.length) items = [line('Add songs to the playlist above: their singers show up here.')];
+  else {
+    for (const g of R.groups) { items.push(head(g.song), ...R.rows.slice(at, at + g.n).map(petRow)); at += g.n; }
+    items.push(...R.lines.map(line));
+  }
+  // (a keyboard stays on the same singer: on its card, or on its first button; without scrolling the list about)
+  const act = document.activeElement, on = ul.contains(act) ? act.closest('li[data-key]') : null, had = on ? on.dataset.key : '';
   ul.replaceChildren(...items);
-  const li = had && items.find(x => x.dataset.key === had), fb = li && li.querySelector('button');
-  if (fb) fb.focus();
+  const li = had && items.find(x => x.dataset.key === had), to = li && (on === act ? li : li.querySelector('button'));
+  if (to) to.focus({ preventScroll: true });
+  petSelPaint();
 }
 /* One singer's row: a frame for its picture, its name, the songs it sings in, whether it has a picture
-   (no picture: a warning; the Chorus has no warning of its own), Choose picture… or Change…, and Remove. */
+   (no picture: a warning; the Chorus has no warning of its own), Choose picture… or Change…, and Remove.
+   The row itself can be selected (see "several cards at once" below): its buttons stay buttons, and its
+   picture still asks for a file unless Ctrl or Shift is held. */
 function petRow(c) {
   const li = document.createElement('li'), th = document.createElement('div'), tx = document.createElement('div');
   const nm = document.createElement('div'), sg = document.createElement('div'), bd = document.createElement('div'), bt = document.createElement('div');
   const who = c.chorus ? 'the Chorus' : 'this singer';
   li.dataset.key = c.key;
+  li.tabIndex = 0;
   th.className = c.url ? 'pc-th on' : 'pc-th'; tx.className = 'pc-txt';
   if (c.url) { const im = new Image(); im.src = c.url; im.alt = ''; th.appendChild(im); } else th.innerHTML = PET_FRAME;
   nm.className = 'pc-name'; nm.textContent = c.label;
@@ -11000,7 +12054,7 @@ function petRow(c) {
   pick.setAttribute('aria-label', (c.url ? 'Change the picture for ' : 'Choose a picture for ') + c.label);
   if (c.url) btn('Remove', c.chorus ? "Remove this picture: the Chorus isn't shown any more" : "Remove this picture: the singer isn't shown any more", () => petCharDo('remove', c.key)).setAttribute('aria-label', 'Remove the picture for ' + c.label);
   th.title = (c.url ? 'Change the picture for ' : 'Choose a picture for ') + c.label;
-  th.onclick = () => { if (!pick.disabled) pick.click(); };
+  th.onclick = e => { if (!(e.ctrlKey || e.metaKey || e.shiftKey) && !pick.disabled) pick.click(); }; // (Ctrl or Shift held: the click selects the card)
   tx.append(nm, sg, bd, bt);
   li.append(th, tx);
   return li;
@@ -11022,12 +12076,17 @@ async function petUsePicture(key, file) {
   URL.revokeObjectURL(u);
   return { ok: !!ok, url: n ? n.pic.url : '' };
 }
+/* Choose picture… / Change… on a card: a file for that singer — or, when the card is one of several
+   selected, for all of those (several files may be chosen then: petGive). */
 function petChoose(key, b) {
-  const inp = $('petPick');
+  const inp = $('petPick'), keys = PETR.sel.size > 1 && PETR.sel.has(key) ? petSelKeys() : [key];
+  if (PETR.busy) return;
   inp.value = '';
+  inp.multiple = keys.length > 1;
   inp.onchange = async () => {
-    const f = inp.files && inp.files[0];
+    const files = [...(inp.files || [])], f = files[0];
     if (!f) return;
+    if (keys.length > 1) { petGive(keys, files); return; }
     if (b) { b.disabled = true; b.textContent = 'Getting it ready…'; }
     const r = await petUsePicture(key, f);
     if (r.url) URL.revokeObjectURL(r.url);
@@ -11036,6 +12095,215 @@ function petChoose(key, b) {
     petPanel();
   };
   inp.click();
+}
+
+/* ---- Characters…: several cards at once ----
+   A click on a card selects it (just that one); Ctrl+click adds it or takes it out; Shift+click selects
+   everything from the card last clicked to this one. A click anywhere else in the list, or Esc, selects
+   nothing. With the keyboard: Space on a card adds it or takes it out, ↑ / ↓ go from card to card,
+   Shift+↑ / ↓ select as they go, Ctrl+A selects all. As with every control here, a card that got its focus
+   from a click leaves Space and the plain arrows to the player (play / pause, volume). With more than one
+   selected, a bar over the list says how many, with Choose picture for all…, Remove pictures and Clear
+   selection, and Choose picture… / Change… on any selected card is for all of them. Voicebank pictures
+   works on the selected cards when there are any. */
+function petSelKeys() { return PETR.rows.map(c => c.key).filter(k => PETR.sel.has(k)); } // (in the list's order)
+function petSelSet(keys) {
+  PETR.sel = new Set(keys);
+  petBankDisarm(); // (what Voicebank pictures would replace next was about the list as it was)
+  petSelPaint();
+}
+/* The selection as it shows: each card's outline, the bar over the list, and what the buttons there say and
+   may do now (while pictures are being set or removed: nothing). */
+function petSelPaint() {
+  for (const li of $('petList').querySelectorAll('li[data-key]')) {
+    const on = PETR.sel.has(li.dataset.key);
+    li.classList.toggle('sel', on);
+    li.setAttribute('aria-selected', String(on));
+  }
+  const bar = $('petSelBar'), ul = $('petList'), box = ul.closest('main');
+  if (bar.hidden !== PETR.sel.size < 2) { // (the bar comes or goes: the cards stay where they are under the mouse, as far as the panel can scroll)
+    const y = ul.getBoundingClientRect().top;
+    bar.hidden = !bar.hidden;
+    if (box) box.scrollTop += ul.getBoundingClientRect().top - y;
+  }
+  $('petSelN').textContent = PETR.sel.size + ' selected';
+  $('petSelPick').disabled = PETR.busy;
+  petSelDisarm();
+  $('petSelDel').disabled = PETR.busy || !PETR.rows.some(c => c.url && PETR.sel.has(c.key));
+  petBankLabel();
+}
+/* A click on the card of singer `key`, with the keys held as e has them (petSelNext says what that selects). */
+function petSelClick(key, e) {
+  const n = petSelNext(PETR.rows.map(c => c.key), [...PETR.sel], PETR.anchor, key, !!(e.ctrlKey || e.metaKey), !!e.shiftKey);
+  PETR.anchor = n.anchor;
+  petSelSet(n.sel);
+}
+$('petList').onclick = e => {
+  const li = e.target.closest('li[data-key]'), held = e.ctrlKey || e.metaKey || e.shiftKey;
+  if (!li) { petSelSet([]); return; } // (a song's name, a line, empty space)
+  if (e.target.closest('button') || (!held && e.target.closest('.pc-th'))) return; // (its buttons stay buttons; its picture asks for a file)
+  petSelClick(li.dataset.key, e);
+};
+$('petPanel').addEventListener('keydown', e => {
+  const li = e.target.closest('li[data-key]'), k = e.key, cmd = e.ctrlKey || e.metaKey;
+  if (e.altKey) return;
+  if (k === 'Escape' && !cmd && PETR.sel.size) petSelSet([]);
+  else if (!li || e.target !== li) return; // (the rest are a card's own keys: not its buttons')
+  else if (cmd && !e.shiftKey && k.toLowerCase() === 'a') petSelSet(PETR.rows.map(c => c.key));
+  else if (!cmd && (k === 'ArrowDown' || k === 'ArrowUp') && (e.shiftKey || !li._byPointer)) {
+    const cards = [...$('petList').querySelectorAll('li[data-key]')], to = cards[cards.indexOf(li) + (k === 'ArrowDown' ? 1 : -1)];
+    if (to) {
+      to.focus();
+      if (e.shiftKey) {
+        if (!PETR.rows.some(c => c.key === PETR.anchor)) PETR.anchor = li.dataset.key; // (nothing clicked yet: from the card it started on)
+        petSelClick(to.dataset.key, { shiftKey: true });
+      }
+    }
+  } else if (!cmd && !e.shiftKey && k === ' ' && !li._byPointer) petSelClick(li.dataset.key, { ctrlKey: true });
+  else return;
+  e.preventDefault();
+  e.stopPropagation(); // (the player's own keys — Space, the arrows, Esc — don't act as well)
+});
+$('petSelNone').onclick = () => petSelSet([]);
+$('petSelPick').onclick = () => { const keys = petSelKeys(); if (keys.length) petChoose(keys[0], null); };
+/* Remove pictures (the bar): several pictures gone at one click, so the first click arms it, as Reset
+   everything's does; then each goes as one Remove does (petCharDo). */
+function petSelDisarm() {
+  clearTimeout(PETR.delT);
+  $('petSelDel').classList.remove('armed');
+  $('petSelDel').textContent = 'Remove pictures';
+}
+$('petSelDel').onclick = async () => {
+  const b = $('petSelDel');
+  if (PETR.busy) return;
+  if (!b.classList.contains('armed')) {
+    b.classList.add('armed');
+    b.textContent = 'Click again to confirm';
+    PETR.delT = setTimeout(petSelDisarm, 3000);
+    return;
+  }
+  const keys = PETR.rows.filter(c => c.url && PETR.sel.has(c.key)).map(c => c.key);
+  let n = 0;
+  petBusy(true);
+  for (const key of keys) {
+    try { mapApp.petPics([{ key }]).catch(() => {}); if (await mapApp.petChar('remove', key)) n++; } catch (e) {} // (met just now, as for one Remove)
+  }
+  petBusy(false);
+  petNote(petGoneText(n, keys.length));
+  await petPanel();
+};
+$('petSelDel').addEventListener('blur', petSelDisarm);
+/* The line over the list for what several pictures at once came to, and how far they are. */
+function petNote(text) {
+  const p = $('petNote');
+  p.textContent = text;
+  p.hidden = !text;
+}
+/* Several pictures are being set or removed: the buttons over the list wait until it's done. */
+function petBusy(on) {
+  PETR.busy = on;
+  petSelPaint();
+}
+/* The list again with the pictures the app has now, for the songs it shows (between two of many pictures:
+   no song is looked up again). A reading of the playlist started meanwhile paints by itself. */
+async function petRepaint() {
+  const songs = PETR.songs, gen = PETR.gen, r = await petKnownPics(songs);
+  if (Array.isArray(r) && gen === PETR.gen && songs === PETR.songs) petPaint(songs, r);
+}
+/* Several selected singers' pictures in one go. One file: each of them gets it. Several files: they're
+   handed out down the list, one each, in the order of their names (petHandOut); singers or files left
+   over stay as they are, and the line over the list says so. Each goes the way one does (petUsePicture). */
+async function petGive(keys, files) {
+  if (PETR.busy) return;
+  const jobs = petHandOut(keys, files);
+  let ok = 0, bad = 0;
+  petBusy(true);
+  for (let i = 0; i < jobs.length; i++) {
+    petNote('Getting the pictures ready… (' + (i + 1) + ' / ' + jobs.length + ')');
+    const r = await petUsePicture(jobs[i][0], jobs[i][1]);
+    if (r.url) URL.revokeObjectURL(r.url);
+    if (r.ok) { ok++; await petRepaint(); } else bad++;
+    if (!ok && files.length === 1) break; // (the one file can't be used: not for the others either)
+  }
+  petBusy(false);
+  petNote(petGiveText({ ok, bad, singers: keys.length, files: files.length }));
+  await petPanel();
+}
+
+/* ---- Characters…: Voicebank pictures ----
+   Each singer gets the picture that comes with its voicebank, where that voicebank is installed on this
+   computer and has one (the app looks: petbanks.js — which singers first, then each picture's bytes, which
+   go the way a file the user chose does: petUsePicture). The first press: every singer without a picture.
+   Singers who have one keep it, and the button is armed for a few seconds: pressed again, it replaces
+   those too. With cards selected it works on those only, replacing. The line over the list says how far
+   it is and what it came to; the list repaints as pictures arrive. */
+function petBankLabel() {
+  const b = $('petBankBtn'), n = PETR.sel.size, again = PETR.again;
+  b.classList.toggle('armed', !!again);
+  b.textContent = again ? 'Press again to replace ' + again.length : n ? 'Voicebank pictures for ' + n + ' selected' : 'Voicebank pictures';
+  b.disabled = PETR.busy || !PETR.rows.some(c => !c.chorus);
+}
+function petBankDisarm() {
+  clearTimeout(PETR.armT);
+  PETR.again = null;
+  petBankLabel();
+}
+/* What the app finds for these singers (petBankWho's) among the voicebanks installed here, 300 at a time,
+   what it takes. → { banks: how many voicebanks it knows of, by: key → { bank, pic: 'full' | 'icon' | '' } },
+   null if it couldn't look. */
+async function petBankFind(list) {
+  const by = new Map();
+  let banks = 0;
+  for (let i = 0; i < list.length; i += 300) {
+    const r = await mapApp.petBanks(list.slice(i, i + 300));
+    if (!r || !Array.isArray(r.singers)) return null;
+    banks = Math.max(banks, +r.banks || 0);
+    for (const s of r.singers) if (s && typeof s.key === 'string') by.set(s.key, s);
+  }
+  return { banks, by };
+}
+/* One singer's voicebank picture as a file, just as it is in the voicebank (null: none, or it can't be read). */
+async function petBankFile(who) {
+  let r = null;
+  try { r = await mapApp.petBankPic(who); } catch (e) {}
+  if (!r || !r.bytes) return null;
+  try { return new File([r.bytes], String(r.name || 'voicebank'), { type: String(r.mime || '') }); } catch (e) { return null; }
+}
+async function petBankRun() {
+  if (PETR.busy || !CAN_BANKS) return;
+  const again = PETR.again, rows = PETR.rows.slice(), sel = new Set(PETR.sel), who = petBankWho(PETR.songs);
+  petBankDisarm();
+  if (!who.size) return;
+  petBusy(true);
+  petNote('Looking for voicebanks…');
+  let found = null;
+  try { found = await petBankFind([...who.values()]); } catch (e) {}
+  if (!found || !found.banks) {
+    petBusy(false);
+    petNote(found ? 'No voicebanks found on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona).' : "Couldn't look for voicebanks on this computer.");
+    return;
+  }
+  // who gets one (petBankPlan): the selected cards; or, pressed again, the singers who kept theirs; else every singer without a picture
+  const plan = petBankPlan(rows, sel, again, key => { const f = found.by.get(key); return !!(f && f.pic); });
+  let set = 0, bad = 0;
+  for (let i = 0; i < plan.todo.length; i++) {
+    petNote('Setting pictures from voicebanks… (' + (i + 1) + ' / ' + plan.todo.length + ')');
+    const key = plan.todo[i], f = await petBankFile(who.get(key)), r = f ? await petUsePicture(key, f) : { ok: false, url: '' };
+    if (r.url) URL.revokeObjectURL(r.url);
+    if (r.ok) { set++; await petRepaint(); } else bad++;
+  }
+  petBusy(false);
+  petNote(petBankText({ set, bad, none: plan.none, kept: plan.kept.length }));
+  if (plan.kept.length) { // (armed: the same button, pressed again within a few seconds, replaces those too)
+    PETR.again = plan.kept;
+    PETR.armT = setTimeout(petBankDisarm, 8000);
+    petBankLabel();
+  }
+  await petPanel();
+}
+if (CAN_BANKS) {
+  $('petTools').hidden = $('petBankHint').hidden = false;
+  $('petBankBtn').onclick = petBankRun;
 }
 
 /* ---- Desktop pet: the singers of the songs in the playlist ----
@@ -11051,7 +12319,8 @@ async function petReadScore(id, keys) {
   if (files.length) try { sc = await parseScoreFile(files, []); } catch (e) {}
   if (!sc || !sc.notes || !sc.notes.length) return { cast: [], why: 'bad' };
   const cast = sc.lyr ? petCast(sc, id) : [];
-  return { cast: cast.map(g => ({ key: g.key, label: g.label, eng: g.eng, ...(g.chorus ? { chorus: true } : {}) })), why: cast.length ? '' : 'quiet' };
+  // (id and alt: the score's own id for the singer and its other spellings — what Voicebank pictures finds its voicebank by)
+  return { cast: cast.map(g => ({ key: g.key, label: g.label, eng: g.eng, ...(g.id ? { id: g.id } : {}), ...(g.alt && g.alt.length ? { alt: g.alt.slice(0, 8) } : {}), ...(g.chorus ? { chorus: true } : {}) })), why: cast.length ? '' : 'quiet' };
 }
 /* One song → { name, cast, why (PET_WHY) }, null if it's been deleted. reading(): called when its score
    really has to be read (not when it's known already). */
@@ -11114,7 +12383,7 @@ async function petAskFirst(ids) {
     btn.textContent = was;
     if (!Array.isArray(r)) return true; // (the app couldn't say: they start, with whoever has a picture)
     const known = new Map(r.map(p => [p.key, p])), list = petAskList(songs, known), nobody = petNobody(songs, known);
-    if (list.length) return await petAskDialog(list, !nobody);
+    if (list.length) return await petAskDialog(list, !nobody, petBankWho(songs));
     if (!nobody) return true;
     say(nobody, 4000);
     await petCharsOpen(true); // (Characters…, up to date: Choose picture… is there)
@@ -11128,9 +12397,11 @@ async function petAskFirst(ids) {
 }
 const PET_FRAME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20.2c.9-3.7 3.7-5.7 7.2-5.7s6.3 2 7.2 5.7"/></svg>';
 /* The dialog itself: list [{ key, label, songs }]; others: a singer in the playlist not in it has a picture
-   already (Start may go with none chosen here) → Promise<true: Start | false: Cancel>. */
-function petAskDialog(list, others) {
-  const d = $('petPicDlg'), ul = $('petPicList'), inp = $('petPicFile'), go = $('petPicGo'), no = $('petPicNo'), none = $('petPicNone');
+   already (Start may go with none chosen here); who: what the scores say about each singer (petBankWho), for
+   its Voicebank pictures button — each singer here still without a picture gets the one that comes with
+   its voicebank, where there is one, just as if it had been chosen → Promise<true: Start | false: Cancel>. */
+function petAskDialog(list, others, who) {
+  const d = $('petPicDlg'), ul = $('petPicList'), inp = $('petPicFile'), go = $('petPicGo'), no = $('petPicNo'), none = $('petPicNone'), bank = $('petPicBank');
   const blobs = [], pending = new Set();
   let closed = false;
   const pick = row => {
@@ -11183,12 +12454,33 @@ function petAskDialog(list, others) {
   ul.scrollTop = 0;
   none.hidden = true;
   go.disabled = no.disabled = false;
+  bank.hidden = !(CAN_BANKS && who);
+  bank.disabled = false;
+  bank.textContent = 'Voicebank pictures';
+  bank.onclick = async () => {
+    bank.disabled = true;
+    bank.textContent = 'Looking for voicebanks…';
+    let found = null;
+    try { found = await petBankFind(rows.map(r => who.get(r.s.key)).filter(Boolean)); } catch (e) {}
+    for (const row of rows) {
+      if (closed) return;
+      if (row.has || row.b.disabled) continue; // (it has one by now, or one is being made ready)
+      const f = found && found.by.get(row.s.key), file = f && f.pic ? await petBankFile(who.get(row.s.key)) : null;
+      if (closed) return;
+      if (row.has || row.b.disabled) continue;
+      if (file) await use(row, file);
+      else { row.st.className = 'pp-state'; row.st.textContent = !found ? "Couldn't look for voicebanks" : found.banks ? 'No voicebank picture found' : 'No voicebanks found on this computer'; }
+    }
+    if (closed) return;
+    bank.disabled = false;
+    bank.textContent = 'Voicebank pictures';
+  };
   return new Promise(res => {
     let done = false;
     const end = v => {
       if (done) return;
       done = closed = true;
-      go.onclick = no.onclick = d.oncancel = d.onclose = inp.onchange = null;
+      go.onclick = no.onclick = d.oncancel = d.onclose = inp.onchange = bank.onclick = null;
       if (d.open) d.close();
       ul.replaceChildren();
       for (const u of blobs) URL.revokeObjectURL(u);
@@ -11228,6 +12520,24 @@ const PACK_MAGIC = 'MAPPROJ1';
 const isProjectFile = f => /\.mapproj$/i.test(f.name || '');
 const newId = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 const safeName = n => String(n || 'Project').replace(/[\\/:*?"<>|\u0000-\u001f]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80) || 'Project';
+/* Projects and their files (recs: key → { file }, as the store hands them out) put together as one .mapproj, handed to the
+   browser to save, and said: what was exported, how big it is, how many of its files weren't there. → the file. */
+function packProjects(ps, recs) {
+  const keys = [...new Set(ps.flatMap(projKeys))];
+  const files = keys.filter(k => recs.get(k)).map(k => recs.get(k).file);
+  const desc = { format: 'Multi Audio Player project', version: 1, exported: new Date().toISOString(),
+    projects: ps.map(p => ({ ...p })),
+    files: files.map(f => ({ key: fileKey(f), name: f.name, type: f.type || '', lastModified: f.lastModified, size: f.size })) };
+  const json = new TextEncoder().encode(JSON.stringify(desc)), head = new Uint8Array(12);
+  head.set(new TextEncoder().encode(PACK_MAGIC));
+  new DataView(head.buffer).setUint32(8, json.length, true);
+  const blob = new Blob([head, json, ...files], { type: 'application/x-mapproj' }); // (the files aren't copied)
+  const name = (ps.length === 1 ? safeName(ps[0].name) : 'Multi Audio Player projects ' + new Date().toISOString().slice(0, 10)) + '.mapproj';
+  const missing = ps.reduce((n, p) => n + projKeys(p).filter(k => !recs.get(k)).length, 0);
+  saveBlob(blob, name);
+  say('Exported ' + (ps.length === 1 ? '“' + ps[0].name + '”' : ps.length + ' projects') + ' · ' + fmtBytes(blob.size) + (missing ? ' · ' + missing + ' file' + (missing > 1 ? 's' : '') + ' missing' : ''), 3000);
+  return blob;
+}
 async function exportProjects(ids) {
   dataBusy++;
   try {
@@ -11235,21 +12545,26 @@ async function exportProjects(ids) {
     const ps = ids ? all.filter(p => ids.includes(p.id)) : all;
     if (!ps.length) { say('No projects to export yet'); return; }
     say('Exporting…');
-    const keys = [...new Set(ps.flatMap(projKeys))];
-    const recs = await getFiles(keys);
-    const files = keys.filter(k => recs.get(k)).map(k => recs.get(k).file);
-    const desc = { format: 'Multi Audio Player project', version: 1, exported: new Date().toISOString(),
-      projects: ps.map(p => ({ ...p })),
-      files: files.map(f => ({ key: fileKey(f), name: f.name, type: f.type || '', lastModified: f.lastModified, size: f.size })) };
-    const json = new TextEncoder().encode(JSON.stringify(desc)), head = new Uint8Array(12);
-    head.set(new TextEncoder().encode(PACK_MAGIC));
-    new DataView(head.buffer).setUint32(8, json.length, true);
-    const blob = new Blob([head, json, ...files], { type: 'application/x-mapproj' }); // (the files aren't copied)
-    const name = (ps.length === 1 ? safeName(ps[0].name) : 'Multi Audio Player projects ' + new Date().toISOString().slice(0, 10)) + '.mapproj';
-    const missing = ps.reduce((n, p) => n + projKeys(p).filter(k => !recs.get(k)).length, 0);
-    saveBlob(blob, name);
-    say('Exported ' + (ps.length === 1 ? '“' + ps[0].name + '”' : ps.length + ' projects') + ' · ' + fmtBytes(blob.size) + (missing ? ' · ' + missing + ' file' + (missing > 1 ? 's' : '') + ' missing' : ''), 3000);
-    return blob;
+    return packProjects(ps, await getFiles([...new Set(ps.flatMap(projKeys))]));
+  } catch (e) { say("Couldn't export"); }
+  finally { dataBusy--; }
+}
+/* Export current…: what's loaded right now as a .mapproj — the record Save would store, with its files as they are at this
+   moment, packed exactly as Export packs a saved project. Nothing is stored and no saved project is touched. Its name is the
+   one Save would use — what's in the name box (the open project's name, unless another has been typed there) — or else
+   the open project's, or the first file's. A file that can't be read any more (moved or changed on disk since it was added)
+   is left out and counted as missing, as a saved project's lost file is. */
+async function exportCurrent() {
+  if (nothingLoaded()) { say('Nothing to export yet'); return; }
+  if (isLoading()) { say('You can export once everything has loaded'); return; }
+  dataBusy++;
+  try {
+    const first = tracks[0] ? tracks[0]._name : bgFile ? bgFile.name : svp.srcFiles && svp.srcFiles[0] ? svp.srcFiles[0].name : svp.fileName;
+    const name = (projName.value.trim() || (currentProject && currentProject.name) || String(first || '').replace(/\.[^.]+$/, '') || 'Project').slice(0, 80);
+    const now = Date.now(), { p, files } = projectOfNow({ id: currentProject ? currentProject.id : newId(), name, created: now, updated: now });
+    say('Exporting…');
+    const ok = await Promise.all(files.map(f => f.file.slice(0, 1).arrayBuffer().then(() => true, () => false)));
+    return packProjects([p], new Map(files.filter((f, i) => ok[i]).map(f => [f.key, f])));
   } catch (e) { say("Couldn't export"); }
   finally { dataBusy--; }
 }
@@ -11325,6 +12640,7 @@ async function importProjectsNow(list, openOne) {
 $('projImport').onclick = () => $('projImportFile').click();
 $('projImportFile').onchange = e => { const fs = [...e.target.files]; e.target.value = ''; if (fs.length) importProjects(fs); };
 $('projExportAll').onclick = () => exportProjects(null);
+$('projExportNow').onclick = () => exportCurrent(); // (off while there's nothing loaded, or it's still loading: filesUI)
 if (IS_IOS) $('projImportFile').removeAttribute('accept'); // (iOS greys out types it doesn't know)
 
 /* ---- Edit a saved project without opening it (no audio is read): its tracks' colours, volumes,
@@ -11524,12 +12840,33 @@ function saveProject() {
   saveQ = run.catch(() => {});
   return run;
 }
+/* What's loaded right now as a project record — the tracks with their mix, the video, the score, every setting and the
+   speed / volume / visuals / tabs state — with its files as the store keeps them ({ key, name, file }, each once). head:
+   its id, name, created and updated. Save stores it; Export current… packs it and stores nothing. */
+function projectOfNow(head) {
+  const files = new Map();
+  const keep = f => { const k = fileKey(f); files.set(k, { key: k, name: f.name, file: f }); return k; };
+  const p = {
+    ...head,
+    tracks: tracks.map(a => ({ key: keep(a._file), name: a._name, vol: a._vol, loop: a.loop, muted: !!a._muted,
+                               show: a._show, color: a._color, custom: !!a._custom, ...(a._spd !== 1 ? { spd: a._spd } : {}), ...(a._shift ? { shift: a._shift } : {}) })),
+    video: bgFile ? keep(bgFile) : null,
+    videoName: bgFile ? bgFile.name : null,
+    score: svp && svp.srcFile ? keep(svp.srcFile) : null,
+    scores: svp && svp.srcFiles ? svp.srcFiles.map(keep) : null, // .ust: every part's file
+    scoreName: svp ? svp.fileName : null,
+    scoreNames: svp && svp.srcFiles ? svp.srcFiles.map(f => f.name) : null,
+    settings: collectSettings(),
+    state: { rate, masterVol, masterMuted, noVisuals: visToggle.on, barHidden: view.hidden,
+             noTabs: document.body.classList.contains('no-tabs'), ...(svp && svp.raw && svp.raw.auto ? { tpqAuto: svp.raw.auto } : {}) },
+  };
+  p.bytes = [...files.values()].reduce((s, f) => s + f.file.size, 0);
+  return { p, files: [...files.values()] };
+}
 async function saveProjectNow() {
   if (!tracks.length && !bgFile && !svp) { say('Nothing to save yet'); return; }
   const typed = projName.value.trim();
   let name = typed || 'Project ' + new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-  const files = new Map();
-  const keep = f => { const k = fileKey(f); files.set(k, { key: k, name: f.name, file: f }); return k; };
   try {
     const all = await listProjects(), named = n => all.filter(p => p.name.trim().toLowerCase() === n.toLowerCase());
     let existing = null;
@@ -11541,27 +12878,15 @@ async function saveProjectNow() {
       for (let k = 2; named(name).length; k++) name = base + ' (' + k + ')';
     }
     const now = Date.now();
-    const p = {
+    const { p, files } = projectOfNow({
       id: existing ? existing.id : (window.crypto && crypto.randomUUID ? crypto.randomUUID() : now.toString(36) + Math.random().toString(36).slice(2)),
       name,
       created: existing ? existing.created : now,
       updated: now,
-      tracks: tracks.map(a => ({ key: keep(a._file), name: a._name, vol: a._vol, loop: a.loop, muted: !!a._muted,
-                                 show: a._show, color: a._color, custom: !!a._custom, ...(a._spd !== 1 ? { spd: a._spd } : {}), ...(a._shift ? { shift: a._shift } : {}) })),
-      video: bgFile ? keep(bgFile) : null,
-      videoName: bgFile ? bgFile.name : null,
-      score: svp && svp.srcFile ? keep(svp.srcFile) : null,
-      scores: svp && svp.srcFiles ? svp.srcFiles.map(keep) : null, // .ust: every part's file
-      scoreName: svp ? svp.fileName : null,
-      scoreNames: svp && svp.srcFiles ? svp.srcFiles.map(f => f.name) : null,
-      settings: collectSettings(),
-      state: { rate, masterVol, masterMuted, noVisuals: visToggle.on, barHidden: view.hidden,
-               noTabs: document.body.classList.contains('no-tabs'), ...(svp && svp.raw && svp.raw.auto ? { tpqAuto: svp.raw.auto } : {}) },
-    };
-    p.bytes = [...files.values()].reduce((s, f) => s + f.file.size, 0);
+    });
     say('Saving…');
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
-    await putProject(p, [...files.values()]);
+    await putProject(p, files);
     currentProject = { id: p.id, name };
     projName.value = name;
     renderProjects();
@@ -11639,6 +12964,7 @@ const ICON = {
 let renderSeq = 0;
 async function renderProjects() {
   const seq = ++renderSeq;
+  filesUI(); // (Export current… is right as the view opens)
   let ps;
   try { ps = await listProjects(); }
   catch (e) {
@@ -11945,8 +13271,58 @@ function syncSetTrack(a, s) {
    while this view or Settings (the summary line) is open; the playhead runs only while the view is open. So when neither is,
    none of this runs at all.
    ===================================================================== */
-const SY = { open: false, things: [], tracks: [], lone: null, sig: null, raf: 0, ro: null, w: 0, lo: 0, hi: 1, ticks: '', headX: NaN, drag: null, armT: 0 };
-const SY_NUDGES = [-1, -0.1, -0.01, 0.01, 0.1, 1];
+const SY = { open: false, things: [], tracks: [], lone: null, sig: null, raf: 0, ro: null, w: 0, lo: 0, hi: 1, ticks: '', headX: NaN, drag: null, hold: null, armT: 0 };
+/* @pure:sync begin */
+/* A row's − and + move its number by one step: a second, a tenth or a hundredth, the same for every row (it's how you're
+   working just now, not something a track has). What's kept of it is text, and anything that's none of the three is a second. */
+const SY_STEPS = [1, 0.1, 0.01];
+const syStepOf = v => (SY_STEPS.includes(+v) ? +v : 1);
+const syStepNext = (v, back) => SY_STEPS[(SY_STEPS.indexOf(syStepOf(v)) + (back ? SY_STEPS.length - 1 : 1)) % SY_STEPS.length]; // (the next smaller, and from the smallest round to a second again; back: the other way)
+const syNudged = (v, dir, step) => syncRound(v + dir * step); // (dir: −1 or 1. To the millisecond, as each of the six buttons these took over from did: −1, −0.1, −0.01, +0.01, +0.1, +1)
+/* @pure:sync end */
+/* The step is kept in Settings' hidden block, as this device's other two are: so it's remembered, stays out of projects, and
+   Reset everything puts it back to a second. Any row's step button changes it, for all of them. */
+const syStepSel = $('syncStep'), syStep = () => syStepOf(syStepSel.value);
+function syStepSet(v) {
+  syStepSel.value = v;
+  syStepSel.dispatchEvent(new Event('change', { bubbles: true })); // (it bubbles: Settings remembers what changes in it)
+}
+/* What every row's three buttons show and say, for the step as it is now. */
+function syStepPaint() {
+  const s = syStep();
+  for (const o of SY.things) {
+    if (o.stepNow === s) continue;
+    o.stepNow = s;
+    const [step, minus, plus] = o.nudges, [less, more] = o.key === 'cut' ? ['less', 'more'] : ['earlier', 'later'];
+    step.textContent = s;
+    step.title = 'Step: ' + s + ' s. Click to change';
+    step.setAttribute('aria-label', step.title);
+    minus.title = s + ' s ' + less;
+    plus.title = s + ' s ' + more;
+    minus.setAttribute('aria-label', o.name + ' ' + minus.title);
+    plus.setAttribute('aria-label', o.name + ' ' + plus.title);
+  }
+}
+syStepSel.addEventListener('change', syStepPaint);
+/* − or + held down goes on by itself after a moment, ten times a second (a dragged bar tells the engine a dozen times), until
+   it's let go. It can't run away: it stops as well when the pointer slides off the button, the window loses focus or is put
+   away, the view closes, the rows are built again, files start loading, or a dialog comes up over it all. */
+function syHoldStop() {
+  if (!SY.hold) return;
+  clearTimeout(SY.hold.t);
+  SY.hold = null;
+}
+function syHoldStep() {
+  const h = SY.hold;
+  if (!h) return;
+  if (!SY.open || !h.b.isConnected || isLoading() || document.querySelector('dialog[open]')) { syHoldStop(); return; }
+  h.b._ran = true; // (the click that ends this press has had its steps)
+  h.go();
+  if (SY.hold === h) h.t = setTimeout(syHoldStep, 100);
+}
+for (const k of ['pointerup', 'pointercancel']) addEventListener(k, e => { if (SY.hold && e.pointerId === SY.hold.id) syHoldStop(); }, true); // (wherever it's let go, over the button or not)
+addEventListener('blur', syHoldStop);
+document.addEventListener('visibilitychange', () => { if (document.hidden) syHoldStop(); });
 const syFmt = v => { const a = Math.abs(v); return a.toFixed(Math.abs(a * 100 - Math.round(a * 100)) > 1e-6 ? 3 : 2); }; // (2.00, or 0.005 when it takes that)
 const syOff = v => (v < 0 ? '−' : '+') + syFmt(v) + ' s';
 const timeWords = v => (Number.isInteger(v) ? fmt(v) : syFmt(v) + ' s'); // (whole seconds on the clock's way, 0:04; part of a second as it is, 0.50 s: fmt alone would read it early)
@@ -11980,16 +13356,17 @@ function sySummary() {
   if (st.O) bits.push('Score ' + syOff(st.O));
   $('syncSum').textContent = (bits.join(' · ') || 'Everything starts together') + (spk ? ' · Speaker delay ' + spk + ' ms' : '');
 }
-/* A row (name, number, ↺, nudges, and what it means) and, for what has a place on the timeline, its bar. */
+/* A row (name, number, ↺, the step with its − and +, and what it means) and, for what has a place on the timeline, its bar. */
 function syThing(o) {
   const row = document.createElement('div');
   row.className = 'sy-row' + (o.a ? ' one' : '');
   row.dataset.sy = o.key;
   row.innerHTML = '<div class="sy-top"><span class="sy-name"></span><input type="number" step="0.001" autocomplete="off"><span class="sy-unit">s</span>' +
-    '<button type="button" class="sy-back" title="Back to 0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div><div class="sy-nudges"></div>';
+    '<button type="button" class="sy-back" title="Back to 0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button></div>' +
+    '<div class="sy-nudges"><button type="button" class="sy-step" data-a="step"></button><button type="button" data-a="minus">−</button><button type="button" data-a="plus">+</button></div>';
   o.nameEl = row.querySelector('.sy-name');
   o.nameEl.title = o.nameEl.textContent = o.name;
-  const inp = o.inp = row.querySelector('input'), back = o.back = row.querySelector('.sy-back'), nudges = row.querySelector('.sy-nudges');
+  const inp = o.inp = row.querySelector('input'), back = o.back = row.querySelector('.sy-back'), [step, minus, plus] = o.nudges = [...row.querySelectorAll('.sy-nudges button')]; // (what they show and say: syStepPaint)
   inp.setAttribute('aria-label', o.name + ', in seconds');
   back.setAttribute('aria-label', o.name + ' back to 0');
   /* While you type, the number stays yours; it counts from Enter or leaving the field. An empty field changes nothing. */
@@ -11998,21 +13375,35 @@ function syThing(o) {
     if (inp.value !== '') o.set(+inp.value);
     syPaint();
   };
+  /* One step earlier (−1) or later (1); for the cut, less or more of it. A number still being typed counts first. */
+  const nudge = dir => { if (inp._typing) commit(); o.set(syNudged(o.get(), dir, syStep())); };
   inp.addEventListener('input', () => { inp._typing = true; });
   inp.addEventListener('change', commit);
   inp.addEventListener('blur', () => { if (inp._typing) commit(); });
   inp.addEventListener('keydown', e => {
     if (e.key === 'Enter') { e.preventDefault(); commit(); }
     else if (e.key === 'Escape') { e.stopPropagation(); inp._typing = false; syPaint(); inp.blur(); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); nudge(e.key === 'ArrowUp' ? 1 : -1); } // (the field's own arrow keys went by its thousandth: now they go by the step, as + and − do)
   });
   back.onclick = () => { inp._typing = false; o.set(0); };
-  for (const d of SY_NUDGES) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.textContent = (d < 0 ? '−' : '+') + Math.abs(d);
-    b.setAttribute('aria-label', o.name + ' ' + Math.abs(d) + ' s ' + (d < 0 ? 'earlier' : 'later'));
-    b.onclick = () => { if (inp._typing) commit(); o.set(syncRound(o.get() + d)); };
-    nudges.appendChild(b);
+  /* The step's button: the next smaller one, and round again; with Shift, or a right click, the other way. */
+  step.onclick = e => syStepSet(syStepNext(syStep(), e.shiftKey));
+  step.oncontextmenu = e => { e.preventDefault(); if (e.pointerType !== 'touch') syStepSet(syStepNext(syStep(), true)); }; // (a finger held on it is a right click to some browsers: that's none)
+  for (const [b, dir] of [[minus, -1], [plus, 1]]) {
+    b.onclick = e => { const ran = b._ran; b._ran = false; if (!ran || !e.detail) nudge(dir); }; // (a press that went on by itself ends in a click too: that one has had its steps. A key's click, detail 0, always counts)
+    b.addEventListener('pointerdown', e => { // (held down: syHoldStep)
+      if (e.button) return;
+      syHoldStop();
+      b._ran = false;
+      SY.hold = { b, id: e.pointerId, go: () => nudge(dir), t: setTimeout(syHoldStep, 400) };
+    });
+    b.addEventListener('pointerleave', () => { if (SY.hold && SY.hold.b === b) syHoldStop(); });
+    b.addEventListener('pointermove', e => { // (a finger stays this button's wherever it slides and never leaves it: where it is tells, with a little room as a finger at rest rolls)
+      if (!SY.hold || SY.hold.b !== b) return;
+      const r = b.getBoundingClientRect();
+      if (e.clientX < r.left - 8 || e.clientX > r.right + 8 || e.clientY < r.top - 8 || e.clientY > r.bottom + 8) syHoldStop();
+    });
+    b.oncontextmenu = e => e.preventDefault(); // (a finger held down: no menu comes up to take the pointer away)
   }
   if (o.says !== undefined) {
     o.saysEl = document.createElement('p');
@@ -12044,6 +13435,7 @@ const syEach = st => st.tracks.length > 1 || st.tracks.some(k => k.s) || (st.tra
 /* The rows and bars for what's loaded. Only when that changes: a change of a number must leave them be (the bar being dragged, the field you're in). */
 function syBuild(st, sig) {
   if (SY.drag) { clearTimeout(SY.drag.timer); SY.drag = null; } // (what it was moving may have gone)
+  syHoldStop(); // (and the button held down has)
   SY.sig = sig;
   SY.tracks = st.tracks.map(k => k.a);
   SY.lone = SY.tracks.length === 1 && syEach(st) ? SY.tracks[0] : null;
@@ -12073,6 +13465,7 @@ function syPaint() {
   const st = syncState(), loaded = st.hasAudio || st.hasVideo || st.hasScore;
   const sig = +st.hasVideo + '|' + +st.hasScore + '|' + st.tracks.length + '|' + syEach(st);
   if (sig !== SY.sig || st.tracks.some((k, i) => k.a !== SY.tracks[i])) syBuild(st, sig);
+  syStepPaint();
   for (const o of SY.things) {
     const v = SY.drag && SY.drag.o === o ? SY.drag.v : o.get();
     if (!o.inp._typing && o.inp.value !== v.toFixed(3)) o.inp.value = v.toFixed(3);
@@ -12262,7 +13655,7 @@ function syShown(name) {
   const open = name === 'sync', i = syncListeners.indexOf(syChanged);
   if ((open || name === 'settings') && i < 0) syncListeners.push(syChanged);
   else if (!open && name !== 'settings' && i >= 0) syncListeners.splice(i, 1);
-  if (!open) { syUp(true); syDisarm(); }
+  if (!open) { syUp(true); syDisarm(); syHoldStop(); }
   SY.open = open;
   if (name === 'settings') sySummary();
   if (!open) { SY.lone = null; return; }
