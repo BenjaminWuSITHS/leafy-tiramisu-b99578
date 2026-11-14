@@ -15,6 +15,23 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.11
+<!-- date: 2026-11-14T11:25 -->
+- Pet editor: the body under an arm in front is filled in from its own colours and lines: no more streaks when the arm moves.
+- Pet editor: an arm can go behind the clothes (Hidden parts, "This arm goes behind the clothes"): the skirt or apron covers it, and the part you can't see is drawn in to paint over (your other arm, mirrored, if it is held alike). Hidden parts now lists what the picture hides, one job at a time.
+  <!-- picture: changelog/1.0.11/arms.gif | 1.0.10 on the left, 1.0.11 on the right -->
+- Pet editor: a new 3D tab sets how each piece of the body turns: the head and what is on it, the body, each arm and leg and the piece under it.
+- Desktop pets: a singer on a window comes down a split second after the window closes, is minimised or is covered. One let go over a window drops onto it with a bounce, as onto the taskbar.
+- Pet editor: legs have a knee. In the pose editor, drag a foot to bend its knee. Only your own animations bend a knee.
+  <!-- picture: changelog/1.0.11/knee.png | A knee bent in poses of your own -->
+- Background mode: Previous and Next have the player's own icons, not emoji.
+- Pet editor: a finished pet can be painted in its new Paint tab.
+- Pet editor: every place that paints has Brush, Line, Bucket and Picker.
+- Desktop pets no longer walk about. The settings "Singers with nothing to sing wander" and "Takes steps as it wanders", and Faces right / Faces left on the cards, are gone.
+- Pet editor: Watch the tutorial plays a short film of the steps.
+- Pet editor: Save for later keeps a pet you haven't finished without giving it to a singer: it waits under Pets you're working on, or in a .petdraft file.
+- A pet with an arm behind the clothes is a version 3 pet sheet: versions before 1.0.11 won't open it.
+
 ## 1.0.10
 <!-- date: 2026-11-13T20:41 -->
 - Desktop pets come up from the taskbar. One you left on a window comes up below it and hops on, instead of appearing mid-screen. Changing Character size mid-song leaves everyone where they stand.

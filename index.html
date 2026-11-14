@@ -455,6 +455,9 @@ li.renaming .proj-pen{display:none}
 #bgmNow{border:1px solid var(--accent);border-radius:8px;padding:10px 12px 2px;margin:0 0 12px}
 #bgmNow .bgm-title{font-weight:600}
 #bgmNow .bgm-next{margin:2px 0 8px}
+#bgmNow .dbg-row button{display:flex;align-items:center;justify-content:center;gap:6px}
+#bgmNow .dbg-row svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#bgmNow .dbg-row svg .fill{fill:currentColor;stroke:none}
 #plList{list-style:none;margin:0 0 10px;padding:0;counter-reset:pl}
 #plList li{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--line);font-size:.9rem;counter-increment:pl;cursor:grab;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #plList li::before{content:counter(pl);min-width:1.4em;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -540,7 +543,7 @@ body.bgm.bgm-fill:not(.phone){--viz-h:100vh}
 body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-shadow:none}
 #plWhereRow[hidden],#plCoverHint[hidden],#plPetOld[hidden],#petSet[hidden],#petPanel[hidden],#plVisualRow[hidden],#plVisualHint[hidden],#plOneLyricRow[hidden],#plOneLyricHint[hidden]{display:none}
 #petFreeRow[hidden],#petFreeHint[hidden],#petWinRow[hidden],#petWinHint[hidden],#petGravRow[hidden],#petGravHint[hidden]{display:none}
-#petWanderRow[hidden],#petWanderHint[hidden],#petPetsRow[hidden],#petPetsHint[hidden]{display:none}
+#petPetsRow[hidden],#petPetsHint[hidden]{display:none}
 #petList{list-style:none;margin:6px 0 10px;padding:0}
 #petList li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:.85rem}
 #petList li.hint{display:block;margin:0}
@@ -571,7 +574,7 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #petSelN{flex:1 0 100%;font-size:.82rem;font-weight:600}
 #petSelBar button{font-size:.75rem;padding:3px 8px}
 .pet-note{margin:0 0 10px;font-size:.82rem;line-height:1.4;color:var(--muted)}
-#petTools[hidden],#petBankHint[hidden],#petFaceHint[hidden],#petSelBar[hidden],#petNote[hidden],#petPicBank[hidden]{display:none}
+#petTools[hidden],#petBankHint[hidden],#petSelBar[hidden],#petNote[hidden],#petPicBank[hidden]{display:none}
 #petBankBtn[hidden],#petKitBtn[hidden],#petKitHint[hidden]{display:none}
 #petPicBank{margin-right:auto}
 #petPicDlg .pp-foot{flex-wrap:wrap}
@@ -757,6 +760,7 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-tabs .pd-chip{padding:4px 14px;font-size:.85rem}
 #petEdDlg .pd-pans{display:grid;grid-template-columns:minmax(0,1fr);flex:none;min-width:0}
 #petEdDlg .pd-pan{grid-area:1/1;min-width:0}
+#petEdDlg .pd-pans.pd-solo>.pd-pan[data-off]{display:none} /* (3D: no picture under the tools to keep in its place) */
 #petEdDlg #petEdPanFace[data-off]{display:none} /* (Face's cards are the tallest by far: they take room only while Face is the tab) */
 #petEdDlg .pd-tools,#petEdDlg .pd-paint,#petEdDlg .pd-hidrow,#petEdDlg .pd-faceacts{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:8px 12px 0}
 #petEdDlg :is(.pd-tools,.pd-tabrow,.pd-hidrow,.pd-faceacts,.pd-facemore) button{font-size:.8rem;padding:4px 10px}
@@ -804,6 +808,7 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 /* Layers: a line and Back to the usual in the tabs' cell; the list itself where the picture is in the other tabs */
 #petEdDlg #petEdPanLayers{padding:8px 12px 0}
 #petEdDlg #petEdPanLayers .pd-tip{margin:0 0 6px;font-size:.8rem}
+#petEdDlg #petEdPan3d .pd-tip{margin:6px 12px 0;font-size:.8rem}
 #petEdDlg .pd-lay{flex:1 1 auto;min-height:160px;overflow:auto;margin:8px 12px 0;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--fg) 4%,transparent)}
 #petEdDlg .pd-lay ol{display:flex;flex-direction:column;gap:4px;max-width:420px;margin:0;padding:10px;list-style:none}
 #petEdDlg .pd-layer{display:flex;align-items:center;gap:8px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:.85rem}
@@ -812,6 +817,7 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-grip{padding:2px 4px;color:var(--muted);letter-spacing:-3px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 #petEdDlg .pd-layer-name{flex:1 1 auto;min-width:0}
 #petEdDlg .pd-layer button{width:30px;padding:2px 0;font-size:.85rem;line-height:1.3}
+#petEdDlg .pd-layer.pd-over{margin-left:18px;border-style:dashed;color:var(--muted);cursor:pointer} /* (the clothes over an arm that goes behind them: chosen in Hidden parts) */
 #petEdDlg .pd-chips{display:flex;flex-wrap:wrap;gap:4px}
 #petEdDlg .pd-chip{position:relative;display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border:1px solid var(--line);border-radius:999px;font-size:.8rem;line-height:1.5;cursor:pointer;user-select:none;-webkit-user-select:none}
 #petEdDlg .pd-chip:hover{border-color:var(--accent)}
@@ -858,11 +864,92 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-name input{width:150px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);font:inherit;font-size:.85rem}
 #petEdDlg .pd-name input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 #petEdDlg .pd-for select{max-width:200px}
+/* 1.0.11. The tutorial's "?" in the head; on the start, the pets being worked on (Save for later), as the singers'
+   list looks, each with Save as file… and Delete… beside it */
+#petEdDlg .pd-tutb{width:28px;height:28px;padding:0;border-radius:50%;font-size:.9rem;font-weight:700;line-height:1}
+#petEdDlg .pd-drafts{margin:0 0 12px}
+#petEdDlg .pd-drafts h4{margin:0 0 6px;font-size:.85rem}
+#petEdDlg .pd-drafts ul{display:flex;flex-direction:column;gap:4px;max-height:min(40vh,320px);overflow:auto;overscroll-behavior:contain;margin:0;padding:6px;list-style:none;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--fg) 3%,transparent)}
+#petEdDlg .pd-draft{display:flex;align-items:center;gap:6px}
+#petEdDlg .pd-draft .pd-sg{flex:1 1 auto}
+#petEdDlg .pd-dact{flex:none;padding:4px 10px;font-size:.8rem}
+/* The painting tools: Brush · Line · Bucket · Picker · Eraser in every place that paints; the brush's size and Colours
+   alike share one cell of a grid (the one not used keeps its room), so nothing moves as the tools are switched */
+#petEdDlg .pd-ptools{flex:none}
+#petEdDlg .pd-sizes{display:inline-grid}
+#petEdDlg .pd-sizes>.pd-size{grid-area:1/1;display:inline-flex;align-items:center;gap:8px}
+/* Paint (a finished sheet): the part chosen, the one before and the next, the colour */
+#petEdDlg #petEdPtCell{max-width:220px}
+#petEdDlg .pd-hidrow .pd-step{width:30px;padding:2px 0;font-size:1rem;line-height:1.2} /* (.pd-hidrow: as specific as that row's button rule, so the arrows aren't shrunk to its .8rem) */
+/* Hidden parts: what the picture hides, as a list of jobs (it takes room only while Hidden parts is the tab); one
+   job open: its title and Done, then (an arm behind the clothes) its buttons, then the colour and the switches. In a
+   window big enough, the list is beside the picture (.pd-side, at the end of this block), so the picture stays big */
+#petEdDlg #petEdPanHidden[data-off]{display:none}
+#petEdDlg .pd-jobs{padding:8px 12px 0}
+#petEdDlg .pd-jobsT{margin:0 0 6px;font-size:.82rem;color:var(--muted);line-height:1.4}
+#petEdDlg .pd-jobsT b{color:var(--fg)}
+#petEdDlg .pd-joblist{display:flex;flex-direction:column;gap:3px;max-height:min(24vh,190px);overflow:auto;overscroll-behavior:contain;margin:0 0 6px;padding:0;list-style:none}
+#petEdDlg .pd-jobrow{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;font-size:.82rem}
+#petEdDlg .pd-jobrow.pd-sub{margin-left:18px}
+#petEdDlg .pd-armrow{background:color-mix(in srgb,var(--fg) 4%,transparent)}
+#petEdDlg .pd-armrow .pd-sw{margin-left:auto}
+#petEdDlg .pd-jobtx{display:flex;flex-direction:column;flex:1 1 180px;min-width:0}
+#petEdDlg .pd-jobname{font-weight:600;overflow-wrap:anywhere}
+#petEdDlg .pd-jobst{color:var(--muted);font-size:.76rem}
+#petEdDlg .pd-jobrow button{flex:none;font-size:.8rem;padding:3px 12px}
+#petEdDlg .pd-jobnote{margin:0 0 0 18px;padding:2px 8px;color:var(--muted);font-size:.78rem;line-height:1.35}
+#petEdDlg .pd-hidany{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:.8rem;color:var(--muted)}
+#petEdDlg .pd-jobT{flex:1 1 160px;min-width:0;font-size:.85rem}
+/* 3D: the pieces of the body as a tree, the chosen one's sliders beside it — where the picture is in the other tabs */
+#petEdDlg .pd-3d{flex:1 1 auto;min-height:160px;display:grid;grid-template-columns:minmax(120px,230px) minmax(180px,1fr);grid-template-rows:minmax(0,1fr);gap:0 8px;overflow:hidden;margin:8px 12px 0;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--fg) 4%,transparent)} /* (the tree and the chosen piece's sliders each scroll by themselves: choosing a piece low in the tree leaves its sliders in sight) */
+#petEdDlg .pd-tree{display:flex;flex-direction:column;gap:2px;margin:0;padding:8px;list-style:none;border-right:1px solid var(--line)}
+#petEdDlg .pd-tree,#petEdDlg .pd-set3{min-height:0;overflow:auto;overscroll-behavior:contain}
+#petEdDlg .pd-piece{display:flex;align-items:center;gap:8px;padding:4px 8px;border:1px solid transparent;border-radius:8px;font-size:.85rem;cursor:pointer;user-select:none;-webkit-user-select:none}
+#petEdDlg .pd-piece.pd-sub{margin-left:18px;font-size:.8rem}
+#petEdDlg .pd-piece:hover{border-color:var(--accent)}
+#petEdDlg .pd-piece.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent)}
+#petEdDlg .pd-piece[aria-disabled=true]{opacity:.5;cursor:default}
+#petEdDlg .pd-piece:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+#petEdDlg .pd-piece-name{flex:1 1 auto;min-width:0}
+#petEdDlg .pd-mark{flex:none;width:1ch;color:var(--accent);font-weight:700}
+#petEdDlg .pd-set3{padding:8px 12px 12px}
+#petEdDlg .pd-set3 h4{margin:2px 0 8px}
+#petEdDlg .pd-set3 .op{flex-wrap:wrap} /* (a narrow window: a slider goes under its name rather than past the column) */
+#petEdDlg .pd-set3 input[type=range]{width:min(150px,100%)}
+/* The tutorial (a dialog of its own, over the editor): the film, the caption under it (never over the editor it
+   shows), the chapters, every step as text */
+#petTutDlg{width:min(1180px,calc(100vw - 24px));max-width:none;max-height:calc(100vh - 24px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.45);overflow:auto}
+#petTutDlg::backdrop{background:rgba(0,0,0,.55)}
+#petTutDlg [hidden]{display:none!important}
+#petTutDlg .pt-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;padding:12px 18px 8px}
+#petTutDlg h3{margin:0;font-size:1.05rem}
+#petTutDlg .pt-len{color:var(--muted);font-size:.85rem}
+#petTutDlg .pt-gap{flex:1}
+#petTutDlg .pt-body{padding:0 18px 16px}
+#petTutDlg video{display:block;width:100%;max-height:calc(100vh - 220px);max-width:calc((100vh - 220px) * 16 / 9);margin:0 auto;aspect-ratio:16/9;background:#000;border-radius:8px} /* (as big as the window lets it be with the caption and the chapters under it; never wider than the film, so its controls stay on it) */
+#petTutDlg .pt-cap{min-height:2.8em;margin:8px 0 4px;font-size:.95rem;line-height:1.4;text-align:center}
+#petTutDlg .pt-bad{margin:8px 0;color:#d0473f;font-size:.9rem}
+#petTutDlg .pt-chaps{display:flex;align-items:center;gap:6px}
+#petTutDlg .pt-list{display:flex;flex-wrap:wrap;gap:4px;flex:1 1 auto;min-width:0}
+#petTutDlg .pt-list button{padding:3px 10px;border:1px solid var(--line);border-radius:999px;font-size:.8rem}
+#petTutDlg .pt-list button[aria-current=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent)}
+#petTutDlg .pt-step{flex:none;width:32px;padding:2px 0;font-size:1.05rem}
+#petTutDlg .pt-text{margin-top:10px;font-size:.85rem}
+#petTutDlg .pt-text summary{cursor:pointer;font-weight:600}
+#petTutDlg .pt-text ol{margin:6px 0 0;padding-left:22px}
+#petTutDlg .pt-text[open] ol{max-height:min(34vh,300px);overflow:auto;overscroll-behavior:contain} /* (the steps scroll in their own box: the film above stays in sight, and a line clicked plays it there) */
+#petTutDlg:has(.pt-text[open]) video{max-height:calc(66vh - 235px);max-width:calc((66vh - 235px) * 16 / 9)}
+#petTutDlg .pt-text ul{margin:2px 0 6px;padding-left:4px;list-style:none}
+#petTutDlg .pt-line{padding:1px 4px;border:none;background:none;color:var(--fg);font-size:.82rem;text-align:left;cursor:pointer}
+#petTutDlg .pt-line:hover{text-decoration:underline}
 @media (max-width:760px),(max-height:520px){
   #petEdDlg .pd-work{grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;overflow:auto} /* (each side as tall as what is in it: only this scrolls) */
   #petEdDlg .pd-left{border-right:none;border-bottom:1px solid var(--line)}
   #petEdDlg .pd-pane{flex:none;height:60vh}
   #petEdDlg .pd-lay{flex:none}
+  #petEdDlg .pd-3d{flex:none;grid-template-columns:minmax(0,1fr);grid-template-rows:none;overflow:visible}
+  #petEdDlg .pd-tree{border-right:none;border-bottom:1px solid var(--line)}
+  #petEdDlg .pd-tree,#petEdDlg .pd-set3{overflow:visible}
   #petEdDlg .pd-right{overflow:visible}
   #petEdDlg .pd-notes{max-height:none}
   #petEdDlg .pd-head,#petEdDlg .pd-foot{padding-left:14px;padding-right:14px}
@@ -875,6 +962,19 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 }
 @media (max-height:600px){
   #petEdDlg .pd-hints{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0)}
+}
+/* Hidden parts' list of what the picture hides (no job open: .pd-side on the left column), in a window big enough:
+   the list and the hint in a column beside the picture, which then has the column's whole height — moving over a job
+   marks its place on it. The tab row and the notes stay across the top and the bottom; nothing else takes a cell */
+@media (min-width:1000px) and (min-height:600px){
+  #petEdDlg .pd-left.pd-side{display:grid;grid-template-columns:minmax(240px,320px) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto auto;overflow:hidden}
+  #petEdDlg .pd-side>:is(.pd-tabrow,.pd-notes){grid-column:1/-1}
+  #petEdDlg .pd-side>.pd-pans{grid-column:1;grid-row:2;min-height:0;overflow:auto;overscroll-behavior:contain}
+  #petEdDlg .pd-side>.pd-pans>.pd-pan[data-off]{display:none}
+  #petEdDlg .pd-side .pd-joblist{max-height:none;overflow:visible}
+  #petEdDlg .pd-side>.pd-hints{grid-column:1;grid-row:3}
+  #petEdDlg .pd-side .pd-ghost{display:none}
+  #petEdDlg .pd-side>.pd-pane{grid-column:2;grid-row:2/4;margin-bottom:0}
 }
 /* ---- the pose editor (petanim.js, inside the pet editor): its own rules, #petEdDlg .pa-… — the pet editor's rules end above this line ---- */
 /* Its host (.pa-root) has the pet editor's whole work area while it is open: a bar on top (Done, Name, Plays…); the
@@ -1527,7 +1627,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <h1>Background mode</h1>
     <p class="hint">Plays your saved projects one after another, as a playlist — the next song is loaded while the current one plays, so there's no waiting in between. In the desktop app it plays in a small player in the corner of the screen, on top of your other windows — drag it by its top edge, resize it by its edges; the ↗ button (or Esc) takes you back to the full player, with nothing loaded.</p>
     <div id="bgmNow" hidden><div class="bgm-title"></div><div class="bgm-next hint"></div>
-      <div class="dbg-row"><button id="bgmPrev" title="Previous song">⏮ Previous</button><button id="bgmNextBtn" title="Next song">Next ⏭</button></div>
+      <div class="dbg-row"><button id="bgmPrev" title="Previous song"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M18 18.5 9 12l9-6.5z"/><path d="M6.5 6v12"/></svg><span>Previous</span></button><button id="bgmNextBtn" title="Next song"><span>Next</span><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M6 5.5 15 12l-9 6.5z"/><path d="M17.5 6v12"/></svg></button></div>
     </div>
     <h2>Playlist</h2>
     <ol id="plList"></ol>
@@ -1552,15 +1652,13 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
       <p class="hint" id="petWinHint" hidden>Let go of a singer just over the top edge of a window and it stands on it: it rides along when you move the window, and comes down when the window closes, is minimised or stays covered there for more than a moment: to the taskbar, or with Gravity on to the next window below. Opening this player's own window never knocks anyone off.</p>
       <label class="op" id="petGravRow" hidden>Gravity <input type="checkbox" id="petGravity" autocomplete="off"></label>
       <p class="hint" id="petGravHint" hidden>On: a singer with nothing under its feet falls. Let go of one in the air and it drops onto the top edge of the first window below it, or onto the taskbar; when the window it stands on goes away, it lands on the next window down. Singers hanging in the air come down as soon as you switch this on, and where they land is remembered. Off: a singer stays where you leave it, in the air.</p>
-      <label class="op" id="petWanderRow" hidden>Singers with nothing to sing wander <input type="checkbox" id="petWander" autocomplete="off" checked></label>
-      <p class="hint" id="petWanderHint" hidden>With two or more singers on screen, one that has no line for a while strolls along the taskbar (or the window it stands on) and is standing still again before its next line. It never walks into the others, it stays put for a while after you move it, and the place you gave it is still the one that's remembered.</p>
       <label class="op" id="petPetsRow" hidden>How many pets <select id="petPets" autocomplete="off"><option value="each">A pet for each singer</option><option value="few">As few pets as possible</option><option value="one" id="petPetsOne">One singer</option></select></label>
       <p class="hint" id="petPetsHint" hidden>A pet for each singer: every singer with a picture is a pet, and one that sings two lines at once is two pets with the same picture, side by side, each with its own bubble. As few pets as possible: singers who never sing at the same time share one pet, which sings all their lines — the one of them with a picture who sings most; singers who do sing together stay separate pets. One singer: only one pet, the singer with a picture who sings most; it sings everybody's lines, and lines sung at the same time each get a speech bubble of their own over it.</p>
-      <div class="dbg-row"><button id="petCharsBtn" aria-expanded="false">Characters…</button><button type="button" id="petSheetBtn" aria-haspopup="dialog" title="Settings for singers whose picture is a pet sheet: a puppet that sings, blinks, gestures and walks" hidden>Animated pets…</button></div>
-      <div id="petPanel" hidden><p class="hint">The singers of the songs in the playlist above: only singers with a picture come on. Choose picture… or Change… gives one its picture (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more. The list goes song by song, in the playlist's order. To change several singers at once, select their cards (click one; Ctrl+click adds one or takes it out; Shift+click takes all in between), then Choose picture… on any of them: one file goes to all of them, several files are handed out down the list, in the order of their names.</p><p class="pet-sum" id="petSum" role="status" hidden></p><div class="pet-tools" id="petTools" hidden><button type="button" id="petBankBtn">Voicebank pictures</button><button type="button" id="petKitBtn" title="Choose a folder: a new folder with the template, a finished sample and the guide is put there" hidden>Pet sheet kit…</button></div><p class="hint" id="petBankHint" hidden>Voicebank pictures gives each singer the picture that comes with its voicebank, if that voicebank is installed on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona). Singers who have a picture keep it unless you press again; with cards selected, only those change.</p><p class="hint" id="petKitHint" hidden>A pet sheet is a picture that moves: one PNG with the singer's parts on a grid (head, hair, body, eyes, mouths, arms and legs), which the player puts together as a puppet — its mouth follows the words it sings, it blinks, walks, hops when you click it and swings when you pick it up. Pet sheet kit… puts a folder where you choose, with the template to draw over, a finished sample to try and a guide. Save your sheet as a PNG with a name that ends in .petsheet.png and give it to a singer with Choose picture…, like any picture; its card then says Animated.</p><p class="hint" id="petFaceHint" hidden>Faces right / Faces left on a card says which way that picture is drawn: a singer that wanders is mirrored while it walks the other way, so press it if yours walks backwards.</p><div class="pet-tools" id="petSelBar" hidden><span id="petSelN"></span><button type="button" id="petSelPick" title="One file for all of them, or several files: one each, down the list, in the order of their names">Choose picture for all…</button><button type="button" id="petSelDel" title="Remove the selected singers' pictures: they aren't shown any more">Remove pictures</button><button type="button" id="petSelNone" title="Select nothing (Esc)">Clear selection</button></div><p class="pet-note" id="petNote" role="status" hidden></p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*,.json" multiple hidden></div>
+      <div class="dbg-row"><button id="petCharsBtn" aria-expanded="false">Characters…</button><button type="button" id="petSheetBtn" aria-haspopup="dialog" title="Settings for singers whose picture is a pet sheet: a puppet that sings, blinks, gestures and hops" hidden>Animated pets…</button></div>
+      <div id="petPanel" hidden><p class="hint">The singers of the songs in the playlist above: only singers with a picture come on. Choose picture… or Change… gives one its picture (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more. The list goes song by song, in the playlist's order. To change several singers at once, select their cards (click one; Ctrl+click adds one or takes it out; Shift+click takes all in between), then Choose picture… on any of them: one file goes to all of them, several files are handed out down the list, in the order of their names.</p><p class="pet-sum" id="petSum" role="status" hidden></p><div class="pet-tools" id="petTools" hidden><button type="button" id="petBankBtn">Voicebank pictures</button><button type="button" id="petKitBtn" title="Choose a folder: a new folder with the template, a finished sample and the guide is put there" hidden>Pet sheet kit…</button></div><p class="hint" id="petBankHint" hidden>Voicebank pictures gives each singer the picture that comes with its voicebank, if that voicebank is installed on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona). Singers who have a picture keep it unless you press again; with cards selected, only those change.</p><p class="hint" id="petKitHint" hidden>A pet sheet is a picture that moves: one PNG with the singer's parts on a grid (head, hair, body, eyes, mouths, arms and legs), which the player puts together as a puppet — its mouth follows the words it sings, it blinks, hops when you click it and swings when you pick it up. Pet sheet kit… puts a folder where you choose, with the template to draw over, a finished sample to try and a guide. Save your sheet as a PNG with a name that ends in .petsheet.png and give it to a singer with Choose picture…, like any picture; its card then says Animated.</p><div class="pet-tools" id="petSelBar" hidden><span id="petSelN"></span><button type="button" id="petSelPick" title="One file for all of them, or several files: one each, down the list, in the order of their names">Choose picture for all…</button><button type="button" id="petSelDel" title="Remove the selected singers' pictures: they aren't shown any more">Remove pictures</button><button type="button" id="petSelNone" title="Select nothing (Esc)">Clear selection</button></div><p class="pet-note" id="petNote" role="status" hidden></p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*,.json" multiple hidden></div>
       <p class="pet-sum" id="petWarn" role="status" hidden></p>
     </div>
-    <p class="hint" id="plCoverHint" hidden>Cover the screen: instead of the small window, the visualizer and the piano roll play over your whole screen, with nothing behind them — your other windows show through, and the mouse goes straight through to them. The player waits in the taskbar as the remote control. The controls are in a little window in the bottom-right corner of the screen (the song, ⏮ ⏯ ⏭, and ✕ to stop), and these keys work from any app while it plays: Ctrl+Alt+Space play / pause, Ctrl+Alt+Page Down next song, Ctrl+Alt+Page Up previous song, Ctrl+Alt+End stop — and the media keys on your keyboard.</p>
+    <p class="hint" id="plCoverHint" hidden>Cover the screen: instead of the small window, the visualizer and the piano roll play over your whole screen, with nothing behind them — your other windows show through, and the mouse goes straight through to them. The player waits in the taskbar as the remote control. The controls are in a little window in the bottom-right corner of the screen (the song, previous, play / pause and next, and ✕ to stop), and these keys work from any app while it plays: Ctrl+Alt+Space play / pause, Ctrl+Alt+Page Down next song, Ctrl+Alt+Page Up previous song, Ctrl+Alt+End stop — and the media keys on your keyboard.</p>
     <button id="bgmStart" class="primary bgm-big">Start background mode</button>
   </section>
 </main>
@@ -1587,7 +1685,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 <div id="pet" aria-hidden="true"><svg class="pet-bubs"></svg></div>
 <dialog id="petPicDlg" aria-labelledby="petPicT" aria-describedby="petPicP"><h3 id="petPicT">Pictures for the singers</h3><p class="pp-intro" id="petPicP">Choose a picture of your own for each singer: it stands on your taskbar and sings their lines. A picture with see-through parts is trimmed, a plain background is cleared; other pictures become a sticker card. A pet sheet (a PNG named ….petsheet.png: see Pet sheet kit… in Characters…) is kept as it is and moves as a puppet. Singers left without a picture aren't shown. To change them later: Characters… in the Desktop pet settings.</p><ul id="petPicList"></ul><p class="pp-none" id="petPicNone" role="alert" hidden>None of the singers has a picture yet — choose at least one.</p><div class="pp-foot"><button type="button" id="petPicBank" title="Give each of these singers the picture that comes with its voicebank, if that voicebank is installed on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona)" hidden>Voicebank pictures</button><button type="button" id="petPicNo">Cancel</button><button type="button" id="petPicGo" class="primary">Start</button></div><input type="file" id="petPicFile" accept="image/*,.json" multiple hidden></dialog>
 <dialog id="petSheetDlg" aria-labelledby="petSheetT" aria-describedby="petSheetP"><h3 id="petSheetT">Animated pets</h3><div class="ps-body">
-  <p class="hint" id="petSheetP">Only for singers whose picture is a pet sheet: a puppet that sings, blinks, gestures and walks. Singers with a plain picture stay as they are. Pet sheet kit… in Characters… has what you need to draw one. Every change here shows at once on the pets on screen.</p>
+  <p class="hint" id="petSheetP">Only for singers whose picture is a pet sheet: a puppet that sings, blinks, gestures and hops. Singers with a plain picture stay as they are. Pet sheet kit… in Characters… has what you need to draw one. Every change here shows at once on the pets on screen.</p>
   <label class="op">Mouth follows the words <input type="checkbox" id="petShWords" autocomplete="off" checked></label>
   <p class="hint">On: the mouth takes the shape of each sound it sings (ah, ee, oo, eh, oh), and the lips close for m, b and p. Off: it simply opens with each note and closes after it.</p>
   <label class="op" id="petShReadRow">Lyrics in Latin letters are read as <select id="petShRead" autocomplete="off"><option value="auto" selected>Automatic</option><option value="ja">Japanese (romaji)</option><option value="en">English</option><option value="zh">Chinese (pinyin)</option></select></label>
@@ -1598,8 +1696,6 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <p class="hint">The eyes blink every few seconds. Off: they stay open, but still shut in a smile for a wave, a hop and a long, strong note.</p>
   <label class="op">Gestures as it sings <select id="petShGest" autocomplete="off"><option value="off">Off</option><option value="gentle">Gentle</option><option value="lively" selected>Lively</option></select></label>
   <p class="hint">The nod on each note, and the arms, which rise on high and long notes. Lively: all of it. Gentle: half as far. Off: it sings standing still, with only its mouth moving (it still breathes and sways).</p>
-  <label class="op">Takes steps as it wanders <input type="checkbox" id="petShSteps" autocomplete="off" checked></label>
-  <p class="hint">A singer with nothing to sing walks to its new place: the legs step and the arms swing. Off: it glides there without moving them (one drawn from the side still turns to face the way it goes).</p>
   <label class="op">Swings when you carry it <input type="checkbox" id="petShSwing" autocomplete="off" checked></label>
   <p class="hint">Picked up with the mouse, it hangs from where you grabbed it, and its arms and legs trail behind and swing. Off: it stays upright while you carry it.</p>
   <label class="op">Hops when clicked <input type="checkbox" id="petShHop" autocomplete="off" checked></label>
@@ -3248,8 +3344,7 @@ $('app').appendChild(setTip); // (inside #app, so it turns with the phone layout
 const tipS = { for: null, timer: 0, warmUntil: 0, n: 0, pinned: false, all: [] };
 const TIP_STAY = new Set(['prefHint', 'syncSum', 'updStatus', 'updGetHint', 'dcStatus', 'syEmpty', 'syProjLine', 'syAuto', 'syWasText', 'projStatus', 'plPetOld', 'updDlgHint']);
 /* Explanations whose "i" isn't on the row, heading or row of buttons just before them: [the explanation, what it explains].
-   Two on one thing share its "i" (the one that applies shows: Plays in, Characters…). Faces right / Faces left is on
-   every card with a title of its own, so what it is for goes with the rest of the cards' explanation, on Characters…. */
+   Two on one thing share its "i" (the one that applies shows: Plays in, Characters…). */
 const TIP_ON = [
   ['#updTok .hint', '#updTok .psave'], // (the token's steps: on the box you paste it in)
   ['#syLine > .hint', '#viewSync > h1'], // (how to move things: with the view's introduction)
@@ -3258,7 +3353,6 @@ const TIP_ON = [
   ['#petSet > .hint:first-child', '#plWhereRow'],
   ['#plCoverHint', '#plWhereRow'],
   ['#petPanel > .hint:first-child', '#petCharsBtn'],
-  ['#petFaceHint', '#petCharsBtn'],
   ['#petBankHint', '#petBankBtn'],
   ['#petKitHint', '#petKitBtn'],
   ['#petPicP', '#petPicT'],
@@ -7236,22 +7330,19 @@ async function loadScore(f) { // f: a score file, or a list of .ust files (one p
    fast one steps aside to get there (DIP/s) · floor / ledge – a singer let go this near the taskbar
    line / a window's top edge (DIP) stands on it · fall – one with nothing under it speeds up this much
    (DIP/s²) · hold – a singer whose window edge is missing from main's word waits this long (s) before
-   it falls · leap / peak – the jump up to its place, once it has come on, takes this long (s), and the
+   it falls: more than one frame may count for (0.1 s, petFrame), so one long frame never uses it up · pop –
+   one let go a little under a window's top edge steps up onto it this fast (DIP/s) · leap / peak – the jump
+   up to its place, once it has come on, takes this long (s), and the
    top of its arc is this far past that place (× its height) · lag / reach – the mouse rectangles lead a moving singer by this long (s), at most this
-   far (DIP) · idle / soon / far – a singer with nothing to sing wanders once its last line ended
-   this long ago (s), stands still from this long before its next one starts (s: its bubble comes
-   `early` before that, and it is on its feet well before), and only sets off with this long to go
-   (s) · walk / pace – it walks this fast (× its height a second), a step this long (× its height) ·
-   shy – walking, it keeps this much further off the others than they must keep apart (DIP) · turn – a
-   picture turning round to face the way it walks takes this long (s) · over – two lines of one singer
+   far (DIP) · over – two lines of one singer
    that overlap by more than this (s) run at the same time: two voices (less is one part's last note
    running into the next part's first: under a tenth of a second where this was set, with real
    second lines overlapping by seconds)
    ===================================================================== */
 const PETL = { early: 0.25, unison: 0.3, appear: 1, jump: 1, max: 100, at: 0.7, step: 1, pad: 16, bump: 0.6, edge: 8, gap: 6, rows: 3, round: 12, tail: 7,
   keep: 6, glide: 140, floor: 40, ledge: 28, fall: 3000, lag: 0.2, reach: 160,
-  idle: 1.5, soon: 1.25, far: 4, walk: 0.34, pace: 0.15, shy: 12, turn: 0.15, over: 0.3,
-  level: 10, turns: 100, hold: 0.6, leap: 0.45, peak: 0.12 };
+  over: 0.3,
+  level: 10, turns: 100, hold: 0.15, pop: 600, leap: 0.45, peak: 0.12 };
 /* A track named after its singer plus a harmony word ("Lumi_harm", "Lumi (chorus)", "Lumiハモリ",
    "ルミ（ハモリ）", "ルミ・ハモ") is that singer. Latin words need a separator before them ("Echo" stays
    "Echo"). NFKC first: Japanese typing gives full-width brackets （ ）［ ］. */
@@ -7443,14 +7534,6 @@ function petSpans(tracks, pre = 0, post = 0) {
     if (p && o.s <= p.e) p.e = Math.max(p.e, o.e); else out.push(o);
   }
   return out;
-}
-/* How long a singer has had nothing to sing, and how long until it has (spans: petSpans of its lines).
-   → { since: s since its last line ended (Infinity: none yet), until: s to its next one (Infinity: none
-   left) }; both 0 while a line is on. */
-function petIdle(spans, now) {
-  const i = nUpTo(spans, now), p = spans[i - 1], n = spans[i];
-  if (p && now < p.e) return { since: 0, until: 0 };
-  return { since: p ? now - p.e : Infinity, until: n ? n.s - now : Infinity };
 }
 /* "As few pets as possible": the song's singers in the fewest groups in which no two clash; each group is
    ONE pet, which sings all its singers' lines. Two singers clash when a line of one would have to give way
@@ -7939,42 +8022,8 @@ function petClearOf(want, span, lo, hi, taken, pad = PETL.keep) {
   for (const x of [Math.max(lo, Math.min(hi, want)), ...taken.flatMap(o => [o.x - g(o), o.x + g(o)])]) if (ok(x) && (best === null || Math.abs(x - want) < Math.abs(best - want))) best = Math.max(lo, Math.min(hi, x));
   return best;
 }
-/* Where a singer with nothing to sing walks to next, along the line it stands on: x its centre, span what's
-   drawn of it (petSpan), lo…hi where its centre may be on that line; others [{ x, span, to }] the others
-   standing on it (to: where one of them is walking to, else null). It never walks through anyone, and nobody
-   has to step aside for it: its room ends PETL.shy short of where it would have to keep apart from the nearest
-   one on each side — one who is walking counts from where it is to where it's going. Somewhere in that room
-   (rnd: 0…1), no further than reach (it has to be there, standing, in time for its next line). → the spot, or
-   null: nowhere worth the walk. */
-function petStroll(x, span, lo, hi, others, rnd, reach = Infinity) {
-  let A = lo, B = hi;
-  for (const o of others) {
-    const g = (span + o.span) / 2 + PETL.keep + PETL.shy, to = o.to == null ? o.x : o.to;
-    if (o.x < x) A = Math.max(A, Math.min(x, Math.max(o.x, to)) + g); else B = Math.min(B, Math.max(x, Math.min(o.x, to)) - g);
-  }
-  A = Math.max(Math.min(A, x), x - reach); B = Math.min(Math.max(B, x), x + reach);
-  const to = A + rnd * (B - A);
-  return Math.abs(to - x) < Math.max(24, span / 2) ? null : to;
-}
-/* One frame of a walk: from x towards to, d at most, and never nearer to a singer ahead of it than the two
-   must keep apart (others [{ x, span }]; 1 DIP more than that, so the rule that keeps singers apart — petKeep
-   — never has to act on a walker: no shoving). → { x: where it is now, end: it's there, or someone is in its
-   way — the walk is over } */
-function petStride(x, to, d, span, others) {
-  const dir = to < x ? -1 : 1;
-  let far = Math.abs(to - x);
-  for (const o of others) {
-    const ahead = (o.x - x) * dir;
-    if (ahead > 0) far = Math.min(far, ahead - (span + o.span) / 2 - PETL.keep - 1);
-  }
-  return { x: x + dir * Math.max(0, Math.min(d, far)), end: far <= d };
-}
-/* A plain picture turns round to face the way it walks: f is its sideways scale now (1: as it is drawn … -1:
-   mirrored), to where it is going (1 or -1), dt s on. The whole way round takes PETL.turn s at an even pace,
-   through 0 — its narrow side, as a card turns: a turn, not a jump cut. → its scale after dt. */
-const petTurn = (f, to, dt) => (f < to ? Math.min(to, f + 2 * dt / PETL.turn) : Math.max(to, f - 2 * dt / PETL.turn));
-/* What's drawn of a picture turned that far (f as for petTurn), sideways: box as it is drawn (x0…x1, fractions
-   of its width), mirrored about the picture's middle — where the singer stands doesn't change, but a drawing off
+/* What's drawn of a picture turned that far (f: its sideways scale, 1 as it is drawn … -1 mirrored), sideways: box
+   as it is drawn (x0…x1, fractions of its width), mirrored about the picture's middle — where the singer stands doesn't change, but a drawing off
    to one side is off to the other. → [x0, x1], fractions of its width (edge on, f = 0: the same place twice). */
 const petTurned = (box, f) => { const a = 0.5 + f * (box.x0 - 0.5), b = 0.5 + f * (box.x1 - 0.5); return [Math.min(a, b), Math.max(a, b)]; };
 /* Bubble places: items { cx, w, tips } in the order they take their places (petLay: the lowest first;
@@ -12769,15 +12818,14 @@ function petSaidText(said) {
    the mouth starts to open (ms, 0–200) · read – how lyrics in Latin letters are read into mouth shapes: 'auto' (the
    voice's language where the score names it, else what most of the lyrics look like), or 'ja' (romaji), 'en'
    (English), 'zh' (pinyin) for every singer · blink – it blinks · gestures – the arms and the nod as it sings:
-   'off', 'gentle', 'lively' · steps – it takes steps as it wanders (off: it glides) · swing – it hangs and swings
-   from the mouse while it's carried · hop – it hops when clicked · half – it is drawn every other frame (for many
-   puppets on a slow computer) */
-const PETSH = { words: true, early: 50, read: 'auto', blink: true, gestures: 'lively', steps: true, swing: true, hop: true, half: false };
+   'off', 'gentle', 'lively' · swing – it hangs and swings from the mouse while it's carried · hop – it hops when
+   clicked · half – it is drawn every other frame (for many puppets on a slow computer) */
+const PETSH = { words: true, early: 50, read: 'auto', blink: true, gestures: 'lively', swing: true, hop: true, half: false };
 /* Those settings as the app hands them over (s: its cfg.sheet), each one checked: what isn't one of a setting's
    values — or isn't said at all, by an app from before them — is the usual. → all of them, a new object. */
 function petSheetCfg(s) {
   const o = s && typeof s === 'object' ? s : {}, out = { ...PETSH };
-  for (const k of ['words', 'blink', 'steps', 'swing', 'hop', 'half']) if (typeof o[k] === 'boolean') out[k] = o[k];
+  for (const k of ['words', 'blink', 'swing', 'hop', 'half']) if (typeof o[k] === 'boolean') out[k] = o[k];
   if (Number.isFinite(o.early)) out.early = Math.max(0, Math.min(200, Math.round(o.early)));
   if (['auto', 'ja', 'en', 'zh'].includes(o.read)) out.read = o.read;
   if (['off', 'gentle', 'lively'].includes(o.gestures)) out.gestures = o.gestures;
@@ -12844,8 +12892,8 @@ const PETS = {
   // the song's singers, every one, as petCast gives them (raw); cast is who the pets are (petGroup, by the setting: a pet
   // for each singer — two for one that sings two lines at once —, one for each group of them, or one for them all) and
   // sc what petActive / petOnsets / petFirstLineAt read for the cast: the pets' lines and notes, standing in for the
-  // score (svp); spans: key → when that pet has lines (petSpans: wandering)
-  raw: [], sc: null, spans: new Map(), have: '', // (have: which of them had a picture as the groups were made — petHave)
+  // score (svp)
+  raw: [], sc: null, have: '', // (have: which of them had a picture as the groups were made — petHave)
   pics: new Map(),   // key → its picture, ready to show: { url, w, h, box, from, id }; null: none (that singer isn't shown)
   // a picture that is a pet sheet — a puppet (petReady) — also has sheet (its settings, made ready: PetSheet.make), src
   // (its picture, as loaded) and copy (a smaller one for the size the pets are now: petSheetCopy); voices: pet key → what
@@ -12923,21 +12971,18 @@ function petLedges(list) {
   for (const c of PETS.chars.values()) if (c.on) { PETS.rideAt = performance.now(); break; }
 }
 /* A singer with a picture: an element on the strip (its picture inside .pet-fig, which hops and tilts), not
-   shown yet. Its place: fx, alt, on, fall (see PETS above); ride: just let go onto a window, it is easing onto
-   it ({ x0, a0, t0 }: from there, since then); dest: where it goes once it has come up — null, or { fx: its
+   shown yet. Its place: fx, alt, on, fall (see PETS above); ride: just let go onto a window, it is dropping onto
+   its edge ({ h, v }: how far over the edge it still is, DIP — under it, < 0: it steps up —, and how fast it
+   drops, DIP/s: petMove); dest: where it goes once it has come up — null, or { fx: its
    centre there (a share of the width), alt, win: onto the window top edge that is there (false: a place in
    the air), until: 0, or the clock time until which it waits on the taskbar to hear where the windows are };
    jump: on its way there — null, or { t0, x0, a0: since then, from there, on: the window it will stand on
    ({ id, off }; null: the air), x1, a1: where that place is now, lost: its edge is missing since then };
    inAt: when it had arrived (a puppet waves then; null: not yet); leftAt: when it was told to go (petLeave); vx, vy: how fast it's moving (DIP/s, for
    the mouse rectangles); keep: the user put it where it is, so where it comes to rest is remembered.
-   walk: how it is walking, while it wanders with nothing to sing (petRoam) — null: it stands; else { to: where
-   to (its centre, x in the window), dir: -1 left / 1 right, v: how fast just now (DIP/s), k: how far through
-   the step it's taking (0…1), foot: 0 / 1 in turn, a step each, done: it has stopped and is only finishing
-   that step where it stands }; rest: it stands at least until then (the frame clock, ms).
-   facing: the way it faces, -1 left / 1 right — the way its picture is drawn (c.pic.faces), or the way it last
-   walked (petAnim); mir: so its plain picture is mirrored, or turning to be, and flip: that picture's sideways
-   scale just now (1: as drawn … -1: mirrored; petTurn). box is the picture as it is drawn: what goes by where
+   facing: the way it faces, -1 left / 1 right — the way its picture is drawn (c.pic.faces; a puppet: as its pose
+   says, petPosed); mir, flip: a puppet whose pose is mirrored (flip: its sideways scale, 1 as drawn … -1 mirrored —
+   a plain picture is never mirrored). box is the picture as it is drawn: what goes by where
    the drawing is sideways goes through petBox, which knows about the turn.
    key is the pet's own (its place on the strip, its remembered place, its lines and notes); pk the singer whose
    picture it has — the same, but for the second pet of a singer that sings two lines at once (petVoiced).
@@ -12946,8 +12991,8 @@ function petLedges(list) {
 function petNew(g) {
   const c = { key: g.key, pk: petPk(g), label: g.label, g, state: 'wait', t0: 0, fx: null, alt: 0, on: null, fall: null, ride: null, dest: null, jump: null, inAt: null, leftAt: null, w: 0, h: 0, y: 0, phase: Math.random(),
     hopAt: -1e9, hopH: 0, hopMs: 240, clickAt: -1e9, tilt: 0, tiltTo: 0, side: 1, sing: false, drag: null, landAt: -1e9, say: null,
-    tf: '', ff: '', cp: '', vx: 0, vy: 0, lx: null, ly: null, keep: false, walk: null, rest: 0, picUrl: null, pic: null, box: null,
-    facing: 1, mir: false, wdir: 0, flip: 1, fl: '', img: null, pup: null };
+    tf: '', ff: '', cp: '', vx: 0, vy: 0, lx: null, ly: null, keep: false, picUrl: null, pic: null, box: null,
+    facing: 1, mir: false, flip: 1, img: null, pup: null };
   const el = document.createElement('div'), fig = document.createElement('div');
   el.className = 'pet-ch';
   fig.className = 'pet-fig';
@@ -12974,7 +13019,7 @@ function petPic(c, poof) {
     c.fig.replaceChildren(n);
     c.img = n;
   }
-  c.mir = false; c.wdir = 0; c.flip = 1; c.fl = ''; c.facing = petDrawn(c); // (a new picture stands the way it is drawn)
+  c.mir = false; c.flip = 1; c.facing = petDrawn(c); // (a new picture stands the way it is drawn)
   petSize(c);
   if (poof && c.state !== 'wait' && !(was && p.id && p.id === was.id)) petPoof(c);
 }
@@ -13009,7 +13054,7 @@ function petPuppet(c) {
   c.fig.replaceChildren(cv);
   const u = c.pup = { cv, cx: null, act: null, dpr: 0, k: 1, cw: 1, ch: 1, ox: 0, oy: 0, src: null, pose: null, bad: false, dirty: true, gone: false, odd: !!(++PETS.pups & 1),
     st: { x: 0, y: 0, h: 0, voice: null, now: 0, walk: 0, held: false, grab: { x: 0, y: 0 }, air: false, landAt: null, hopAt: null, hopMs: 420, hopH: 14, enterAt: null, leaveAt: null,
-      steps: true, blink: true, gesture: 1, shadow: true } }; // (steps, blink, gesture: the puppets' settings, as petDraw says them each frame; shadow: there is ground under its feet)
+      blink: true, gesture: 1, shadow: true } }; // (blink, gesture: the puppets' settings, as petDraw says them each frame; shadow: there is ground under its feet)
   try { u.cx = cv.getContext('2d'); u.act = PetSheet.actor(c.pic.sheet, c.key); } catch (e) {}
   if (!u.cx) petSheetBad(c, true); else if (!u.act) petSheetBad(c);
 }
@@ -13091,24 +13136,22 @@ function petLang(g) {
 /* One frame of a puppet (petAnim calls it once the singer's box is placed, as a picture's is): the stage says what
    the singer is doing, the puppet works out how it stands (PetSheet.step) and is drawn again (PetSheet.draw).
    x, y: where the middle of its feet is in the window now — its place, and how far it has risen or sunk as it
-   comes on or leaves: how that point moves is what makes a carried puppet swing, a falling one trail and a
-   walking one step.
+   comes on or leaves: how that point moves is what makes a carried puppet swing and a falling one trail. It never
+   walks (st.walk stays 0: the stage doesn't move singers about by themselves).
    · It sings: its mouth goes by its notes and their lyrics (petVoice) — while this song's own score plays (sc),
      and not while the music is paused.
-   · It walks while it wanders (c.walk, the way that says; not while it only finishes a step where it stands). One
-     drawn from the side turns itself round to face the way it goes: the stage mirrors plain pictures only.
    · Carried (c.drag.moved) it hangs from where it was grabbed (gx, gy: petDown) and swings. A press that is only
      a click doesn't make it go limp.
-   · It falls (c.fall) and lands (c.landAt); a click makes it hop (c.clickAt: as long and as high as a picture's
-     big hop — the notes make it nod, not hop); it waves once it has come on (c.inAt: up, and at its place) and
+   · It falls (c.fall; let go over a window's edge, c.ride, while it drops onto that) and lands (c.landAt); a click
+     makes it hop (c.clickAt: as long and as high as a picture's big hop — the notes make it nod, not hop); it waves once it has come on (c.inAt: up, and at its place) and
      as it leaves (c.leftAt).
    What the stage reads back: c.up — how far the hop has it off the ground (the press test) —, and c.flip, c.mir,
    c.facing — how far round a side-drawn puppet has turned: what's drawn of it is on the other side of its feet
    then, as a mirrored picture's is (petBox).
    The puppets' settings (PETS.sh — Animated pets… in the main window; as they are usually, all of the above) turn
-   some of it down, from the very next frame: it glides instead of taking steps (steps), stays upright while it is
-   carried (swing), doesn't hop when clicked (hop), doesn't blink (blink), makes smaller gestures or none as it sings
-   (gestures) — and at half speed (half) it is drawn every other frame.
+   some of it down, from the very next frame: it stays upright while it is carried (swing), doesn't hop when clicked
+   (hop), doesn't blink (blink), makes smaller gestures or none as it sings (gestures) — and at half speed (half) it
+   is drawn every other frame.
    A failure marks the sheet bad (petSheetBad): it is then drawn once, standing still. Nothing is made per frame:
    the state and the pose are the same objects every time. */
 function petDraw(c, t, now, sc, x, y) {
@@ -13124,16 +13167,15 @@ function petDraw(c, t, now, sc, x, y) {
     let p = null;
     if (u.bad) p = PetSheet.still(S);
     else {
-      const st = u.st, wk = c.walk, d = c.drag, j = c.jump;
+      const st = u.st, d = c.drag, j = c.jump;
       st.x = x; st.y = y; st.h = c.h;
       st.voice = sc && PETS.playing ? petVoice(c) : null; st.now = now;
-      st.walk = wk && !wk.done ? wk.dir : 0; st.steps = U.steps;
       st.held = U.swing && !!(d && d.moved);
       if (st.held) { st.grab.x = d.gx; st.grab.y = d.gy; }
       // (its jump up to its place — c.jump — is told as a hop's time in the air, legs and arms out, with no lift of the
       // puppet's own: the stage carries it up, and it lands as one that drops does. A hop of no height is no click to
       // the puppet: an animation of the sheet's own for a click doesn't start — petsheet.js, pickClip)
-      st.air = !!c.fall; st.landAt = c.landAt; st.hopAt = j ? j.t0 - 110 : U.hop ? c.clickAt : null; st.hopMs = j ? PETL.leap * 1000 / 0.7 : 420; st.hopH = j ? 0 : 14;
+      st.air = !!c.fall || !!(c.ride && c.ride.h > 0); st.landAt = c.landAt; st.hopAt = j ? j.t0 - 110 : U.hop ? c.clickAt : null; st.hopMs = j ? PETL.leap * 1000 / 0.7 : 420; st.hopH = j ? 0 : 14;
       st.blink = U.blink; st.gesture = petGesture(U.gestures);
       st.enterAt = c.state === 'leaving' ? null : c.inAt; st.leaveAt = c.state === 'leaving' ? c.leftAt : null;
       // (its shadow lies on the ground: under one that stands on the taskbar or on a window's edge — none under one left
@@ -13177,7 +13219,6 @@ function petShow(c, t) {
   if (c.fx == null && !petPlace(c)) return false;
   c.state = 'rising'; c.t0 = t; c.seq = ++PETS.seq;
   c.inAt = c.dest ? null : t; // (when it is there, for a puppet's wave: one with somewhere higher to be waves once it has landed — petLeap)
-  c.rest = t + 2000 + Math.random() * 4000; // (it stands a while where it came on before it wanders off: petRoam)
   c.el.style.visibility = '';
   return true;
 }
@@ -13399,7 +13440,6 @@ function petTimes() {
   PETS.on = sc ? petOnsets(PETS.cast, sc) : null;
   PETS.voices = new Map(); // (what each puppet's mouth does: worked out again, for these notes, when it is next drawn — petVoice)
   PETS.cur = new Map(PETS.cast.map(g => [g.key, {}]));
-  PETS.spans = new Map(PETS.cast.map(g => [g.key, petSpans(sc && sc.pet ? sc.pet.lines.get(g.key) : null)]));
   petWhen();
 }
 /* When each one comes on, worked out over the singers with a picture (only they're shown): the first of
@@ -13437,8 +13477,9 @@ async function petPics(cast, apply) {
   try { r = await mapApp.petPics(list.map(g => ({ key: g.key, label: g.label, eng: g.eng }))); } catch (e) {}
   if (Array.isArray(r)) await Promise.all(r.map(p => petTake(p, apply)));
 }
-/* Which way a picture is drawn, as the app lists it: 'left' only when the user said so (Characters… → Faces left);
-   an app from before that says nothing, and every picture faces right. */
+/* Which way a picture is drawn, as the app lists it: 'left' only when the user said so before 1.0.11 (Characters… had
+   Faces left then; nothing sets it now, and nothing is mirrored by it); an app older than that button says nothing, and
+   every picture faces right. */
 const petFaces = p => (p && p.faces === 'left' ? 'left' : 'right');
 /* One singer's picture from the app ({ key, url, v, faces, sheet }; url '': none): ready to show. The same picture again
    (the same v: a new picture is a new file, so a new v) is not looked at or swapped in again — only which way
@@ -13574,8 +13615,8 @@ function petCard(cv, w, h) {
 }
 /* main: a singer's picture changed (Characters… or the dialog before the start, while the pets are on):
    it swaps in with a poof — or comes on, if it's one of this song's singers; url '': it was removed, that
-   singer leaves (petSync). The picture that's here already: the user said which way it's drawn (Faces left /
-   Faces right) — the singer on screen goes by that from its next frame on. */
+   singer leaves (petSync). The picture that's here already: only which way it is drawn may have changed (what the
+   app keeps with the picture) — the singer on screen goes by that from its next frame on. */
 async function petNewPic(m) {
   const url = m.url;
   if (url && !/^file:/i.test(url)) return;
@@ -13602,7 +13643,7 @@ function petFrame() {
   if (same && svp && svp !== PETS.svp) petRecast();
   const sc = same && !!svp && svp === PETS.svp; // (this song's own score is the one playing)
   if (sc && playing) PETS.started = true;
-  petMove(t, dt, same && (sc || !PETS.cast.length)); // (a song without words: everyone still there has nothing to sing)
+  petMove(t, dt);
   for (const c of [...PETS.chars.values()]) {
     if (c.state === 'wait') {
       const at = PETS.appear.get(c.key);
@@ -13647,22 +13688,10 @@ function petAnim(c, now, t, dt, sc) {
     if (hit && !c.drag && t - c.hopAt > 120) { c.hopAt = t; c.hopH = (hit.d < 0.15 ? 3 : 6) * s; c.hopMs = 240; c.side = -c.side; }
     sing = petSounding(cur, on, now);
   }
-  // walking (petRoam; it has nothing to sing then): a little hop for each step, leaning the way it goes — a touch
-  // more on every other step, so it waddles
-  const wk = c.walk;
-  c.tiltTo = c.drag ? 4 * c.drag.dir : wk && !wk.done ? (2 + wk.foot) * wk.dir : sing ? 2 * c.side : 0;
-  // …and facing the way it goes: its picture is mirrored while it walks against the way it is drawn (the user says
-  // which way that is: c.pic.faces), turning round quickly through its narrow side (petTurn). It keeps facing that way
-  // while it stands, and turns back to the way it's drawn when it is picked up, and for its next line — as that line's
-  // bubble comes, so it has turned before the first note. One that never wanders is never mirrored.
-  const dn = petDrawn(c), q = sc ? petIdle(PETS.spans.get(c.key) || [], now) : null;
-  if (c.drag || sing || (q && q.until <= PETL.early)) { c.mir = false; c.wdir = 0; }
-  else if (wk && !wk.done) { c.wdir = wk.dir; c.mir = wk.dir !== dn; }
-  else if (c.wdir) c.mir = c.wdir !== dn; // (standing after a walk: still facing that way, whichever way the picture is said to be drawn)
-  c.facing = c.mir ? -dn : dn;
-  c.flip = petTurn(c.flip, c.mir ? -1 : 1, dt);
-  // (a click's big hop runs its whole course, the notes' hops — or a step's — over it only where higher: petLift)
-  up = petLift(up, Math.max(petArc((t - c.hopAt) / c.hopMs, c.hopH), wk ? petArc(wk.k, 4 * s) : 0), petArc((t - c.clickAt) / 420, 14), 14);
+  c.tiltTo = c.drag ? 4 * c.drag.dir : sing ? 2 * c.side : 0;
+  c.facing = petDrawn(c); // (the way its picture is drawn: nothing turns a pet round — a puppet's pose says its own, petDraw)
+  // (a click's big hop runs its whole course, the notes' hops over it only where higher: petLift)
+  up = petLift(up, petArc((t - c.hopAt) / c.hopMs, c.hopH), petArc((t - c.clickAt) / 420, 14), 14);
   const kq = (t - Math.max(c.hopAt, c.clickAt)) / 120;
   if (kq >= 0 && kq < 1) { sx *= 1 + 0.03 * (1 - kq); sy *= 1 - 0.04 * (1 - kq); }
   // held: lifted a little; let go: it lands with a small bounce
@@ -13678,18 +13707,15 @@ function petAnim(c, now, t, dt, sc) {
   const tf = 'translate(' + (px - c.w / 2).toFixed(1) + 'px,' + (feet - c.h + y).toFixed(1) + 'px)';
   if (tf !== c.tf) c.el.style.transform = c.tf = tf;
   // (all of the above places a puppet's box as it places a picture's — where it stands, its rise and its sinking away,
-  // the cut at its standing line, how fast it goes. The figure's own bob, hop, lean and squash, and the picture's turn,
-  // are a plain picture's: a puppet — a pet sheet — bobs, hops, leans and turns round itself, petDraw)
+  // the cut at its standing line, how fast it goes. The figure's own bob, hop, lean and squash are a plain picture's:
+  // a puppet — a pet sheet — bobs, hops and leans itself, petDraw)
   const ff = c.pup ? '' : 'translateY(' + (-up).toFixed(2) + 'px) rotate(' + c.tilt.toFixed(2) + 'deg) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')';
   if (ff !== c.ff) c.fig.style.transform = c.ff = ff;
-  // (the turn is the picture's own, inside the figure that hops and leans: it leans the way it walks either way round)
-  const fl = c.flip === 1 ? '' : 'scaleX(' + c.flip.toFixed(3) + ')';
-  if (fl !== c.fl && c.img) c.img.style.transform = c.fl = fl;
   if (c.pup) petDraw(c, t, now, sc, px, py);
 }
 const petVis = c => !!c && (c.state === 'rising' || c.state === 'in');
 // the way its picture is drawn: -1 left / 1 right (petFaces) — by the listing's own picture object, which is the one
-// petTake / petNewPic change when the user says Faces left / Faces right (a picture made ready twice at the same time
+// petTake / petNewPic change when the app says so (a picture made ready twice at the same time
 // leaves the singer with the other copy, which nobody changes); one whose picture has just gone goes by what it shows
 const petDrawn = c => { const p = PETS.pics.get(c.pk) || c.pic; return p && p.faces === 'left' ? -1 : 1; };
 /* ---- where a singer stands ---- */
@@ -13737,10 +13763,11 @@ function petBox(c, lifted) {
   const cut = c.alt > 0 && c.y > 0 ? petFeet(c) : Infinity;
   return { x, y, w: (r[1] - r[0]) * c.w, h: Math.min(y + (b.y1 - b.y0) * c.h, cut) - y };
 }
-/* From now on it stands on a window's top edge (L: the part of it under x), easing onto it from where it is. */
+/* From now on it stands on a window's top edge (L: the part of it under x): from where it is it drops onto it, as
+   onto the taskbar — or, let go a little under it, steps up onto it (c.ride: petMove). */
 function petStandOn(c, L, x, t) {
   c.on = { id: L.id, off: x - L.wx, lost: 0 };
-  c.ride = { x0: c.fx * PETS.G.W, a0: c.alt, t0: t };
+  c.ride = { h: c.alt - (PETS.G.feetY - L.y), v: 0 }; // (how far over the edge it was let go — under it: < 0 — and how fast it drops: petMove)
   c.fall = null; c.dest = null; c.jump = null;
 }
 /* Where a singer stands now is remembered (map-pet.pos, the newest 200), for one the user put there: x and
@@ -13755,9 +13782,10 @@ function petRemember(c) {
 }
 /* Where everyone stands this frame, before they're drawn. A singer on a window is where that is now, at once
    (main says where the windows are as often as they move: nothing eases along behind a window that's dragged
-   — only one just let go onto a window eases onto it, c.ride. Nor is it put ahead of where the window was last
-   seen, by the window's speed: main speaks only when something changed, so a window that stops is not heard of,
-   and the singer would stand ahead of it for a moment and then step back); one whose window has gone, or is
+   — one just let go over a window drops onto its edge, c.ride, as onto the taskbar, and goes along with the window
+   meanwhile. Nor is it put ahead of where the window was last seen, by the window's speed: main speaks only when
+   something changed, so a window that stops is not heard of, and the singer would stand ahead of it for a moment
+   and then step back); one whose window has gone, or is
    covered just there, waits a moment (PETL.hold: the edge may only be missing from one word of main's) and
    then falls to the taskbar, faster and faster, and lands with a drop's bounce. With the Gravity setting on,
    a fall ends on the first window edge under it, and one left in the air falls too (petFallOnto). Singers
@@ -13766,15 +13794,13 @@ function petRemember(c) {
    each staying on what it stands on (petKeep: one call for everyone; one standing clear above another stays).
    One the user holds is no part of that: carried, it is on no line, and nobody it's carried past moves because
    of it; once it's let go — on a line, or in the air — it and whoever it overlaps glide apart like anyone, and
-   where it comes to rest is what's remembered. Then the ones with nothing to sing wander along their line
-   (petRoam; live: this song is the one that's on — its own score, or a song with nobody singing in it). */
-function petMove(t, dt, live) {
-  const G = PETS.G, W = G.W, Ls = petLs(), grav = petGrav(), lines = new Map(), glid = new Set(), where = new Map(), airs = []; // (where: the line each one is on; airs: the ones left standing in the air)
-  const join = (k, c, x, lo, hi, L) => { if (!lines.has(k)) lines.set(k, []); lines.get(k).push({ c, x, lo, hi, L }); where.set(c, k); };
-  let seen = 0; // (how many singers are on screen)
+   where it comes to rest is what's remembered. Nobody walks about by itself: a singer only moves when it is
+   carried, falls, jumps up to its place, rides on its window or steps aside. */
+function petMove(t, dt) {
+  const G = PETS.G, W = G.W, Ls = petLs(), grav = petGrav(), lines = new Map(), glid = new Set(), airs = []; // (airs: the ones left standing in the air)
+  const join = (k, c, x, lo, hi, L) => { if (!lines.has(k)) lines.set(k, []); lines.get(k).push({ c, x, lo, hi, L }); };
   for (const c of PETS.chars.values()) {
     if (c.fx == null || !petVis(c)) continue;
-    seen++;
     const x = c.fx * W, lo = c.w / 2, hi = W - c.w / 2;
     // carried, it's wherever the pointer has it, and on no line: nobody it's carried past makes room for it, or minds it
     // at all — a whole row would start moving while you only want to take one somewhere. Let go, it's on a line again
@@ -13805,8 +13831,8 @@ function petMove(t, dt, live) {
       c.fall.v += PETL.fall * dt;
       c.alt -= c.fall.v * dt;
       // (gravity: it lands on the first window edge under it that its standing line reaches or passes in this step —
-      // petFallOnto; lx: where it can stand, as one standing on an edge is kept on the screen — with a drop's bounce, not
-      // eased on as one let go onto an edge is. Without gravity it goes on down to the taskbar, through any window, as ever)
+      // petFallOnto; lx: where it can stand, as one standing on an edge is kept on the screen — with a drop's bounce, as
+      // one let go over an edge has. Without gravity it goes on down to the taskbar, through any window, as ever)
       const lx = Math.max(lo, Math.min(hi, x)), li = grav ? petFallOnto(Ls, lx, y0, G.feetY - c.alt, petRoom(c), G.feetY) : -1;
       if (li >= 0) { const L = Ls[li]; c.fx = lx / W; c.alt = G.feetY - L.y; c.on = { id: L.id, off: lx - L.wx, lost: 0 }; c.fall = null; c.landAt = t - (c.pup ? 0 : 150); glid.add(c); continue; }
       // (down: the bounce a drop has, from where it touches. It only just got there: whether it can stay right there —
@@ -13818,17 +13844,6 @@ function petMove(t, dt, live) {
     if (petFloor(c)) join('t', c, x, lo, hi);
     else airs.push({ c, x, lo, hi, L: null }); // (left standing in the air — nothing falls, or it is pressed there: on no line, but it keeps apart like anyone)
   }
-  // singers with nothing to sing wander: with two or more on screen, and while the song plays (paused, everyone stands)
-  // (OUT.again: the song is only stopped for a moment while the sound device starts again, outRestart — a walk goes on;
-  // a start that is getting ready counts too: with the standard engine the players stand paused for a moment more after
-  // outRestart has handed over to launch)
-  const roam = !!PETS.cfg && PETS.cfg.wander === true && !!live && (PETS.playing || OUT.again || (wantPlay && !!launching)) && seen > 1;
-  // (a walker keeps off those not on its line too, where they are level with it — what's drawn of them overlaps in
-  // height, as keeping apart goes by: one on a low window or left in the air just over the taskbar, one coming down;
-  // one of them that is walking counts to where it is going — not one the user is carrying: it walks on as if that one
-  // weren't there)
-  const aside = (c, k) => { const e = petExt(c); return [...PETS.chars.values()].filter(o => o !== c && o.fx != null && petVis(o) && !(o.drag && o.drag.moved) && where.get(o) !== k && petLevel(petExt(o), e))
-    .map(o => ({ x: o.fx * W, span: petSpan(o.w, o.box), to: o.walk && !o.walk.done ? o.walk.to : null })); };
   // keeping apart: everyone at once, whatever they stand on — the lines' singers and the ones left in the air, each bound
   // to its own line (petKeep). (One that's pressed but not carried off yet stays put under the pointer, and nobody moves
   // because of it either — keeping apart is for the ones nobody holds)
@@ -13845,68 +13860,24 @@ function petMove(t, dt, live) {
       glid.add(m.c);
     });
   }
-  for (const [key, on] of lines) {
-    for (const m of on) petRoam(m, on, roam, t, dt, () => aside(m.c, key));
-    for (const m of on) { // on a window: right where that is now — or, just let go onto it, on the way there
+  for (const on of lines.values()) {
+    for (const m of on) { // on a window: right where that is now — or, just let go over it, on its way onto it
       const c = m.c;
       if (!c.on) continue;
-      const k = c.ride ? Math.min(1, (t - c.ride.t0) / 260) : 1, ta = G.feetY - m.L.y;
-      c.fx = (c.ride ? c.ride.x0 + (m.x - c.ride.x0) * k : m.x) / W;
-      c.alt = c.ride ? c.ride.a0 + (ta - c.ride.a0) * k : ta;
-      if (k >= 1) c.ride = null;
+      const r = c.ride;
+      if (r && r.h > 0) { r.v += PETL.fall * dt; r.h = Math.max(0, r.h - r.v * dt); } // (over the edge: it drops onto it, as onto the taskbar)
+      else if (r) r.h = Math.min(0, r.h + PETL.pop * dt); // (a little under it, inside the window: it steps up onto the edge)
+      if (r && r.h === 0) { c.ride = null; c.landAt = t - (c.pup ? 0 : 150); } // (there: the bounce a drop has)
+      c.fx = m.x / W;
+      c.alt = G.feetY - m.L.y + (c.ride ? c.ride.h : 0); // (from the edge where that is now: a window moved meanwhile takes it along)
     }
   }
   for (const c of PETS.chars.values()) {
-    // a walk is over for one that is picked up or going; one no longer on a line (it fell) stops; and a walker that has
-    // stopped finishes the step it was taking where it stands (0.3 s for a whole one), then stands
-    const wk = c.walk;
-    if (wk && (c.drag || !petVis(c))) c.walk = null;
-    else if (wk) {
-      if (!wk.done && wk.at !== t) { wk.done = true; wk.v = 0; c.rest = Math.max(c.rest, t + 1500); }
-      if (wk.done && (wk.k < 0.1 || (wk.k += dt / 0.3) >= 1)) c.walk = null;
-    }
     // one the user put somewhere: what's remembered is where it came to rest (the others' are as the user left them)
     // (not while anybody is held: nobody steps apart then, so one still on its way to its place hasn't come to rest; nor
     // while it waits for its window's edge to be back: that would be remembered as a place in the air)
     if (c.keep && petVis(c) && !c.drag && !c.fall && !c.ride && !c.dest && !c.jump && !(c.on && c.on.lost) && !glid.has(c) && !(PETS.held && PETS.held.drag)) { c.keep = false; petRemember(c); }
   }
-}
-/* One singer on its line (m: petMove's { c, x, lo, hi, L }; on: everyone on that line; aside(): the others whose
-   pictures are level with it though they aren't on the line) wanders while it has nothing to sing (roam: singers
-   wander at all just now): it picks a spot with room along the line (petStroll), walks there in small steps at
-   an easy pace (petStride: never into anyone, so nobody is shoved and the rule that keeps singers apart has
-   nothing to do), stands a random while, and picks another. It has no line then: its last one ended PETL.idle
-   ago, and it stops PETL.soon before its next one starts — so it is standing still well before that line's
-   bubble comes — and never sets off with less than PETL.far to go. One the user holds doesn't walk; one the
-   user has just put somewhere, or clicked, stands a good while first (c.rest). How it walks is c.walk (petNew),
-   which petAnim draws. Wandering never touches what's remembered (map-pet.pos): that stays where the user
-   left it. */
-function petRoam(m, on, roam, t, dt, aside) {
-  const c = m.c, wk = c.walk, span = petSpan(c.w, c.box);
-  // (one on a window stands while the windows are moving, as it always has: PETS.rideAt is when main last said they did)
-  const q = roam && c.state === 'in' && !c.drag && !c.ride && !c.dest && !(c.on && t - PETS.rideAt < 260) && !c.sing && !(c.say && t < c.say.until) ? petIdle(PETS.spans.get(c.key) || [], PETS.now) : null;
-  const free = !!q && q.since >= PETL.idle && q.until >= PETL.soon;
-  if (wk && !wk.done) {
-    wk.at = t; // (still on a line this frame: petMove stops one that isn't)
-    if (!free) { wk.done = true; wk.v = 0; c.rest = Math.max(c.rest, t + 1500); return; }
-    const others = on.filter(o => o !== m).map(o => ({ x: o.x, span: petSpan(o.c.w, o.c.box) })).concat(aside());
-    // (it sets off gently: over half a second — the mouse rectangles, sent 10 times a second at most, are with it before it has gone 4 px)
-    const v = PETL.walk * c.h * wk.f * Math.min(1, 0.1 + (t - wk.t0) / 600);
-    const s = petStride(m.x, Math.max(m.lo, Math.min(m.hi, wk.to)), v * dt, span, others), d = Math.abs(s.x - m.x);
-    wk.v = dt > 0 ? d / dt : 0;
-    if (d > 0) wk.dir = s.x < m.x ? -1 : 1;
-    wk.k += d / (PETL.pace * c.h);
-    while (wk.k >= 1) { wk.k -= 1; wk.foot ^= 1; }
-    m.x = s.x;
-    if (c.on) c.on.off = m.x - m.L.wx; else c.fx = m.x / PETS.G.W;
-    if (s.end) { wk.done = true; wk.v = 0; c.rest = t + 2500 + Math.random() * 5500; }
-    return;
-  }
-  if (wk || !free || t < c.rest || q.until < PETL.far) return;
-  const others = on.filter(o => o !== m).map(o => ({ x: o.x, span: petSpan(o.c.w, o.c.box), to: o.c.walk && !o.c.walk.done ? o.c.walk.to : null })).concat(aside());
-  const f = 0.85 + Math.random() * 0.3, to = petStroll(m.x, span, m.lo, m.hi, others, Math.random(), (q.until - PETL.soon - 0.5) * PETL.walk * c.h * f);
-  if (to == null) { c.rest = t + 1500 + Math.random() * 2500; return; } // (no room worth a walk just now: it looks again in a moment)
-  c.walk = { to, dir: to < m.x ? -1 : 1, v: 0, k: 0, foot: 0, f, t0: t, at: t, done: false };
 }
 /* The speech bubbles: who sings now (petActive) — one bubble per line, one shared by singers singing the
    same words together, with a tail to each; a long line in bubble-wide pieces with the karaoke wipe; on
@@ -14163,8 +14134,8 @@ function petUp(e) {
   petLetGo(c, e.type === 'pointerup');
 }
 /* The held singer is let go. Dragged: it comes to stand — on the taskbar when it's near that, on a window's top
-   edge when one is just under it, else where it was left, in the air (with the Gravity setting on it falls from
-   there: petMove says where it lands) — and is there next time. Not moved, and click: that was a click. */
+   edge when one is just under it (dropping onto it, as onto the taskbar), else where it was left, in the air (with
+   the Gravity setting on it falls from there: petMove says where it lands) — and is there next time. Not moved, and click: that was a click. */
 function petLetGo(c, click) {
   const d = c.drag, t = performance.now(), G = PETS.G;
   c.drag = null;
@@ -14181,11 +14152,9 @@ function petLetGo(c, click) {
     else if (at || drop) c.fall = { v: 0 }; // or down onto the taskbar;
     else c.landAt = t; // along the taskbar (the strip), or left in the air: it settles there with a small bounce
     c.keep = true; // (where it comes to rest is what's remembered: petMove)
-    c.rest = t + 10000 + Math.random() * 6000; // (and it stays where it was put a good while before it wanders off again: petRoam)
     petRemember(c);
   } else if (click) { // a click: a big hop, and the song's name for 2 s
     c.clickAt = t;
-    c.rest = Math.max(c.rest, t + 4000); // (it stands for that, and a little longer)
     const name = PETS.song || (currentProject && currentProject.name) || '';
     if (name) c.say = { text: '♪ ' + name, until: t + 2000 };
   }
@@ -14193,7 +14162,7 @@ function petLetGo(c, click) {
 /* What's on the strip now, for tests (window.__pet): a plain copy. Places in the window's DIP; alt: how far its
    standing line is above the taskbar line, on: the window it stands on (its id), jumping: it is on its jump up to its
    place, to: where it goes once it has come up ({ x, alt, window, waiting: to hear where the windows are } or null),
-   rect: what's drawn of it where it stands (main lets the mouse in over that: petGrab); walking: it's wandering just now, also: the other singers
+   rect: what's drawn of it where it stands (main lets the mouse in over that: petGrab); also: the other singers
    whose lines it sings too (as few pets as possible, one singer); facing: the way it faces (-1 left, 1 right) and
    mirrored: its picture is shown the other way round than it is drawn, or is turning to be; of: the singer whose
    picture it has (its own key — the second pet of a singer with two lines at once has that singer's). A pet that
@@ -14210,7 +14179,7 @@ function petSnapshot() {
       return { key: c.key, of: c.pk, label: c.label, x, y: top, w: c.w, h: c.h,
         puppet: u ? { mouth: po ? po.mouth : 'rest', open: po ? po.open : 0, eyes: po ? po.eyes : 'open', still: u.bad, canvas: { x: u.ox, y: u.oy, w: u.cw, h: u.ch } } : null,
         feet: petFeet(c) + c.y, up: c.up || 0, alt: c.alt, on: c.on ? c.on.id : null, falling: !!c.fall, jumping: !!c.jump, to: c.dest ? { x: c.dest.fx * G.W, alt: c.dest.alt, window: c.dest.win, waiting: !!c.dest.until } : null,
-        walking: !!c.walk && !c.walk.done, also: (c.g && c.g.also) || [], facing: c.facing, mirrored: c.mir,
+        also: (c.g && c.g.also) || [], facing: c.facing, mirrored: c.mir,
         visible: c.state === 'rising' || c.state === 'in' || c.state === 'leaving', state: c.state, held: !!c.drag, singing: c.sing,
         rect: x == null ? null : { x: x - c.w / 2 + r[0] * c.w, y: top + b.y0 * c.h, w: (r[1] - r[0]) * c.w, h: (b.y1 - b.y0) * c.h } };
     }),
@@ -14251,13 +14220,12 @@ async function petCfgUI() {
   petGravCan = can && typeof c.gravity === 'boolean';
   $('petGravity').checked = petGravCan && c.gravity;
   petFreeUI(can);
-  // (nor about wandering and how many pets show, if it's from before those. One from before "One singer" keeps only
-  // whether it's as few pets as possible, merge: the first two choices are offered, and it is told in its own word)
-  const one = ['each', 'few', 'one'].includes(c.pets), more = typeof c.wander === 'boolean' && (one || typeof c.merge === 'boolean');
-  $('petWander').checked = more && c.wander;
+  // (nor about how many pets show, if it's from before that. One from before "One singer" keeps only whether it's as
+  // few pets as possible, merge: the first two choices are offered, and it is told in its own word)
+  const one = ['each', 'few', 'one'].includes(c.pets), more = one || typeof c.merge === 'boolean';
   $('petPetsOne').hidden = $('petPetsOne').disabled = !one;
   $('petPets').value = one ? c.pets : c.merge === true ? 'few' : 'each';
-  for (const id of ['petWanderRow', 'petWanderHint', 'petPetsRow', 'petPetsHint']) $(id).hidden = !more;
+  for (const id of ['petPetsRow', 'petPetsHint']) $(id).hidden = !more;
   // (Animated pets…, the settings of pet-sheet puppets: offered whether or not any singer has a sheet just now — but
   // only by an app that keeps them, where a pet sheet can be shown at all)
   $('petSheetBtn').hidden = !(CAN_SHEET && c.sheet && typeof c.sheet === 'object');
@@ -14285,14 +14253,13 @@ $('petLift').ondblclick = e => { e.target.value = 50; e.target.dispatchEvent(new
 $('petFree').onchange = e => { petCfgSet({ free: e.target.checked }); petFreeUI(true); };
 $('petWindows').onchange = e => petCfgSet({ windows: e.target.checked });
 $('petGravity').onchange = e => petCfgSet({ gravity: e.target.checked });
-$('petWander').onchange = e => petCfgSet({ wander: e.target.checked });
 $('petPets').onchange = e => petCfgSet({ pets: e.target.value, merge: e.target.value === 'few' }); // (merge: what an app from before "One singer" goes by)
 /* ---- Animated pets…: the settings that only matter for singers whose picture is a pet sheet — a puppet —, in a
-   dialog of their own (size, height, wandering, how many pets and the other general ones stay in the list above).
+   dialog of their own (size, height, how many pets and the other general ones stay in the list above).
    The app keeps them with the others (pet.json: sheet — PETSH has each of them and what it usually is) and tells the
    pet page, so every change shows at once on the puppets on screen; nothing waits for Done, which only closes the
    dialog, as Esc does. ---- */
-const PETSH_BOX = { words: 'petShWords', blink: 'petShBlink', steps: 'petShSteps', swing: 'petShSwing', hop: 'petShHop' }; // (the ones that are on or off: each with its switch)
+const PETSH_BOX = { words: 'petShWords', blink: 'petShBlink', swing: 'petShSwing', hop: 'petShHop' }; // (the ones that are on or off: each with its switch)
 /* The dialog's controls as the settings say (s: the app's, or PETSH). What Latin letters are read as is only
    offered while the mouth follows the words: without that, no lyrics are read into shapes at all. */
 function petShPaint(s) {
@@ -14345,7 +14312,6 @@ $('petShOk').onclick = () => $('petSheetDlg').close();
    puppet as drawn, kept while the sheet is listed. */
 const PETR = { gen: 0, timer: 0, closed: false, job: null, painted: '', songs: [], rows: [], sel: new Set(), anchor: '', busy: false, again: null, armT: 0, delT: 0, roster: null, sheets: new Map(), thumbs: new Map() };
 const CAN_BANKS = CAN_PET && !!(mapApp.petBanks && mapApp.petBankPic); // (an older desktop app: no Voicebank pictures)
-const CAN_FACE = CAN_PET && !!mapApp.petFace; // (an older desktop app: every picture is taken to face right, and no card says which way)
 // Pet sheets (petsheet.js: a picture that is a puppet's parts, and moves). The kit for drawing one comes with the app's
 // own side (an older desktop app has none); and a sheet is only taken where it can be shown as one: this page has the
 // module, and the app's own side tells the pet window which pictures are sheets — which it does when it has the kit
@@ -14375,6 +14341,15 @@ const CAN_EDIT = CAN_SHEET && !!(window.PetSplit && window.PetEditor) && PetEdit
   give: async (key, png) => { try { await mapApp.petPics([{ key }]); return !!(await mapApp.petSetImg(key, png)); } catch (e) { return false; } }, // (met just now, as for any picture)
   saveBlob, say, paintRange,
   settings: petShOpen,
+  // (Save for later: the pets being worked on are kept by the app — main, <userData>/pet/drafts — never given to a
+  // singer; an older app has no such calls, and the editor then doesn't offer it)
+  drafts: mapApp.petDrafts && mapApp.petDraftGet && mapApp.petDraftPut && mapApp.petDraftDel
+    ? { list: () => mapApp.petDrafts(), get: id => mapApp.petDraftGet(id), put: (id, b) => mapApp.petDraftPut(id, b), del: id => mapApp.petDraftDel(id) } : null,
+  // (the tutorial's words — tutorial/pet-editor.json, as text — come from the app, as What's new does: this page comes
+  // from file://, where its own reading of a file beside it may be refused)
+  tutRead: mapApp.tutorial ? () => mapApp.tutorial() : null,
+  // (what a pet saved for later says it was made with: this app's version, as it is when the pet is saved)
+  get version() { return (UPD.s && UPD.s.version) || ''; },
   // (closing an editor opened by a card's Edit…: the keyboard goes back to that card's Edit…, when it was lost — the
   // list is drawn again after Use for, and the button the dialog came from is gone)
   back: key => {
@@ -14462,10 +14437,9 @@ function petPaint(songs, r) {
 }
 /* One singer's row: a frame for its picture, its name, the songs it sings in, whether it has a picture
    (no picture: a warning; the Chorus has no warning of its own), Choose picture… or Change…, and — with a
-   picture — Remove and which way the picture is drawn, Faces right / Faces left (petFaceDo).
+   picture — Remove.
    A picture that is a pet sheet says "Animated", shows its puppet standing rather than the sheet's grid of
-   parts (petThumb), has Edit… (the pet editor: how each of its animations goes), and has no Faces button: the
-   sheet itself says which way it is drawn.
+   parts (petThumb), has Edit… (the pet editor: how each of its animations goes).
    The row itself can be selected (see "several cards at once" below): its buttons stay buttons, and its
    picture still asks for a file unless Ctrl or Shift is held. */
 function petRow(c) {
@@ -14487,7 +14461,6 @@ function petRow(c) {
   pick.setAttribute('aria-label', (c.url ? 'Change the picture for ' : 'Choose a picture for ') + c.label);
   if (c.url && c.sheet && CAN_EDIT_CARD) btn('Edit…', 'Open this pet in the pet editor: set how each of its animations goes', () => PetEditor.open({ key: c.key })).setAttribute('aria-label', 'Edit the pet of ' + c.label);
   if (c.url) btn('Remove', c.chorus ? "Remove this picture: the Chorus isn't shown any more" : "Remove this picture: the singer isn't shown any more", () => petCharDo('remove', c.key)).setAttribute('aria-label', 'Remove the picture for ' + c.label);
-  if (c.url && CAN_FACE && !c.sheet) petFaceSay(btn('', PET_FACE_TIP, b => petFaceDo(c, b)), c);
   th.title = (c.url ? 'Change the picture for ' : 'Choose a picture for ') + c.label;
   th.onclick = e => { if (!(e.ctrlKey || e.metaKey || e.shiftKey) && !pick.disabled) pick.click(); }; // (Ctrl or Shift held: the click selects the card)
   tx.append(nm, sg, bd, bt);
@@ -14519,32 +14492,6 @@ function petThumb(th, url, json, copy) {
     } catch (e) {}
   };
   im.src = url;
-}
-/* Faces right / Faces left on a card: which way that singer's picture is drawn. A picture can't say so itself,
-   and a singer that wanders is mirrored when it walks the other way: with the wrong word here it would walk
-   backwards. The button says what the app has (right, until the user says otherwise), and a press changes it:
-   the app keeps it with the picture (petpics.js), the pets on screen go by it at once, and the card says so
-   without the list being drawn again — the keyboard stays on the button, to press it again. */
-const PET_FACE_TIP = 'Which way this picture is drawn. A singer that wanders is mirrored when it walks the other way: if this one walks backwards, press to change it.';
-function petFaceSay(b, c) {
-  const left = c.faces === 'left';
-  b.textContent = left ? 'Faces left' : 'Faces right';
-  b.setAttribute('aria-label', 'The picture for ' + c.label + ' faces ' + (left ? 'left' : 'right') + ': press to change');
-}
-async function petFaceDo(c, b) {
-  if (b._busy) return; // (one press at a time)
-  b._busy = true;
-  const to = c.faces === 'left' ? 'right' : 'left';
-  let ok = false;
-  try { ok = await mapApp.petFace(c.key, to); } catch (e) {}
-  b._busy = false;
-  if (ok) {
-    if (to === 'left') c.faces = 'left'; else delete c.faces; // (its row, as petRoster has it)
-    petFaceSay(b, c);
-    // (what's painted says so now: nothing to draw again when the app is next asked — unless the list is waiting to be drawn again anyway, painted '')
-    if (PETR.roster && PETR.painted) PETR.painted = JSON.stringify(PETR.roster);
-  } else say("Couldn't change that — the picture may be gone", 2500);
-  petPanel(); // (the app is asked again: a reading from before this press is out of date, and the newest one counts)
 }
 async function petCharDo(cmd, key) {
   let ok = false;
@@ -14871,7 +14818,6 @@ if (CAN_BANKS) {
   $('petTools').hidden = $('petBankHint').hidden = false;
   $('petBankBtn').onclick = petBankRun;
 } else $('petBankBtn').hidden = true; // (the row it is in may still show: for the kit)
-if (CAN_FACE) $('petFaceHint').hidden = false; // (what Faces right / Faces left on the cards is for)
 /* ---- Characters…: Pet sheet kit… ----
    Beside Voicebank pictures: the app asks for a folder (its own dialog) and puts a new folder "Pet sheet kit"
    there — the template to draw over, a finished sample with its settings and a picture of it put together, and
