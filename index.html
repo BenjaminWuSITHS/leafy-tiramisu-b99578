@@ -544,6 +544,7 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #plWhereRow[hidden],#plCoverHint[hidden],#plPetOld[hidden],#petSet[hidden],#petPanel[hidden],#plVisualRow[hidden],#plVisualHint[hidden],#plOneLyricRow[hidden],#plOneLyricHint[hidden]{display:none}
 #petFreeRow[hidden],#petFreeHint[hidden],#petWinRow[hidden],#petWinHint[hidden],#petGravRow[hidden],#petGravHint[hidden]{display:none}
 #petPetsRow[hidden],#petPetsHint[hidden]{display:none}
+#petDanceRow[hidden],#petDanceHint[hidden],#petDanceSizeRow[hidden],#petDanceSizeHint[hidden],#petCarryRow[hidden],#petCarryHint[hidden],#petScaredRow[hidden],#petScaredHint[hidden]{display:none}
 #petList{list-style:none;margin:6px 0 10px;padding:0}
 #petList li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:.85rem}
 #petList li.hint{display:block;margin:0}
@@ -710,10 +711,11 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
    picture and its tools on the left, the puppet playing and each animation's settings on the right, Use for and Save
    along the bottom; one column, scrolling, in a small window. Its chips are radio buttons; its slider rows are .op
    rows as in the other dialogs. The left side's tabs keep their tools in ONE cell of a grid (.pd-pans): the ones not
-   chosen are only out of sight (data-off), so the cell is as tall in Cut as in Hidden parts and Layers and the
-   picture under it doesn't change size between them; the hints do the same (.pd-hints). Face is the exception (its
-   cards are tall, and it has its own view of the picture): its tools take room only while it is the tab. In a short
-   window nothing keeps room for what is out of sight (the media rule at the end) */
+   chosen are only out of sight (data-off), so the cell is as tall in Cut as in 3D and the picture under it doesn't
+   change size between them; the hints do the same (.pd-hints). Face and a picture's Layers are the exceptions: their
+   tools take room only while they are the tab (Face's cards are tall, and it has its own view of the picture; Layers
+   puts its list, or the part open, beside the picture). In a short window nothing keeps room for what is out of
+   sight (the media rule at the end) */
 #petEdDlg{width:min(1180px,calc(100vw - 24px));height:calc(100vh - 24px);max-width:none;max-height:none;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.4);overflow:hidden}
 #petEdDlg[open]{display:flex;flex-direction:column}
 #petEdDlg:not([open]){display:none}
@@ -774,8 +776,8 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-brush input[type=range]{flex:none;width:160px}
 #petEdDlg .pd-brush .rv{flex:none;width:7ch;color:var(--muted);font-variant-numeric:tabular-nums}
 #petEdDlg .pd-brush button{flex:none;width:26px;padding:2px 0;font-size:.85rem;line-height:1.3}
-/* Hidden parts: the parts' chips, the colour (the picker itself is the swatch), the colours used, the switches */
-#petEdDlg #petEdHidParts{padding:8px 12px 0}
+/* Paint (a finished sheet): the colour (the picker itself is the swatch), the colours used; a chip that can't be
+   chosen now */
 #petEdDlg .pd-chip.off{opacity:.45;cursor:default}
 #petEdDlg .pd-colour{display:inline-flex;align-items:center;gap:6px;font-size:.82rem}
 #petEdDlg .pd-colour input{width:36px;height:26px;padding:0;border:1px solid var(--line);border-radius:6px;background:none;cursor:pointer}
@@ -796,6 +798,8 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-fc-tag{color:var(--muted);font-size:.66rem}
 #petEdDlg .pd-fc.own .pd-fc-tag{color:var(--fg);font-weight:600}
 #petEdDlg .pd-faceacts{min-height:32px;padding-top:2px;font-size:.82rem} /* (as tall with a line of words as with a button) */
+#petEdDlg #petEdFacePut{margin:0;padding:8px 12px 0;font-size:.82rem} /* (a picture cut by hand with no eye and mouth boxes yet: the button that puts them on) */
+#petEdDlg #petEdFacePut button{margin-left:6px;font-size:.8rem;padding:4px 10px}
 #petEdDlg .pd-facesel{color:var(--muted)}
 #petEdDlg .pd-facemore{flex:none;padding:0 12px}
 #petEdDlg .pd-facemore .pd-row{margin:0 0 4px}
@@ -805,7 +809,8 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-more summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #petEdDlg .pd-more>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 20px}
 #petEdDlg .pd-more .pd-usual{grid-column:1/-1;justify-self:start}
-/* Layers: a line and Back to the usual in the tabs' cell; the list itself where the picture is in the other tabs */
+/* Layers of a finished sheet (the order only): a line and Back to the usual in the tabs' cell; the list itself where
+   the picture is in the other tabs. A picture's Layers is under these (.pd-lyrow) */
 #petEdDlg #petEdPanLayers{padding:8px 12px 0}
 #petEdDlg #petEdPanLayers .pd-tip{margin:0 0 6px;font-size:.8rem}
 #petEdDlg #petEdPan3d .pd-tip{margin:6px 12px 0;font-size:.8rem}
@@ -817,7 +822,43 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-grip{padding:2px 4px;color:var(--muted);letter-spacing:-3px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 #petEdDlg .pd-layer-name{flex:1 1 auto;min-width:0}
 #petEdDlg .pd-layer button{width:30px;padding:2px 0;font-size:.85rem;line-height:1.3}
-#petEdDlg .pd-layer.pd-over{margin-left:18px;border-style:dashed;color:var(--muted);cursor:pointer} /* (the clothes over an arm that goes behind them: chosen in Hidden parts) */
+#petEdDlg .pd-layer.pd-over{margin-left:18px;border-style:dashed;color:var(--muted);cursor:pointer} /* (the clothes over an arm that goes behind them) */
+/* Layers, a picture (1.0.12): its seven parts, the one in front first, in a column beside the picture (.pd-side, at the
+   end of this block). A row (.pd-lyrow, 66 px): the grip (the only thing that drags), the part alone in small with its
+   Missing area striped, its dot and its name, how it stands and where, its arrows; a click anywhere else opens it.
+   An arm whose paint goes under the clothes has a dashed row of its own under it (.pd-lyrow.pd-over). The colours the
+   editor's Layers share: the Missing area's red, Painted by you's green, the joint's orange ring, the blue of the
+   clothes over an arm, and the plain light grey a part is shown alone on */
+#petEdDlg{--pd-miss:#be3428;--pd-done:#2c8c50;--pd-ring:#ffa000;--pd-clothes:#2a6fdb;--pd-alone:#eceef1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #petEdDlg{--pd-miss:#f0877b;--pd-done:#6fca95;--pd-clothes:#7aaaf5}}
+#petEdDlg #petEdPanLayers[data-off],#petEdDlg #petEdPanLayer[data-off]{display:none} /* (a picture's list and an open part are tall: they take room only while they are shown) */
+#petEdDlg #petEdLyT{margin:0 0 2px;font-size:1rem;font-weight:600}
+#petEdDlg #petEdPanLayers ol{display:flex;flex-direction:column;gap:5px;margin:8px 0;padding:0;list-style:none}
+#petEdDlg #petEdPanLayers #petEdLyWait{margin:6px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--accent) 7%,var(--surface));color:var(--fg);font-size:.85rem;line-height:1.45} /* (the points aren't all placed: Go to Cut) */
+#petEdDlg #petEdLyWait button{display:block;margin-top:8px;padding:4px 12px;font-size:.8rem}
+#petEdDlg .pd-lyrow{display:grid;grid-template-columns:14px 52px minmax(0,1fr) 28px 28px;align-items:center;gap:0 6px;min-height:66px;padding:3px 8px 3px 4px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:.875rem;line-height:1.3;cursor:pointer;user-select:none;-webkit-user-select:none}
+#petEdDlg .pd-lyrow:is(:hover,.hot){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface))} /* (.hot: the part the mouse is on, on the picture too) */
+#petEdDlg .pd-lyrow:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+#petEdDlg .pd-lyrow.drag{border-color:var(--accent);box-shadow:0 2px 10px rgba(0,0,0,.3)}
+#petEdDlg .pd-lygrip{width:14px;height:42px;padding:12px 0;background:radial-gradient(circle,color-mix(in srgb,var(--fg) 45%,transparent) 1.4px,transparent 1.9px) 0 0/7px 6px content-box;font-size:0;color:transparent;cursor:grab;touch-action:none} /* (six dots, drawn; its own ⋮⋮ is not shown) */
+#petEdDlg .pd-lyrow.drag .pd-lygrip{cursor:grabbing}
+#petEdDlg .pd-lythumb{display:block;width:52px;height:58px;overflow:hidden;border:1px solid var(--line);border-radius:4px;background:var(--pd-alone)}
+#petEdDlg .pd-lythumb>canvas{display:block;width:100%;height:100%;object-fit:contain}
+#petEdDlg .pd-lytx{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+#petEdDlg .pd-lytx .pd-lyname{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;min-width:0;font-weight:600;overflow-wrap:anywhere}
+#petEdDlg .pd-lytx .pd-lyname b{font-weight:600}
+#petEdDlg .pd-lybent{color:var(--muted);font-size:.75rem;font-weight:400} /* (straightened, after an unbent limb's name) */
+#petEdDlg .pd-lytx .pd-lystate{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.75rem;line-height:1.35}
+#petEdDlg .pd-lytx :is(.pd-lystate:not(:has(.pd-lyico)),.pd-lywhere){padding-left:16px} /* (its words start where the name does, after the dot) */
+#petEdDlg .pd-lyico{flex:none;display:flex;align-items:center;justify-content:center;width:10px;height:10px;font-size:.75rem;font-weight:700;line-height:1}
+#petEdDlg .pd-lystate.pd-lymiss{color:var(--pd-miss)}
+#petEdDlg .pd-lymiss .pd-lyico{border:1px solid currentColor;background:repeating-linear-gradient(135deg,currentColor 0 1.2px,transparent 1.2px 3px)} /* (a small striped square) */
+#petEdDlg .pd-lystate.pd-lydone{color:var(--pd-done)}
+#petEdDlg .pd-lywhere{color:var(--muted);font-size:.6875rem;line-height:1.3}
+#petEdDlg .pd-lyrow>button{width:28px;height:28px;padding:0;font-size:.85rem;line-height:1}
+#petEdDlg .pd-lyrow.pd-over{display:flex;align-items:center;gap:8px;min-height:32px;margin:-1px 0 0 24px;padding:3px 4px 3px 12px;border:1px dashed color-mix(in srgb,var(--pd-clothes) 60%,var(--line));font-size:.75rem;cursor:default}
+#petEdDlg .pd-lyrow.pd-over>.pd-lyname{flex:1 1 auto;min-width:0}
+#petEdDlg .pd-lyrow.pd-over>button{width:auto;height:24px;padding:0 10px;font-size:.75rem}
 #petEdDlg .pd-chips{display:flex;flex-wrap:wrap;gap:4px}
 #petEdDlg .pd-chip{position:relative;display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border:1px solid var(--line);border-radius:999px;font-size:.8rem;line-height:1.5;cursor:pointer;user-select:none;-webkit-user-select:none}
 #petEdDlg .pd-chip:hover{border-color:var(--accent)}
@@ -881,25 +922,124 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 /* Paint (a finished sheet): the part chosen, the one before and the next, the colour */
 #petEdDlg #petEdPtCell{max-width:220px}
 #petEdDlg .pd-hidrow .pd-step{width:30px;padding:2px 0;font-size:1rem;line-height:1.2} /* (.pd-hidrow: as specific as that row's button rule, so the arrows aren't shrunk to its .8rem) */
-/* Hidden parts: what the picture hides, as a list of jobs (it takes room only while Hidden parts is the tab); one
-   job open: its title and Done, then (an arm behind the clothes) its buttons, then the colour and the switches. In a
-   window big enough, the list is beside the picture (.pd-side, at the end of this block), so the picture stays big */
-#petEdDlg #petEdPanHidden[data-off]{display:none}
-#petEdDlg .pd-jobs{padding:8px 12px 0}
-#petEdDlg .pd-jobsT{margin:0 0 6px;font-size:.82rem;color:var(--muted);line-height:1.4}
-#petEdDlg .pd-jobsT b{color:var(--fg)}
-#petEdDlg .pd-joblist{display:flex;flex-direction:column;gap:3px;max-height:min(24vh,190px);overflow:auto;overscroll-behavior:contain;margin:0 0 6px;padding:0;list-style:none}
-#petEdDlg .pd-jobrow{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;font-size:.82rem}
-#petEdDlg .pd-jobrow.pd-sub{margin-left:18px}
-#petEdDlg .pd-armrow{background:color-mix(in srgb,var(--fg) 4%,transparent)}
-#petEdDlg .pd-armrow .pd-sw{margin-left:auto}
-#petEdDlg .pd-jobtx{display:flex;flex-direction:column;flex:1 1 180px;min-width:0}
-#petEdDlg .pd-jobname{font-weight:600;overflow-wrap:anywhere}
-#petEdDlg .pd-jobst{color:var(--muted);font-size:.76rem}
-#petEdDlg .pd-jobrow button{flex:none;font-size:.8rem;padding:3px 12px}
-#petEdDlg .pd-jobnote{margin:0 0 0 18px;padding:2px 8px;color:var(--muted);font-size:.78rem;line-height:1.35}
-#petEdDlg .pd-hidany{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:.8rem;color:var(--muted)}
-#petEdDlg .pd-jobT{flex:1 1 160px;min-width:0;font-size:.85rem}
+/* Layers, a part open (1.0.12; .pd-lyopen on the left column): the tabs' cell and the open part's own box give what is
+   in them to the column (display:contents), so it is laid out round the picture: the title row across (‹ All parts,
+   the part's dot and name, big, Show the rest faintly), the painting tools as a column on the left (#petEdBrushRow,
+   .pd-lytools: big buttons, each its picture, its word and its key) with the colour under them (#petEdLyTools), the
+   part bar right above the picture (.pd-lybar: always there, always as high, so the picture never moves while the part
+   is open). Choosing the clothes over an arm (.pd-lyclothes): no tools and no bar, the picture across. In a window
+   too small for the column (.pd-side's media rule, at the end of this block): the same, one under the other */
+#petEdDlg .pd-left.pd-lyopen>.pd-pans,#petEdDlg .pd-left.pd-lyopen #petEdPanLayer{display:contents}
+#petEdDlg .pd-left.pd-lyopen>.pd-pans>.pd-pan:not(#petEdPanLayer){display:none}
+#petEdDlg .pd-left.pd-lyopen .pd-lyhead{order:1}
+#petEdDlg .pd-left.pd-lyopen>#petEdBrushRow{order:2;display:flex}
+#petEdDlg .pd-left.pd-lyopen #petEdLyTools{order:3}
+#petEdDlg .pd-left.pd-lyopen #petEdLyBar{order:4}
+#petEdDlg .pd-left.pd-lyopen>.pd-pane{order:5}
+#petEdDlg .pd-left.pd-lyopen>.pd-hints{order:6;min-height:calc(3 * 1.4 * .78rem + 12px)} /* (three lines kept for the hint: the picture keeps its size as the tools change the hint) */
+#petEdDlg .pd-left.pd-lyopen>.pd-notes{order:7}
+#petEdDlg .pd-left.pd-lyopen .pd-ghost{display:none}
+#petEdDlg .pd-lyhead{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:8px 12px 0}
+#petEdDlg #petEdLyBack{flex:none;margin-right:4px;padding:4px 12px;font-size:.8rem}
+#petEdDlg #petEdLyDot{width:16px;height:16px}
+#petEdDlg #petEdLyName,#petEdDlg #petEdLyCloT{margin:0;font-size:1.25rem;font-weight:600;line-height:1.25}
+#petEdDlg #petEdLyName{min-width:0;overflow-wrap:anywhere}
+#petEdDlg .pd-lyhead>:is(#petEdLyRestRow,#petEdLyDone){margin-left:auto}
+#petEdDlg #petEdLyDone{flex:none;padding:5px 22px;font-size:.85rem}
+#petEdDlg .pd-ptools :is(.pd-pti,.pd-ptk){display:none} /* (a tool's picture and key: only in Layers' tool column) */
+#petEdDlg .pd-lytools #petEdPTools{display:flex;flex:1 1 auto;flex-wrap:wrap;gap:5px;min-width:0}
+#petEdDlg .pd-lytools .pd-chip{display:grid;grid-template-columns:18px auto auto;align-items:center;gap:0 8px;min-height:34px;padding:4px 10px;border-radius:8px;background:var(--surface);font-size:.875rem;line-height:1.2}
+#petEdDlg .pd-lytools .pd-chip.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
+#petEdDlg .pd-lytools .pd-pti{display:flex}
+#petEdDlg .pd-lytools .pd-pti svg{width:18px;height:18px}
+#petEdDlg .pd-lytools .pd-chip.on .pd-pti{color:var(--accent)}
+#petEdDlg .pd-lytools .pd-ptk{display:block;justify-self:end;color:var(--muted);font-size:.6875rem}
+#petEdDlg #petEdLyTools{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;min-width:0;padding:8px 12px 0;color:var(--muted);font-size:.75rem}
+#petEdDlg #petEdLyInsideRow{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--fg);font-size:.75rem} /* (Stay inside the lines: while Take is the tool) */
+#petEdDlg :is(.pd-lycolour,.pd-lyused){display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+#petEdDlg .pd-lyT{color:var(--muted);font-size:.75rem}
+#petEdDlg .pd-lysw{display:flex;align-items:center;gap:10px}
+#petEdDlg .pd-lyhex{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
+#petEdDlg #petEdLyCol{flex:none;width:54px;height:34px;padding:0;border:1px solid color-mix(in srgb,var(--fg) 40%,transparent);border-radius:6px;cursor:pointer}
+#petEdDlg #petEdLyCol.pd-none{background:repeating-linear-gradient(135deg,#fff 0 6px,#d9d9d4 6px 7px)!important} /* (No colour yet: hatched, empty) */
+#petEdDlg #petEdLyColTxt{color:var(--muted);font-size:.75rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#petEdDlg #petEdLyChoose{padding:0;border:none;background:none;color:var(--accent);font-size:.75rem}
+#petEdDlg #petEdLyChoose:hover{text-decoration:underline}
+#petEdDlg #petEdLyRecent{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0;min-height:24px}
+#petEdDlg #petEdLyRecent .pd-swatch{width:24px;height:24px;padding:0;border:1px solid color-mix(in srgb,var(--fg) 40%,transparent);border-radius:4px}
+#petEdDlg #petEdLyRecent .pd-swatch[aria-pressed=true]{outline:2px solid var(--accent);outline-offset:1px}
+#petEdDlg #petEdLyRecent .pd-lynone{color:color-mix(in srgb,var(--muted) 75%,transparent);font-size:.75rem} /* (None yet) */
+#petEdDlg #petEdLyAgain{padding:6px 8px;font-size:.8rem}
+/* The part bar: what the open part has besides its paint — an arm's or a leg's joint (its orange ring, how it bends,
+   Straighten · As drawn · Turn…), an arm's clothes (the blue dash), the Head's link to Face, what lies in front of the
+   Body or the Swinging hair. Bold for what it is, grey for how it is; on one line, its words on two if they must (a
+   narrower window: two rows, the second after the line) */
+#petEdDlg .pd-lybar{display:flex;align-items:center;gap:8px;flex:none;height:36px;min-width:0;margin:8px 12px 0;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--muted);font-size:.8125rem;line-height:1.15;overflow:hidden}
+#petEdDlg .pd-lybar>*{flex:0 1 auto}
+#petEdDlg .pd-lybar b{color:var(--fg);font-weight:600}
+#petEdDlg .pd-lybar>:is(button,.pd-ring,.pd-lysep,.pd-lydash){flex:none}
+#petEdDlg .pd-lybar button{height:26px;padding:0 10px;font-size:.8rem;line-height:1;white-space:nowrap}
+#petEdDlg .pd-lybar .pd-ring{width:16px;height:16px;border:3px solid var(--pd-ring);border-radius:50%}
+#petEdDlg .pd-lybar .pd-lysep{width:1px;height:20px;margin:0 4px;background:var(--line)}
+#petEdDlg .pd-lybar .pd-lydash{width:18px;height:2px;background:repeating-linear-gradient(90deg,var(--pd-clothes) 0 4px,transparent 4px 7px)}
+#petEdDlg .pd-lybar .pd-lyok{color:var(--pd-done)} /* (straightened) */
+/* An arm's bar (it ends with its clothes and Choose…) is too long for one row once the arm is straightened (Open Body
+   comes in too): two rows at every width, the elbow on the first, the clothes on the second (after Open Body). Only its
+   first line starts the second row; one after it stays a line. The picture still never moves while the arm is open */
+#petEdDlg .pd-lybar:has(>[data-act=clothes]){flex-wrap:wrap;align-content:center;gap:4px 8px;height:64px;padding:3px 10px}
+#petEdDlg .pd-lybar:has(>[data-act=clothes])>.pd-lysep:not(.pd-lysep~.pd-lysep){flex-basis:100%;height:0;margin:0}
+#petEdDlg .pd-lybar:has(>[data-act=clothes])>.pd-lysep~.pd-lysep{flex-basis:auto;height:20px;margin:0 4px}
+@media (max-width:1199px){
+  #petEdDlg .pd-lybar{flex-wrap:wrap;align-content:center;gap:4px 8px;height:64px;padding:3px 10px} /* (always two rows here, so the picture still never moves) */
+  #petEdDlg .pd-lybar>.pd-lysep{flex-basis:100%;height:0;margin:0}
+  #petEdDlg #petEdLyBar{column-gap:6px} /* (a straightened arm's or leg's first row still fits beside the tools, down to a 1000 px window) */
+  #petEdDlg #petEdLyBar button{padding:0 8px}
+}
+@media (min-width:760px) and (max-width:999px){
+  #petEdDlg #petEdLyBar{height:auto;min-height:64px} /* (beside the preview the bar is too narrow for a bent limb's row: a third row, rather than buttons out of sight) */
+}
+/* A picture's Layers: the preview's caption under it, not over it (its words run to three lines there) */
+#petEdDlg:has(>.pd-work>.pd-left.pd-side) .pd-prev{height:auto;background:none;border-bottom:none}
+#petEdDlg:has(>.pd-work>.pd-left.pd-side) .pd-prev canvas{height:clamp(200px,40vh,360px);background:color-mix(in srgb,var(--fg) 4%,transparent);border-bottom:1px solid var(--line)}
+#petEdDlg:has(>.pd-work>.pd-left.pd-side) .pd-cap{position:static;padding:8px 14px 0;color:var(--fg);font-size:.82rem;line-height:1.4;text-align:left}
+#petEdDlg:has(>.pd-work>.pd-left.pd-side) .pd-cap:empty{display:none}
+/* A picture goes in (1.0.12): how to cut it out — a dialog of its own over the editor (#petEdHow), two cards side by
+   side, the outlined one (.pd-main) the one Enter takes; Start over asks the same, with one more line (.pd-howwipe) */
+#petEdDlg .pd-how{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:14px 40px;width:min(1000px,calc(100vw - 48px));max-width:none;max-height:calc(100vh - 48px);margin:auto;padding:26px 32px 22px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.4);outline:none;overflow:auto;overscroll-behavior:contain}
+#petEdDlg dialog.pd-how:not([open]){display:none}
+#petEdDlg .pd-how::backdrop{background:rgba(0,0,0,.35)}
+#petEdDlg .pd-how>:not(.pd-howcard){grid-column:1/-1;margin:0}
+#petEdDlg .pd-how h3{margin:0;font-size:1.35rem;font-weight:600;line-height:1.3}
+#petEdDlg #petEdHowT+p{margin-top:-6px;color:var(--muted);font-size:.82rem;line-height:1.45}
+#petEdDlg .pd-howcard{display:flex;flex-direction:column;gap:14px;min-width:0;padding:20px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--fg) 2.5%,var(--surface));color:var(--fg);font-size:.875rem;line-height:1.45;text-align:left}
+#petEdDlg .pd-howcard.pd-main{padding:19px;border:2px solid var(--accent)}
+#petEdDlg .pd-howcard>:is(canvas,img){display:block;width:100%;height:clamp(120px,calc(100vh - 440px),350px);border-radius:6px;background:var(--pd-alone);object-fit:contain}
+#petEdDlg .pd-howcard button{width:100%;padding:8px 14px;font-size:1rem;font-weight:600}
+#petEdDlg .pd-howcard p{margin:0}
+#petEdDlg .pd-how .pd-howwipe{display:flex;align-items:center;justify-self:start;gap:10px;font-size:.875rem}
+#petEdDlg .pd-how>:is(.pd-howfoot,p:has(+#petEdHowNo)){grid-column:1;align-self:center;color:var(--muted);font-size:.82rem}
+#petEdDlg .pd-how>#petEdHowNo{grid-column:2;justify-self:end;padding:5px 18px;font-size:.85rem}
+/* "I'll do it myself", in Cut while points are left to place (#petEdSelf, at the end of Cut's tools): a checklist
+   beside the picture (at the end of this block) — the parts' chips ("painted" once a part has some), Place the points
+   and the points in their order (two columns), the face boxes in Face */
+#petEdDlg #petEdPanCut[data-off] #petEdSelf{display:none} /* (tall: no room kept for it in the other tabs) */
+#petEdDlg .pd-self{padding:10px 12px 4px;font-size:.85rem}
+#petEdDlg .pd-self h4{margin:0 0 4px;font-size:1rem;font-weight:600}
+#petEdDlg .pd-self .pd-tip{margin:0 0 6px;font-size:.82rem}
+#petEdDlg .pd-selfstep{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:12px 0 6px}
+#petEdDlg .pd-selfstep h5{margin:0;font-size:.875rem;font-weight:600}
+#petEdDlg .pd-selfn{display:inline-block;min-width:1.4em}
+#petEdDlg .pd-selfstep button{margin-left:auto;padding:3px 12px;font-size:.8rem}
+#petEdDlg .pd-selfparts{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin:0;padding:0 0 0 18px;list-style:none}
+#petEdDlg .pd-selfparts li{display:flex;align-items:center;gap:10px}
+#petEdDlg .pd-selfparts .pd-chip{min-width:9.5em;padding-top:2px;padding-bottom:2px}
+#petEdDlg .pd-selfok{color:var(--pd-done);font-size:.75rem}
+#petEdDlg .pd-selfpts{display:grid;grid-template-columns:repeat(2,max-content);gap:2px 16px;margin:0;padding:0 0 0 18px;list-style:none} /* (two columns: the list fits beside the picture) */
+#petEdDlg .pd-selfpt{color:var(--muted);font-size:.78rem;line-height:1.3}
+#petEdDlg .pd-selfpt.on{color:var(--fg)}
+#petEdDlg .pd-selfnext{grid-column:1/-1;color:var(--accent);font-size:.85rem;font-weight:600}
+#petEdDlg .pd-selfface{margin:0 0 0 18px;color:var(--muted);font-size:.78rem}
+#petEdDlg .pd-selflink{padding:0;border:none;background:none;color:var(--accent);font:inherit;text-align:left;text-decoration:underline;cursor:pointer}
 /* 3D: the pieces of the body as a tree, the chosen one's sliders beside it — where the picture is in the other tabs */
 #petEdDlg .pd-3d{flex:1 1 auto;min-height:160px;display:grid;grid-template-columns:minmax(120px,230px) minmax(180px,1fr);grid-template-rows:minmax(0,1fr);gap:0 8px;overflow:hidden;margin:8px 12px 0;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--fg) 4%,transparent)} /* (the tree and the chosen piece's sliders each scroll by themselves: choosing a piece low in the tree leaves its sliders in sight) */
 #petEdDlg .pd-tree{display:flex;flex-direction:column;gap:2px;margin:0;padding:8px;list-style:none;border-right:1px solid var(--line)}
@@ -947,6 +1087,8 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
   #petEdDlg .pd-left{border-right:none;border-bottom:1px solid var(--line)}
   #petEdDlg .pd-pane{flex:none;height:60vh}
   #petEdDlg .pd-lay{flex:none}
+  #petEdDlg .pd-how{grid-template-columns:minmax(0,1fr)}
+  #petEdDlg .pd-how>:is(.pd-howfoot,p,#petEdHowNo){grid-column:1}
   #petEdDlg .pd-3d{flex:none;grid-template-columns:minmax(0,1fr);grid-template-rows:none;overflow:visible}
   #petEdDlg .pd-tree{border-right:none;border-bottom:1px solid var(--line)}
   #petEdDlg .pd-tree,#petEdDlg .pd-set3{overflow:visible}
@@ -963,18 +1105,67 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 @media (max-height:600px){
   #petEdDlg .pd-hints{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0)}
 }
-/* Hidden parts' list of what the picture hides (no job open: .pd-side on the left column), in a window big enough:
-   the list and the hint in a column beside the picture, which then has the column's whole height — moving over a job
-   marks its place on it. The tab row and the notes stay across the top and the bottom; nothing else takes a cell */
+/* A picture's Layers, in a window big enough (.pd-side on the left column): the list of the parts in a column beside
+   the picture, which then has the column's whole height (moving over a part outlines it there); the tab row across the
+   top, the hint and the notes across the bottom. A part open: its title across, the tools in a narrow column, the part
+   bar above the picture. "I'll do it myself" in Cut: its checklist beside the picture in the same way */
 @media (min-width:1000px) and (min-height:600px){
-  #petEdDlg .pd-left.pd-side{display:grid;grid-template-columns:minmax(240px,320px) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto auto;overflow:hidden}
-  #petEdDlg .pd-side>:is(.pd-tabrow,.pd-notes){grid-column:1/-1}
+  #petEdDlg .pd-left.pd-side{display:grid;grid-template-columns:minmax(280px,340px) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto auto;overflow:hidden}
+  #petEdDlg .pd-side>.pd-tabrow{grid-column:1/-1;grid-row:1}
   #petEdDlg .pd-side>.pd-pans{grid-column:1;grid-row:2;min-height:0;overflow:auto;overscroll-behavior:contain}
   #petEdDlg .pd-side>.pd-pans>.pd-pan[data-off]{display:none}
-  #petEdDlg .pd-side .pd-joblist{max-height:none;overflow:visible}
-  #petEdDlg .pd-side>.pd-hints{grid-column:1;grid-row:3}
-  #petEdDlg .pd-side .pd-ghost{display:none}
+  #petEdDlg .pd-side>.pd-lay{grid-column:1;grid-row:3;min-height:0;margin-right:0}
+  #petEdDlg .pd-side>.pd-brush{display:none}
   #petEdDlg .pd-side>.pd-pane{grid-column:2;grid-row:2/4;margin-bottom:0}
+  #petEdDlg .pd-side>.pd-hints{grid-column:1/-1;grid-row:4}
+  #petEdDlg .pd-side .pd-ghost{display:none}
+  #petEdDlg .pd-side>.pd-notes{grid-column:1/-1;grid-row:5}
+  #petEdDlg .pd-left.pd-lyopen{display:grid;grid-template-columns:152px minmax(0,1fr);grid-template-rows:auto auto 44px auto 1fr auto auto auto;overflow:hidden auto} /* (44 px: the bar and the room over it; the colour's row takes what is left, never less than it needs: a short window scrolls) */
+  #petEdDlg .pd-left.pd-lyopen:has(#petEdLyBar>[data-act=clothes]){grid-template-rows:auto auto 72px auto 1fr auto auto auto} /* (an arm: its bar's two rows) */
+  #petEdDlg .pd-left.pd-lyopen>.pd-tabrow{grid-column:1/-1;grid-row:1}
+  #petEdDlg .pd-left.pd-lyopen .pd-lyhead{grid-column:1/-1;grid-row:2}
+  #petEdDlg .pd-left.pd-lyopen>#petEdBrushRow{grid-column:1;grid-row:3/5;flex-direction:column;align-items:stretch;gap:10px;margin:8px 0 0 12px;padding:0;white-space:normal}
+  #petEdDlg .pd-left.pd-lyopen #petEdLyBar{grid-column:2;grid-row:3}
+  #petEdDlg .pd-left.pd-lyopen>.pd-pane{grid-column:2;grid-row:4/7;margin-bottom:0}
+  #petEdDlg .pd-left.pd-lyopen #petEdLyTools{grid-column:1;grid-row:5;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:8px;margin:14px 0 0 12px;padding:0}
+  #petEdDlg .pd-left.pd-lyopen #petEdLyAgain{margin-top:auto} /* (at the foot of the column) */
+  #petEdDlg .pd-left.pd-lyopen>.pd-hints{grid-column:1/-1;grid-row:7}
+  #petEdDlg .pd-left.pd-lyopen>.pd-notes{grid-column:1/-1;grid-row:8}
+  #petEdDlg .pd-left.pd-lyclothes>.pd-pane{grid-column:1/-1;grid-row:3/7}
+  #petEdDlg .pd-lytools #petEdPTools{flex:none;flex-direction:column;flex-wrap:nowrap}
+  #petEdDlg .pd-lytools .pd-chip{grid-template-columns:18px minmax(0,1fr) auto}
+  #petEdDlg .pd-lytools .pd-chip.on{font-weight:600} /* (a column: the chosen tool can be bold without moving another) */
+  #petEdDlg .pd-lytools .pd-sizes{display:grid}
+  #petEdDlg .pd-lytools .pd-size{display:grid;grid-template-columns:24px minmax(0,1fr) 24px;align-items:center;gap:2px 6px;color:var(--muted);font-size:.75rem}
+  #petEdDlg .pd-lytools .pd-size>label{grid-column:1/3;grid-row:1;justify-self:start}
+  #petEdDlg .pd-lytools .pd-size>output{grid-column:2/4;grid-row:1;justify-self:end;width:auto}
+  #petEdDlg .pd-lytools .pd-size>input[type=range]{grid-column:2;grid-row:2;width:100%;min-width:0}
+  #petEdDlg .pd-lytools #petEdTolRow>input[type=range]{grid-column:1/-1}
+  #petEdDlg .pd-lytools .pd-size>button{grid-row:2;width:24px;height:24px;padding:0}
+  #petEdDlg .pd-lytools .pd-size>button:last-of-type{grid-column:3}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden])){display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto auto;overflow:hidden}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden]))>.pd-tabrow{grid-column:1/-1;grid-row:1}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden]))>.pd-pans{grid-column:1;grid-row:2/4;min-height:0;overflow:auto;overscroll-behavior:contain}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden]))>.pd-pans>.pd-pan[data-off]{display:none}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden]))>.pd-brush{grid-column:2;grid-row:2}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden]))>.pd-pane{grid-column:2;grid-row:3;margin-bottom:0}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden]))>.pd-hints{grid-column:1/-1;grid-row:4}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden])) .pd-ghost{display:none}
+  #petEdDlg .pd-left:has(>.pd-pans>#petEdPanCut:not([data-off]) #petEdSelf:not([hidden]))>.pd-notes{grid-column:1/-1;grid-row:5}
+}
+@media (min-width:1000px) and (min-height:600px) and (max-width:1199px){
+  #petEdDlg .pd-left.pd-lyopen{grid-template-rows:auto auto 72px auto 1fr auto auto auto} /* (the bar's two rows) */
+}
+/* A short window, a part open: the tools and the colour closer together, the hint only as tall as its words, so the
+   column fits beside the picture (on a 768 px screen too); shorter still, the column scrolls */
+@media (min-width:1000px) and (min-height:600px) and (max-height:820px){
+  #petEdDlg .pd-left.pd-lyopen .pd-lyhead{padding-top:4px}
+  #petEdDlg .pd-lytools #petEdPTools{gap:2px}
+  #petEdDlg .pd-lytools .pd-chip{min-height:26px;padding-top:1px;padding-bottom:1px}
+  #petEdDlg .pd-left.pd-lyopen>#petEdBrushRow{gap:6px}
+  #petEdDlg .pd-left.pd-lyopen #petEdLyTools{gap:4px;margin-top:8px}
+  #petEdDlg #petEdLyCol{width:44px;height:28px}
+  #petEdDlg .pd-left.pd-lyopen>.pd-hints{min-height:0}
 }
 /* ---- the pose editor (petanim.js, inside the pet editor): its own rules, #petEdDlg .pa-… — the pet editor's rules end above this line ---- */
 /* Its host (.pa-root) has the pet editor's whole work area while it is open: a bar on top (Done, Name, Plays…); the
@@ -1240,6 +1431,10 @@ body.dropping::after{content:'Drop audio, video, SVP, MIDI, VoiSona, UST or USTX
 #petPetsRow{gap:6px}
 #petPetsRow>.opname{flex:none}
 #petPets{flex:0 1 auto;min-width:0;padding-left:2px;padding-right:2px;font-size:.8rem}
+/* Carry a pet: the same, for its longest choice, Like a doll (as before) */
+#petCarryRow{gap:6px}
+#petCarryRow>.opname{flex:none}
+#petCarry{flex:0 1 auto;min-width:0;padding-left:2px;padding-right:2px;font-size:.8rem}
 .dbg-row>.tipi,.psave>.tipi,.pet-tools>.tipi{align-self:center;margin-left:0}
 .has-tip:hover .tipi,.tipi:hover,.tipi.on,.tipi:focus-visible{opacity:1;color:var(--accent)}
 .tipi:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
@@ -1268,6 +1463,7 @@ html.corner #airPanel .air-head .tipi{display:none} /* (the small player shows n
 /* Desktop-only things are hidden on touch screens / phone layouts */
 body.touch .no-touch,body.phone .no-touch,body.phone .no-phone{display:none!important}
 html[data-build=mobile] #rail .rbtn::after{display:none}
+html[data-build=mobile] .desk-say{display:none} /* (words about keys and the wheel, which the phone site has not: its Settings, and their "i" tips) */
 /* Touch devices and Light / Minimal graphics: no live blurs or big soft shadows. They re-render
    every frame over the moving canvases/video and were the main cause of stutter. */
 body.touch *,body.touch *::before,body.touch *::after,
@@ -1429,6 +1625,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <label class="op">Glow particles <input autocomplete="off" type="range" id="glowAmt" min="0" max="2" step="0.1" value="1"></label>
         <div class="no-phone">
           <label class="op">Layout <select autocomplete="off" id="rollLayout"><option value="full" selected>Full screen</option><option value="bar">Bar</option></select></label>
+          <p class="hint">Full screen: the lyrics and the piano roll fill the free space. Bar: they sit in a bar you can slide away<span class="desk-say"> (B), and scrolling over it moves through the song, down or right is later (Shift: 5× as far). Not in fullscreen or background mode</span>.</p>
           <div class="dep" id="barOpts" data-needs="rollLayout=bar">
             <label class="op">Bar position <select autocomplete="off" id="barPos"><option value="bottom" selected>Bottom</option><option value="top">Top</option></select></label>
             <label class="op">Bar height <input autocomplete="off" type="range" id="barHeight" min="140" max="720" step="10" value="300"></label>
@@ -1514,6 +1711,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <dt>Space / K</dt><dd>Play / pause all</dd>
         <dt>J / L</dt><dd>Back / forward 10s</dd>
         <dt>← / →</dt><dd>Back / forward 5s</dd>
+        <dt>Mouse wheel</dt><dd>Over the lyrics bar: back / forward (Shift: 5× as far)</dd>
         <dt>↑ / ↓</dt><dd>Master volume</dd>
         <dt>M</dt><dd>Mute / unmute</dd>
         <dt>S</dt><dd>Sync all tracks</dd>
@@ -1654,6 +1852,14 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
       <p class="hint" id="petGravHint" hidden>On: a singer with nothing under its feet falls. Let go of one in the air and it drops onto the top edge of the first window below it, or onto the taskbar; when the window it stands on goes away, it lands on the next window down. Singers hanging in the air come down as soon as you switch this on, and where they land is remembered. Off: a singer stays where you leave it, in the air.</p>
       <label class="op" id="petPetsRow" hidden>How many pets <select id="petPets" autocomplete="off"><option value="each">A pet for each singer</option><option value="few">As few pets as possible</option><option value="one" id="petPetsOne">One singer</option></select></label>
       <p class="hint" id="petPetsHint" hidden>A pet for each singer: every singer with a picture is a pet, and one that sings two lines at once is two pets with the same picture, side by side, each with its own bubble. As few pets as possible: singers who never sing at the same time share one pet, which sings all their lines — the one of them with a picture who sings most; singers who do sing together stay separate pets. One singer: only one pet, the singer with a picture who sings most; it sings everybody's lines, and lines sung at the same time each get a speech bubble of their own over it.</p>
+      <label class="op" id="petDanceRow" hidden>Dance while singing <input type="checkbox" id="petDance" autocomplete="off" checked></label>
+      <p class="hint" id="petDanceHint" hidden>On: while a song with a score plays (SVP, MIDI, VoiSona, UST, USTX or VSQX), the pets dance to it. Each one gets a long dance of its own, worked out from the score and on its beat: calmer in the verses, bigger in the choruses (the same moves each time a chorus comes back), a pose held on a long note, an arm up on a high one, and a bow together at the end. They all do the same moves, every other pet mirrored. Their legs stay straight, their mouths still sing, a click still makes one hop, and one you pick up stops dancing until you let go. A pet with a plain picture bounces, sways and turns to the beat. A song without a score: they sing as before. Off: they sing as before.</p>
+      <label class="op" id="petDanceSizeRow" hidden>How lively <select id="petDanceSize" autocomplete="off"><option value="gentle">Gentle</option><option value="lively" selected>Lively</option></select></label>
+      <p class="hint" id="petDanceSizeHint" hidden>Lively: the whole dance, with spins, jumps and claps over the head in the choruses. Gentle: smaller moves, with no spins or jumps.</p>
+      <label class="op" id="petCarryRow" hidden>Carry a pet <select id="petCarry" autocomplete="off"><option value="hand" selected>By one hand</option><option value="doll">Like a doll (as before)</option></select></label>
+      <p class="hint" id="petCarryHint" hidden>For pets whose picture is a pet sheet. By one hand: picked up with the mouse, it holds on to your pointer with the hand on the side you took it by; that arm goes straight up, and the rest of it hangs and swings below it, legs dangling. Held low over the taskbar, where it can't hang (and always with Pets can go anywhere off), it stands and holds your pointer out beside it, as when holding hands; with Pets can go anywhere off, one you take by its legs, lower than its hand reaches, is pulled along as before. Like a doll (as before): it hangs from wherever you picked it up, as in earlier versions. A pet with a plain picture only tilts a little, either way. With Swings when you carry it off (Animated pets…), it stays upright.</p>
+      <label class="op" id="petScaredRow" hidden>Scared face when carried <input type="checkbox" id="petScared" autocomplete="off" checked></label>
+      <p class="hint" id="petScaredHint" hidden>For pets whose picture is a pet sheet. On: while you carry it, its eyes squeeze shut (&gt;_&lt;) and it looks scared until you let go; if it's singing, its mouth goes on singing. It goes with either way of carrying, and with Swings when you carry it off (Animated pets…) too. Off: it keeps its usual face.</p>
       <div class="dbg-row"><button id="petCharsBtn" aria-expanded="false">Characters…</button><button type="button" id="petSheetBtn" aria-haspopup="dialog" title="Settings for singers whose picture is a pet sheet: a puppet that sings, blinks, gestures and hops" hidden>Animated pets…</button></div>
       <div id="petPanel" hidden><p class="hint">The singers of the songs in the playlist above: only singers with a picture come on. Choose picture… or Change… gives one its picture (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more. The list goes song by song, in the playlist's order. To change several singers at once, select their cards (click one; Ctrl+click adds one or takes it out; Shift+click takes all in between), then Choose picture… on any of them: one file goes to all of them, several files are handed out down the list, in the order of their names.</p><p class="pet-sum" id="petSum" role="status" hidden></p><div class="pet-tools" id="petTools" hidden><button type="button" id="petBankBtn">Voicebank pictures</button><button type="button" id="petKitBtn" title="Choose a folder: a new folder with the template, a finished sample and the guide is put there" hidden>Pet sheet kit…</button></div><p class="hint" id="petBankHint" hidden>Voicebank pictures gives each singer the picture that comes with its voicebank, if that voicebank is installed on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona). Singers who have a picture keep it unless you press again; with cards selected, only those change.</p><p class="hint" id="petKitHint" hidden>A pet sheet is a picture that moves: one PNG with the singer's parts on a grid (head, hair, body, eyes, mouths, arms and legs), which the player puts together as a puppet — its mouth follows the words it sings, it blinks, hops when you click it and swings when you pick it up. Pet sheet kit… puts a folder where you choose, with the template to draw over, a finished sample to try and a guide. Save your sheet as a PNG with a name that ends in .petsheet.png and give it to a singer with Choose picture…, like any picture; its card then says Animated.</p><div class="pet-tools" id="petSelBar" hidden><span id="petSelN"></span><button type="button" id="petSelPick" title="One file for all of them, or several files: one each, down the list, in the order of their names">Choose picture for all…</button><button type="button" id="petSelDel" title="Remove the selected singers' pictures: they aren't shown any more">Remove pictures</button><button type="button" id="petSelNone" title="Select nothing (Esc)">Clear selection</button></div><p class="pet-note" id="petNote" role="status" hidden></p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*,.json" multiple hidden></div>
       <p class="pet-sum" id="petWarn" role="status" hidden></p>
@@ -5703,6 +5909,7 @@ function pauseAll() {
   if (!LIM.node && ENG.mod) setTimeout(limIn, 200); // (the limiter, had it waited for a pause: once the sound has faded)
 }
 function seekTo(frac) {
+  wheelStop(); // (any seek takes over from a scroll over the roll that hasn't landed yet: it never lands after this)
   const t = frac * total();
   nowT = t;
   if (ndSeek(t)) return; // (No-delay AirPlay: its <audio> goes there too, and what follows it follows — or, play waiting for its mix, it starts there)
@@ -5747,6 +5954,98 @@ const endDrag = () => {
 };
 sbar.addEventListener('pointerup', endDrag);
 sbar.addEventListener('pointercancel', endDrag);
+/* @pure:wheel begin */
+/* Scrolling over the lyrics or the piano roll moves through the song as a page scrolls: down or right is later (the next
+   lyric line is below the one being sung, and the notes come in from the right; in Falling notes, down pulls them onto
+   the keys), up or left is earlier. By the roll's own time scale, so a trackpad drags the notes along under the fingers
+   and one notch of a mouse wheel (about 100 px on Windows) moves them as far as it would scroll a page; Shift: 5× as
+   far. Only in the Bar layout (Settings → Score → Layout), never in fullscreen, background mode or on a phone. */
+const WHEEL_LINE = 100 / 3, WHEEL_FAST = 5, WHEEL_CAP = 10, WHEEL_LAND = 200;
+// One wheel event → CSS px along the song (positive: later), or 0. dx, dy, mode: its deltaX, deltaY and deltaMode (1:
+// lines, as Firefox counts; 2: pages); page: the panel's width. The bigger axis wins (a tilt wheel, a trackpad, and
+// Shift+wheel, which Chromium on Windows sends as deltaX).
+function wheelPx(dx, dy, mode, page) {
+  const d = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+  if (!isFinite(d) || !d) return 0;
+  return d * (mode === 1 ? WHEEL_LINE : mode === 2 ? page : 1);
+}
+// CSS px → seconds of song. spp: the roll's own seconds per CSS px (Classic and Pitch line: 14 s across the panel;
+// Falling notes: 3.2 s down the fall). At most WHEEL_CAP s an event (× WHEEL_FAST with Shift).
+function wheelSecs(px, spp, fast) {
+  const k = fast ? WHEEL_FAST : 1, s = px * spp * k;
+  return isFinite(s) ? Math.max(-WHEEL_CAP * k, Math.min(WHEEL_CAP * k, s)) : 0;
+}
+// Is this wheel the song's? g: what the page knows right now, as plain values (rollWheel gathers them).
+function wheelOurs(g) {
+  if (g.ctrl || g.meta || g.alt) return false;               // (Ctrl+wheel and a pinch zoom the page, as before)
+  if (g.fs || g.full || !g.bar) return false;                 // (the Bar layout only: not the Full screen layout, not in fullscreen)
+  if (g.bgm || g.subwin || g.cover) return false;             // (not in background mode, nor in its windows)
+  if (g.phone || g.mobileBuild) return false;                 // (not on a phone)
+  if (g.loading || g.dialog || g.dragging || !g.song) return false;
+  if (!g.rollOn || !g.box || !g.target) return false;         // (the roll is showing, and nothing else is under the pointer)
+  const B = g.box, top = Math.max(0, B.y), bottom = Math.min(B.y + B.h, B.limit); // (the bar as far as it shows: above the tabs)
+  if (!(bottom - top > 1)) return false;                      // (slid away)
+  return g.x >= B.x && g.x <= B.x + B.w && g.y >= top && g.y <= bottom;
+}
+/* @pure:wheel end */
+/* The wheel over the roll. The picture goes there at once: tickSeek shows the scroll's place (the progress bar, the time,
+   the Sync playhead) and smoothTime holds while it does, as for a drag of the progress bar, so the roll and the lyrics
+   move with every notch and every trackpad step; while it plays, it carries on from there at the song's speed. The sound
+   follows once the wheel has been still for WHEEL_LAND ms: one seekTo for the whole flick (a seek restarts the standard
+   engine's tracks and moves the video: never 60 a second). Any other seek takes over from it (seekTo: wheelStop). */
+const WHL = { on: false, t: 0, at: 0, timer: 0, svp: null, told: false, play: false }; // (play: the song played as the scroll began)
+function wheelNow() { // (the song time the scroll is at: it goes on at the song's speed while it plays)
+  const p = performance.now();
+  if (wantPlay && !launching) WHL.t += (p - WHL.at) / 1000 * (ENG.on ? ENG.speed : rate);
+  WHL.at = p;
+  return WHL.t;
+}
+function wheelStop() { if (WHL.on) { WHL.on = false; clearTimeout(WHL.timer); } }
+function wheelLand() { // (the wheel has been still: the sound goes there)
+  if (!WHL.on) return;
+  const t = wheelNow(), T = total();
+  WHL.on = false;
+  if (!T || svp !== WHL.svp || isLoading()) return; // (another song by now, or one loading: nothing lands)
+  // (the sound stays where it was until the scroll lands: a song that ran out meanwhile, under a scroll that began while
+  // it played, plays on from the scroll's place — scrolled back near the end, it goes on, as it would have; one scrolled
+  // to the very end stays there. Not after a pause of yours: togglePlay clears WHL.play.)
+  if (WHL.play && !wantPlay && !COVER.on && t < T - 0.1 && songTime() >= T - 0.25) { startAll(t); return; }
+  seekTo(clamp01(t / T));
+}
+// (the window's own fullscreen, where the page's isn't: F11 in a browser, which display-mode says; and in the app, whose
+// window keeps Electron's own menu and its F11 — display-mode may not say so there, but the window is then exactly its
+// screen. A maximized window isn't: its frame reaches past the screen's edges, and the taskbar keeps its share.)
+const fsWindow = () => {
+  try { return matchMedia('(display-mode: fullscreen)').matches || (outerWidth > 0 && Math.abs(outerWidth - screen.width) <= 1 && Math.abs(outerHeight - screen.height) <= 1); } catch (e) { return false; }
+};
+function wheelTell() { // (the first time ever: what scrolling there does)
+  if (WHL.told) return;
+  WHL.told = true;
+  try { if (localStorage.getItem('map-wheel-told')) return; localStorage.setItem('map-wheel-told', '1'); } catch (e) {}
+  say('Scroll to move through the song', 2600);
+}
+function rollWheel(e) {
+  const B = view.box, p = lpoint(e), tg = e.target, b = document.body.classList;
+  if (!wheelOurs({
+    ctrl: e.ctrlKey, meta: e.metaKey, alt: e.altKey,
+    fs: inFs() || fsWindow(), full: b.contains('roll-full'), bar: !!(B && B.bar),
+    bgm: BGM.on || b.contains('bgm'), subwin: SUBWIN, cover: COVER.on,
+    phone: !!mobileMode() || b.contains('phone'), mobileBuild: MOBILE_BUILD,
+    loading: isLoading(), dialog: !!document.querySelector('dialog[open]'), dragging: dragging || !!SY.drag,
+    song: !!svp && total() > 0, rollOn: rollEl.classList.contains('on'), box: B,
+    target: tg === $('app') || tg === $('lyrGrip') || tg === $('barGrip'), x: p.x, y: p.y,
+  })) return;
+  const s = wheelSecs(wheelPx(e.deltaX, e.deltaY, e.deltaMode, B.w), view.spp || 14 / B.w, e.shiftKey);
+  if (!s) return;
+  if (!WHL.on) Object.assign(WHL, { on: true, t: songNow(), at: performance.now(), svp, play: wantPlay });
+  WHL.t = Math.max(0, Math.min(total(), wheelNow() + s));
+  clearTimeout(WHL.timer);
+  WHL.timer = setTimeout(wheelLand, WHEEL_LAND);
+  wheelTell();
+}
+// (passive: nothing under the free area scrolls — #app and the page are overflow:hidden — so there is nothing to
+// prevent, and a passive listener never makes the side panel's own scrolling wait for the page)
+$('app').addEventListener('wheel', rollWheel, { passive: true });
 /* Progress bar: transforms only, and the page is touched only when something changed. */
 let seekF = -1, seekTxt = '', lastPlayUI = null;
 function tickSeek() {
@@ -5754,6 +6053,7 @@ function tickSeek() {
   const T = total();
   let cur = 0;
   if (dragging) cur = dragFrac * T;
+  else if (WHL.on) { const h = wheelNow(); cur = T ? Math.min(T, h) : h; } // (a scroll over the roll: where it is, until it lands)
   else if (ND.el) { const h = ndTime(); cur = T ? Math.min(T, h) : h; } // (No-delay AirPlay: its <audio>, as heard)
   else if (ENG.on) { const h = engHeard() + audioOffset; cur = T ? Math.min(T, h) : h; }
   else if (pre.on || stdPos != null || stdClk.on || (FREE.on && tracks.length)) cur = T ? Math.min(T, songTime()) : songTime();
@@ -5786,7 +6086,7 @@ function volMsg() { say('Volume ' + Math.round(masterVol * 100) + '%'); }
 function skip(sec) {
   const T = total();
   if (!T) return;
-  seekTo(clamp01((songTime() + sec) / T));
+  seekTo(clamp01(((WHL.on ? wheelNow() : songTime()) + sec) / T)); // (during a scroll over the roll: from where it shows)
   say((sec > 0 ? '+' : '') + sec + 's');
 }
 /* AirPlay, paused by you: the device drops what it hasn't played yet (quiet at once, not a moment
@@ -5812,8 +6112,11 @@ function allBeforeStart() {
 function togglePlay() {
   if (COVER.on) { coverCmd('play'); return; } // (covering the screen: play / pause is the cover window's)
   if (!tracks.length) return;
-  if (playOn()) { airPause(pauseAll); say('Paused'); } // (also in the moment the sound device is opened afresh: the song then stays paused)
-  else if (!allBeforeStart() && startAll() && wantPlay) say('Playing');
+  if (playOn()) { WHL.play = false; airPause(pauseAll); say('Paused'); } // (also in the moment the sound device is opened afresh: the song then stays paused. WHL.play: a scroll over the roll still to land lands paused)
+  else {
+    if (WHL.on) { WHL.play = false; wheelLand(); } // (a scroll over the roll still to land: it lands first, and play starts where it shows)
+    if (!allBeforeStart() && startAll() && wantPlay) say('Playing');
+  }
 }
 function syncAll() {
   const T = total();
@@ -5855,9 +6158,9 @@ function setRate(r) {
   say('Speed ' + r + 'x');
 }
 $('playPause').onclick = () => { if (!tracks.length) { say('Add some audio first'); return; } togglePlay(); };
-$('playAll').onclick = () => { if (tracks.length && !allBeforeStart()) startAll(0); };
+$('playAll').onclick = () => { wheelStop(); if (tracks.length && !allBeforeStart()) startAll(0); }; // (wheelStop: a scroll over the roll still to land never lands after this)
 $('syncAll').onclick = () => { if (tracks.length) syncAll(); };
-$('stopAll').onclick = () => { airPause(pauseAll); ndSeek(0); if (ENG.on) { ENG.pausedAt = -audioOffset; if (FREE.on) freeReset(-audioOffset); videoAt(0); } else placeSong(0); };
+$('stopAll').onclick = () => { wheelStop(); airPause(pauseAll); ndSeek(0); if (ENG.on) { ENG.pausedAt = -audioOffset; if (FREE.on) freeReset(-audioOffset); videoAt(0); } else placeSong(0); };
 
 /* Interruptions (calls, Siri, lock screen…). When the sound comes back, the precise engine lines
    everything up with the video again (the video may have kept going meanwhile). */
@@ -6341,7 +6644,11 @@ function parseSVP(text) {
     singers.push(trackSinger(ns, sgs, who(t.mainRef)));
     for (const n of ns) notes.push(n);
   });
-  return finishScore(notes, names, singers);
+  // (the beat and the bars, for the pets' dances: the tempo map in quarter notes, and the time signatures — index: the bar)
+  const meter = ((j.time && Array.isArray(j.time.meter) && j.time.meter) || []).filter(m => m && Number.isInteger(m.index) && m.index >= 0 && m.numerator > 0 && m.denominator > 0)
+    .map(m => ({ bar: m.index, num: m.numerator, den: m.denominator }));
+  const grid = { tempo: tempos.filter(t => Number.isFinite(t.position) && t.bpm > 0).map(t => ({ q: t.position / BLICK, bpm: t.bpm })), meter };
+  return finishScore(notes, names, singers, grid);
 }
 /* First index in a list sorted by .s whose .s >= t. */
 function firstAt(ns, t) {
@@ -6447,9 +6754,28 @@ function trackSinger(ns, sgs, fb) {
   ns.forEach((n, i) => { n.sg = sgs[i]; });
   return Object.assign({}, top, { multi: true });
 }
+/* A score's time signatures as the desktop pets' song map takes them (svp.grid.meter — petsong.js: the bars they dance
+   to): sigs — [{ c: the tick it begins at, num, den }], tpq ticks a beat (a quarter note) → [{ bar: the bar it begins
+   at (0: the first), num, den }], each bar counted in the signature before it (4/4 until one is said). Nonsense is left
+   out; of two at one bar, the later. */
+function scoreMeter(sigs, tpq) {
+  const S = (Array.isArray(sigs) ? sigs : []).filter(g => g && Number.isFinite(g.c) && g.c >= 0 && Number.isInteger(g.num) && g.num > 0 && g.num < 100 && [1, 2, 4, 8, 16, 32, 64].includes(g.den)).sort((a, b) => a.c - b.c);
+  const out = [];
+  if (!(tpq > 0)) return out;
+  let bar = 0, c0 = 0, len = 4 * tpq;
+  for (const g of S) {
+    bar += Math.max(0, Math.round((g.c - c0) / len));
+    c0 = g.c; len = g.num * tpq * 4 / g.den;
+    if (out.length && out[out.length - 1].bar === bar) out.pop();
+    out.push({ bar, num: g.num, den: g.den });
+  }
+  return out;
+}
 /* @pure:pet end */
-/* Shared by all score formats: sort, note labels, ranges, lyric lines. singers[t]: see singerOf. */
-function finishScore(notes, names, singers) {
+/* Shared by all score formats: sort, note labels, ranges, lyric lines. singers[t]: see singerOf. grid (only what the
+   desktop pets' dances go by — petsong.js): the score's beat, { tempo: [{ q: quarter notes from its start, where that
+   tempo begins, bpm }], meter: [{ bar, num, den }] (scoreMeter) }; null: the score has no tempo of its own. */
+function finishScore(notes, names, singers, grid) {
   notes.sort((a, b) => a.s - b.s);
   cleanKanaParts(notes);
   let min = Infinity, max = -Infinity, maxLen = 0, end = 0;
@@ -6461,7 +6787,7 @@ function finishScore(notes, names, singers) {
     if (n.e > end) end = n.e;
   }
   singers = names.map((nm, t) => (singers && singers[t]) || singerOf('', null, nm));
-  return { notes, names, singers, maxLen, end, min, max, ...buildLines(notes) };
+  return { notes, names, singers, maxLen, end, min, max, ...buildLines(notes), grid: grid || null };
 }
 
 /* =====================================================================
@@ -6658,7 +6984,9 @@ function tickSecs(raw, tpq) {
 }
 function timeTicks(raw, tpq) {
   const toSec = tickSecs(raw, tpq);
-  const sc = finishScore(raw.notes.map(n => ({ s: toSec(n.c), e: toSec(n.c + n.d), p: n.p, l: n.l, t: n.t, glue: n.glue })), raw.names, raw.singers);
+  // (grid: the beat for the pets' dances, timed as the notes are — again whenever they are: retimeScore)
+  const grid = { tempo: raw.tempos.map(t => ({ q: t.c / tpq, bpm: t.bpm })), meter: scoreMeter(raw.sigs, tpq) };
+  const sc = finishScore(raw.notes.map(n => ({ s: toSec(n.c), e: toSec(n.c + n.d), p: n.p, l: n.l, t: n.t, glue: n.glue })), raw.names, raw.singers, grid);
   sc.raw = raw;
   sc.tpq = tpq;
   return sc;
@@ -6759,7 +7087,7 @@ function parseMIDI(buf) {
   if (p + 14 > u8.length) throw new Error('not a MIDI file');
   const ntr = dv.getUint16(p + 10), div = dv.getUint16(p + 12);
   p += 8 + dv.getUint32(p + 4);
-  const raw = [], tempos = [];
+  const raw = [], tempos = [], sigs = []; // (sigs: the time signatures — only for the pets' dances: scoreMeter)
   while (raw.length < ntr && p + 8 <= u8.length) {
     const id = tag(p), len = dv.getUint32(p + 4);
     p += 8;
@@ -6785,6 +7113,7 @@ function parseMIDI(buf) {
         if (o + l > end) break; // truncated
         p += l;
         if (type === 0x51 && l >= 3) tempos.push({ tick, us: (u8[o] << 16) | (u8[o + 1] << 8) | u8[o + 2] });
+        else if (type === 0x58 && l >= 2) sigs.push({ c: tick, num: u8[o], den: 2 ** u8[o + 1] });
         else if (type === 0x03 && !tr.name) tr.name = u8.slice(o, o + l);
         else if (type === 0x04 && !tr.inst) tr.inst = u8.slice(o, o + l); // (instrument name: kept for the pet, may name the voice)
         else if (type === 0x05) tr.lyr.push({ tick, b: u8.slice(o, o + l) });
@@ -6815,7 +7144,7 @@ function parseMIDI(buf) {
   }
   if ((div & 0x7fff) === 0 || ((div & 0x8000) && !(div & 0xff))) throw new Error('not a MIDI file');
   // Ticks → seconds (tempo map, or SMPTE time)
-  let toSec, tol, win;
+  let toSec, tol, win, grid = null; // (grid: the beat and the bars, for the pets' dances — none in SMPTE time)
   if (div & 0x8000) {
     const fps = 256 - (div >> 8), tps = (fps === 29 ? 29.97 : fps) * (div & 0xff);
     toSec = t => t / tps;
@@ -6837,6 +7166,7 @@ function parseMIDI(buf) {
     };
     tol = div / 16;
     win = div;
+    grid = { tempo: tempos.filter(t => t.us > 0).map(t => ({ q: t.tick / div, bpm: 60e6 / t.us })), meter: scoreMeter(sigs, div) };
   }
   // Which events carry the words (a track with a few stray text events isn't lyrics)
   const useText = !raw.some(t => t.lyr.length);
@@ -6928,7 +7258,7 @@ function parseMIDI(buf) {
       notes.push({ s: toSec(n.s), e: toSec(n.e), p: n.p, l, t: di, glue: !!n.glue, brk: !!n.brk });
     }
   });
-  return finishScore(notes, disp.map(D => D.name), disp.map(D => singerOf('midi', null, D.name, { alt: D.inst && D.inst !== D.name ? [D.inst] : [] })));
+  return finishScore(notes, disp.map(D => D.name), disp.map(D => singerOf('midi', null, D.name, { alt: D.inst && D.inst !== D.name ? [D.inst] : [] })), grid);
 }
 
 function applyRoll() {
@@ -7034,7 +7364,10 @@ function parseVSQX(text) {
     singers.push(trackSinger(ns, sgs, fb));
     for (const n of ns) notes.push(n);
   });
-  return finishScore(notes, names, singers);
+  // (the beat and the bars for the pets' dances, from the end of the pre-measure bars on, as the notes are)
+  const meter = [];
+  for (const g of sigs) { const bar = Math.max(0, Math.round(g.m - preBars)); if (meter.length && meter[meter.length - 1].bar === bar) meter.pop(); if (g.nu > 0 && g.de > 0) meter.push({ bar, num: g.nu, den: g.de }); }
+  return finishScore(notes, names, singers, { tempo: tempos.map(t => ({ q: t.c / tpq, bpm: t.bpm })), meter });
 }
 function decodeText(buf) {
   const u8 = new Uint8Array(buf);
@@ -7064,23 +7397,24 @@ function parseUST(text) {
     if (cur && i > 0) cur.v[line.slice(0, i).trim()] = line.slice(i + 1).trim();
   }
   const set = sec.find(x => x.id === 'SETTING');
-  let bpm = set && +set.v.Tempo > 0 ? +set.v.Tempo : 120, t = 0;
-  const notes = [];
+  let bpm = set && +set.v.Tempo > 0 ? +set.v.Tempo : 120, t = 0, q = 0;
+  const notes = [], tempo = [{ q: 0, bpm }]; // (tempo: the tempo map, in quarter notes from the start — the pets' dances go by it: svp.grid)
   for (const x of sec) {
     if (!/^\d+$/.test(x.id)) continue; // notes only ([#PREV], [#NEXT], [#INSERT], [#DELETE] are plugin scratch)
-    if (+x.v.Tempo > 0) bpm = +x.v.Tempo;
+    if (+x.v.Tempo > 0 && +x.v.Tempo !== bpm) { bpm = +x.v.Tempo; const T = tempo[tempo.length - 1]; if (T.q === q) T.bpm = bpm; else tempo.push({ q, bpm }); }
     const len = +x.v.Length;
     if (!(len > 0)) continue;
     const d = len * 60 / (bpm * 480), p = +x.v.NoteNum, l = ustLyric(x.v.Lyric);
     if (l !== null && isFinite(p)) notes.push({ s: t, e: t + d, p, l });
-    t += d;
+    t += d; q += len / 480;
   }
   if (!notes.length) throw new Error('no notes');
-  return Object.assign(notes, { voice: (set && set.v.VoiceDir) || '' }); // (the voicebank folder: who sings)
+  return Object.assign(notes, { voice: (set && set.v.VoiceDir) || '', tempo }); // (the voicebank folder: who sings)
 }
 /* Read .ust files into one score: a part per file. Files that can't be read are skipped (bad). */
 async function scoreFromUST(files, bad) {
   const notes = [], names = [], singers = [], used = [];
+  let grid = null; // (the beat for the pets' dances: the first part's tempo map — the parts of one song share it; UST keeps no time signature: 4/4)
   for (const f of files) {
     let ns;
     try { ns = parseUST(decodeText(await f.arrayBuffer())); } catch (e) { bad.push(f.name); continue; }
@@ -7089,10 +7423,11 @@ async function scoreFromUST(files, bad) {
     // VoiceDir: "%VOICE%folder", "%DATA%…\folder" or a full path (utauFolder finds the singer in it)
     singers.push(utauSinger(ns.voice) || singerOf('utau', null, names[t]));
     used.push(f);
+    if (!grid) grid = { tempo: ns.tempo, meter: [] };
     for (const n of ns) notes.push({ ...n, t });
   }
   if (!notes.length) throw new Error('no notes');
-  const sc = finishScore(notes, names, singers);
+  const sc = finishScore(notes, names, singers, grid);
   sc.ustFiles = used;
   return sc;
 }
@@ -7268,7 +7603,10 @@ function scoreFromUSTX(doc) {
     }
   });
   if (!notes.length) throw new Error('no notes');
-  return finishScore(notes, names, singers);
+  // (the beat and the bars for the pets' dances: the tempo map, and the time signatures where the file has them)
+  const meter = (Array.isArray(doc.time_signatures) ? doc.time_signatures : []).filter(m => m && Number.isInteger(+m.bar_position) && +m.bar_position >= 0 && +m.beat_per_bar > 0 && +m.beat_unit > 0)
+    .map(m => ({ bar: +m.bar_position, num: +m.beat_per_bar, den: +m.beat_unit })).sort((a, b) => a.bar - b.bar);
+  return finishScore(notes, names, singers, { tempo: tempos.map(t => ({ q: t.c / res, bpm: t.bpm })), meter });
 }
 let scoreGen = 0; // the latest score being read (a newer one, a project or Reset supersedes it)
 /* A score file (or a list of .ust files, one part each) read into a score, nothing else changed — so the
@@ -7337,12 +7675,13 @@ async function loadScore(f) { // f: a score file, or a list of .ust files (one p
    far (DIP) · over – two lines of one singer
    that overlap by more than this (s) run at the same time: two voices (less is one part's last note
    running into the next part's first: under a tenth of a second where this was set, with real
-   second lines overlapping by seconds)
+   second lines overlapping by seconds) · grip – a puppet picked up by one hand comes to hang from the pointer by
+   it over this long (s: petHeldAt) · dz – a plain picture's dance comes in and goes out over this long (s: petPicDance)
    ===================================================================== */
 const PETL = { early: 0.25, unison: 0.3, appear: 1, jump: 1, max: 100, at: 0.7, step: 1, pad: 16, bump: 0.6, edge: 8, gap: 6, rows: 3, round: 12, tail: 7,
   keep: 6, glide: 140, floor: 40, ledge: 28, fall: 3000, lag: 0.2, reach: 160,
   over: 0.3,
-  level: 10, turns: 100, hold: 0.15, pop: 600, leap: 0.45, peak: 0.12 };
+  level: 10, turns: 100, hold: 0.15, pop: 600, leap: 0.45, peak: 0.12, grip: 0.25, dz: 0.12 };
 /* A track named after its singer plus a harmony word ("Lumi_harm", "Lumi (chorus)", "Lumiハモリ",
    "ルミ（ハモリ）", "ルミ・ハモ") is that singer. Latin words need a separator before them ("Echo" stays
    "Echo"). NFKC first: Japanese typing gives full-width brackets （ ）［ ］. */
@@ -8073,7 +8412,7 @@ function smoothTime(raw, playing) {
   let t = raw;
   const started = playing && !clk.was; // this frame: the start position, not movement yet
   clk.was = playing;
-  if (!playing || dragging || started) clk.hold = true;
+  if (!playing || dragging || WHL.on || started) clk.hold = true; // (WHL.on: a scroll over the roll shows each step at once)
   else if (clk.hold) {
     if (raw !== clk.raw) clk.hold = false; // it's moving: extrapolate from the next frame on
   } else {
@@ -9034,6 +9373,7 @@ function drawScrolling(G, line) {
   const span = svp.max - svp.min + 3, u = (bottom - top) / span;
   const hn = Math.min(u * 0.85, 22 * r);
   const px = bw / 14, headX = bx + Math.min(bw * 0.6, Math.max(bw * 0.35, 440 * r));
+  view.spp = r / px; // (seconds per CSS px across: what one px of a wheel moves — rollWheel)
   const rowY = p => top + (svp.max - p + 1) * u + u / 2; // middle of a pitch's row
   const tFrom = now - (headX - bx) / px - svp.maxLen, tTo = now + (bx + bw - headX) / px;
   rc.textBaseline = 'middle';
@@ -9175,6 +9515,7 @@ function drawFalling(G) {
   const keyW = p => isBlackKey(p) ? bkw : ww;
   const kbH = Math.min((bottom - top) * 0.5, Math.max(26 * r, Math.min(84 * r, (bottom - top) * 0.14)));
   const hitY = bottom - kbH, ahead = 3.2, pps = (hitY - top) / ahead; // notes are seen 3.2 s before they play
+  view.spp = r / pps; // (seconds per CSS px down the fall: what one px of a wheel moves — rollWheel)
   // Notes on their way down (and the part of a sounding note that hasn't reached the keys yet)
   const vis = [], active = new Map();
   for (let ni = firstAt(svp.notes, now - svp.maxLen); ni < svp.notes.length; ni++) {
@@ -9386,6 +9727,7 @@ function paintRoll() {
   let bottom = (below ? lt : pb) - 14 * r;
   // falling notes: the keyboard sits on the bottom edge, so it moves clear of the phone's progress bar
   if (rollStyleSel.value === 'falling' && mob === 'portrait' && !below) bottom -= 28 * r;
+  view.spp = 0; // (the notes' scale, set by drawScrolling / drawFalling: none drawn, the wheel goes by 14 s across)
   if (bottom - top > 24 * r && svp.notes.length) {
     rc.save();
     rc.beginPath();
@@ -12833,6 +13175,22 @@ function petSheetCfg(s) {
 }
 /* How much of its singing gestures a puppet makes for that setting (PetSheet.step's gesture: 0 — none — to 1 — all). */
 const petGesture = g => (g === 'off' ? 0 : g === 'gentle' ? 0.5 : 1);
+/* What the pets do as they sing and while they are carried (Background mode → Desktop pet, in the list itself; the app
+   keeps them in pet.json with the others — petwin.js has the same list). PETDC: the usual.
+   dance – each pet dances while it sings a song that has a score (petsong.js works out the song's beat, bars and parts,
+   petdance.js each pet's dance through it: petDanceOf); off: it sings as before · danceSize – 'gentle' (smaller moves,
+   no spins or jumps) or 'lively' · carry – how a puppet (a pet sheet) is carried: 'hand' — its hand holds on to the
+   pointer and the rest of it hangs below (petGrip, petHeldAt) — or 'doll' — it hangs from wherever it was picked up,
+   as before 1.0.12 · scared – while it's carried a puppet's face goes (>_<) (either way it's carried) */
+const PETDC = { dance: true, danceSize: 'lively', carry: 'hand', scared: true };
+/* Those as the app hands them over (c: its cfg), each one checked as petSheetCfg does. → all of them, a new object. */
+function petDcCfg(c) {
+  const o = c && typeof c === 'object' ? c : {}, out = { ...PETDC };
+  for (const k of ['dance', 'scared']) if (typeof o[k] === 'boolean') out[k] = o[k];
+  if (['gentle', 'lively'].includes(o.danceSize)) out.danceSize = o.danceSize;
+  if (['hand', 'doll'].includes(o.carry)) out.carry = o.carry;
+  return out;
+}
 /* The Characters list's selection after a click on the card of singer `key`. order – the cards' keys as
    listed · sel – the keys selected now · anchor – the card last clicked ('': none) · ctrl / shift – the
    keys held. A plain click selects just that card; Ctrl adds it or takes it out; Shift selects everything
@@ -12904,6 +13262,12 @@ const PETS = {
   // which petVoice and petDraw go by · pups: how many puppets were made so far (every other one is drawn on the
   // other frames, at half speed: petPuppet)
   sh: petSheetCfg(null), pups: 0,
+  // dancing and carrying (1.0.12) — dc: those settings (petDcCfg; the usual until main says) · map: the song map of this
+  // song's score (petsong.js: its beat, bars and parts — petMapOf, as the song is loaded; null: nobody dances to it),
+  // maps: each score's, kept with the score · dances: pet key → its dance through this song ({ S, plan, D }: petDanceOf),
+  // emptied with the voices (petTimes) and when the dance settings change · hands: a sheet → where its hands meet
+  // (PetSheet.meet: the dance's claps; null: none)
+  dc: petDcCfg(null), map: null, maps: new WeakMap(), dances: new Map(), hands: new WeakMap(),
   bubs: new Map(), small: false, rectSig: '', rectAt: 0, rideAt: -1e9, first: true, at: 0, now: 0, playing: false, pos: {}, seq: 0,
   yielded: new Set(), // bubbles of lines that gave way to a new one (petYields): not shown again
   next: null,         // the next song's singers, from the read-ahead: { id, cast, pet: their lines and notes } (petBye)
@@ -12953,6 +13317,10 @@ function petGeom(g) {
 function petCfgNow(c) {
   const was = petMode(), h0 = PETS.sh, h = PETS.sh = petSheetCfg(c.sheet);
   if (h.words !== h0.words || h.early !== h0.early || h.read !== h0.read) PETS.voices = new Map();
+  // (dancing on or off, gentle or lively: every pet's dance is worked out again as it is next drawn — petDanceOf. How
+  // it's carried and its face: from the very next frame, petDraw; one held just now goes on as it was picked up)
+  const v0 = PETS.dc, v = PETS.dc = petDcCfg(c);
+  if (v.dance !== v0.dance || v.danceSize !== v0.danceSize) PETS.dances = new Map();
   PETS.cfg = { ...c };
   if (c.free === false || c.windows === false) PETS.ledges = []; // (nobody stands on a window any more: petMove lets them down)
   if (petMode() !== was && PETS.ready) petGroup(); // (a pet for each singer, as few as possible, or one singer: who the pets are)
@@ -12992,7 +13360,7 @@ function petNew(g) {
   const c = { key: g.key, pk: petPk(g), label: g.label, g, state: 'wait', t0: 0, fx: null, alt: 0, on: null, fall: null, ride: null, dest: null, jump: null, inAt: null, leftAt: null, w: 0, h: 0, y: 0, phase: Math.random(),
     hopAt: -1e9, hopH: 0, hopMs: 240, clickAt: -1e9, tilt: 0, tiltTo: 0, side: 1, sing: false, drag: null, landAt: -1e9, say: null,
     tf: '', ff: '', cp: '', vx: 0, vy: 0, lx: null, ly: null, keep: false, picUrl: null, pic: null, box: null,
-    facing: 1, mir: false, flip: 1, img: null, pup: null };
+    facing: 1, mir: false, flip: 1, img: null, pup: null, dz: 0, fp: null, fg: null }; // (dz, fp, fg: a plain picture's dance — petPicDance)
   const el = document.createElement('div'), fig = document.createElement('div');
   el.className = 'pet-ch';
   fig.className = 'pet-fig';
@@ -13053,7 +13421,7 @@ function petPuppet(c) {
   const cv = document.createElement('canvas');
   c.fig.replaceChildren(cv);
   const u = c.pup = { cv, cx: null, act: null, dpr: 0, k: 1, cw: 1, ch: 1, ox: 0, oy: 0, src: null, pose: null, bad: false, dirty: true, gone: false, odd: !!(++PETS.pups & 1),
-    st: { x: 0, y: 0, h: 0, voice: null, now: 0, walk: 0, held: false, grab: { x: 0, y: 0 }, air: false, landAt: null, hopAt: null, hopMs: 420, hopH: 14, enterAt: null, leaveAt: null,
+    st: { x: 0, y: 0, h: 0, voice: null, now: 0, walk: 0, held: false, carried: false, carry: 'doll', hand: 0, hang: 1, face: false, dance: null, grab: { x: 0, y: 0 }, air: false, landAt: null, hopAt: null, hopMs: 420, hopH: 14, enterAt: null, leaveAt: null,
       blink: true, gesture: 1, shadow: true } }; // (blink, gesture: the puppets' settings, as petDraw says them each frame; shadow: there is ground under its feet)
   try { u.cx = cv.getContext('2d'); u.act = PetSheet.actor(c.pic.sheet, c.key); } catch (e) {}
   if (!u.cx) petSheetBad(c, true); else if (!u.act) petSheetBad(c);
@@ -13133,6 +13501,82 @@ function petLang(g) {
   const all = new Set([petPk(g), ...(g.also || [])].map(of));
   return all.size === 1 ? [...all][0] : '';
 }
+/* ---- dancing (1.0.12): a pet dances while it sings a song that has a score ---- */
+/* The song's length in the score's own time (the stage's now: song time − scoreOffset); 0: not known. */
+function petSongLen() {
+  try { const T = total() - scoreOffset; return T > 0 ? T : 0; } catch (e) { return 0; }
+}
+/* The song map of a score (PetSong.build: its beat and bars, its phrases, its parts — intro, verses, choruses, and
+   which of them come again —, how lively each bar is, its end): worked out once for a score, as its song is loaded
+   (petSong; a score timed again is another one: petRecast), never in a frame, and kept with it (PETS.maps). Only a
+   score with words — a song that has singers — has one. null: none (no score, no petsong.js / petdance.js, or it
+   couldn't be made): nobody dances to it, and the pets sing as before. */
+function petMapOf(sc) {
+  if (!sc || !sc.lyr || !Array.isArray(sc.notes) || !sc.notes.length || !window.PetSong || !window.PetDance) return null;
+  let m = PETS.maps.get(sc);
+  if (m === undefined) {
+    m = null;
+    try { m = PetSong.build(sc, { dur: petSongLen() }) || null; } catch (e) {}
+    PETS.maps.set(sc, m);
+  }
+  return m;
+}
+/* Where a sheet's two hands meet, in front and over its head (PetSheet.meet — a dance's claps go by it, so the hands
+   touch whatever the arms are like): worked out once a sheet, as its picture is made ready (petReady), and kept
+   (PETS.hands). null: it has no hands, or this petsheet.js can't say. */
+function petHands(S) {
+  let F = PETS.hands.get(S);
+  if (F === undefined) {
+    F = null;
+    try { if (window.PetSheet && typeof PetSheet.meet === 'function') F = PetSheet.meet(S) || null; } catch (e) {}
+    PETS.hands.set(S, F);
+  }
+  return F;
+}
+/* A pet's dance through this song (PetDance.plan): one long dance, its moves on the song's beats — calm in a verse,
+   bigger in a chorus, the same moves each time a part comes again, a pose held on a long note of its own, an arm up
+   on a high one, a bow together at the end —, from the song map (PETS.map) and the notes this pet sings (as its
+   mouth: its own lines, and those it sings for). Worked out the first time it is drawn with the song playing, once:
+   PETS.dances keeps it — petTimes empties that with the voices (another song, cast or grouping), petCfgNow when a
+   dance setting changes, and a pet whose picture is now another sheet, or a plain picture, gets its dance again. The
+   song's pets all dance together (one seed: the song's — from its score, so the same song dances the same in any
+   project), and every other one of the pets that show (a singer with a picture) mirrors the one before it (a duet:
+   petSync empties PETS.dances when a picture comes or goes); the legs stay straight (knees: false). A puppet plays it through its engine by the song's clock
+   (PetSheet.dance: st.dance, petDraw), a plain picture by PetDance.figure (petPicDance).
+   → { S: the sheet it was made for (null: a plain picture), plan, D: what the puppet's engine plays }; plan null: it
+   doesn't dance — the setting is off, the song has no map, it isn't one of this song's pets (one still on from the song
+   before), or it failed (it sings as before). */
+function petDanceOf(c) {
+  const S = c.pup && !c.pup.bad ? c.pic.sheet : null;
+  let E = PETS.dances.get(c.key);
+  if (E && E.S === S) return E;
+  E = { S, plan: null, D: null };
+  PETS.dances.set(c.key, E);
+  const V = PETS.dc, M = PETS.map, i = PETS.cast.indexOf(c.g), P = PETS.sc && PETS.sc.pet;
+  if (!V.dance || !M || i < 0 || !window.PetDance) return E;
+  try {
+    const seed = [M.bpm, Math.round(M.first * 100), Math.round(M.last * 100)].join(':'), side = PETS.cast.filter(g => PETS.pics.get(petPk(g))).indexOf(c.g) % 2 === 1 ? -1 : 1;
+    const plan = PetDance.plan(M, { seed, side, own: (P && P.notes && P.notes.get(c.key)) || [],
+      size: V.danceSize, front: !S || S.faces === 'front', fit: S ? petHands(S) : null, end: petSongLen(), knees: false }) || null;
+    E.plan = plan;
+    if (plan && S && typeof PetSheet.dance === 'function') E.D = PetSheet.dance(S, { ch: PetDance.CH, add: PetDance.ADD, len: plan.len, blend: 0.25, at: (n, o, w) => PetDance.at(plan, n, o, w) }) || null;
+  } catch (e) { E.plan = null; E.D = null; }
+  return E;
+}
+/* What a puppet's engine plays this frame (st.dance): its dance, or null. */
+const petDance = c => petDanceOf(c).D;
+/* A plain picture's dance this frame (petAnim): PetDance.figure — a bounce on the beat, a lean from side to side, a
+   squash on each bar, a turn like a card's for a spin, still and tall through a long note of its own, the bow —,
+   eased in and out over PETL.dz (c.dz: how much of it shows; c.fp: the dance it goes by, kept while it eases out),
+   while this song's score plays and nobody holds it: a pause, a seek away from the song or picking it up lets it ease
+   back to its own bob. → the figure ({ up, tilt, sx, sy }: c.fg, the same object every frame), or null: none. */
+function petPicDance(c, now, sc, dt) {
+  const E = !c.drag && sc && PETS.playing ? petDanceOf(c) : null, on = !!(E && E.plan);
+  if (on) c.fp = E.plan;
+  c.dz = Math.max(0, Math.min(1, c.dz + (on ? dt : -dt) / PETL.dz));
+  if (!(c.dz > 0) || !c.fp) { c.dz = 0; c.fp = null; return null; }
+  try { return (c.fg = PetDance.figure(c.fp, now, c.fg || {})) || null; } catch (e) { c.dz = 0; c.fp = null; return null; }
+}
 /* One frame of a puppet (petAnim calls it once the singer's box is placed, as a picture's is): the stage says what
    the singer is doing, the puppet works out how it stands (PetSheet.step) and is drawn again (PetSheet.draw).
    x, y: where the middle of its feet is in the window now — its place, and how far it has risen or sunk as it
@@ -13140,8 +13584,11 @@ function petLang(g) {
    walks (st.walk stays 0: the stage doesn't move singers about by themselves).
    · It sings: its mouth goes by its notes and their lyrics (petVoice) — while this song's own score plays (sc),
      and not while the music is paused.
-   · Carried (c.drag.moved) it hangs from where it was grabbed (gx, gy: petDown) and swings. A press that is only
-     a click doesn't make it go limp.
+   · It dances as it sings (st.dance: its dance through the song, petDanceOf), by the song's clock — st.now, the
+     mouth's —, so a pause lets it ease back to standing and a seek takes it to the move of that moment.
+   · Carried (c.drag.moved) it hangs from where it was grabbed (gx, gy: petDown) and swings — or, carried by one hand
+     (the setting: PETS.dc.carry; petGrip), from its hand on the pointer (st.carry, st.hand, st.grab: the pointer as it
+     is); its face goes (>_<) while it's carried (st.face). A press that is only a click doesn't make it go limp.
    · It falls (c.fall; let go over a window's edge, c.ride, while it drops onto that) and lands (c.landAt); a click
      makes it hop (c.clickAt: as long and as high as a picture's big hop — the notes make it nod, not hop); it waves once it has come on (c.inAt: up, and at its place) and
      as it leaves (c.leftAt).
@@ -13155,7 +13602,7 @@ function petLang(g) {
    A failure marks the sheet bad (petSheetBad): it is then drawn once, standing still. Nothing is made per frame:
    the state and the pose are the same objects every time. */
 function petDraw(c, t, now, sc, x, y) {
-  const u = c.pup, S = c.pic.sheet, U = PETS.sh, dpr = window.devicePixelRatio || 1;
+  const u = c.pup, S = c.pic.sheet, U = PETS.sh, dpr = window.devicePixelRatio || 1, V = PETS.dc;
   c.up = 0; c.flip = 1; c.mir = false; c.facing = 1; // (as it stands, until its pose says otherwise)
   if (!u.gone && u.dpr !== dpr) petFit(c, dpr); // (a new size, another screen: its canvas again)
   if (u.gone || (u.bad && !u.dirty)) return;
@@ -13170,8 +13617,15 @@ function petDraw(c, t, now, sc, x, y) {
       const st = u.st, d = c.drag, j = c.jump;
       st.x = x; st.y = y; st.h = c.h;
       st.voice = sc && PETS.playing ? petVoice(c) : null; st.now = now;
+      st.dance = st.voice ? petDance(c) : null; // (it dances while it sings this song's score — not while paused: petDanceOf)
       st.held = U.swing && !!(d && d.moved);
-      if (st.held) { st.grab.x = d.gx; st.grab.y = d.gy; }
+      // (picked up by one hand — petGrip —, that hand holds on to the pointer itself, where it is now, from the middle of
+      // its feet; like a doll, it hangs from where it was grabbed. Its scared face goes with either, as the setting says —
+      // and carried upright too (Swings when you carry it off: carried, not held), when it doesn't dance either)
+      st.carry = d && d.hand ? 'hand' : 'doll'; st.face = V.scared; st.carried = !!(d && d.moved);
+      if (d && d.hand) { st.hand = d.hand.k; st.hang = d.hf; } // (hang: how far it hangs from it — 0, standing on the taskbar: petHeldAt)
+      if (st.held && d.hand) { st.grab.x = d.px + d.dx - x; st.grab.y = d.py + d.dy - y; }
+      else if (st.held) { st.grab.x = d.gx; st.grab.y = d.gy; }
       // (its jump up to its place — c.jump — is told as a hop's time in the air, legs and arms out, with no lift of the
       // puppet's own: the stage carries it up, and it lands as one that drops does. A hop of no height is no click to
       // the puppet: an animation of the sheet's own for a click doesn't start — petsheet.js, pickClip)
@@ -13375,6 +13829,7 @@ function petSync(key) {
   else if (step === 'swap') petPic(c, true);
   else if (step === 'come') { if (c) petDrop(c); PETS.chars.set(key, petNew(g)); }
   petWhen(); // (the first singer with a picture to sing may be another one now)
+  PETS.dances = new Map(); // (and who shows, so who mirrors whom: petDanceOf)
 }
 /* ---- songs ---- */
 /* A song is loaded (background mode's bgmPlay, before it starts): its cast; singers who are in it too
@@ -13386,6 +13841,7 @@ async function petSong(gen) {
   const id = BGM.order[BGM.i];
   const raw = svp && svp.lyr ? petCast(svp, id) : [];
   Object.assign(PETS, { songId: id, svp, raw, ready: true, started: false, song: currentProject && currentProject.id === id ? currentProject.name : '' });
+  PETS.map = petMapOf(svp); // (what the pets dance to — a song with a score that has words: worked out now, before it starts)
   petGroup(); // (a picture not known yet: petPics below brings its singer on)
   const P = petPics(raw, true);
   await Promise.race([P, new Promise(r => setTimeout(r, PETS.first ? 2000 : 1000))]);
@@ -13439,6 +13895,7 @@ function petTimes() {
   const sc = PETS.sc;
   PETS.on = sc ? petOnsets(PETS.cast, sc) : null;
   PETS.voices = new Map(); // (what each puppet's mouth does: worked out again, for these notes, when it is next drawn — petVoice)
+  PETS.dances = new Map(); // (and each one's dance: petDanceOf)
   PETS.cur = new Map(PETS.cast.map(g => [g.key, {}]));
   petWhen();
 }
@@ -13451,6 +13908,7 @@ function petWhen() {
 }
 function petRecast() {
   PETS.svp = svp;
+  PETS.map = petMapOf(svp); // (a score timed again: its own song map)
   PETS.raw = petCast(svp, PETS.songId);
   petGroup();
 }
@@ -13530,6 +13988,7 @@ async function petReady(p, url, id) {
     x.putImageData(d, 0, 0);
     src = cv;
   }
+  if (PETS.dc.dance) petHands(S); // (where its hands meet, for a dance's claps: worked out now, not in the frame it first dances)
   const M = Math.max(S.right, -S.left); // (how far the standing puppet reaches from the middle of its feet, in cells: its wider side)
   return { url, w: 2 * M * S.cell, h: S.tall * S.cell, box: { x0: (M + S.left) / (2 * M), y0: 0, x1: (M + S.right) / (2 * M), y1: 1 },
     from: url, id, faces: petFaces(p), sheet: S, src, copy: null };
@@ -13690,8 +14149,13 @@ function petAnim(c, now, t, dt, sc) {
   }
   c.tiltTo = c.drag ? 4 * c.drag.dir : sing ? 2 * c.side : 0;
   c.facing = petDrawn(c); // (the way its picture is drawn: nothing turns a pet round — a puppet's pose says its own, petDraw)
+  // dancing, a plain picture (petPicDance; a puppet dances itself: petDraw): its bounce on the beat stands in for the idle
+  // bob — a note's hop or a click's goes over it only where higher —, its lean for the note's tilt, and its squash and
+  // its turn like a card's go on the picture as it is, all as far as the dance has come in (c.dz)
+  const F = c.pup ? null : petPicDance(c, now, sc, dt), dz = c.dz;
+  if (F) { up *= 1 - dz; c.tiltTo += (F.tilt - c.tiltTo) * dz; sx *= 1 + (F.sx - 1) * dz; sy *= 1 + (F.sy - 1) * dz; }
   // (a click's big hop runs its whole course, the notes' hops over it only where higher: petLift)
-  up = petLift(up, petArc((t - c.hopAt) / c.hopMs, c.hopH), petArc((t - c.clickAt) / 420, 14), 14);
+  up = petLift(up, Math.max(petArc((t - c.hopAt) / c.hopMs, c.hopH), F ? F.up * c.h / 200 * dz : 0), petArc((t - c.clickAt) / 420, 14), 14); // (F.up: px at a 200 px picture)
   const kq = (t - Math.max(c.hopAt, c.clickAt)) / 120;
   if (kq >= 0 && kq < 1) { sx *= 1 + 0.03 * (1 - kq); sy *= 1 - 0.04 * (1 - kq); }
   // held: lifted a little; let go: it lands with a small bounce
@@ -13803,8 +14267,9 @@ function petMove(t, dt) {
     if (c.fx == null || !petVis(c)) continue;
     const x = c.fx * W, lo = c.w / 2, hi = W - c.w / 2;
     // carried, it's wherever the pointer has it, and on no line: nobody it's carried past makes room for it, or minds it
-    // at all — a whole row would start moving while you only want to take one somewhere. Let go, it's on a line again
-    if (c.drag && c.drag.moved) continue;
+    // at all — a whole row would start moving while you only want to take one somewhere. Let go, it's on a line again.
+    // (Held by one hand, it comes to hang under that hand in the first moments, the pointer still or not: petHeldAt)
+    if (c.drag && c.drag.moved) { if (c.drag.hand) petHeldAt(c, t); continue; }
     // one that has come up and has somewhere higher to be (c.dest: petPlace) jumps there — on no line while it does
     if (c.dest && !c.jump && c.state === 'in' && !c.drag) petTakeOff(c, t, Ls, dt);
     if (c.jump) { petLeap(c, t, Ls, dt); continue; }
@@ -14107,8 +14572,10 @@ function petDown(e) {
   // (fell: caught as it fell, it stops there, under the pointer — else it would fall on while the press is still only a
   // press, and jump back up to the pointer as the drag begins. A press that turns out a click lets it fall on: petLetGo.
   // One caught on its jump up to its place stops there too, and a click lets it go on up: c.dest stays, petMove)
+  // (px, py: the pointer as it was pressed, in the window; dx, dy: how far it has moved since, on the screen — petDragTo;
+  // hand: carried by one hand — petGrip, as it is picked up; hf: how far it hangs from that hand — petHeldAt)
   c.drag = { id: e.pointerId, sx: e.screenX, sy: e.screenY, x0: c.fx * PETS.G.W, a0: c.alt, lastX: e.screenX, moved: false, dir: 1,
-    gx: e.clientX - c.fx * PETS.G.W, gy: e.clientY - (petFeet(c) + c.y), fell: c.fall };
+    gx: e.clientX - c.fx * PETS.G.W, gy: e.clientY - (petFeet(c) + c.y), fell: c.fall, px: e.clientX, py: e.clientY, dx: 0, dy: 0, hand: null, hf: 1 };
   c.fall = null; c.jump = null;
   PETS.held = c;
   c.el.classList.add('held'); // (on top of the others)
@@ -14123,10 +14590,64 @@ function petDragTo(e) {
   if (e.pointerType === 'mouse' && !(e.buttons & 1)) { petLetGo(c, false); return; } // (the button is up: its letting go never got here)
   const G = PETS.G, W = G.W, dx = e.screenX - d.sx, dy = G.free ? e.screenY - d.sy : 0;
   if (!d.moved && Math.hypot(dx, dy) < 4) return; // (less than that is a click)
-  if (!d.moved) { d.moved = true; c.on = null; c.ride = null; c.fall = null; c.dest = null; c.jump = null; } // (picked up: off whatever it stood on, and going nowhere of its own)
+  if (!d.moved) { d.moved = true; c.on = null; c.ride = null; c.fall = null; c.dest = null; c.jump = null; d.hand = petGrip(c); } // (picked up: off whatever it stood on, and going nowhere of its own)
   if (e.screenX !== d.lastX) { d.dir = e.screenX > d.lastX ? 1 : -1; d.lastX = e.screenX; }
+  d.dx = dx; d.dy = e.screenY - d.sy; // (the pointer, also where it can't take the pet up off the taskbar: a hand reaches up to it)
+  if (d.hand) { petHeldAt(c, performance.now()); return; }
   c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, d.x0 + dx)) / W;
   if (G.free) c.alt = Math.max(0, Math.min(petTop(c), d.a0 - dy));
+}
+/* Carried by one hand (the setting: PETS.dc.carry 'hand' — a puppet that swings when it's carried, Animated pets…):
+   as it is picked up, which of its hands takes the pointer — the one on the side where it was pressed — and where that
+   hand is from the middle of its feet once it hangs still from it (PetSheet.grip; px). → { k: 0 its picture's left
+   arm, 1 its right, x, y, t0: when it was picked up } — or null: it is carried as a doll (as before, the other setting,
+   a plain picture, a puppet with no arm to hold, or a petsheet.js that can't). With "Pets can go anywhere" off it can
+   never be lifted into reach: taken lower than its standing hand reaches down (PetSheet.gripLow: px from its feet, its
+   arm straight down and the hand on it — by its knees or feet), it is pulled along as a doll too, rather than holding a
+   hand up over a pointer it can't reach. */
+function petGrip(c) {
+  const u = c.pup;
+  if (!u || u.bad || !PETS.sh.swing || PETS.dc.carry !== 'hand' || !window.PetSheet || typeof PetSheet.grip !== 'function') return null;
+  try {
+    const g = PetSheet.grip(c.pic.sheet, c.h, c.drag.gx, c.mir ? -1 : 1);
+    if (g && (g.k === 0 || g.k === 1) && Number.isFinite(g.x) && Number.isFinite(g.y)) {
+      if (!PETS.G.free && typeof PetSheet.gripLow === 'function' && c.drag.gy > PetSheet.gripLow(c.pic.sheet, c.h, g.k)) return null;
+      return { k: g.k, x: g.x, y: g.y, t0: performance.now() };
+    }
+  } catch (e) {}
+  return null;
+}
+/* Where a pet carried by one hand stands (c.fx, c.alt — its feet), the pointer where it is: over the first PETL.grip s
+   after it was picked up its feet go from where they were under the pointer (as a doll's stay) to where that hand
+   holds the pointer, and then go with the pointer. Held still meanwhile, it still settles: petMove calls this every
+   frame. Lifted high enough, it hangs from that hand: its feet right under it. On the taskbar it can't hang any lower
+   (hf: how far it hangs — 0 standing, the pointer no higher than its shoulder, to 1 once the pointer is as high as
+   the hand it hangs from; "Pets can go anywhere" off: always 0, it stays on the taskbar): standing, the pointer goes out
+   beside the shoulder of the hand that holds it, most of an arm's length off, round that shoulder as it rises — the
+   shoulder leaned as far as it hangs, the arm straighter — up to where it hangs (bx: where across, from its feet —
+   PetSheet.gripBeside, from the pointer's height y1; s0: its shoulder's, PetSheet.gripFrom), so the hand stays on the
+   pointer all the way up and back down, never swinging round through its shoulder or across its face or chest. With a
+   petsheet.js that can't say where its shoulder is: out beside it, blended across to hanging by the pointer's height
+   over where it was taken; with one that can't say even that: under where it was taken. */
+function petHeldAt(c, t) {
+  const d = c.drag, h = d.hand, G = PETS.G, W = G.W, k = Math.max(0, Math.min(1, (t - h.t0) / (PETL.grip * 1000))), e = k * k * (3 - 2 * k), S = c.pic.sheet, f = c.mir ? -1 : 1;
+  let s0 = NaN;
+  try { if (typeof PetSheet.gripFrom === 'function') s0 = PetSheet.gripFrom(S, c.h, h.k); } catch (er) {}
+  if (Number.isFinite(s0)) {
+    if (G.free) c.alt = Math.max(0, Math.min(petTop(c), d.a0 - d.dy - e * (d.gy - h.y)));
+    // (y1: the pointer from its feet once it has come to hang as far as it can — in the air: at that hand; on the ground: where the pointer is)
+    const a1 = Math.max(0, Math.min(petTop(c), d.a0 - d.dy - (d.gy - h.y))), y1 = !G.free ? d.gy + d.dy + c.alt - d.a0 : a1 > 0 ? h.y : d.gy + d.dy - d.a0;
+    const hf = d.hf = !G.free ? 0 : a1 > 0 ? 1 : s0 - h.y > 1 ? Math.max(0, Math.min(1, (s0 - y1) / (s0 - h.y))) : 1;
+    let bx = h.x;
+    if (hf < 1) try { const x = PetSheet.gripBeside(S, c.h, h.k, y1, f, hf); if (Number.isFinite(x)) bx = x; } catch (er) {}
+    c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, d.x0 + d.dx + e * (d.gx - bx))) / W;
+    return;
+  }
+  const need = d.gy - h.y, hf = d.hf = !G.free ? 0 : need > 1 ? Math.max(0, Math.min(1, (d.a0 - d.dy) / need)) : 1;
+  if (G.free) c.alt = Math.max(0, Math.min(petTop(c), d.a0 - d.dy - e * (d.gy - h.y)));
+  let bx = d.gx;
+  if (hf < 1 && typeof PetSheet.gripBeside === 'function') try { const x = PetSheet.gripBeside(S, c.h, h.k, d.gy + d.dy + c.alt - d.a0, f); if (Number.isFinite(x)) bx = x; } catch (er) {}
+  c.fx = Math.max(c.w / 2, Math.min(W - c.w / 2, d.x0 + d.dx + e * (d.gx - bx - hf * (h.x - bx)))) / W;
 }
 function petUp(e) {
   const c = PETS.held, d = c && c.drag;
@@ -14168,8 +14689,10 @@ function petLetGo(c, click) {
    picture it has (its own key — the second pet of a singer with two lines at once has that singer's). A pet that
    sings several lines at once is in each of their bubbles' singers. pets: how many pets show ('each', 'few', 'one').
    puppet: null for a plain picture; for a pet sheet what its puppet shows as it was last drawn — mouth (the shape:
-   'rest', 'A', 'I', 'U', 'E', 'O', 'N', 'F'), open (how far), eyes, still (its sheet failed: it only stands) and
-   canvas (its own canvas, in DIP: where its feet are in it, and its size). puppets: the settings the puppets go by
+   'rest', 'A', 'I', 'U', 'E', 'O', 'N', 'F'), open (how far), eyes, still (its sheet failed: it only stands),
+   canvas (its own canvas, in DIP: where its feet are in it, and its size) and hand (it's carried by one hand);
+   dancing: it dances to the song now (a puppet: it was told its dance as it was last drawn; a picture: some of its
+   dance shows). puppets: the settings the puppets go by
    (Animated pets…: petSheetCfg — the usual, until the app says otherwise). */
 function petSnapshot() {
   const G = PETS.G;
@@ -14177,7 +14700,8 @@ function petSnapshot() {
     characters: [...PETS.chars.values()].map(c => {
       const x = c.fx == null ? null : c.fx * G.W, b = c.box, top = petFeet(c) - c.h + c.y, r = petTurned(b, c.mir ? -1 : 1), u = c.pup, po = u && u.pose;
       return { key: c.key, of: c.pk, label: c.label, x, y: top, w: c.w, h: c.h,
-        puppet: u ? { mouth: po ? po.mouth : 'rest', open: po ? po.open : 0, eyes: po ? po.eyes : 'open', still: u.bad, canvas: { x: u.ox, y: u.oy, w: u.cw, h: u.ch } } : null,
+        puppet: u ? { mouth: po ? po.mouth : 'rest', open: po ? po.open : 0, eyes: po ? po.eyes : 'open', still: u.bad, canvas: { x: u.ox, y: u.oy, w: u.cw, h: u.ch }, hand: !!(c.drag && c.drag.hand) } : null,
+        dancing: u ? !u.bad && !!u.st.dance : c.dz > 0,
         feet: petFeet(c) + c.y, up: c.up || 0, alt: c.alt, on: c.on ? c.on.id : null, falling: !!c.fall, jumping: !!c.jump, to: c.dest ? { x: c.dest.fx * G.W, alt: c.dest.alt, window: c.dest.win, waiting: !!c.dest.until } : null,
         also: (c.g && c.g.also) || [], facing: c.facing, mirrored: c.mir,
         visible: c.state === 'rising' || c.state === 'in' || c.state === 'leaving', state: c.state, held: !!c.drag, singing: c.sing,
@@ -14226,6 +14750,16 @@ async function petCfgUI() {
   $('petPetsOne').hidden = $('petPetsOne').disabled = !one;
   $('petPets').value = one ? c.pets : c.merge === true ? 'few' : 'each';
   for (const id of ['petPetsRow', 'petPetsHint']) $(id).hidden = !more;
+  // (dancing, and how a pet sheet's puppet is carried and its face: offered by an app that keeps them — the dance where
+  // this page can work one out, the carrying where a pet sheet can be shown at all; How lively only while they dance)
+  petDanceCan = typeof c.dance === 'boolean' && ['gentle', 'lively'].includes(c.danceSize) && !!window.PetSong && !!window.PetDance;
+  $('petDance').checked = petDanceCan && c.dance;
+  $('petDanceSize').value = petDanceCan ? c.danceSize : 'lively';
+  petDanceUI();
+  const carry = CAN_SHEET && ['hand', 'doll'].includes(c.carry) && typeof c.scared === 'boolean';
+  $('petCarry').value = carry ? c.carry : 'hand';
+  $('petScared').checked = carry && c.scared;
+  for (const id of ['petCarryRow', 'petCarryHint', 'petScaredRow', 'petScaredHint']) $(id).hidden = !carry;
   // (Animated pets…, the settings of pet-sheet puppets: offered whether or not any singer has a sheet just now — but
   // only by an app that keeps them, where a pet sheet can be shown at all)
   $('petSheetBtn').hidden = !(CAN_SHEET && c.sheet && typeof c.sheet === 'object');
@@ -14236,6 +14770,12 @@ function petFreeUI(can) {
   $('petFreeRow').hidden = $('petFreeHint').hidden = !can;
   $('petWinRow').hidden = $('petWinHint').hidden = !(can && $('petFree').checked);
   $('petGravRow').hidden = $('petGravHint').hidden = !(can && petGravCan && $('petFree').checked);
+}
+/* "How lively" is only offered while the pets dance. */
+let petDanceCan = false; // (the app keeps the dance settings, and this page can work out a dance: petCfgUI)
+function petDanceUI() {
+  $('petDanceRow').hidden = $('petDanceHint').hidden = !petDanceCan;
+  $('petDanceSizeRow').hidden = $('petDanceSizeHint').hidden = !(petDanceCan && $('petDance').checked);
 }
 let petCfgBusy = null, petCfgNext = null;
 function petCfgSet(c) { // (one at a time; the slider's newest value wins — it moves the pets live)
@@ -14254,6 +14794,10 @@ $('petFree').onchange = e => { petCfgSet({ free: e.target.checked }); petFreeUI(
 $('petWindows').onchange = e => petCfgSet({ windows: e.target.checked });
 $('petGravity').onchange = e => petCfgSet({ gravity: e.target.checked });
 $('petPets').onchange = e => petCfgSet({ pets: e.target.value, merge: e.target.value === 'few' }); // (merge: what an app from before "One singer" goes by)
+$('petDance').onchange = e => { petCfgSet({ dance: e.target.checked }); petDanceUI(); };
+$('petDanceSize').onchange = e => petCfgSet({ danceSize: e.target.value });
+$('petCarry').onchange = e => petCfgSet({ carry: e.target.value });
+$('petScared').onchange = e => petCfgSet({ scared: e.target.checked });
 /* ---- Animated pets…: the settings that only matter for singers whose picture is a pet sheet — a puppet —, in a
    dialog of their own (size, height, how many pets and the other general ones stay in the list above).
    The app keeps them with the others (pet.json: sheet — PETSH has each of them and what it usually is) and tells the
@@ -14341,6 +14885,9 @@ const CAN_EDIT = CAN_SHEET && !!(window.PetSplit && window.PetEditor) && PetEdit
   give: async (key, png) => { try { await mapApp.petPics([{ key }]); return !!(await mapApp.petSetImg(key, png)); } catch (e) { return false; } }, // (met just now, as for any picture)
   saveBlob, say, paintRange,
   settings: petShOpen,
+  // (its Carried preview carries the pet as the desktop does: Background mode → Desktop pet, Carry a pet and Scared face
+  // when carried, as the list shows them — the usual, by one hand and scared, where the app keeps neither)
+  carry: () => ({ hand: $('petCarry').value !== 'doll', face: $('petScaredRow').hidden || $('petScared').checked }),
   // (Save for later: the pets being worked on are kept by the app — main, <userData>/pet/drafts — never given to a
   // singer; an older app has no such calls, and the editor then doesn't offer it)
   drafts: mapApp.petDrafts && mapApp.petDraftGet && mapApp.petDraftPut && mapApp.petDraftDel

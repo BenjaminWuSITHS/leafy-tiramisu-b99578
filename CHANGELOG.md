@@ -15,6 +15,17 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.12
+<!-- date: 2026-11-14T20:58 -->
+- In the lyrics bar (Settings → Score → Layout: Bar), scroll over the lyrics or the piano roll to go back or forward in the song: down or right is later, Shift goes 5 times as far. Not in the Full screen layout, fullscreen or background mode.
+- Desktop pets dance while they sing a song with a score: a long dance each, on the song's beat, calm in the verses, bigger in the choruses (the same moves each time), punchier where the words come fast, a jump into each chorus, a pose held on a long note, an arm up on a high one, and a bow together at the end. Every other pet dances it mirrored, and their legs stay straight. Settings → Background mode → Dance while singing: Gentle or Lively.
+  <!-- picture: changelog/1.0.12/dance.gif | Dancing into a chorus -->
+- Desktop pets: picked up with the mouse, a pet holds on to your pointer by one hand and hangs from that arm, legs dangling, with a scared (>_<) face until you let go. Carry a pet: Like a doll (as before) brings back the old way, and Scared face when carried is a switch of its own.
+  <!-- picture: changelog/1.0.12/carried.gif | 1.0.11 on the left, 1.0.12 on the right -->
+- Desktop pets: a singer whose words have "view" in them sings again (it stood silent).
+- Pet editor: Hidden parts is gone. Layers shows your picture part by part: click a part to paint it alone, its own pixels too; what other parts hide of it, its Missing area, is striped. Nothing is filled in for you any more, and a bent arm or leg can be straightened.
+- Pet editor: a new picture asks: Cut it out for me, or I'll do it myself. Cut's brush colours outlines and the picture's edge, follows the mouse and doesn't lag; its Bucket takes an arm's soft edge with it. Carried shows the carry you chose.
+
 ## 1.0.11
 <!-- date: 2026-11-14T11:25 -->
 - Pet editor: the body under an arm in front is filled in from its own colours and lines: no more streaks when the arm moves.
