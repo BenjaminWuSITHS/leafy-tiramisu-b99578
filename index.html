@@ -643,6 +643,26 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #updDlgNotes .un-p{margin:0 0 6px}
 #updDlgNotes > :first-child{margin-top:0}
 #updDlgNotes > :last-child{margin-bottom:0}
+/* …laid out as the What's new page lays a version out (updNotesPaint: newsVersion makes the same parts as in #newsList,
+   a little smaller here): its number, the day it came out, its points, its pictures. A click on a picture shows it large */
+#updDlgNotes.un-rich{max-height:min(46vh,420px)}
+#updDlgNotes.un-pics{height:min(46vh,420px)}
+#updDlgNotes .nw-ver{padding:12px 0 4px}
+#updDlgNotes .nw-ver:first-child{padding-top:2px}
+#updDlgNotes .nw-ver+.nw-ver{border-top:1px solid var(--line)}
+#updDlgNotes .nw-ver h4{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:0;font-size:1.02rem;font-weight:600;line-height:1.3}
+#updDlgNotes .nw-date{display:block;margin:2px 0 8px;color:var(--muted);font-size:.8rem}
+#updDlgNotes .nw-ver ul{margin:0 0 8px;padding-left:20px;list-style:disc}
+#updDlgNotes .nw-ver li{margin:0 0 6px}
+#updDlgNotes .nw-ver li::marker{color:var(--muted)}
+#updDlgNotes .nw-ver h5{margin:10px 0 4px;font-size:.9rem;font-weight:600}
+#updDlgNotes .nw-ver p{margin:0 0 8px}
+#updDlgNotes .nw-ver a{color:var(--accent);text-underline-offset:2px}
+#updDlgNotes .nw-fig{margin:8px 0 12px}
+#updDlgNotes .nw-pic{display:block;max-width:100%;padding:0;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--fg) 5%,transparent);overflow:hidden;line-height:0;cursor:zoom-in}
+#updDlgNotes .nw-pic:hover{border-color:var(--accent)}
+#updDlgNotes .nw-pic img{display:block;max-width:100%;max-height:min(40vh,320px);width:auto;height:auto}
+#updDlgNotes figcaption{margin-top:5px;color:var(--muted);font-size:.8rem;line-height:1.4}
 #updDlgAll{display:block;margin:-6px 0 12px;padding:2px 0;border:none;border-radius:4px;background:none;color:var(--accent);font-size:.85rem;text-decoration:underline;text-underline-offset:2px} /* (the What's new page, over the popup: see setUpNews) */
 #updDlgBar{display:block;width:100%;height:8px;margin:0 0 10px;border:none;border-radius:999px;overflow:hidden;-webkit-appearance:none;appearance:none;background:color-mix(in srgb,var(--fg) 14%,transparent)}
 #updDlgBar::-webkit-progress-bar{background:transparent}
@@ -11900,7 +11920,8 @@ const UPD_ERR = {
 // really begun (an answer sent before that says nothing about it). gen: goes up to call off a Close and install.
 // ignored: Ignore was clicked, which lasts for this start. told, failed: the news from the last update.
 // at: when the screen last changed (see aimed, in setUpUpdates). notes: what's new, as last read, and for which version.
-const UPD = { s: null, screen: '', started: false, gen: 0, ignored: false, told: false, failed: '', at: 0, notes: null };
+// pics: those notes' pictures as read so far, for that version (updPic). shown: the notes the popup has up (updNotesPaint).
+const UPD = { s: null, screen: '', started: false, gen: 0, ignored: false, told: false, failed: '', at: 0, notes: null, pics: null, shown: null };
 let dataBusy = 0; // (projects being imported or exported, and a moment after each save: see saveBlob)
 const updBusy = () => somethingOpen() || COVER.on || PIC.on || dataBusy > 0 || !!(UPD.s && UPD.s.saving);
 /* The line in Settings, for every status the app can be in */
@@ -11993,12 +12014,50 @@ function updNoteRows(text) {
   }
   return rows;
 }
+/* The same notes laid out as the What's new page lays a version out (1.0.14): its number, the day it came out, its
+   points, its pictures. The app sends a release's notes with their comment lines too (raw), where the date and the
+   pictures are written as in CHANGELOG.md, and the page's own newsParse reads them: → what it makes of one version,
+   or null (no raw — an app from before it —, or nothing in it to show: the plain rows below are used then). */
+function updNoteVersion(n) {
+  if (typeof n.raw !== 'string' || !n.raw || !/^\d+\.\d+\.\d+$/.test(n.version)) return null;
+  try {
+    const part = n.raw.split('\n').filter(l => !/^##[ \t]/.test(l)).join('\n'); // (a version line of its own would end the part there)
+    const v = newsParse('## ' + n.version + '\n' + part)[0];
+    return v && v.items.length ? v : null;
+  } catch (e) { return null; }
+}
+/* A picture of those notes. It comes with the new version, so it isn't beside this page: the app reads it from the
+   repository (mapApp.notePicture → { type, data }), and it is shown from memory. Each is asked for once for a version
+   (UPD.pics); its figure shows when the picture is here, and one that can't be had leaves no gap. */
+function updPic(p, img, fig) {
+  const app = window.mapApp, v = (UPD.notes && UPD.notes.v) || '';
+  fig.hidden = true;
+  if (!app || typeof app.notePicture !== 'function') return;
+  if (!UPD.pics || UPD.pics.v !== v) {
+    if (UPD.pics) for (const u of UPD.pics.urls) try { URL.revokeObjectURL(u); } catch (e) {}
+    UPD.pics = { v, map: new Map(), urls: [] };
+  }
+  const P = UPD.pics;
+  if (!P.map.has(p.src)) P.map.set(p.src, Promise.resolve().then(() => app.notePicture(p.src)).then(r => {
+    if (!r || !/^image\/(?:png|jpeg|gif|webp)$/.test(r.type) || !r.data || !r.data.byteLength) return '';
+    const u = URL.createObjectURL(new Blob([r.data], { type: r.type }));
+    P.urls.push(u);
+    return u;
+  }, () => ''));
+  P.map.get(p.src).then(u => { if (u && UPD.pics === P) { img.src = u; fig.hidden = false; } });
+}
 function updNotesPaint(list) {
   const wrap = $('updDlgNew'), box = $('updDlgNotes'), was = wrap.hidden;
-  const shown = list.map(n => ({ version: n.version, rows: updNoteRows(n.text) })).filter(n => n.rows.length);
+  if (!was && UPD.shown === list) return; // (these very notes are up already — from asking, on to downloading: where it was read to, and its pictures, stay as they are)
+  UPD.shown = list;
+  const shown = list.map(n => ({ version: n.version, v: updNoteVersion(n), rows: updNoteRows(n.text) })).filter(n => n.v || n.rows.length);
+  const rich = shown.some(n => n.v), pics = shown.some(n => n.v && n.v.items.some(it => it.pics.length));
   box.textContent = '';
+  box.classList.toggle('un-rich', rich);
+  box.classList.toggle('un-pics', pics); // (pictures arrive after the words: the box keeps one height, so the buttons under it never move)
   for (const n of shown) {
     let ul = null;
+    if (n.v) { box.append(newsVersion(n.v, false, { id: 'un-v', load: updPic })); continue; }
     if (shown.length > 1) { const h = box.appendChild(document.createElement('div')); h.className = 'un-v'; h.textContent = 'Version ' + n.version; }
     for (const r of n.rows) {
       if (r.li != null) { if (!ul) ul = box.appendChild(document.createElement('ul')); ul.appendChild(document.createElement('li')).textContent = r.li; continue; }
@@ -12008,7 +12067,7 @@ function updNotesPaint(list) {
       row.textContent = r.h != null ? r.h : r.p;
     }
   }
-  $('updDlgNewT').textContent = shown.length === 1 ? "What's new in version " + shown[0].version : "What's new";
+  $('updDlgNewT').textContent = shown.length === 1 && !rich ? "What's new in version " + shown[0].version : "What's new"; // (laid out as the page: each version says its own number)
   wrap.hidden = !shown.length;
   if (was && shown.length) { box.scrollTop = 0; UPD.at = performance.now(); } // (the buttons have just moved down: a click aimed at where they were counts for nothing, as after a change of screen)
 }
@@ -12019,7 +12078,7 @@ function updNotes(v) {
   if (!v || !app || !app.notes) return; // (a desktop app from before these: the popup is as it was)
   app.notes().then(list => {
     if (!Array.isArray(list)) return;
-    UPD.notes = { v, list: list.filter(n => n && typeof n.version === 'string' && typeof n.text === 'string').slice(0, 10) };
+    UPD.notes = { v, list: list.filter(n => n && typeof n.version === 'string' && typeof n.text === 'string').slice(0, 10) }; // (and raw, where the app sends it: updNoteVersion)
     if ((UPD.screen === 'ask' || UPD.screen === 'down') && UPD.s && UPD.s.offer && UPD.s.offer.version === v) updNotesPaint(UPD.notes.list);
   }, () => {});
 }
@@ -12344,7 +12403,9 @@ function newsWords(el, spans) {
     } else el.append(s.text);
   }
 }
-function newsFigs(where, pics) {
+/* load: for pictures that aren't beside the page (the update popup's: updPic). It is given the picture, its img and
+   its figure, and puts the img's src there itself; the large view then shows what the img shows. */
+function newsFigs(where, pics, load) {
   for (const p of pics) {
     const fig = document.createElement('figure'), b = document.createElement('button'), img = document.createElement('img');
     fig.className = 'nw-fig';
@@ -12355,18 +12416,20 @@ function newsFigs(where, pics) {
     img.loading = 'lazy';
     img.decoding = 'async';
     img.onerror = () => { fig.hidden = true; }; // (a picture that isn't there: nothing, rather than a broken one)
-    img.src = p.src;
+    if (load) load(p, img, fig); else img.src = p.src;
     b.append(img);
-    b.onclick = () => newsBig(p, b);
+    b.onclick = () => newsBig(load ? { src: img.src, caption: p.caption } : p, b);
     fig.append(b);
     if (p.caption) { const c = document.createElement('figcaption'); c.textContent = p.caption; fig.append(c); }
     where.append(fig);
   }
 }
-function newsVersion(v, mine) {
-  const sec = document.createElement('section'), h = document.createElement('h4');
+/* One version, laid out: its number, the day it came out, its points and its pictures. o (the update popup's use of
+   it): id — what its heading's id starts with, so it never meets the What's new page's; load — see newsFigs. */
+function newsVersion(v, mine, o) {
+  const sec = document.createElement('section'), h = document.createElement('h4'), load = (o && o.load) || null;
   sec.className = 'nw-ver';
-  h.id = 'nw-v' + v.version.replace(/\./g, '-');
+  h.id = ((o && o.id) || 'nw-v') + v.version.replace(/\./g, '-');
   h.append('Version ' + v.version);
   if (mine) { const b = document.createElement('span'); b.className = 'nw-this'; b.textContent = 'This version'; h.append(b); }
   sec.setAttribute('aria-labelledby', h.id);
@@ -12379,13 +12442,13 @@ function newsVersion(v, mine) {
       if (!ul) { ul = document.createElement('ul'); sec.append(ul); }
       const li = document.createElement('li');
       newsWords(li, it.spans);
-      newsFigs(li, it.pics);
+      newsFigs(li, it.pics, load);
       ul.append(li);
       continue;
     }
     ul = null;
     if (it.type !== 'pic') { const el = document.createElement(it.type === 'h' ? 'h5' : 'p'); newsWords(el, it.spans); sec.append(el); }
-    newsFigs(sec, it.pics);
+    newsFigs(sec, it.pics, load);
   }
   return sec;
 }

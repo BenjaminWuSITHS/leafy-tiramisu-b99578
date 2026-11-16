@@ -15,6 +15,10 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.14
+<!-- date: 2026-11-15T23:30 -->
+- The update popup shows What's new the way the What's new page does: each version with the day it came out, its points and its pictures (click a picture to see it large). You see it from the update after this one: the popup is drawn by the version you already have.
+
 ## 1.0.13
 <!-- date: 2026-11-15T23:00 -->
 - Lyrics from a text file: add a .txt with the song's words along with its score, and the lyrics, the notes and the pets' bubbles show the file's words in time with the notes. Lines it can't match for sure keep the score's words, and it says which (Settings → Score).
