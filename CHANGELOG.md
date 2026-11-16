@@ -15,6 +15,21 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.13
+<!-- date: 2026-11-15T23:00 -->
+- Lyrics from a text file: add a .txt with the song's words along with its score, and the lyrics, the notes and the pets' bubbles show the file's words in time with the notes. Lines it can't match for sure keep the score's words, and it says which (Settings → Score).
+- Scrolling over the lyrics or the piano roll now moves through the song in the Full screen layout too (not while the window itself is fullscreen).
+- Desktop pets no longer dance by themselves: Dance while singing is Off unless you choose My own dances or Made for me (automatic).
+- Make your own dances in the pet editor (Dances): line up ready-made moves and your own animations by beats, or place moves on a timeline for one song.
+- Idle mode: chosen pets stay on your taskbar with no song. Click one to pick a song it sings in; after it, they are idle again.
+- A pet's speech bubble goes with it when it hops, lands or jumps.
+- Variety (Desktop pet settings): no fall, landing, hop or wave is quite like the last. 0% is as before.
+- Pet editor, Face: double-click an eye's box or the mouth's to paint that face picture there. A painted shut or smiling eye covers the open eye fully and changes nothing outside its box.
+- The scared (>_<) face can be your own: paint Scared eyes and a Scared mouth, or set the lines' colour and thickness.
+- Pet editor: the brush's ring is exact now. Everything inside it is painted or rubbed out fully, at any size or speed, also on an arm or leg you straightened.
+- Pet editor, Layers: Clothes in front of your paint has a switch for each arm. Off, nothing is drawn over your paint.
+- Pet editor: an arm or leg your picture hides can be opened in Layers and painted.
+
 ## 1.0.12
 <!-- date: 2026-11-14T20:58 -->
 - In the lyrics bar (Settings → Score → Layout: Bar), scroll over the lyrics or the piano roll to go back or forward in the song: down or right is later, Shift goes 5 times as far. Not in the Full screen layout, fullscreen or background mode.

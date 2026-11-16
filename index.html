@@ -542,7 +542,19 @@ body.bgm-visual #viz{--ui-bg:0;border-top-color:transparent;box-shadow:none}
 body.bgm.bgm-fill:not(.phone){--viz-h:100vh}
 body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-shadow:none}
 #plWhereRow[hidden],#plCoverHint[hidden],#plPetOld[hidden],#petSet[hidden],#petPanel[hidden],#plVisualRow[hidden],#plVisualHint[hidden],#plOneLyricRow[hidden],#plOneLyricHint[hidden]{display:none}
+/* Idle mode (Background mode → Desktop pet): its switch, and the list of singers with a picture — each a row with its picture, its name, the songs it sings in and its own switch (it stays on the screen) */
+#petIdleRow[hidden],#petIdleHint[hidden],#petIdleBox[hidden]{display:none}
+#petIdleList{list-style:none;margin:0 0 12px;padding:0;max-height:300px;overflow-y:auto}
+#petIdleList li{border-bottom:1px solid var(--line);font-size:.85rem}
+#petIdleList label{display:flex;gap:10px;align-items:center;padding:6px 2px;cursor:pointer}
+#petIdleList .pi-th{flex:none;width:36px;height:44px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;color:color-mix(in srgb,var(--fg) 35%,transparent)}
+#petIdleList .pi-th :is(img,canvas){max-width:100%;max-height:100%;object-fit:contain}
+#petIdleList .pi-th svg{width:24px;height:24px;margin:auto}
+#petIdleList .pi-txt{flex:1;min-width:0}
+#petIdleList .pi-name{font-weight:600;overflow-wrap:anywhere}
+#petIdleList .pi-songs{color:var(--muted);font-size:.78rem;line-height:1.35;overflow-wrap:anywhere}
 #petFreeRow[hidden],#petFreeHint[hidden],#petWinRow[hidden],#petWinHint[hidden],#petGravRow[hidden],#petGravHint[hidden]{display:none}
+#petVaryRow[hidden],#petVaryHint[hidden]{display:none}
 #petPetsRow[hidden],#petPetsHint[hidden]{display:none}
 #petDanceRow[hidden],#petDanceHint[hidden],#petDanceSizeRow[hidden],#petDanceSizeHint[hidden],#petCarryRow[hidden],#petCarryHint[hidden],#petScaredRow[hidden],#petScaredHint[hidden]{display:none}
 #petList{list-style:none;margin:6px 0 10px;padding:0}
@@ -801,6 +813,15 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg #petEdFacePut{margin:0;padding:8px 12px 0;font-size:.82rem} /* (a picture cut by hand with no eye and mouth boxes yet: the button that puts them on) */
 #petEdDlg #petEdFacePut button{margin-left:6px;font-size:.8rem;padding:4px 10px}
 #petEdDlg .pd-facesel{color:var(--muted)}
+/* Face, a box open to paint (#petEdFpBar, in the cards' place): back and its name; which eye and which picture, as
+   chips (a dot on the ones painted in this box); the colour and what the painting can start from; what is in front
+   where boxes overlap */
+#petEdDlg .pd-fpbar .pd-fpname{margin:0 4px;font-size:.9rem;font-weight:600}
+#petEdDlg .pd-fpbar .pd-fpT{color:var(--muted);font-size:.8rem}
+#petEdDlg .pd-fpbar .pd-hidrow>.pd-chips{flex:0 1 auto;min-width:0}
+#petEdDlg .pd-fpbar .pd-chip .pd-dot{width:8px;height:8px;border:0}
+#petEdDlg #petEdFpOver{margin:0;padding:6px 12px 0;font-size:.82rem}
+#petEdDlg #petEdFpOver button{margin-left:6px;font-size:.8rem;padding:4px 10px}
 #petEdDlg .pd-facemore{flex:none;padding:0 12px}
 #petEdDlg .pd-facemore .pd-row{margin:0 0 4px}
 #petEdDlg .pd-facemore .pd-look{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 20px;padding:0}
@@ -983,17 +1004,19 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-lybar .pd-lysep{width:1px;height:20px;margin:0 4px;background:var(--line)}
 #petEdDlg .pd-lybar .pd-lydash{width:18px;height:2px;background:repeating-linear-gradient(90deg,var(--pd-clothes) 0 4px,transparent 4px 7px)}
 #petEdDlg .pd-lybar .pd-lyok{color:var(--pd-done)} /* (straightened) */
-/* An arm's bar (it ends with its clothes and Choose…) is too long for one row once the arm is straightened (Open Body
-   comes in too): two rows at every width, the elbow on the first, the clothes on the second (after Open Body). Only its
-   first line starts the second row; one after it stays a line. The picture still never moves while the arm is open */
+#petEdDlg .pd-lybar .pd-lysw{flex:none;gap:6px;font-size:inherit;white-space:nowrap;cursor:pointer} /* (an arm's switch: Clothes in front of your paint — off, nothing is put in front of its paint) */
+#petEdDlg .pd-lybar .pd-lysw input{flex:none;margin:0;cursor:pointer}
+/* An arm's bar (it has both its elbow and its clothes) is two rows (64 px) at every width: the elbow (with Straighten,
+   As drawn and Turn…) on the first row, the clothes (and Open Body once straightened) on the second. Only its first
+   line starts the second row; one after it stays a line. The picture never moves while the arm is open */
 #petEdDlg .pd-lybar:has(>[data-act=clothes]){flex-wrap:wrap;align-content:center;gap:4px 8px;height:64px;padding:3px 10px}
 #petEdDlg .pd-lybar:has(>[data-act=clothes])>.pd-lysep:not(.pd-lysep~.pd-lysep){flex-basis:100%;height:0;margin:0}
 #petEdDlg .pd-lybar:has(>[data-act=clothes])>.pd-lysep~.pd-lysep{flex-basis:auto;height:20px;margin:0 4px}
 @media (max-width:1199px){
   #petEdDlg .pd-lybar{flex-wrap:wrap;align-content:center;gap:4px 8px;height:64px;padding:3px 10px} /* (always two rows here, so the picture still never moves) */
   #petEdDlg .pd-lybar>.pd-lysep{flex-basis:100%;height:0;margin:0}
-  #petEdDlg #petEdLyBar{column-gap:6px} /* (a straightened arm's or leg's first row still fits beside the tools, down to a 1000 px window) */
-  #petEdDlg #petEdLyBar button{padding:0 8px}
+  #petEdDlg #petEdLyBar{column-gap:5px;padding:3px 8px} /* (an arm's or leg's first row — even "hidden in your picture" with Straighten, As drawn and Turn… — fits beside the tools down to a 1000 px window) */
+  #petEdDlg #petEdLyBar button{padding:0 7px}
 }
 @media (min-width:760px) and (max-width:999px){
   #petEdDlg #petEdLyBar{height:auto;min-height:64px} /* (beside the preview the bar is too narrow for a bent limb's row: a third row, rather than buttons out of sight) */
@@ -1067,6 +1090,10 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petTutDlg .pt-gap{flex:1}
 #petTutDlg .pt-body{padding:0 18px 16px}
 #petTutDlg video{display:block;width:100%;max-height:calc(100vh - 220px);max-width:calc((100vh - 220px) * 16 / 9);margin:0 auto;aspect-ratio:16/9;background:#000;border-radius:8px} /* (as big as the window lets it be with the caption and the chapters under it; never wider than the film, so its controls stay on it) */
+#petTutDlg .pt-bar{display:flex;align-items:center;gap:8px;max-width:calc((100vh - 220px) * 16 / 9);margin:6px auto 0}
+#petTutDlg .pt-bar button{flex:none;padding:2px 10px;font-size:.8rem}
+#petTutDlg #petTutScrub{flex:1 1 auto;min-width:80px}
+#petTutDlg .pt-time{flex:none;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 #petTutDlg .pt-cap{min-height:2.8em;margin:8px 0 4px;font-size:.95rem;line-height:1.4;text-align:center}
 #petTutDlg .pt-bad{margin:8px 0;color:#d0473f;font-size:.9rem}
 #petTutDlg .pt-chaps{display:flex;align-items:center;gap:6px}
@@ -1236,6 +1263,46 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
   #petEdDlg .pa-side{border-left:none;border-top:1px solid var(--line);overflow:visible}
 }
 /* ---- end of the pose editor's rules ---- */
+/* ---- the dance editors (petdancer.js, inside the pet editor; 1.0.13): their own rules, #petEdDlg .dn-… and the Dances list's .pd-dance… ---- */
+/* The Dances list under the animations: a button for each of the pet's dances (.on: the one it dances), then New dance…
+   and Dance for one song… side by side. A dance editor opens in the pose editor's host (.pa-root, with .dn-root) and
+   uses its rules for the bar, the stage, the side column and the row of buttons; here only what it has of its own. A
+   dance's steps need a wider side column than a key pose's things; a dance for one song (.dn-songroot) gives the
+   timeline the whole width under the stage */
+#petEdDlg .pd-dance{padding:3px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font-size:.8rem;line-height:1.5;cursor:pointer}
+#petEdDlg .pd-dance:hover{border-color:var(--accent)}
+#petEdDlg .pd-dance.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent)}
+#petEdDlg .pd-dance:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#petEdDlg .pd-dancenew{display:flex;flex-wrap:wrap;gap:0 8px}
+#petEdDlg .pa-root.dn-root{grid-template-columns:minmax(0,1fr) 400px}
+#petEdDlg .pa-root.dn-songroot{grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:"bar bar" "stage side" "time time"}
+#petEdDlg .dn-song-name{font-weight:600;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#petEdDlg .dn-steps{margin:0 0 10px;padding:0;list-style:none}
+#petEdDlg .dn-step{display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:4px 6px;margin-bottom:4px;padding:5px 6px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+#petEdDlg .dn-step.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+#petEdDlg .dn-no{grid-row:1/3;align-self:start;padding-top:4px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+#petEdDlg .dn-step .dn-m{grid-column:2/4;min-width:0;width:100%}
+#petEdDlg .dn-step .dn-b{grid-column:2;justify-self:start}
+#petEdDlg .dn-step .pa-sw{grid-column:3;font-size:.78rem}
+#petEdDlg .dn-tools{grid-column:2/4;display:flex;gap:4px}
+#petEdDlg .pa-root .dn-tools button{padding:2px 8px;font-size:.75rem}
+#petEdDlg .dn-add{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+#petEdDlg .dn-add .pa-row{flex:1;margin:0}
+#petEdDlg .dn-add select{max-width:220px}
+#petEdDlg .dn-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+#petEdDlg .dn-clock{min-width:22ch}
+#petEdDlg .dn-zoom{display:inline-flex;gap:4px}
+#petEdDlg .dn-tl{margin:8px 0 0;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--fg) 4%,transparent);overflow:hidden}
+#petEdDlg .dn-tl canvas{display:block;width:100%;height:114px;touch-action:none;outline:none;cursor:pointer}
+#petEdDlg .dn-tl canvas:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+#petEdDlg .dn-scroll{display:block;width:100%;margin:6px 0 0}
+#petEdDlg .dn-songroot .pa-side input[type=number]{width:70px}
+#petEdDlg .dn-where{margin:12px 0 0;padding-top:8px;border-top:1px solid var(--line)}
+@media (max-width:900px){
+  #petEdDlg .pa-root.dn-root{grid-template-columns:minmax(0,1fr) 320px}
+  #petEdDlg .pa-root.dn-songroot{grid-template-columns:minmax(0,1fr) 260px}
+}
+/* ---- end of the dance editors' rules ---- */
 #dcBox .dc-more[hidden]{display:none}
 /* AirPlay (desktop app) */
 #airBtn.on{color:var(--accent)}
@@ -1345,6 +1412,12 @@ html.pet #pet{display:block;position:fixed;inset:0;pointer-events:none;overflow:
 @keyframes petPoof{0%{filter:brightness(2.2) saturate(.3);transform:scale(.6)}55%{filter:brightness(1.4);transform:scale(1.08)}100%{filter:none;transform:scale(1)}}
 #pet .pet-puff{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:rgb(255 255 255 / .85);pointer-events:none;animation:petPuff .5s ease-out forwards}
 @keyframes petPuff{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+/* Idle mode: the list of songs by an idle pet that was clicked (petMenuOpen) — the one thing in the pet window besides the pets that takes the mouse */
+#pet .pet-menu{position:absolute;left:0;top:0;z-index:9;box-sizing:border-box;min-width:190px;max-width:min(330px,calc(100vw - 16px));max-height:min(420px,calc(100vh - 16px));overflow-y:auto;padding:6px;border-radius:12px;border:1px solid rgb(255 255 255 / .16);background:rgb(20 20 18 / .95);box-shadow:0 6px 22px rgb(0 0 0 / .45);color:#fff;font:14px/1.3 system-ui,sans-serif;pointer-events:auto;cursor:default;will-change:transform}
+#pet .pet-menu .pm-h{padding:4px 8px 6px;font-size:13px;font-weight:600;color:rgb(255 255 255 / .75);overflow-wrap:anywhere}
+#pet .pet-menu .pm-song{display:block;width:100%;margin:0;padding:7px 8px;border:none;border-radius:8px;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;overflow-wrap:anywhere}
+#pet .pet-menu .pm-song:hover{background:rgb(255 255 255 / .16)}
+#pet .pet-menu .pm-none{padding:4px 8px 6px;font-size:13px;color:rgb(255 255 255 / .75)}
 #pet svg.pet-bubs{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 #pet .pet-bub{fill:var(--cap-bg)}
 #pet .pet-txt{position:absolute;left:0;top:0;padding:6px 12px;white-space:pre;color:rgb(255 255 255 / .92);font-weight:600;font-family:system-ui,sans-serif;line-height:1.25;will-change:transform,opacity}
@@ -1625,7 +1698,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <label class="op">Glow particles <input autocomplete="off" type="range" id="glowAmt" min="0" max="2" step="0.1" value="1"></label>
         <div class="no-phone">
           <label class="op">Layout <select autocomplete="off" id="rollLayout"><option value="full" selected>Full screen</option><option value="bar">Bar</option></select></label>
-          <p class="hint">Full screen: the lyrics and the piano roll fill the free space. Bar: they sit in a bar you can slide away<span class="desk-say"> (B), and scrolling over it moves through the song, down or right is later (Shift: 5× as far). Not in fullscreen or background mode</span>.</p>
+          <p class="hint">Full screen: the lyrics and the piano roll fill the free space. Bar: they sit in a bar you can slide away<span class="desk-say"> (B). In both, scrolling over the lyrics or the piano roll moves through the song: down or right is later (Shift: 5× as far). Not while the window is fullscreen, and not in background mode</span>.</p>
           <div class="dep" id="barOpts" data-needs="rollLayout=bar">
             <label class="op">Bar position <select autocomplete="off" id="barPos"><option value="bottom" selected>Bottom</option><option value="top">Top</option></select></label>
             <label class="op">Bar height <input autocomplete="off" type="range" id="barHeight" min="140" max="720" step="10" value="300"></label>
@@ -1640,6 +1713,10 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <option value="1920">1920 ticks / beat</option>
         <option value="3840">3840 ticks / beat</option>
       </select></label>
+      <div class="op"><span>Lyrics from a text file <span class="rv" id="lyrTxtName">none</span></span><button type="button" id="lyrTxtPick">Choose…</button></div>
+      <p class="hint" id="lyrTxtHint">Have the song's words in a .txt file? Add it (here, or with the + button, or drop it on the player) and its words are shown in place of the score's own, line by line as the file has them, in time with the notes. Where a line can't be matched, the score's words stay.</p>
+      <div class="hint" id="lyrTxtStat"></div>
+      <button id="lyrTxtOff" hidden>Take the lyrics file off</button>
       <button id="svpClear" hidden>Remove score</button>
     </div>
 
@@ -1711,7 +1788,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <dt>Space / K</dt><dd>Play / pause all</dd>
         <dt>J / L</dt><dd>Back / forward 10s</dd>
         <dt>← / →</dt><dd>Back / forward 5s</dd>
-        <dt>Mouse wheel</dt><dd>Over the lyrics bar: back / forward (Shift: 5× as far)</dd>
+        <dt>Mouse wheel</dt><dd>Over the lyrics or the piano roll: back / forward (Shift: 5× as far). Not in fullscreen</dd>
         <dt>↑ / ↓</dt><dd>Master volume</dd>
         <dt>M</dt><dd>Mute / unmute</dd>
         <dt>S</dt><dd>Sync all tracks</dd>
@@ -1842,6 +1919,9 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <p class="hint" id="plPetOld" hidden>Install the newest version to get Desktop pet mode (this copy of the app is from before it).</p>
     <div id="petSet" hidden>
       <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer to move it (where you leave it is remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the top of the screen, in the middle) stops. Each singer is a picture of your own: Characters… lists the singers of the songs in your playlist, so you can give them their pictures before you start, and warns about any without one. When you start, the player also asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
+      <label class="op" id="petIdleRow" hidden>Idle mode <input type="checkbox" id="petIdleOn" autocomplete="off"></label>
+      <p class="hint" id="petIdleHint" hidden>On: the pets you switch on in the list below stay on your taskbar with no song. They blink and move a little, and you can drag them, as always; the player stays as it is, and you can go on using it. Click one of them and it shows the songs it sings in: the songs in your playlist and your saved projects whose score has that singer. Choose a song and it plays as a desktop-pet song: the song's other singers with a picture come on and sing their lines too. When the song ends, or you stop it, the others leave and your pets are idle again. It plays that one song only, not the rest of the playlist. Esc, a click somewhere else, or a few seconds' wait closes the list. Idle pets come back by themselves each time you open the player. Ctrl+Alt+End (or ✕ on the little controls) while no song plays switches Idle mode off; this switch brings the pets back. Off: pets are only there while background mode plays.</p>
+      <div id="petIdleBox" hidden><p class="pet-sum" id="petIdleSum" role="status"></p><ul id="petIdleList"></ul></div>
       <label class="op">Character size <select id="petSize" autocomplete="off"><option value="S">Small</option><option value="M">Medium</option><option value="L">Large</option></select></label>
       <label class="op"><span>Height on the taskbar <span class="rv" id="petLiftTxt">50%</span></span><input autocomplete="off" type="range" id="petLift" min="0" max="150" step="5" value="50" title="0%: feet on the bottom edge of the screen · 50%: on the middle of the taskbar · 100%: on its top edge"></label>
       <label class="op" id="petFreeRow" hidden>Pets can go anywhere on the screen <input type="checkbox" id="petFree" autocomplete="off" checked></label>
@@ -1852,14 +1932,16 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
       <p class="hint" id="petGravHint" hidden>On: a singer with nothing under its feet falls. Let go of one in the air and it drops onto the top edge of the first window below it, or onto the taskbar; when the window it stands on goes away, it lands on the next window down. Singers hanging in the air come down as soon as you switch this on, and where they land is remembered. Off: a singer stays where you leave it, in the air.</p>
       <label class="op" id="petPetsRow" hidden>How many pets <select id="petPets" autocomplete="off"><option value="each">A pet for each singer</option><option value="few">As few pets as possible</option><option value="one" id="petPetsOne">One singer</option></select></label>
       <p class="hint" id="petPetsHint" hidden>A pet for each singer: every singer with a picture is a pet, and one that sings two lines at once is two pets with the same picture, side by side, each with its own bubble. As few pets as possible: singers who never sing at the same time share one pet, which sings all their lines — the one of them with a picture who sings most; singers who do sing together stay separate pets. One singer: only one pet, the singer with a picture who sings most; it sings everybody's lines, and lines sung at the same time each get a speech bubble of their own over it.</p>
-      <label class="op" id="petDanceRow" hidden>Dance while singing <input type="checkbox" id="petDance" autocomplete="off" checked></label>
-      <p class="hint" id="petDanceHint" hidden>On: while a song with a score plays (SVP, MIDI, VoiSona, UST, USTX or VSQX), the pets dance to it. Each one gets a long dance of its own, worked out from the score and on its beat: calmer in the verses, bigger in the choruses (the same moves each time a chorus comes back), a pose held on a long note, an arm up on a high one, and a bow together at the end. They all do the same moves, every other pet mirrored. Their legs stay straight, their mouths still sing, a click still makes one hop, and one you pick up stops dancing until you let go. A pet with a plain picture bounces, sways and turns to the beat. A song without a score: they sing as before. Off: they sing as before.</p>
+      <label class="op" id="petDanceRow" hidden>Dance while singing <select id="petDance" autocomplete="off"><option value="off" selected>Off</option><option value="own">My own dances</option><option value="auto">Made for me (automatic)</option></select></label>
+      <p class="hint" id="petDanceHint" hidden>Off: the pets only sing. My own dances: while a song with a score plays (SVP, MIDI, VoiSona, UST, USTX or VSQX), each pet whose picture is a pet sheet dances the dance you made for it, on the song's beat. You make dances in the pet editor (Animated pets…, then open the pet and look under Dances): a dance of its own, which it repeats for as long as it sings and rests from when it has nothing to sing for a while; and, for a song where you want exact moves at exact moments, a dance for that one song, which it then dances in place of its own. A pet with no dance just sings. Made for me (automatic): the app makes each pet a long dance for every song, worked out from the score: calmer in the verses, bigger in the choruses (the same moves each time a chorus comes back), a pose held on a long note, an arm up on a high one, and a bow together at the end; they all do the same moves, every other pet mirrored, and a pet with a plain picture bounces, sways and turns to the beat. Either way their mouths still sing, a click still makes one hop, and one you pick up stops dancing until you let go. The ready-made moves keep the legs straight. A song without a score: they only sing.</p>
       <label class="op" id="petDanceSizeRow" hidden>How lively <select id="petDanceSize" autocomplete="off"><option value="gentle">Gentle</option><option value="lively" selected>Lively</option></select></label>
-      <p class="hint" id="petDanceSizeHint" hidden>Lively: the whole dance, with spins, jumps and claps over the head in the choruses. Gentle: smaller moves, with no spins or jumps.</p>
+      <p class="hint" id="petDanceSizeHint" hidden>For the automatic dance. Lively: the whole dance, with spins, jumps and claps over the head in the choruses. Gentle: smaller moves, with no spins or jumps.</p>
       <label class="op" id="petCarryRow" hidden>Carry a pet <select id="petCarry" autocomplete="off"><option value="hand" selected>By one hand</option><option value="doll">Like a doll (as before)</option></select></label>
       <p class="hint" id="petCarryHint" hidden>For pets whose picture is a pet sheet. By one hand: picked up with the mouse, it holds on to your pointer with the hand on the side you took it by; that arm goes straight up, and the rest of it hangs and swings below it, legs dangling. Held low over the taskbar, where it can't hang (and always with Pets can go anywhere off), it stands and holds your pointer out beside it, as when holding hands; with Pets can go anywhere off, one you take by its legs, lower than its hand reaches, is pulled along as before. Like a doll (as before): it hangs from wherever you picked it up, as in earlier versions. A pet with a plain picture only tilts a little, either way. With Swings when you carry it off (Animated pets…), it stays upright.</p>
       <label class="op" id="petScaredRow" hidden>Scared face when carried <input type="checkbox" id="petScared" autocomplete="off" checked></label>
       <p class="hint" id="petScaredHint" hidden>For pets whose picture is a pet sheet. On: while you carry it, its eyes squeeze shut (&gt;_&lt;) and it looks scared until you let go; if it's singing, its mouth goes on singing. It goes with either way of carrying, and with Swings when you carry it off (Animated pets…) too. Off: it keeps its usual face.</p>
+      <label class="op" id="petVaryRow" hidden><span>Variety <span class="rv" id="petVaryTxt">40%</span></span><input autocomplete="off" type="range" id="petVary" min="0" max="100" step="5" value="40" title="0%: every time exactly the same · 100%: every time clearly different"></label>
+      <p class="hint" id="petVaryHint" hidden>How much a pet's moves differ from one time to the next. Above 0%, no fall, landing, hop or wave is quite like the last: it takes a little longer or less long, goes a little further or less far, leans one way or the other. A landing also goes by how far the pet fell: a short drop is a small dip, a long one a deeper squash with one more small bounce, and now and then it takes a step to catch its balance. 0%: every time exactly the same, as before. Dances and animations you made yourself are not changed. Double-click the slider for 40%.</p>
       <div class="dbg-row"><button id="petCharsBtn" aria-expanded="false">Characters…</button><button type="button" id="petSheetBtn" aria-haspopup="dialog" title="Settings for singers whose picture is a pet sheet: a puppet that sings, blinks, gestures and hops" hidden>Animated pets…</button></div>
       <div id="petPanel" hidden><p class="hint">The singers of the songs in the playlist above: only singers with a picture come on. Choose picture… or Change… gives one its picture (the pets on screen take it at once); Remove takes it away — that singer isn't shown any more. The list goes song by song, in the playlist's order. To change several singers at once, select their cards (click one; Ctrl+click adds one or takes it out; Shift+click takes all in between), then Choose picture… on any of them: one file goes to all of them, several files are handed out down the list, in the order of their names.</p><p class="pet-sum" id="petSum" role="status" hidden></p><div class="pet-tools" id="petTools" hidden><button type="button" id="petBankBtn">Voicebank pictures</button><button type="button" id="petKitBtn" title="Choose a folder: a new folder with the template, a finished sample and the guide is put there" hidden>Pet sheet kit…</button></div><p class="hint" id="petBankHint" hidden>Voicebank pictures gives each singer the picture that comes with its voicebank, if that voicebank is installed on this computer (OpenUtau, UTAU, Synthesizer V, VOCALOID or VoiSona). Singers who have a picture keep it unless you press again; with cards selected, only those change.</p><p class="hint" id="petKitHint" hidden>A pet sheet is a picture that moves: one PNG with the singer's parts on a grid (head, hair, body, eyes, mouths, arms and legs), which the player puts together as a puppet — its mouth follows the words it sings, it blinks, hops when you click it and swings when you pick it up. Pet sheet kit… puts a folder where you choose, with the template to draw over, a finished sample to try and a guide. Save your sheet as a PNG with a name that ends in .petsheet.png and give it to a singer with Choose picture…, like any picture; its card then says Animated.</p><div class="pet-tools" id="petSelBar" hidden><span id="petSelN"></span><button type="button" id="petSelPick" title="One file for all of them, or several files: one each, down the list, in the order of their names">Choose picture for all…</button><button type="button" id="petSelDel" title="Remove the selected singers' pictures: they aren't shown any more">Remove pictures</button><button type="button" id="petSelNone" title="Select nothing (Esc)">Clear selection</button></div><p class="pet-note" id="petNote" role="status" hidden></p><ul id="petList"></ul><input type="file" id="petPick" accept="image/*,.json" multiple hidden></div>
       <p class="pet-sum" id="petWarn" role="status" hidden></p>
@@ -1883,7 +1965,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <button class="rbtn" id="tabProjects" data-tip="Projects" aria-label="Projects"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></button>
   <button class="rbtn" id="tabPlaylist" data-tip="Background mode (playlist)" aria-label="Background mode (playlist)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h12M3 12h12M3 18h7"/><path d="M15 15.5v5l4.5-2.5z" fill="currentColor"/></svg></button>
   <span class="sep"></span>
-  <label class="rbtn file" data-tip="Add files (audio, video, SVP, MIDI, VoiSona, UST, USTX, VSQX)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><input id="picker" type="file" multiple accept="audio/*,video/*,.wav,.mp3,.ogg,.flac,.m4a,.aac,.opus,.mp4,.m4v,.webm,.mov,.mkv,.svp,.mid,.midi,.kar,.rmi,.tssln,.tssprj,.tsmsln,.ccs,.ust,.ustx,.vsqx,.mapproj" aria-label="Add files"></label>
+  <label class="rbtn file" data-tip="Add files (audio, video, SVP, MIDI, VoiSona, UST, USTX, VSQX, lyrics .txt)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><input id="picker" type="file" multiple accept="audio/*,video/*,.wav,.mp3,.ogg,.flac,.m4a,.aac,.opus,.mp4,.m4v,.webm,.mov,.mkv,.svp,.mid,.midi,.kar,.rmi,.tssln,.tssprj,.tsmsln,.ccs,.ust,.ustx,.vsqx,.txt,.mapproj" aria-label="Add files"></label>
  <button class="rbtn" id="airBtn" data-tip="AirPlay" aria-label="AirPlay" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 17H4.5A2.5 2.5 0 0 1 2 14.5v-9A2.5 2.5 0 0 1 4.5 3h15A2.5 2.5 0 0 1 22 5.5v9a2.5 2.5 0 0 1-2.5 2.5H18"/><path d="M12 14.5l5.5 6.5h-11z" fill="currentColor"/></svg></button>
   <button class="rbtn" id="playPause" data-tip="Play / pause" aria-label="Play / pause" data-key="Space"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></button>
 </nav>
@@ -5959,7 +6041,9 @@ sbar.addEventListener('pointercancel', endDrag);
    lyric line is below the one being sung, and the notes come in from the right; in Falling notes, down pulls them onto
    the keys), up or left is earlier. By the roll's own time scale, so a trackpad drags the notes along under the fingers
    and one notch of a mouse wheel (about 100 px on Windows) moves them as far as it would scroll a page; Shift: 5× as
-   far. Only in the Bar layout (Settings → Score → Layout), never in fullscreen, background mode or on a phone. */
+   far. In both layouts (Settings → Score → Layout): over the bar in Bar, over the whole lyrics and piano roll area — the
+   free space above the tabs — in Full screen (since 1.0.13; 1.0.12: the Bar layout only). Never while the window is
+   fullscreen (the page's own fullscreen or the window's), in background mode or on a phone. */
 const WHEEL_LINE = 100 / 3, WHEEL_FAST = 5, WHEEL_CAP = 10, WHEEL_LAND = 200;
 // One wheel event → CSS px along the song (positive: later), or 0. dx, dy, mode: its deltaX, deltaY and deltaMode (1:
 // lines, as Firefox counts; 2: pages); page: the panel's width. The bigger axis wins (a tilt wheel, a trackpad, and
@@ -5978,12 +6062,12 @@ function wheelSecs(px, spp, fast) {
 // Is this wheel the song's? g: what the page knows right now, as plain values (rollWheel gathers them).
 function wheelOurs(g) {
   if (g.ctrl || g.meta || g.alt) return false;               // (Ctrl+wheel and a pinch zoom the page, as before)
-  if (g.fs || g.full || !g.bar) return false;                 // (the Bar layout only: not the Full screen layout, not in fullscreen)
+  if (g.fs) return false;                                     // (never in fullscreen — the Bar layout and the Full screen layout alike otherwise: g.bar / g.full no longer decide)
   if (g.bgm || g.subwin || g.cover) return false;             // (not in background mode, nor in its windows)
   if (g.phone || g.mobileBuild) return false;                 // (not on a phone)
   if (g.loading || g.dialog || g.dragging || !g.song) return false;
   if (!g.rollOn || !g.box || !g.target) return false;         // (the roll is showing, and nothing else is under the pointer)
-  const B = g.box, top = Math.max(0, B.y), bottom = Math.min(B.y + B.h, B.limit); // (the bar as far as it shows: above the tabs)
+  const B = g.box, top = Math.max(0, B.y), bottom = Math.min(B.y + B.h, B.limit); // (the bar as far as it shows — in the Full screen layout the whole free area: above the tabs)
   if (!(bottom - top > 1)) return false;                      // (slid away)
   return g.x >= B.x && g.x <= B.x + B.w && g.y >= top && g.y <= bottom;
 }
@@ -6428,6 +6512,7 @@ const BLICK = 705600000;
 const LY = { gap: 0.45, maxDur: 7, maxChars: 40, hold: 0.45, preview: 5, fade: 0.25, scroll: 0.35 };
 const CJK = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af\uff00-\uffef]/;
 let svp = null;
+const LYR = { wait: null, input: null }; // lyrics from a text file (see lyricsOnto): wait – a text added before any score, for the next one added · input – its file picker
 const voices = new Map();
 const rollEl = $('roll');
 const rc = rollEl.getContext('2d');
@@ -6789,6 +6874,518 @@ function finishScore(notes, names, singers, grid) {
   singers = names.map((nm, t) => (singers && singers[t]) || singerOf('', null, nm));
   return { notes, names, singers, maxLen, end, min, max, ...buildLines(notes), grid: grid || null };
 }
+/* @pure:lyrtxt begin */
+/* Lyrics from a text file (.txt) for the score that's loaded: the song's real words, shown in place of the notes' own
+   (romaji or kana per note where the line is kanji, words cut into syllables, spellings made for the voice, typing
+   mistakes). No DOM: lyrTxtDecode reads the file's bytes, lyrTxtLines cuts the text into sung lines and their pieces,
+   lyrTxtMatch lines them up with the score's own lines (svp.lyr: track → lines, as buildLines makes them) and gives
+   back lines of the same shape, timed by the notes they cover — so the lyrics bar, the notes and the pets' bubbles show
+   them as they show any line, and the highlight still moves through a line word by word.
+   How it matches. A piece is the smallest bit of text that is sung on its own: a word (Latin and other alphabets; a
+   "long-word" is cut at its hyphens), a kana with its small kana (きゃ; っ ー ん are pieces of their own), a kanji, a
+   hangul block. A unit is a word of the score: a note with its own text plus the "-" / "+" notes after it, and the
+   syllables glued to it. Each track's units, in time order, are lined up with the pieces, in the text's order, by the
+   cheapest path (dynamic programming): a piece on a unit, a piece over several units (a word whose syllables are notes
+   of their own, a kanji over its kana), several pieces on one unit (なん on one note, "on the" typed "on_the"), a unit
+   left out (the score's own word stays), a piece left out (not sung by this track), a whole line left out (cheap: a
+   title, a spoken line, the other singer's), a whole phrase of notes left out between two lines (a line the text
+   doesn't have). What a pairing costs is how unlike the two sound: the same text costs nothing; kana and romaji are
+   compared as romaji (は may be sung "wa"), words by their letters; where the sounds can't be compared (a kanji over
+   kana, hanzi over pinyin, "99" over "ninety nine") it goes by the count, at a small fixed cost. A line break in the
+   text likes a pause in the notes.
+   Never garbled silently: a line is used on a track only when the match is sure — its sounds agree well enough (LT.ok;
+   LT.sure for a part of a line or a very short one), little is left out inside it, and, where there is little to go
+   by (a very short line, or one that went by count alone — then only the whole line), no other place for it costs
+   nearly the same (LT.margin: two lines of five hanzi over pinyin can't be told apart when a third is missing).
+   Everything else keeps the score's own words, and the report says which lines of the text were used nowhere. Notes
+   still without a line after a pass are lined up with the whole text again (a chorus written once and sung three
+   times): a line that is somewhere already goes only on notes with the same words as there. A text that finds notes
+   for fewer than LT.least of its lines isn't this song's: nothing of it is used.
+   skipU / skipA – a unit / a piece left out inside a line · edge / edgeN – a piece left out at a line's start or end (a
+   part of the line sung by someone else; edgeN: one whose sound isn't known, so that leaving a kanji out is never cheaper
+   than counting it) · line – at most this for a whole line left out · phrase / run – at most phrase for a whole phrase
+   of notes (from pause to pause) left out, up to run notes long · sub / near / steep / weak / far / cap – what a
+   pairing costs: how unlike × sub while they are alike (up to near), then steeply up to weak (less than leaving both
+   out at a line's end, so a word typed for the voice still pairs there), cap once they are plainly different (past far;
+   still less than leaving both out inside a line) · more – each further unit or piece in one pairing · rest – a pause
+   inside one word's notes · pause – a line starting or ending where the notes pause less than [0] s costs [1], less
+   than [2] s costs [3]; a pause of [1] s or more ends a phrase · ok / sure – how unlike a used line may be on average ·
+   cover – below this share of its pieces a line counts as a part of a line · few – matched letters below which there
+   is "little to go by" · in – the share of a line that may be left out inside it · split – a shown line is cut where
+   its notes pause this long (s) · margin / least – see above · cells – the most table cells for one track (more: that
+   track is left as it is) · passes – how many times the notes without a line are tried again. */
+const LT = { skipU: 0.9, skipA: 0.7, edge: 0.12, edgeN: 0.5, line: 0.6, sub: 1.3, near: 0.3, steep: 2.95, weak: 0.98, cap: 1.5, more: 0.05, far: 0.7, rest: 1.5, phrase: 4, run: 14, pause: [0.06, 0.25, 0.2, 0.1], ok: 0.45, sure: 0.15, cover: 0.6, few: 6, in: 0.34, split: 2, margin: 0.5, least: 0.2, cells: 6e6, passes: 6 };
+// (character ranges by their numbers, so no editor or tool can spoil an escape: hiragana and katakana with ー, without ・;
+// kanji with 々 and 〇; hangul blocks; and the page's CJK, which says what needs no space between pieces)
+const ltSet = (...r) => { let s = ''; for (let i = 0; i < r.length; i += 2) s += String.fromCharCode(r[i]) + '-' + String.fromCharCode(r[i + 1]); return new RegExp('[' + s + ']'); };
+const LT_KANA = ltSet(0x3041, 0x3096, 0x309d, 0x309e, 0x30a1, 0x30fa, 0x30fc, 0x30fe), LT_HAN = ltSet(0x3005, 0x3005, 0x3007, 0x3007, 0x3400, 0x4dbf, 0x4e00, 0x9fff, 0xf900, 0xfaff), LT_HANG = ltSet(0xac00, 0xd7a3);
+const LT_CJK = ltSet(0x3040, 0x30ff, 0x3400, 0x9fff, 0xac00, 0xd7af, 0xff00, 0xffef), LT_BOM = String.fromCharCode(0xfeff), LT_NL = new RegExp('\r\n|[\r\n' + String.fromCharCode(0x2028, 0x2029) + ']');
+const LT_SMALL = /[ぁぃぅぇぉゃゅょゎァィゥェォャュョヮ]/, LT_OPEN = /[(\[{<«“‘「『（［｛〈《【〔¿¡]/;
+// (made here, not written out as /…/u: a browser that doesn't know \p{} couldn't start the page at all)
+const ltRe = (() => { let c = null; return () => c || (c = { word: new RegExp('[\\p{L}\\p{N}\\p{M}]', 'u'), num: new RegExp('\\p{N}', 'u'), junk: new RegExp('[^\\p{L}\\p{N}]+', 'gu'), mark: new RegExp('\\p{M}+', 'gu') }); })();
+/* A text file's bytes → its text. UTF-8 (with or without a BOM) and UTF-16 (a BOM, or every other byte 0) are told
+   apart for sure; anything else is one of the old encodings: of Shift-JIS, GBK, Big5, EUC-KR and Windows-1252, the one
+   whose reading looks most like writing (kana, hangul, the commonest characters; no half-width kana or private-use). */
+function lyrTxtDecode(buf) {
+  const u8 = buf instanceof Uint8Array ? buf : new Uint8Array(buf), n = u8.length;
+  const dec = (enc, fatal, from) => new TextDecoder(enc, { fatal: !!fatal }).decode(from ? u8.subarray(from) : u8);
+  const be = from => { const b = new Uint8Array((n - from) & ~1); for (let i = 0; i < b.length; i += 2) { b[i] = u8[from + i + 1]; b[i + 1] = u8[from + i]; } return new TextDecoder('utf-16le').decode(b); };
+  const clean = s => (s[0] === LT_BOM ? s.slice(1) : s).replace(/\0+$/, '');
+  if (n >= 3 && u8[0] === 0xef && u8[1] === 0xbb && u8[2] === 0xbf) return clean(dec('utf-8', false, 3));
+  if (n >= 2 && u8[0] === 0xff && u8[1] === 0xfe) return clean(dec('utf-16le', false, 2));
+  if (n >= 2 && u8[0] === 0xfe && u8[1] === 0xff) return clean(be(2));
+  let z0 = 0, z1 = 0;
+  const h = Math.min(n, 4096) & ~1;
+  for (let i = 0; i < h; i += 2) { if (!u8[i]) z0++; if (!u8[i + 1]) z1++; }
+  if (h >= 4 && z1 > h * 0.2 && z0 < h * 0.02) return clean(dec('utf-16le'));
+  if (h >= 4 && z0 > h * 0.2 && z1 < h * 0.02) return clean(be(0));
+  try { return clean(dec('utf-8', true)); } catch (e) {}
+  let best = null;
+  for (const enc of ['shift_jis', 'gbk', 'big5', 'euc-kr']) {
+    let s;
+    try { s = dec(enc, true); } catch (e) { continue; }
+    let kana = 0, hang = 0, han = 0, common = 0, odd = 0;
+    for (const ch of s) {
+      const c = ch.codePointAt(0);
+      if (c < 0x80) continue;
+      if (c >= 0x3041 && c <= 0x30ff) kana++;
+      else if (c >= 0xac00 && c <= 0xd7a3) hang++;
+      else if (c >= 0x4e00 && c <= 0x9fff) { han++; if ((enc === 'big5' ? '的一是不了我在有人這你來到他們個麼就那著沒好天說心想愛還會為過裡時夢' : '的一是不了我在有人这你来到他们个么就那着没好天说心想爱还会为过里时梦').includes(ch)) common++; }
+      else odd += (c >= 0xff61 && c <= 0xff9f) || (c >= 0xe000 && c <= 0xf8ff) || c === 0xfffd || c < 0xa0 ? 6 : 0.5; // (half-width kana, private use: what another encoding looks like read this way)
+    }
+    // Japanese always has kana among its kanji, Korean is nearly all hangul; Chinese shows by its commonest characters
+    const all = kana + hang + han || 1, v = (enc === 'shift_jis' ? (kana >= 0.15 * all ? kana * 3 + han : -1) : enc === 'euc-kr' ? (hang >= 0.85 * all ? hang * 3 : -1) : common * 3 + han * 0.2 - kana - hang) - odd;
+    if (!best || v > best.v) best = { v, s };
+  }
+  return clean(best && best.v > 0 ? best.s : dec('windows-1252'));
+}
+/* The words that name a part of a song rather than being sung: "[Chorus]", "Verse 1:", "(Bridge)", "サビ", "x2". */
+const LT_SECTION = /^(?:final|last|first|second|third|repeat|double|half|guitar|piano|sax|drum|bass|synth|instrumental|music|musical|大|落ち|ラス|ラスト)*(?:verse|chorus|prechorus|postchorus|bridge|intro|outro|hook|refrain|interlude|instrumental|solo|break|breakdown|coda|ending|drop|buildup|rap|spoken|repeat|amelo|bmelo|cmelo|dmelo|sabi|aメロ|bメロ|cメロ|dメロ|サビ|イントロ|アウトロ|間奏|前奏|後奏|ブリッジ|コーラス|番|主歌|副歌|间奏|尾奏|尾声|桥段|過門|过门|导歌|導歌|벌스|후렴|코러스|브릿지|간주|전주|인트로|아웃트로)+(?:again|x|×)*$/;
+/* A line of text → its pieces: { text (as it is shown, with the punctuation that hangs on it), core (without), kind:
+   lat / kana / han / hang, sp: a space before it }. */
+function ltPieces(s) {
+  const R = ltRe(), cps = Array.from(s), out = [];
+  let pre = '', sp = false, cur = null;
+  const add = (ch, kind) => { const a = { text: pre + ch, core: ch, kind, sp: sp && out.length > 0 }; out.push(a); pre = ''; sp = false; return a; };
+  for (let i = 0; i < cps.length; i++) {
+    const ch = cps[i], nx = cps[i + 1] || '', last = out[out.length - 1];
+    if (/\s/.test(ch)) { sp = true; cur = null; continue; }
+    if (LT_KANA.test(ch)) {
+      if (LT_SMALL.test(ch) && last && last.kind === 'kana' && !sp && !pre && !LT_SMALL.test(last.core.slice(-1)) && !/[っッんンー]/.test(last.core)) { last.text += ch; last.core += ch; }
+      else add(ch, 'kana');
+      cur = null;
+    } else if (LT_HAN.test(ch)) { add(ch, 'han'); cur = null; }
+    else if (LT_HANG.test(ch)) { add(ch, 'hang'); cur = null; }
+    else if (R.word.test(ch) || (/['’ʼ`]/.test(ch) && (cur || R.word.test(nx)) && !(LT_CJK.test(nx)))) {
+      if (cur && !sp) { cur.text += ch; cur.core += ch; } else cur = add(ch, 'lat');
+    } else if (/[-‐‑]/.test(ch) && cur && !sp && R.word.test(nx) && !LT_CJK.test(nx)) { cur.text += ch; cur = null; } // ("long-word": two pieces, no space)
+    else {
+      if (LT_OPEN.test(ch) || !last || (sp && !/\s|^$/.test(nx))) pre += ch;       // (opens what follows)
+      else if (sp) { last.text += ' ' + ch; sp = false; }                           // (a dash between spaces)
+      else last.text += ch;
+      cur = null;
+    }
+  }
+  if (pre && out.length) out[out.length - 1].text += pre;
+  return out;
+}
+/* A text → its sung lines, in order: [{ n: the line's number in the file (1: the first), text, atoms: its pieces }].
+   Left out: empty lines, a line that is only a [tag] or a part's name ("Verse 1:", "(Chorus)", "サビ"), a line with
+   nothing to sing in it. A [tag] inside a line is dropped. */
+function lyrTxtLines(text) {
+  const out = [];
+  String(text == null ? '' : text).split(LT_NL).forEach((src, i) => {
+    const s = src.replace(/\[[^\]]*\]|【[^】]*】|［[^］]*］|〔[^〕]*〕/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!s) return;
+    const bare = s.normalize('NFKC').toLowerCase().replace(/[\s\d()\-‐–—_*#=~.:：・,、]+/g, ''), words = s.split(' ').filter(w => ltRe().word.test(w)).length;
+    if (!bare || (LT_SECTION.test(bare) && (words <= 3 || /[:：]$/.test(s)))) return;
+    if (/[:：]$/.test(s) && words <= 2 && s.length <= 24) return; // ("Miku:", "Both:")
+    if (/^[(（]?\s*(?:[x×]\s*\d+|\d+\s*[x×]|repeat\b.*|繰り返し.*|くりかえし.*)\s*[)）]?$/i.test(s)) return; // ("x2", "(repeat chorus)")
+    const atoms = ltPieces(s);
+    if (atoms.length) out.push({ n: i + 1, text: s, atoms });
+  });
+  return out;
+}
+/* Sounds, to compare. ltRaw: a text as it is compared letter for letter (NFKC, lower case, katakana as hiragana, no
+   punctuation). ltKey: what it sounds like in Latin letters — kana as romaji (っ and ー add nothing), hangul by its
+   letters, other alphabets as they are without accents; null where that can't be told (kanji, digits). */
+const LT_ROMA = (() => {
+  const t = {};
+  'あa いi うu えe おo かka きki くku けke こko さsa しshi すsu せse そso たta ちchi つtsu てte とto なna にni ぬnu ねne のno はha ひhi ふfu へhe ほho まma みmi むmu めme もmo やya ゆyu よyo らra りri るru れre ろro わwa ゐi ゑe をo んn がga ぎgi ぐgu げge ごgo ざza じji ずzu ぜze ぞzo だda ぢji づzu でde どdo ばba びbi ぶbu べbe ぼbo ぱpa ぴpi ぷpu ぺpe ぽpo ゔvu ゕka ゖke'
+    .split(' ').forEach(x => { t[x[0]] = x.slice(1); });
+  return t;
+})();
+const LT_JAMO = ['g kk n d tt r m b pp s ss  j jj ch k t p h'.split(' '), 'a ae ya yae eo e yeo ye o wa wae oe yo u wo we wi yu eu ui i'.split(' '), ' k k k n n n t l k m l l l p l m p p t t ng t t k t p t'.split(' ')];
+const ltHira = s => { let o = ''; for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); o += c >= 0x30a1 && c <= 0x30f6 ? String.fromCharCode(c - 0x60) : s[i]; } return o; }; // (katakana as hiragana)
+const ltRaw = s => ltHira(String(s).normalize('NFKC').toLowerCase().replace(ltRe().junk, ''));
+function ltKey(text) {
+  const R = ltRe(), s = ltHira(String(text).normalize('NFKC').toLowerCase());
+  let key = '', kana = false, han = false, num = false, prevK = false;
+  for (const ch of s) {
+    const wasK = prevK;
+    prevK = false;
+    if (LT_KANA.test(ch) || 'ぁぃぅぇぉゃゅょゎ'.includes(ch)) {
+      kana = prevK = true;
+      if (ch === 'っ' || ch === 'ー') { prevK = wasK; continue; }
+      if ('ゃゅょ'.includes(ch) && wasK && /i$/.test(key)) { key = key.slice(0, -1) + (/(sh|ch|j)$/.test(key.slice(0, -1)) ? '' : 'y') + LT_ROMA['やゆよ'['ゃゅょ'.indexOf(ch)]].slice(1); continue; }
+      if ('ぁぃぅぇぉ'.includes(ch)) { const v = 'aiueo'['ぁぃぅぇぉ'.indexOf(ch)]; key = wasK && /[aiueo]$/.test(key) ? (/(^|[aiueo])u$/.test(key) ? key.slice(0, -1) + 'w' : key.slice(0, -1)) + v : key + v; continue; }
+      key += LT_ROMA[ch === 'ゎ' ? 'わ' : ch === 'ゃ' ? 'や' : ch === 'ゅ' ? 'ゆ' : ch === 'ょ' ? 'よ' : ch] || '';
+    } else if (LT_HAN.test(ch)) han = true;
+    else if (LT_HANG.test(ch)) { const c = ch.charCodeAt(0) - 0xac00; key += LT_JAMO[0][Math.floor(c / 588)] + LT_JAMO[1][Math.floor(c % 588 / 28)] + LT_JAMO[2][c % 28]; }
+    else if (R.num.test(ch)) num = true;
+    else if (R.word.test(ch)) key += ch.normalize('NFKD').replace(R.mark, '');
+  }
+  return { key: han || (num && !key) ? null : key, kana, han, num };
+}
+// romaji however it was typed → one spelling ("si" = "shi", "tu" = "tsu", "la" = "ra", "wo" = "o", doubled letters once)
+const ltJa = k => k.replace(/l/g, 'r').replace(/dzu/g, 'zu').replace(/si/g, 'shi').replace(/ti/g, 'chi').replace(/tu/g, 'tsu').replace(/(^|[^sc])hu/g, '$1fu')
+  .replace(/zi|di/g, 'ji').replace(/du/g, 'zu').replace(/sy/g, 'sh').replace(/ty|cy/g, 'ch').replace(/zy|jy/g, 'j').replace(/wo/g, 'o').replace(/(.)\1+/g, '$1');
+let ltRow = new Uint16Array(64);
+function ltLev(a, b, free) { // (edit distance: letters put in, taken out or changed; free: from a to the stretch of b most like it)
+  const m = a.length, n = b.length;
+  if (!m || !n) return free ? m : m + n;
+  if (n >= ltRow.length) ltRow = new Uint16Array(n * 2);
+  const row = ltRow;
+  for (let j = 0; j <= n; j++) row[j] = free ? 0 : j;
+  for (let i = 1; i <= m; i++) {
+    const ca = a.charCodeAt(i - 1);
+    let diag = row[0];
+    row[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const up = row[j], v = ca === b.charCodeAt(j - 1) ? diag : 1 + (diag < up ? (diag < row[j - 1] ? diag : row[j - 1]) : (up < row[j - 1] ? up : row[j - 1]));
+      diag = up;
+      row[j] = v;
+    }
+  }
+  if (!free) return row[n];
+  let best = row[0];
+  for (let j = 1; j <= n; j++) if (row[j] < best) best = row[j];
+  return best;
+}
+// how unlike two sounds are, 0 (the same) … 1. ja: Japanese (either is kana): romaji in one spelling; は may be "wa",
+// へ "e"; a long vowel may be sung as the vowel before it; two short sounds that differ are plainly different.
+function ltDist(a, b, ja) {
+  if (ja) { a = ltJa(a); b = ltJa(b); }
+  if (a === b) return 0;
+  if (!a || !b) return ja && /^[aiueon]$/.test(a + b) ? 0.4 : 1;
+  if (ja) {
+    const x = a < b ? a + ' ' + b : b + ' ' + a;
+    if (x === 'ha wa' || x === 'e he') return 0.1;
+    if (x === 'o u' || x === 'e i') return 0.4;
+  }
+  const d = ltLev(a, b) / Math.max(a.length, b.length);
+  return ja && a.length <= 3 && b.length <= 3 ? Math.max(d, 0.75) : d;
+}
+// a group's sound in one spelling (ja: as Japanese) and how many of each letter it has; kept on the group
+function ltBag(G, ja) {
+  const c = ja ? 'cj' : 'cl';
+  if (!G[c]) { const k = ja ? ltJa(G.key) : G.key, h = new Uint8Array(32); for (let i = 0; i < k.length; i++) h[k.charCodeAt(i) & 31]++; G[c] = { k, h }; }
+  return G[c];
+}
+/* What it costs to put the pieces A on the units U (each a group: { n, raw, key, kana, han, parts }; one of them is a
+   single) → { c: the cost, d: how unlike they sound (-1: not compared, it went by count) }, or null: never. */
+function ltPair(A, U) {
+  const more = LT.more * (A.n + U.n - 2), by = d => ({ c: (d <= LT.near ? LT.sub * d : d <= LT.far ? Math.min(LT.weak, LT.sub * LT.near + (d - LT.near) * LT.steep) : LT.cap) + more + (d ? 0 : 0.02) + (A.n > 1 && A.parts[0].key === '' ? 0.03 : 0), d }); // (the same sound written another way: a little more than the same text; っ and ー go with the kana before them)
+  if (A.raw && A.raw === U.raw) return { c: more, d: 0 };
+  const a = A.parts[0], ja = A.kana || U.kana;
+  if (A.n === 1 && U.n > a.maxU) return null;
+  if (A.n === 1 && a.kind === 'num') return { c: 0.35 + 0.12 * (U.n - 1), d: -1 };
+  if (A.n === 1 && a.kind === 'han') {
+    if (U.han) return U.n === 1 ? by(0.5) : null;                                           // (another character than the note's)
+    return { c: a.ja ? [0.3, 0.25, 0.6, 1.5, 2.4][U.n - 1] : U.n === 1 ? 0.3 : 1.3, d: -1 }; // (a hanzi is one note; over two it costs more than leaving the second note out)
+  }
+  if (U.key == null) return A.n === 1 && U.n === 1 ? by(1) : null;                          // (the note's own text is kanji, the piece isn't: nothing alike)
+  if (A.wild) { // kanji among several pieces on one note: what is known of the sound must be there, in order
+    if (!A.parts.some(p => p.ja)) return A.n === 2 && A.wild === 2 ? { c: 1, d: -1 } : null;
+    const re = new RegExp('^' + A.parts.map(p => (p.key == null ? '.+' : ltJa(p.key).replace(/[^a-z]/g, ''))).join('') + '$');
+    return re.test(ltJa(U.key)) ? { c: 0.3 * A.wild + more + 0.05, d: -1 } : null;
+  }
+  if (A.n === 1 && U.n === 1) return by(ltDist(A.key, U.key, ja));
+  // a group: alike enough (LT.far), and every one in it must belong — without it the rest may not sound more like the
+  // other side, unless it is itself a stretch of the other side ("desperate" sung on the notes "desperate" + "per")
+  const k = x => (ja ? ltJa(x) : x), ca = ltBag(A, ja), cu = ltBag(U, ja), ak = ca.k, uk = cu.k, len = Math.max(ak.length, uk.length, 1), G = U.n > 1 ? U : A;
+  if (Math.abs(ak.length - uk.length) > LT.far * len) return null;
+  let same = 0; // (letters the two have in common, whatever their order: they can't be more alike than that)
+  for (let x = 0; x < 32; x++) same += ca.h[x] < cu.h[x] ? ca.h[x] : cu.h[x];
+  if (len - same > LT.far * len) return null;
+  const d0 = ltLev(ak, uk);
+  if (d0 > LT.far * len) return null;
+  for (let x = 0; x < G.n; x++) {
+    const rest = k(G.parts.filter((p, y) => y !== x).map(p => p.key).join(''));
+    if (ltLev(G === U ? ak : rest, G === U ? rest : uk) < d0) { const own = k(G.parts[x].key); if (own.length < 2 || ltLev(own, G === U ? ak : uk, true) > LT.near * own.length) return null; }
+  }
+  return by(d0 / len);
+}
+/* The score's lines → its units, in time order: [{ text, toks: the score's own words in it, segs, s, e, li: its line }]. */
+function ltUnits(Ls) {
+  const U = [];
+  Ls.forEach((L, li) => L.toks.forEach((k, ki) => {
+    const p = L.toks[ki - 1], glue = ki > 0 && !k.sp && !(k.cj && p.cj), u = U[U.length - 1];
+    if (glue && u && u.li === li) { u.text += k.text; u.toks.push(k); u.segs.push(...k.segs); u.e = Math.max(u.e, k.end); }
+    else U.push({ text: k.text, toks: [k], segs: k.segs.slice(), s: k.start, e: k.end, li });
+  }));
+  for (const u of U) Object.assign(u, ltKey(u.text), { raw: ltRaw(u.text), n: 1 });
+  return U;
+}
+/* The cheapest way to line the pieces up with the units. X: { m, n: how many pieces / units, aId[a-1][i]: the group of
+   a pieces from i (-1: none), uId[b-1][j]: the group of b units from j, gin[b-1][j]: what the pauses inside that group
+   cost, ps[j]: where the phrase that ends before unit j began (-1: none ends there), maxU[i], ls[i] / le[i]: where
+   piece i's line starts / ends, pen[j]: what a line starting or ending before unit j costs (no pause there), E: what
+   leaving pieces out at a line's ends costs (running sums), cost(aId, uId) }.
+   → { F: the cost of the best way to every cell (i pieces, j units done), bp: how it got there }. */
+function ltAlign(X) {
+  const { m, n, ls, le, pen, E } = X, W = n + 1, F = new Float32Array((m + 1) * W).fill(Infinity), bp = new Uint8Array((m + 1) * W);
+  F[0] = 0;
+  for (let i = 0; i <= m; i++) {
+    const row = i * W, s1 = i ? ls[i - 1] : 0, e1 = i ? le[i - 1] : 0, a1 = i ? X.aId[0][i - 1] : -1, mu = i ? X.maxU[i - 1] : 0;
+    for (let j = 0; j <= n; j++) {
+      if (!i && !j) continue;
+      let best = Infinity, how = 0, v;
+      if (j) { v = F[row + j - 1] + LT.skipU; if (v < best) { best = v; how = 1; } }
+      if (j && X.ps[j] >= 0 && (i === m || ls[i] === i)) { const q = j - X.ps[j]; v = F[row + X.ps[j]] + Math.min(q * LT.skipU, LT.phrase + Math.max(0, q - LT.run) * LT.skipU); if (v < best) { best = v; how = 33; } } // (between two lines: a whole phrase of notes left out — a line the text doesn't have)
+      if (i) {
+        v = F[row - W + j] + LT.skipA; if (v < best) { best = v; how = 2; }
+        const pe = i === e1 ? pen[j] : 0;
+        for (let b = 1; b <= mu && b <= j; b++) {
+          const f = F[row - W + j - b];
+          if (f >= best) continue;
+          const c = X.cost(a1, X.uId[b - 1][j - b]);
+          if (c) { v = f + c.c + (b > 1 ? X.gin[b - 1][j - b] : 0) + (i - 1 === s1 ? pen[j - b] : 0) + pe; if (v < best) { best = v; how = 10 + b; } }
+        }
+        if (j) for (let a = 2; a <= 4 && i - a >= s1; a++) {
+          const f = F[(i - a) * W + j - 1], g = X.aId[a - 1][i - a];
+          if (g < 0 || f >= best) continue;
+          const c = X.cost(g, X.uId[0][j - 1]);
+          if (c) { v = f + c.c + (i - a === s1 ? pen[j - 1] : 0) + pe; if (v < best) { best = v; how = 20 + a; } }
+        }
+        if (i === e1) {
+          v = F[s1 * W + j] + Math.min(E[e1] - E[s1], LT.line); if (v < best) { best = v; how = 30; }
+          for (let k = s1 + 1; k < e1; k++) { v = F[k * W + j] + E[e1] - E[k] + pen[j]; if (v < best) { best = v; how = 31; } }
+        } else { v = F[s1 * W + j] + E[i] - E[s1] + pen[j]; if (v < best) { best = v; how = 32; } }
+      }
+      F[row + j] = best; bp[row + j] = how;
+    }
+  }
+  return { F, bp };
+}
+/* The best path, front to back: [{ i0, i1, j0, j1 }] — pieces i0…i1-1 on units j0…j1-1; one side empty: left out. */
+function ltPath(X, D) {
+  const { n, ls, le, E } = X, W = n + 1, ops = [];
+  let i = X.m, j = n;
+  while (i || j) {
+    const how = D.bp[i * W + j];
+    if (how === 1) { ops.push({ i0: i, i1: i, j0: j - 1, j1: j }); j--; }
+    else if (how === 2) { ops.push({ i0: i - 1, i1: i, j0: j, j1: j }); i--; }
+    else if (how >= 20 && how < 30) { ops.push({ i0: i - (how - 20), i1: i, j0: j - 1, j1: j }); i -= how - 20; j--; }
+    else if (how >= 10 && how < 20) { ops.push({ i0: i - 1, i1: i, j0: j - (how - 10), j1: j }); i--; j -= how - 10; }
+    else if (how === 33) { for (const k = X.ps[j]; j > k; j--) ops.push({ i0: i, i1: i, j0: j - 1, j1: j }); }
+    else if (how === 30 || how === 32) { const s = ls[i - 1]; ops.push({ i0: s, i1: i, j0: j, j1: j }); i = s; }
+    else if (how === 31) {
+      const s = ls[i - 1], e = le[i - 1];
+      let k = s + 1;
+      for (let q = s + 1; q < e; q++) if (D.F[q * W + j] - E[q] < D.F[k * W + j] - E[k]) k = q;
+      ops.push({ i0: k, i1: i, j0: j, j1: j }); i = k;
+    } else break;
+  }
+  return ops.reverse();
+}
+/* One track. Ls: its own lines; lines / atoms: the text's (every piece knows its line). → { pass(k): one more go at
+   the units that have no line yet → how many lines it placed; lines(): what to show; hit: the text lines used; big }. */
+function ltTrack(t, Ls, lines, atoms) {
+  const U = ltUnits(Ls), m = atoms.length, used = new Array(U.length).fill(null), hit = new Set(), made = [];
+  const ids = new Map(), groups = [], memo = [];
+  const gid = (sig, make) => { let g = ids.get(sig); if (g === undefined) { g = groups.length; ids.set(sig, g); groups.push(make()); } return g; };
+  const join = (xs, kind) => { const key = xs.some(x => x.key == null) ? null : xs.map(x => x.key).join(''); return { n: xs.length, raw: xs.map(x => x.raw).join(''), key, kana: xs.some(x => x.kana), han: xs.some(x => x.han), parts: xs, wild: kind === 'a' ? xs.filter(x => x.key == null).length : 0 }; };
+  const aId = [0, 1, 2, 3].map(() => new Int32Array(m).fill(-1)), ls = new Int32Array(m), le = new Int32Array(m), maxU = new Int32Array(m);
+  atoms.forEach((a, i) => {
+    ls[i] = lines[a.line].a0; le[i] = lines[a.line].a1; maxU[i] = a.maxU;
+    for (let k = 1; k <= 4 && i + k <= le[i]; k++) {
+      const xs = atoms.slice(i, i + k);
+      if (k > 1 && xs.some(x => x.kind === 'num')) break;
+      aId[k - 1][i] = gid('a' + xs.map(x => x.kind + (x.ja ? 'j' : '') + ':' + x.raw).join('+'), () => join(xs, 'a'));
+    }
+  });
+  const E = new Float32Array(m + 1); // (what leaving pieces out at a line's ends costs, as running sums)
+  atoms.forEach((a, i) => { E[i + 1] = E[i] + (a.key == null ? LT.edgeN : LT.edge); });
+  const cost = (a, u) => { const M = memo[a] || (memo[a] = new Map()); let c = M.get(u); if (c === undefined) { c = ltPair(groups[a], groups[u]); M.set(u, c); } return c; };
+  const out = { hit, big: false };
+  out.pass = pass => {
+    const idx = [];
+    U.forEach((u, j) => { if (!used[j]) idx.push(j); });
+    const n = idx.length;
+    if (!n || !m || (m + 1) * (n + 1) > LT.cells) { if (n && m && !pass) out.big = true; return 0; }
+    const V = idx.map(j => U[j]), uId = [0, 1, 2, 3, 4, 5].map(() => new Int32Array(n).fill(-1)), pen = new Float32Array(n + 1), rests = new Uint8Array(n + 1);
+    for (let j = 0; j < n; j++) {
+      for (let b = 1; b <= 6 && j + b <= n; b++) uId[b - 1][j] = gid('u' + V.slice(j, j + b).map(x => x.raw + (x.key == null ? '?' : '')).join('+'), () => join(V.slice(j, j + b), 'u'));
+      if (j) { const gap = idx[j] !== idx[j - 1] + 1 ? 9 : V[j].s - V[j - 1].e; pen[j] = gap >= LT.pause[2] ? 0 : gap >= LT.pause[0] ? LT.pause[3] : LT.pause[1]; rests[j] = gap >= LT.pause[1] ? 1 : 0; }
+    }
+    // (a word doesn't go on over a rest: what a group of units costs more for every pause inside it)
+    const gin = uId.map((g, k) => { const r = new Float32Array(n); for (let j = 0; j + k < n; j++) { let c = 0; for (let q = 1; q <= k; q++) c += rests[j + q]; r[j] = c * LT.rest; } return r; });
+    const runs = r => { const p = new Int32Array(n + 1).fill(-1); for (let j = 1, st = 0; j <= n; j++) if (j === n || r[j]) { p[j] = st; st = j; } return p; }; // (where the phrase that ends before unit j began)
+    const X = { m, n, aId, uId, gin, ps: runs(rests), maxU, ls, le, pen, E, cost }, D = ltAlign(X), ops = ltPath(X, D);
+    // each text line's part of the path
+    const recs = new Map(), enter = new Map();
+    for (const o of ops) if (!enter.has(o.i0)) enter.set(o.i0, o.j0);
+    for (const o of ops) if (o.i1 > o.i0 && o.j1 > o.j0) {
+      const li = atoms[o.i0].line;
+      o.c = cost(aId[o.i1 - o.i0 - 1][o.i0], uId[o.j1 - o.j0 - 1][o.j0]);
+      if (!recs.has(li)) recs.set(li, []);
+      recs.get(li).push(o);
+    }
+    let back = null, got = 0;
+    // is this part of the path — text line li on the pairings ms — sure enough to show?
+    const judge = (li, ms) => {
+      const L = lines[li], f = ms[0], l = ms[ms.length - 1], nA = L.a1 - L.a0;
+      let nM = 0, snd = 0, cnt = 0, sum = 0, good = 0;
+      for (const o of ms) {
+        let w = 0;
+        for (let i = o.i0; i < o.i1; i++) w += atoms[i].w;
+        nM += o.i1 - o.i0;
+        if (o.c.d < 0) cnt += w; else { snd += w; sum += w * o.c.d; good += w * (1 - o.c.d); }
+      }
+      const inA = l.i1 - f.i0 - nM, inU = l.j1 - f.j0 - ms.reduce((a, o) => a + o.j1 - o.j0, 0), whole = nM / nA >= LT.cover;
+      let ok = inA <= Math.max(1, LT.in * (l.i1 - f.i0)) && inU <= Math.max(1, LT.in * (l.j1 - f.j0)) && !((inA || inU) && (nM <= 2 || !whole));
+      const full = nM === nA && !inA && !inU, count = snd < LT.in * (snd + cnt);
+      const words = () => V.slice(f.j0, l.j1).map(u => u.raw).join(' ');
+      let room = -1;
+      if (ok && count) ok = !pass && full && l.j1 - f.j0 <= 3 * nA;         // by count alone: only the whole line, nothing left out, no more notes than it could have
+      else if (ok) ok = sum / snd <= (whole && good >= LT.few ? LT.ok : LT.sure) && (good >= LT.few || full);
+      // a line that is somewhere already, used again (a later pass): only on notes that say exactly its words, or the same words as the notes it is on
+      if (ok && pass && L.seen.size) ok = (!sum && !cnt) || L.seen.has(words());
+      if (ok && (count || good < LT.few)) { // little to go by: no other place for it may cost nearly the same
+        if (!back) { // (the same table from the other end: the cheapest way on from every cell)
+          const R = { m, n, cost, aId: aId.map((g, k) => { const r = new Int32Array(m).fill(-1); for (let i = 0; i + k < m; i++) r[m - 1 - i - k] = g[i]; return r; }),
+            uId: uId.map((g, k) => { const r = new Int32Array(n).fill(-1); for (let j = 0; j + k < n; j++) r[n - 1 - j - k] = g[j]; return r; }),
+            gin: gin.map((g, k) => { const r = new Float32Array(n); for (let j = 0; j + k < n; j++) r[n - 1 - j - k] = g[j]; return r; }), ps: runs(rests.slice().reverse()), E: Float32Array.from(E, (e, i) => E[m] - E[m - i]),
+            maxU: maxU.slice().reverse(), ls: Int32Array.from(le, (e, i) => m - le[m - 1 - i]), le: Int32Array.from(ls, (e, i) => m - ls[m - 1 - i]), pen: pen.slice().reverse() };
+          back = ltAlign(R).F;
+        }
+        const W = n + 1, B = (i, j) => back[(m - i) * W + n - j], j0 = enter.get(L.a0);
+        let alt = Infinity;
+        for (let j = 0; j <= n; j++) {
+          if (j < j0 || j > f.j0) alt = Math.min(alt, D.F[L.a0 * W + j] + B(L.a0, j));
+          alt = Math.min(alt, D.F[L.a0 * W + j] + Math.min(E[L.a1] - E[L.a0], LT.line) + B(L.a1, j));
+        }
+        room = alt - D.F[m * W + n];
+        ok = room >= LT.margin;
+      }
+      if (ok) L.seen.add(words());
+      if (LT.log) LT.log({ t, pass, n: L.n, ok, nA, nM, inA, inU, snd, cnt, mean: snd ? sum / snd : 0, good, room }); // (numbers only: for the tests)
+      return ok;
+    };
+    for (const [li, all] of recs) {
+      const L = lines[li], ms = all.slice();
+      // a stray near-match at either end of the part this track sings is let go, until what is left holds
+      while (ms.length && !judge(li, ms)) {
+        const a = Math.max(0, ms[0].c.d), b = Math.max(0, ms[ms.length - 1].c.d);
+        if (Math.max(a, b) <= LT.sure) ms.length = 0;
+        else if (a >= b) ms.shift(); else ms.pop();
+      }
+      if (!ms.length) continue;
+      const f = ms[0], l = ms[ms.length - 1];
+      got++;
+      hit.add(li);
+      // the line as it is shown: a word for every pairing, the score's own word where a unit was left out inside it
+      const toks = [];
+      for (const o of ops) {
+        if (o.j1 === o.j0) { // (a piece left out inside the line, written without spaces around it — a kana, a kanji: it has no note of its own, and shows with the piece before it. A word between spaces isn't sung by this track: left out)
+          const p = toks[toks.length - 1];
+          if (p && !p.own && o.i0 >= f.i1 && o.i1 <= l.i0) for (let i = o.i0; i < o.i1; i++) if (!atoms[i].sp && !(atoms[i + 1] && atoms[i + 1].line === li && atoms[i + 1].sp)) { p.text += atoms[i].text; p.bare += atoms[i].core; }
+          continue;
+        }
+        if (o.j0 < f.j0 || o.j1 > l.j1) continue;
+        if (o.i1 === o.i0) { V[o.j0].toks.forEach((k, q) => toks.push(Object.assign({}, k, { sp: q ? k.sp : !k.cj, own: true }))); used[idx[o.j0]] = li + 1; continue; }
+        const as = atoms.slice(o.i0, o.i1), text = as.map((a, k) => (k && a.sp ? ' ' : '') + a.text).join('');
+        const segs = [].concat(...V.slice(o.j0, o.j1).map(u => u.segs)).sort((a, b) => a[0] - b[0]), han = as.every(a => a.kind === 'han' && a.ja), p = toks[toks.length - 1];
+        for (let j = o.j0; j < o.j1; j++) used[idx[j]] = li + 1;
+        if (han && p && p.han && !as[0].sp) { p.text += text; p.bare += text; p.segs.push(...segs); continue; } // (kanji side by side: one word — how its notes divide among them isn't known)
+        toks.push({ text, bare: as.map((a, k) => (k && a.sp ? ' ' : '') + a.core).join(''), segs, cj: LT_CJK.test(text), sp: as[0].sp, han });
+      }
+      let cur = null, end = -Infinity;
+      for (const k of toks) {
+        k.start = k.segs[0][0];
+        k.end = Math.max(...k.segs.map(s => s[1]));
+        k.d = k.segs.reduce((a, s) => a + (s[1] - s[0]), 0);
+        if (cur && k.start - end > LT.split) cur = null;
+        if (!cur) { cur = { t, s: k.start, e: k.end, toks: [], chars: 0, txt: L.n }; made.push(cur); }
+        if (k.han !== undefined) delete k.han;
+        cur.toks.push(k);
+        cur.chars += k.text.length * (k.cj ? 2 : 1) + (k.sp ? 1 : 0);
+        cur.e = Math.max(cur.e, k.end);
+        end = Math.max(end, k.end);
+      }
+    }
+    return got;
+  };
+  // what no line took keeps the score's own words, line by line as the score had them
+  out.lines = () => {
+    let cur = null;
+    U.forEach((u, j) => {
+      if (used[j]) { cur = null; return; }
+      if (!cur || cur.li !== u.li) { cur = { t, s: u.s, e: u.e, toks: [], chars: 0, li: u.li }; made.push(cur); }
+      for (const k of u.toks) { cur.toks.push(k); cur.chars += k.text.length * (k.cj ? 2 : 1) + (k.sp ? 1 : 0); cur.e = Math.max(cur.e, k.end); }
+    });
+    for (const L of made) if (L.li !== undefined) delete L.li;
+    return made.sort((a, b) => a.s - b.s);
+  };
+  return out;
+}
+/* The text's lines on the score's notes. lyr: the score's own lines (Map: track → lines, or [[t, lines]]); text: the
+   file's text. → { lyr: Map(track → lines to show: the text's where it matched — each with txt: its line number in the
+   file — and the score's own elsewhere), report: { total: sung lines in the text, matched: how many of them are shown
+   on some track, missed: [{ n, text }] the others, own: lines of the score still in its own words, big: a track too
+   long to line up, none: so few matched that nothing was used } }. The score's lines are not changed. */
+function lyrTxtMatch(lyr, text) {
+  const lines = lyrTxtLines(text), atoms = [], tracks = [...(lyr || [])], out = new Map(), hit = new Set();
+  const ja = lines.some(L => L.atoms.some(a => a.kind === 'kana')) || tracks.some(([, Ls]) => Ls.some(L => L.toks.some(k => LT_KANA.test(k.text))));
+  lines.forEach((L, li) => {
+    L.a0 = atoms.length; L.seen = new Set();
+    for (const a of L.atoms) {
+      const x = ltKey(a.core);
+      Object.assign(a, { line: li, raw: ltRaw(a.core), key: x.key, kana: x.kana, han: x.han, ja: a.kind === 'han' && ja });
+      if (a.kind === 'lat' && (x.num || !x.key)) { a.kind = 'num'; a.key = null; }
+      a.maxU = a.kind === 'num' ? 2 + 2 * a.core.replace(/\D/g, '').length : a.kind === 'han' ? (ja ? 5 : 2) : a.kind === 'kana' ? 3 : a.kind === 'hang' ? 2 : Math.max(1, Math.min(5, Math.ceil(a.key.length / 2)));
+      a.maxU = Math.min(6, a.maxU);
+      a.w = a.kind === 'num' || a.kind === 'han' ? 2 : Math.max(1, a.key.length); // (how much it counts for: its letters as they sound)
+      atoms.push(a);
+    }
+    L.a1 = atoms.length;
+  });
+  // every track once; then, while it helps, again for the notes still without a line (what the text writes once and the song sings again)
+  const T = tracks.map(([t, Ls]) => ltTrack(t, Ls, lines, atoms));
+  for (let pass = 0; pass < LT.passes; pass++) for (const x of T) if (x.more !== false) x.more = x.pass(pass) > 0;
+  let own = 0, big = false;
+  tracks.forEach(([t], i) => {
+    const Ls = T[i].lines();
+    out.set(t, Ls);
+    for (const li of T[i].hit) hit.add(li);
+    own += Ls.filter(L => L.txt === undefined).length;
+    big = big || T[i].big;
+  });
+  // hardly any line found its notes: these aren't this song's words (another song's text has a short line or two in common with any song) — nothing is used
+  const none = hit.size > 0 && hit.size < LT.least * lines.length;
+  if (none) { own = 0; for (const [t, Ls] of tracks) { out.set(t, Ls); own += Ls.length; } }
+  return { lyr: out, report: { total: lines.length, matched: none ? 0 : hit.size, missed: lines.filter((L, li) => none || !hit.has(li)).map(L => ({ n: L.n, text: L.text })), own, big, none } };
+}
+/* What each note shows on the piano roll once the text is in: the word on its first note, nothing on the rest of its
+   notes. → for every note of notes (each { s, t }), the text, or null: as the score has it. */
+function lyrTxtLabels(notes, lyr) {
+  const by = new Map();
+  for (const [t, Ls] of lyr) for (const L of Ls) if (L.txt !== undefined) for (const k of L.toks) if (!k.own) k.segs.forEach((g, i) => by.set(t + '|' + g[0], i ? '' : k.bare || k.text));
+  return notes.map(n => { const v = by.get(n.t + '|' + n.s); return v === undefined ? null : v; });
+}
+/* A track whose singer changes partway (its notes carry n.sg): the shown lines that are one singer's — those most of
+   whose notes are that singer's (notes: the singer's notes on the track); half and half: whose note comes first. */
+function lyrTxtOf(Ls, notes) {
+  const mine = new Set(notes.map(n => n.s));
+  return Ls.filter(L => { let a = 0, b = 0; for (const k of L.toks) for (const g of k.segs) { b++; if (mine.has(g[0])) a++; } return a * 2 > b || (a * 2 === b && mine.has(L.s)); });
+}
+/* What the player says once a text is in. name: the file's; R: lyrTxtMatch's report. */
+function lyrTxtSay(name, R) {
+  if (!R || !R.matched) return name + " doesn't match this score: its own words stay";
+  return 'Lyrics from ' + name + ': ' + (R.matched === R.total ? (R.total === 1 ? 'its line' : 'all ' + R.total + ' lines') : R.matched + ' of ' + R.total + ' lines') + ' matched';
+}
+/* @pure:lyrtxt end */
 
 /* =====================================================================
    VoiSona (.tssln / .tssprj / .tsmsln) and CeVIO (.ccs)
@@ -7022,8 +7619,9 @@ function retimeScore(announce) {
   const label = 'Auto (' + chooseTpq(svp.raw, true) + ')';
   if (opt.textContent !== label) opt.textContent = label;
   if (tpq === svp.tpq) return;
-  const keep = { fileName: svp.fileName, srcFile: svp.srcFile, srcFiles: svp.srcFiles }, mainV = mainSel.value;
+  const keep = { fileName: svp.fileName, srcFile: svp.srcFile, srcFiles: svp.srcFiles }, mainV = mainSel.value, txt = svp.txt;
   svp = Object.assign(timeTicks(svp.raw, tpq), keep);
+  if (txt) { lyricsOnto(svp, txt); lyricsUI(); } // (its lyrics file goes on the notes as they are timed now)
   stopVoices();
   parts.length = 0;
   glow.prev = null;
@@ -7265,6 +7863,7 @@ function applyRoll() {
   rollEl.classList.toggle('on', !!svp && showRoll.checked);
   document.body.classList.toggle('roll-off', !showRoll.checked);
   $('svpClear').hidden = !svp;
+  lyricsUI();
   syncDeps(); // (P toggles the piano roll from the keyboard)
   savePrefs();
 }
@@ -7649,6 +8248,68 @@ async function loadScore(f) { // f: a score file, or a list of .ust files (one p
   }
   return true;
 }
+/* ---- Lyrics from a text file (.txt) on the loaded score: the words of the file in place of the notes' own, wherever
+   lyrTxtMatch is sure of them. The score keeps its own lines under them (svp.lyr0; svp.lyr is what's shown), the file's
+   name and text (svp.txt — saved with a project, so it comes back with it, in exports too) and how it went
+   (svp.txtInfo); the words on the piano roll's notes follow. One score is loaded at a time, so a text always goes on
+   that one: added with a score, on that score; added alone, on the score that's loaded; added before any score, it
+   waits for the next score added (LYR.wait). Several texts at once: the one named like the score, else the last. A
+   text that matches nothing isn't kept. ---- */
+function lyricsOnto(sc, txt) { // sc: a score; txt: { name, text }, or null: its own words again → lyrTxtMatch's report (null: none)
+  const base = sc.lyr0 || sc.lyr;
+  let r = null;
+  if (txt) try { r = lyrTxtMatch(base, txt.text); } catch (e) {}
+  const on = !!(r && r.report.matched);
+  Object.assign(sc, { lyr: on ? r.lyr : base, lyr0: on ? base : null, txt: on ? { name: txt.name, text: txt.text } : null, txtInfo: on ? r.report : null });
+  const labs = on ? lyrTxtLabels(sc.notes, sc.lyr) : null;
+  sc.notes.forEach((n, i) => { n.lab = labs && labs[i] !== null ? labs[i] : (n.l === '-' || n.l === '+' || isFiller(n.l)) ? '' : n.l; });
+  return r ? r.report : null;
+}
+function setLyricsTxt(txt, quiet) { // on the loaded score, shown at once → the report
+  if (!svp) return null;
+  const mainV = mainSel.value, sc = Object.assign({}, svp, { chunkKey: null, pet: null }); // (a score of its own: the desktop pets read its lines again — petRecast)
+  const R = lyricsOnto(sc, txt);
+  svp = sc;
+  glow.prev = null;
+  setMain(mainV === 'auto' ? svp.auto : +mainV);
+  lyricsUI();
+  if (!quiet) say(txt ? lyrTxtSay(txt.name, R) : 'Lyrics file taken off', 3500);
+  return R;
+}
+function lyricsUI() { // Settings → Score: which file, how it went, which of its lines found no notes
+  const t = svp && svp.txt, R = svp && svp.txtInfo, w = !t && LYR.wait, stat = $('lyrTxtStat');
+  $('lyrTxtName').textContent = t ? t.name : w ? w.name + ' — waits for a score' : 'none';
+  $('lyrTxtPick').textContent = t || w ? 'Change…' : 'Choose…';
+  $('lyrTxtOff').hidden = !t && !w;
+  let says = ''; // (in plain sight under the row while a file is in — a div, so it isn't put behind the row's "i" as the explanation is)
+  if (t && R) {
+    const cut = s => (s.length > 30 ? s.slice(0, 29) + '…' : s), miss = R.missed.slice(0, 6).map(x => 'line ' + x.n + ' “' + cut(x.text) + '”');
+    says = lyrTxtSay(t.name, R) + '.' + (miss.length ? ' Not matched: ' + miss.join(', ') + (R.missed.length > 6 ? ' and ' + (R.missed.length - 6) + ' more' : '') + '.' : '') +
+      (R.own ? ' Notes the file has no line for keep the score\'s own words.' : '') + (R.big ? ' One part is too long to match and keeps its own words.' : '');
+  }
+  if (stat.textContent !== says) stat.textContent = says;
+}
+async function lyricsFile(f) { // a .txt file → { name, text }, or null: can't be read, empty, or far too big to be lyrics
+  try { if (f.size > 2e6) return null; const text = lyrTxtDecode(await f.arrayBuffer()); return text.trim() ? { name: f.name, text } : null; } catch (e) { return null; }
+}
+async function addLyricsFile(f) { // one text on its own (Settings → Score, or dropped alone)
+  const txt = await lyricsFile(f);
+  if (!txt) { say("Couldn't read " + f.name); return; }
+  if (!svp) { LYR.wait = txt; lyricsUI(); say(f.name + ' will go with the next score you add', 3500); return; }
+  LYR.wait = null;
+  setLyricsTxt(txt);
+}
+$('lyrTxtPick').onclick = () => {
+  if (!LYR.input) {
+    const i = LYR.input = document.createElement('input');
+    i.type = 'file'; i.hidden = true;
+    if (!IS_IOS) i.accept = '.txt,text/plain'; // (iOS greys out types it doesn't know when a filter is set)
+    i.onchange = () => { const f = i.files[0]; i.value = ''; if (f) addLyricsFile(f); };
+    document.body.appendChild(i);
+  }
+  LYR.input.click();
+};
+$('lyrTxtOff').onclick = () => { LYR.wait = null; if (svp && svp.txt) setLyricsTxt(null); else lyricsUI(); };
 
 /* @pure:pet begin */
 /* =====================================================================
@@ -7730,7 +8391,8 @@ function petCast(svp, projectId) {
       if (!by.has(k)) by.set(k, { w, notes: [] });
       by.get(k).notes.push(n);
     }
-    for (const { w, notes } of by.values()) { const b = buildLines(notes); add(w, t, b.lyr.get(t) || [], notes, b.counts.get(t) || 0); }
+    // (with lyrics from a text file — svp.txt — the lines are the text's: each singer gets those sung on its notes)
+    for (const { w, notes } of by.values()) { const b = buildLines(notes); add(w, t, svp.txt ? lyrTxtOf(Ls, notes) : b.lyr.get(t) || [], notes, b.counts.get(t) || 0); }
   }
   const byN = (a, b) => b.n - a.n || a.t - b.t;
   let cast = [...groups.values()].filter(g => [...g.parts.values()].some(p => p.lines.length)).map(g => {
@@ -9744,7 +10406,7 @@ function paintRoll() {
 
 /* =====================================================================
    One place for all files: audio → track, video → background, score (.svp / MIDI / VoiSona /
-   CeVIO) → piano roll. The + button and drag-and-drop both land here.
+   CeVIO) → piano roll, a lyrics text (.txt) → the score's words. The + button and drag-and-drop both land here.
    ===================================================================== */
 const SCORE_RE = /\.(svp|mid|midi|kar|rmi|tssln|tssprj|tsmsln|ccs|ust|ustx|vsqx)$/i;
 const VIDEO_RE = /\.(mp4|m4v|webm|mov|mkv|ogv)$/i;
@@ -9759,11 +10421,12 @@ async function handleFiles(files) {
   files = [...files];
   const packs = files.filter(isProjectFile); // (.mapproj: projects to add, not media)
   if (packs.length) { files = files.filter(f => !packs.includes(f)); await importProjects(packs, !files.length); if (!files.length) return; } // (with other files: not opened — those are added)
-  const audio = [], skipped = [], ust = [];
+  const audio = [], skipped = [], ust = [], txts = [];
   let video = null, score = null;
   for (const f of files) {
     const k = kindOf(f);
-    if (k === 'audio') audio.push(f);
+    if (/\.txt$/i.test(f.name)) txts.push(f); // (a lyrics text for the score: see lyricsOnto)
+    else if (k === 'audio') audio.push(f);
     else if (k === 'video') video = f;  // one background: the last one wins
     else if (k === 'score' && scoreLabel(f.name) === 'UST') ust.push(f); // .ust: all of them, one part each
     else if (k === 'score') score = f;  // one score: the last one wins
@@ -9778,12 +10441,31 @@ async function handleFiles(files) {
   holdGq(4000); // loading causes hiccups: don't count them against the graphics quality
   audio.forEach(addTrack);
   if (video) loadVideo(video);
+  const wasTxt = ust.length && svp && svp.txt ? svp.txt : null; // (more .ust parts for the score that's loaded: its lyrics file stays on it)
   const scoreOk = score ? await loadScore(score) : false;
   const bits = [];
   if (audio.length) bits.push(audio.length + ' audio');
   if (video) bits.push('video');
   const ustRead = ust.filter(u => svp && svp.srcFiles && svp.srcFiles.includes(u)), ustBad = scoreOk ? ust.filter(u => !ustRead.includes(u)) : [];
   if (scoreOk) bits.push(ust.length ? ustRead.length + ' UST' : scoreLabel(score.name));
+  // a lyrics text: the one named like the score (else the last of them) goes on the score just added, or on the one that's
+  // loaded; with no score yet it waits for the next one added — as one that was waiting goes on this one
+  const stem = n => String(n || '').replace(/\.[^.]+$/, '').toLowerCase();
+  const pick = txts.find(f => svp && stem(f.name) === stem(svp.fileName)) || txts[txts.length - 1];
+  let txt = pick ? await lyricsFile(pick) : null;
+  for (const f of txts) if (f !== pick || !txt) skipped.push(f.name);
+  if (!txt && scoreOk) txt = LYR.wait || wasTxt;
+  if (txt && svp) {
+    LYR.wait = null;
+    const R = setLyricsTxt(txt, true), only = !bits.length && !skipped.length;
+    if (only) { say(lyrTxtSay(txt.name, R), 3500); return; }
+    bits.push(R && R.matched ? 'lyrics: ' + R.matched + ' of ' + R.total + ' lines' : "lyrics: " + txt.name + " doesn't match");
+  } else if (txt) {
+    LYR.wait = txt;
+    lyricsUI();
+    if (!bits.length && !skipped.length) { say(txt.name + ' will go with the next score you add', 3500); return; }
+    bits.push('lyrics wait for a score');
+  }
   if (bits.length) {
     let msg = 'Added ' + bits.join(' · ');
     if (score && scoreOk === false) msg += " · couldn't read " + (ust.length ? 'the UST files' : score.name);
@@ -11843,6 +12525,7 @@ function dropFiles() {
   if (bgFile || bg.getAttribute('src')) bgClear.click(); // (also a video still waiting to be read in)
   scoreGen++; // a score still being read is dropped
   svp = null;
+  LYR.wait = null; // (and a lyrics text that was waiting for a score)
   stopVoices();
   parts.length = 0;
   fillMainSelect();
@@ -12419,7 +13102,7 @@ function bgmStop() {
   BGM.gen++;
   dropPre();
   document.body.classList.remove('bgm-awake', 'bgm-low');
-  if (SUBWIN) { pauseAll(); mapApp.cover(false).catch(() => {}); return; } // (its own window closes)
+  if (SUBWIN) { pauseAll(); if (PET && petIdleEnd()) return; mapApp.cover(false).catch(() => {}); return; } // (its own window closes — unless it is the pets' and they stay, idle: Idle mode)
   document.body.classList.remove('bgm', 'bgm-visual');
   $('bgmBar').hidden = true;
   const K = BGM.keep || {};
@@ -12479,6 +13162,7 @@ function bgmIndex(d) {
 }
 async function bgmNext(d) {
   if (!BGM.on) return;
+  if (BGM.one && d > 0) { bgmStop(); return; } // (the desktop pets' Idle mode: the one song a pet was asked for is over — or skipped —, and they are idle again: petIdleEnd)
   if (d > 0 && BGM.i + 1 >= BGM.order.length && PL.loop && PL.shuffle && BGM.order.length > 2) { // a new round: shuffled again (not the same song twice in a row)
     const last = BGM.order[BGM.i];
     let o; do { o = shuffled(BGM.order); } while (o[0] === last);
@@ -12551,7 +13235,7 @@ async function bgmUI() {
       ? (corner ? 'Getting the corner player ready' : pet ? 'Getting the desktop pets ready' : 'Getting ready to cover the screen') + (c.song ? ' — loading ' + c.song : '') + '…'
       : (corner ? 'Playing in the corner' : pet ? 'Desktop pets' : 'Covering the screen') + (c.song ? (pet ? ': now playing ' : ' — now playing: ') + c.song + (c.n ? ' (' + c.i + ' / ' + c.n + ')' : '') : '…');
     now.querySelector('.bgm-next').textContent = c.up || '';
-    $('bgmStart').textContent = corner ? 'Back to the full player' : pet ? 'Stop the desktop pets' : 'Stop covering the screen';
+    $('bgmStart').textContent = corner ? 'Back to the full player' : pet ? (c.idle === 'song' ? 'Stop the song' : c.idle === 'list' ? 'Stop the playlist' : 'Stop the desktop pets') : 'Stop covering the screen'; // (c.idle — the pets' Idle mode: what plays stops, and the idle pets stay)
     $('bgmStart').classList.remove('primary');
     document.querySelectorAll('#plList li').forEach((li, k) => li.classList.toggle('now', !!c.id && PL.ids[k] === c.id));
     return;
@@ -12562,7 +13246,7 @@ async function bgmUI() {
   try { ps = await listProjects(); } catch (e) {}
   const name = id => { const p = ps.find(x => x.id === id); return p ? p.name : '—'; };
   const j = bgmIndex(1);
-  const song = name(BGM.order[BGM.i]), up = j >= 0 ? 'Next: ' + name(BGM.order[j]) : 'Last song';
+  const song = name(BGM.order[BGM.i]), up = BGM.one ? 'One song, then the pets are idle again' : j >= 0 ? 'Next: ' + name(BGM.order[j]) : 'Last song'; // (BGM.one: the desktop pets' Idle mode — the song a pet was asked for)
   if (playOn()) BGM.note = ''; // (no sound device, said by outNone: until the song plays again)
   const shown = BGM.note || up;
   now.querySelector('.bgm-title').textContent = 'Now playing: ' + song + ' (' + (BGM.i + 1) + ' / ' + BGM.order.length + ')';
@@ -12583,7 +13267,7 @@ async function bgmUI() {
 const CAN_COVER = !SUBWIN && !!(window.mapApp && mapApp.cover && mapApp.onCover);
 const CAN_CORNER = CAN_COVER && !!mapApp.corner; // (an older desktop app moves its own window instead)
 const CAN_PET = CAN_COVER && !!(mapApp.pet && mapApp.petPics && mapApp.petCfg); // (an older desktop app: the newest version's installer brings it)
-const coverPost = s => (SUBWIN ? mapApp.coverState(s).catch(() => {}) : Promise.resolve());
+const coverPost = s => (SUBWIN ? mapApp.coverState(PET ? petIdlePost(s) : s).catch(() => {}) : Promise.resolve()); // (the pets' window: with how Idle mode stands — petIdlePost)
 const coverCmd = c => { if (COVER.on) mapApp.coverCmd(c).catch(() => {}); };
 function coverStop() { if (COVER.on) mapApp.cover(false).catch(() => {}); } // (the app then says it ended)
 function coverBack() { // (the window hands its song back; if it doesn't answer, it's simply closed)
@@ -12654,11 +13338,13 @@ document.documentElement.addEventListener('mouseleave', () => { clearTimeout(bgm
 async function coverPage() {
   mapApp.onCover(m => {
     if (!m || !m.cmd) return;
+    if (PET && petIdleCmd(m.cmd)) return; // (the pets' Idle mode: 'idle' — what plays stops, they stay — and 'list' — the playlist plays here)
     if (m.cmd === 'next') { if (once('next', 'app')) bgmNext(1); }
     else if (m.cmd === 'prev') { if (once('prev', 'app')) bgmNext(-1); }
     else if (m.cmd === 'play') { if (once('pp', 'app')) togglePlay(); }
     else if (m.cmd === 'back') { if (BGM.on && CORNER) bgmBack(); else mapApp.cover(false).catch(() => {}); }
   });
+  if (PET && petIdleBorn()) return; // (the pets' Idle mode: this window was opened for the pets that stay on the screen, not to play the playlist)
   if (!(await bgmStart())) mapApp.cover(false).catch(() => {}); // (nothing to play: close again)
 }
 
@@ -12852,6 +13538,34 @@ const petArc = (k, h) => (k >= 0 && k < 1 ? h * 4 * k * (1 - k) : 0);
    up, and the bob gives way as it goes up: at most top over the head's place at rest, so a click never
    lifts a singer into its own bubble (its bottom 18 DIP above that). */
 const petLift = (bob, note, click, top) => bob * (1 - Math.min(1, click / top)) + Math.max(click, note);
+/* Variety (1.0.13; the setting, 0…1 — Settings → Background mode → Desktop pet): how much each PLAY of an animation
+   differs from the last. At 0 every play is the same, exactly as before 1.0.13; above it each fall, landing, hop, jump
+   up to a place, coming on, going, and a plain picture's bob, note hops and tilts are a little their own — how long,
+   how far, how they lean — the more the higher it is. A puppet's own animations are its engine's (petsheet.js: it is
+   told the setting, st.vary, and how far it fell, st.landH).
+   PETV_USUAL: as it is until the app says. petVaryCfg(c): the setting as the app hands it over (c: its cfg) → 0…1;
+   nothing said, or nonsense: the usual. petwin.js keeps it the same way.
+   petPlay(c, kind, at) → the numbers of one play of animation `kind` of pet c, six of them, each -1…1: made from the
+   pet's key, the animation and the moment that play began (at) — so one play keeps its numbers from its first frame to
+   its last, the same frame worked out again is the same, and no two plays share them; never anything made up per
+   frame. Kept with the pet (c.vp: one small list for each animation it has played).
+   petImpact(hd): how hard a landing is by how far it fell (hd: heights of the pet) — a short drop a small dip (0.45),
+   half its height as ever (about 1), a long one harder (up to 2.2); petsheet.js has the same. */
+const PETV_USUAL = 0.4;
+const petVaryCfg = c => { const v = c && typeof c === 'object' ? c.vary : null; return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : PETV_USUAL; };
+function petPlay(c, kind, at) {
+  const V = c.vp || (c.vp = {}), P = V[kind] || (V[kind] = { at: null, u: new Float64Array(6) });
+  if (P.at !== at) {
+    const s = c.key + ':' + kind + ':' + Math.round(at);
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    h = (h >>> 0) || 1;
+    for (let i = 0; i < 6; i++) { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; P.u[i] = (h >>> 0) / 2147483648 - 1; }
+    P.at = at;
+  }
+  return P.u;
+}
+const petImpact = hd => (hd >= 0 ? 0.45 + 1.75 * (1 - Math.exp(-hd / 1.6)) : 1);
 /* How high bubbles stand, with x and row from petRows: lowest row first, each one's bottom at its own
    `bottom` (just above its singers' heads: as low as it may be) or higher — above every bubble of a lower
    row it would overlap, and above any `fixed` box { x, y, w, h } it would overlap (a bubble of singers
@@ -12936,6 +13650,20 @@ function petFitIn(items, x, top, min = 2, gap = PETL.gap) {
    that's dragged, one carried, one coming down: it never eases along behind them. The rest of g (making room,
    coming back down) is glided; a bubble kept at the screen's edge (g 0) stays, whatever its singer does. */
 const petWith = (s, g) => (s > 0 && g > 0 ? Math.min(s, g) : s < 0 && g < 0 ? Math.max(s, g) : 0);
+/* A speech bubble goes with its singer's head (1.0.13): a hop, a landing's dip, a jump in a dance, a swing while it's
+   carried move the bubble as they move the head, in the very same frame — it no longer stays where the singer stands.
+   petGoes(d, still, soft): d — how far the head is from where it is when the singer stands still (DIP; up, down or
+   across) → how far the bubble goes for that (DIP, the same way): nothing while the head is within `still` of its
+   place (a breath, a sway, a nod on a note never move it), then gently over about `soft` more (no jerk as it starts),
+   and from there on exactly as far as the head goes, that much behind it.
+   PETB: those, as shares of the singer's height — still: upwards, down: downwards (more: a puppet's nod on a note
+   takes its head down a little, and the words must not bob as it sings), soft: either way; and for where the tail
+   points across (tailX / tailS: a head sways further than it bobs); boxX / boxS: across for the bubble itself, which
+   stays put through a dance's sways and leans and goes along only when the whole singer is far to the side (carried
+   and swinging, a big step) — its tail points at the head meanwhile. hold: how long (ms) the mouse rectangle keeps
+   the room a hop or a swing took (petRects: it goes with the singer too, without a new one each frame). */
+const PETB = { still: 0.013, down: 0.035, soft: 0.016, tailX: 0.045, tailS: 0.03, boxX: 0.16, boxS: 0.06, hold: 1000 };
+const petGoes = (d, still, soft) => { const a = Math.abs(d) - still; return !(a > 0) ? 0 : (d < 0 ? -1 : 1) * (soft > 0 ? a - soft * Math.tanh(a / soft) : a); };
 /* Which singer a press at (x, y) means: boxes { x, y, w, h, slop } = what's drawn of each, where it is
    now. Of those whose box holds the point, the one whose middle is nearest — with singers overlapping,
    the one aimed at, not whichever happens to be drawn on top (whose see-through part may be all that's
@@ -13177,18 +13905,24 @@ function petSheetCfg(s) {
 const petGesture = g => (g === 'off' ? 0 : g === 'gentle' ? 0.5 : 1);
 /* What the pets do as they sing and while they are carried (Background mode → Desktop pet, in the list itself; the app
    keeps them in pet.json with the others — petwin.js has the same list). PETDC: the usual.
-   dance – each pet dances while it sings a song that has a score (petsong.js works out the song's beat, bars and parts,
-   petdance.js each pet's dance through it: petDanceOf); off: it sings as before · danceSize – 'gentle' (smaller moves,
+   dances – whether a pet dances while it sings a song that has a score, and what (petsong.js works out the song's beat,
+   bars and parts): 'off' — it sings as before, the usual since 1.0.13 —, 'own' — the dance the user made for it: one for
+   this very song, or else its pet sheet's own, repeated on the song's beat —, 'auto' — the dance petdance.js makes for
+   each singer and song, as 1.0.12 did (petDanceOf); dance – true while that is 'auto', and never read from the app:
+   1.0.12's on / off, which was on unless the user said otherwise · danceSize – the automatic dance's: 'gentle' (smaller moves,
    no spins or jumps) or 'lively' · carry – how a puppet (a pet sheet) is carried: 'hand' — its hand holds on to the
    pointer and the rest of it hangs below (petGrip, petHeldAt) — or 'doll' — it hangs from wherever it was picked up,
    as before 1.0.12 · scared – while it's carried a puppet's face goes (>_<) (either way it's carried) */
-const PETDC = { dance: true, danceSize: 'lively', carry: 'hand', scared: true };
+const PETDC = { dances: 'off', dance: false, danceSize: 'lively', carry: 'hand', scared: true };
+const PETDANCES = ['off', 'own', 'auto'];
 /* Those as the app hands them over (c: its cfg), each one checked as petSheetCfg does. → all of them, a new object. */
 function petDcCfg(c) {
   const o = c && typeof c === 'object' ? c : {}, out = { ...PETDC };
   for (const k of ['dance', 'scared']) if (typeof o[k] === 'boolean') out[k] = o[k];
   if (['gentle', 'lively'].includes(o.danceSize)) out.danceSize = o.danceSize;
   if (['hand', 'doll'].includes(o.carry)) out.carry = o.carry;
+  if (PETDANCES.includes(o.dances)) out.dances = o.dances;
+  out.dance = out.dances === 'auto'; // (whatever the app says of `dance`: only `dances` counts)
   return out;
 }
 /* The Characters list's selection after a click on the card of singer `key`. order – the cards' keys as
@@ -13218,6 +13952,152 @@ function petBankPlan(rows, sel, again, has) {
   const targets = picked.length ? picked : again ? rows.filter(c => again.includes(c.key)) : rows.filter(c => !c.chorus && !c.url);
   const todo = targets.filter(c => has(c.key)).map(c => c.key);
   return { todo, none: targets.length - todo.length, kept: picked.length || again ? [] : rows.filter(c => c.url && has(c.key)).map(c => c.key) };
+}
+/* @pure:pet end */
+
+/* @pure:pet begin */
+/* ---- Idle mode (1.0.13), its pure parts ----
+   The pets the user chose stay on the taskbar with no song; a click on one lists the songs it is part of, the one
+   picked plays as a desktop-pet song, and when it is over they are idle again. Here: the songs each singer is in (an
+   index of the saved projects' scores, kept with the app's data so that no score is read twice), what a click, a pick,
+   a song's end or a stop leads to (petIdleStep), who leads a song's pets when one was asked for it (petLedBy), and the
+   Settings list of who can be chosen (petIdleRows).
+   max: how many pets may be chosen (petwin.js keeps that many: MAX_IDLE) · menuMs: a list of songs nobody touches
+   closes after this long. */
+const PETI = { max: 32, menuMs: 12000 };
+/* A project's score as the index knows it: its files' keys, as the store has them (what PET_READ goes by too: a song
+   saved with another score has other keys). '': it has no score. */
+const petIdxSig = p => (p && p.scores && p.scores.length ? p.scores : [p && p.score]).filter(Boolean).join('\n');
+/* The index as it was kept (anything JSON could hold) → { v: 1, songs: { <project id>: { sig, name, keys: [the keys
+   of its singers] } } }: only what is well formed — the rest is read again. */
+function petIdxClean(j) {
+  const out = { v: 1, songs: {} }, S = j && typeof j === 'object' && j.v === 1 && j.songs && typeof j.songs === 'object' && !Array.isArray(j.songs) ? j.songs : {};
+  for (const id of Object.keys(S)) {
+    const e = S[id];
+    if (id === '__proto__' || !e || typeof e !== 'object' || typeof e.sig !== 'string' || !Array.isArray(e.keys)) continue;
+    out.songs[id] = { sig: e.sig, name: typeof e.name === 'string' ? e.name : '', keys: e.keys.filter(k => typeof k === 'string' && k.length > 0 && k.length <= 200).slice(0, 300) };
+  }
+  return out;
+}
+/* What has to be read: the saved projects as the store lists them ([{ id, name, score, scores }]) against the index as
+   kept. → { idx: the index for these projects — one whose score is the one it knows stays (named as it is now), one
+   with no score is known at once (nobody sings in it), a deleted one is gone —, read: [the ids whose score must be
+   read] }. */
+function petIdxPlan(idx, projects) {
+  const old = petIdxClean(idx).songs, out = { v: 1, songs: {} }, read = [], seen = new Set();
+  for (const p of projects || []) {
+    if (!p || typeof p.id !== 'string' || !p.id || p.id === '__proto__' || seen.has(p.id)) continue;
+    seen.add(p.id);
+    const sig = petIdxSig(p), name = String(p.name == null ? '' : p.name), e = Object.prototype.hasOwnProperty.call(old, p.id) ? old[p.id] : null;
+    if (!sig) out.songs[p.id] = { sig: '', name, keys: [] };
+    else if (e && e.sig === sig) out.songs[p.id] = { sig, name, keys: e.keys };
+    else read.push(p.id);
+  }
+  return { idx: out, read };
+}
+/* One score that was read goes into the index: cast as petReadScore gives it ([{ key, chorus? }]); the Chorus (the
+   rest of a very big cast) is nobody. → the index, changed. */
+function petIdxPut(idx, id, sig, name, cast) {
+  const keys = [];
+  for (const g of cast || []) if (g && typeof g.key === 'string' && g.key && !g.chorus && !keys.includes(g.key)) keys.push(g.key);
+  if (id !== '__proto__') idx.songs[id] = { sig: String(sig || ''), name: String(name == null ? '' : name), keys };
+  return idx;
+}
+/* The songs a singer is part of: the playlist's first, in its order (each once), then the other saved projects whose
+   score has that singer, by name. → [{ id, name, list: it is in the playlist }] */
+function petSongsFor(idx, key, playlist) {
+  const S = (idx && idx.songs) || {}, has = id => Object.prototype.hasOwnProperty.call(S, id) && S[id].keys.includes(key), out = [], seen = new Set();
+  for (const id of playlist || []) if (!seen.has(id) && has(id)) { seen.add(id); out.push({ id, name: S[id].name, list: true }); }
+  const rest = Object.keys(S).filter(id => !seen.has(id) && has(id)).map(id => ({ id, name: S[id].name, list: false }));
+  rest.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  return out.concat(rest);
+}
+/* Idle mode's states, and what moves it from one to the next. S: { st, menu } —
+     st 'play': background mode as ever — the playlist plays, or is about to, in the pets' window ·
+        'idle': the chosen pets stand there with no song (menu: the key of the pet whose list of songs is open, '': none) ·
+        'song': the one song a pet was asked for loads or plays ·
+        'off': nothing is left to do here — the window is about to close.
+   ev: { t, on, … } — on: Idle mode is on and at least one chosen pet can be shown (said with every event) · t:
+     'cfg' the settings or the pictures changed (keeps(key): that pet is still chosen) · 'tap' a click on a pet (key;
+     idle: it is one of the chosen) · 'pick' a song chosen from the list (id) · 'shut' the list closes (Esc, a click
+     somewhere else, nobody touched it for a while, its pet went) · 'ended' the song, or the playlist, is over · 'stop'
+     the user stopped it · 'fail' it couldn't be played · 'list' the playlist is to play (Start background mode).
+   → { st, menu, do: [what the page does now, in order] } —
+     'menu' that pet's list of songs opens · 'shut' the list closes · 'sing' the song ev.id is loaded and played ·
+     'rest' back to idle: the song goes, the singers who aren't chosen leave, the chosen ones stay where they stand ·
+     'list' the playlist plays · 'halt' what plays stops without anybody leaving (the playlist is about to start) ·
+     'end' background mode ends as it always has: the window closes (its caller sees to that) · 'close' the window
+     closes itself, once the pets have sunk away.
+   What isn't listed changes nothing: a click while a song plays is the hop and the song's name it always was, and a
+   second song can't be asked for until this one is over (there is no list to pick from). */
+function petIdleStep(S, ev) {
+  const st = S.st, on = !!ev.on, menu = S.menu || '', same = { st, menu, do: [] }, shut = menu ? ['shut'] : [];
+  const end = () => (on ? { st: 'idle', menu: '', do: ['rest'] } : { st: 'off', menu: '', do: ['end'] });
+  if (st === 'idle') {
+    if (ev.t === 'cfg') {
+      if (!on) return { st: 'off', menu: '', do: [...shut, 'close'] };
+      return menu && ev.keeps && !ev.keeps(menu) ? { st, menu: '', do: shut } : same;
+    }
+    if (ev.t === 'tap') return ev.idle && ev.key && ev.key !== menu ? { st, menu: ev.key, do: [...shut, 'menu'] } : { st, menu: '', do: shut };
+    if (ev.t === 'shut') return { st, menu: '', do: shut };
+    if (ev.t === 'pick') return menu && ev.id ? { st: 'song', menu: '', do: ['shut', 'sing'] } : same;
+    if (ev.t === 'list') return { st: 'play', menu: '', do: [...shut, 'list'] };
+    return same; // ('ended', 'stop', 'fail': nothing plays)
+  }
+  if (st === 'song') {
+    if (ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail') return end();
+    if (ev.t === 'list') return { st: 'play', menu: '', do: ['halt', 'list'] };
+    return same;
+  }
+  if (st === 'play') return ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail' ? end() : same;
+  // 'off': the window is about to close — unless Idle mode is on again before it has
+  return ev.t === 'cfg' && on ? { st: 'idle', menu: '', do: ['rest'] } : same;
+}
+/* A song's pets with the singer that was asked for it singing. With "As few pets as possible" or "One singer" another
+   singer may be the pet that sings the asked one's lines: then the two change places — the asked one is the pet, with
+   that group's lines and notes, and the other is one of those it sings for. m: { cast, lines, notes } as petFewest and
+   petSolo give them (changed in place, and handed back); g: the asked singer, as the song's cast has it (none: it
+   isn't in the song). Nothing to do when it is one of the pets already. */
+function petLedBy(m, g) {
+  if (!m || !g || m.cast.some(o => o.key === g.key)) return m;
+  const i = m.cast.findIndex(o => (o.also || []).includes(g.key));
+  if (i < 0) return m;
+  const was = m.cast[i];
+  m.cast[i] = { ...g, tracks: was.tracks, n: was.n, also: [was.key, ...was.also.filter(k => k !== g.key)], ...(was.all ? { all: true } : {}) };
+  m.lines.set(g.key, m.lines.get(was.key) || []); m.lines.delete(was.key);
+  m.notes.set(g.key, m.notes.get(was.key) || []); m.notes.delete(was.key);
+  return m;
+}
+/* Settings → Idle mode: who can be chosen. songs: the playlist's, as for petMerged · known: what the app has for their
+   singers ([{ key, url, sheet, … }]: petKnownPics; null: it couldn't say) · met: every singer the player has met, the
+   newest first ([{ key, label, url, sheet }], the app's own list; null: none) · chosen: the keys kept (idlePets).
+   The singers with a picture — the playlist's first, in its order, then every other singer met (the Chorus is nobody)
+   — and after them any chosen one whose picture has gone: it can't be shown, which its row says, and it can be
+   switched off there.
+   → [{ key, label, url ('': no picture), sheet: a pet sheet's settings as text ('': a plain picture), on: it is chosen,
+   list: it sings in the playlist }] */
+function petIdleRows(songs, known, met, chosen) {
+  const byKey = l => new Map((Array.isArray(l) ? l : []).filter(p => p && typeof p.key === 'string').map(p => [p.key, p]));
+  const K = byKey(known), M = byKey(met), pick = new Set(chosen || []), out = [], had = new Set();
+  const add = (key, label, list) => {
+    if (had.has(key) || key === 'chorus') return;
+    const p = K.get(key) || M.get(key), url = (p && typeof p.url === 'string' && p.url) || '';
+    if (!url && !pick.has(key)) return;
+    had.add(key);
+    out.push({ key, label: String(label || (p && p.label) || '').trim() || key.replace(/^[a-z]+:/, ''), url, sheet: (url && p && typeof p.sheet === 'string' && p.sheet) || '', on: pick.has(key), list });
+  };
+  for (const o of petMerged(songs)) if (!o.chorus) add(o.key, o.label, true);
+  for (const p of M.values()) add(p.key, p.label, false);
+  for (const k of pick) if (typeof k === 'string' && k) add(k, '', false);
+  return out.filter(r => r.url).concat(out.filter(r => !r.url));
+}
+/* The line over that list: rows as petIdleRows gives them. */
+function petIdleSumText(rows) {
+  const have = rows.filter(r => r.url), n = have.filter(r => r.on).length, gone = rows.filter(r => r.on && !r.url).length;
+  if (!have.length) return 'No singer has a picture yet. Give one a picture in Characters… below; then it can be chosen here.';
+  const lost = gone ? ' ' + (gone === 1 ? 'One chosen pet has no picture any more, so it' : gone + ' chosen pets have no picture any more, so they') + " can't be shown." : '';
+  if (!n) return 'Switch on the pets that should stay on your screen.' + lost;
+  return (n === 1 ? '1 pet stays' : n + ' pets stay') + ' on your screen. Click one to ask it for a song.' + lost;
 }
 /* @pure:pet end */
 
@@ -13268,12 +14148,18 @@ const PETS = {
   // emptied with the voices (petTimes) and when the dance settings change · hands: a sheet → where its hands meet
   // (PetSheet.meet: the dance's claps; null: none)
   dc: petDcCfg(null), map: null, maps: new WeakMap(), dances: new Map(), hands: new WeakMap(),
+  lines: null, linesOn: false, // the dances the user made for this very song ({ id, song }: petLinesLoad — 1.0.13); null: not read yet · linesOn: their changes are listened for
   bubs: new Map(), small: false, rectSig: '', rectAt: 0, rideAt: -1e9, first: true, at: 0, now: 0, playing: false, pos: {}, seq: 0,
   yielded: new Set(), // bubbles of lines that gave way to a new one (petYields): not shown again
   next: null,         // the next song's singers, from the read-ahead: { id, cast, pet: their lines and notes } (petBye)
   cfg: null,          // the pets' settings as main keeps them ({ size, lift, free, windows, … }: pet:msg { cfg }); null: not told (an app from before that)
   ledges: null,       // the window top edges a singer can stand on: [{ id, x0, x1, y, wx }] in this window's DIP (pet:msg { ledges }); null: not heard yet
   held: null,         // the singer the user is holding (one at a time)
+  // Idle mode (1.0.13; see "Idle mode" below) — idle: the singers that stay on the screen with no song (their keys: the
+  // settings' idlePets while Idle mode is on, else none — petIdleCfg) · idleNames: what they are called, as the app has
+  // them · menu: the list of songs that is open by one of them ({ key, el, … }: petMenuOpen; null: none) · ask: the
+  // singer that was asked for the song that plays ('': nobody — the playlist): it is one of that song's pets (petPets)
+  idle: new Set(), idleNames: new Map(), menu: null, ask: '',
 };
 /* ---- the strip ---- */
 function petPage() {
@@ -13293,6 +14179,7 @@ function petPage() {
   document.addEventListener('pointerdown', petDown);
   document.addEventListener('pointermove', petDragTo);
   for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) document.addEventListener(ev, petUp);
+  petIdlePage(); // (Idle mode: what it hears from main, and from the main window's storage)
   // (for tests: what's on the strip, read-only — a copy each time)
   Object.defineProperty(window, '__pet', { get: petSnapshot });
 }
@@ -13320,11 +14207,18 @@ function petCfgNow(c) {
   // (dancing on or off, gentle or lively: every pet's dance is worked out again as it is next drawn — petDanceOf. How
   // it's carried and its face: from the very next frame, petDraw; one held just now goes on as it was picked up)
   const v0 = PETS.dc, v = PETS.dc = petDcCfg(c);
-  if (v.dance !== v0.dance || v.danceSize !== v0.danceSize) PETS.dances = new Map();
+  if (v.dances !== v0.dances || v.danceSize !== v0.danceSize) PETS.dances = new Map();
   PETS.cfg = { ...c };
+  PETV = petVaryCfg(c); // (Variety: from the very next frame — a play that has begun goes on with its own numbers, the more or less of them)
   if (c.free === false || c.windows === false) PETS.ledges = []; // (nobody stands on a window any more: petMove lets them down)
   if (petMode() !== was && PETS.ready) petGroup(); // (a pet for each singer, as few as possible, or one singer: who the pets are)
+  petIdleCfg(c); // (Idle mode: who stays on the screen with no song)
 }
+/* Variety as the app says it now (petVaryCfg; the usual until it does): 0 — every play of an animation the same, as
+   before 1.0.13 — to 1. What it changes on the stage: petAnim (coming on, going, a plain picture's bob, hops, tilts
+   and landing), petMove (how fast one falls or steps aside), petLeap (the jump up to its place); a puppet is told it
+   every frame and varies its own animations (petDraw: st.vary, st.landH). */
+let PETV = petVaryCfg(null);
 /* How many pets show (the setting, pets): 'each' — a pet for each singer —, 'few' — as few pets as possible — or 'one' —
    one singer. An app from before the last of these has only merge (true: 'few'). */
 const petMode = () => { const c = PETS.cfg || {}; return c.pets === 'few' || c.pets === 'one' ? c.pets : c.pets == null && c.merge === true ? 'few' : 'each'; };
@@ -13545,7 +14439,9 @@ function petHands(S) {
    (PetSheet.dance: st.dance, petDraw), a plain picture by PetDance.figure (petPicDance).
    → { S: the sheet it was made for (null: a plain picture), plan, D: what the puppet's engine plays }; plan null: it
    doesn't dance — the setting is off, the song has no map, it isn't one of this song's pets (one still on from the song
-   before), or it failed (it sings as before). */
+   before), or it failed (it sings as before).
+   All of that is the automatic dance (the setting 'auto': Made for me). Since 1.0.13 nobody dances unless the user says
+   so ('off', the usual: E stays empty), and with My own dances ('own') the dance is one the user made: petOwnDance. */
 function petDanceOf(c) {
   const S = c.pup && !c.pup.bad ? c.pic.sheet : null;
   let E = PETS.dances.get(c.key);
@@ -13553,7 +14449,8 @@ function petDanceOf(c) {
   E = { S, plan: null, D: null };
   PETS.dances.set(c.key, E);
   const V = PETS.dc, M = PETS.map, i = PETS.cast.indexOf(c.g), P = PETS.sc && PETS.sc.pet;
-  if (!V.dance || !M || i < 0 || !window.PetDance) return E;
+  if (V.dances === 'own') return petOwnDance(c, E); // (My own dances, 1.0.13: the dance the user made — never one worked out here)
+  if (V.dances !== 'auto' || !M || i < 0 || !window.PetDance) return E;
   try {
     const seed = [M.bpm, Math.round(M.first * 100), Math.round(M.last * 100)].join(':'), side = PETS.cast.filter(g => PETS.pics.get(petPk(g))).indexOf(c.g) % 2 === 1 ? -1 : 1;
     const plan = PetDance.plan(M, { seed, side, own: (P && P.notes && P.notes.get(c.key)) || [],
@@ -13562,6 +14459,51 @@ function petDanceOf(c) {
     if (plan && S && typeof PetSheet.dance === 'function') E.D = PetSheet.dance(S, { ch: PetDance.CH, add: PetDance.ADD, len: plan.len, blend: 0.25, at: (n, o, w) => PetDance.at(plan, n, o, w) }) || null;
   } catch (e) { E.plan = null; E.D = null; }
   return E;
+}
+/* A pet's dance of the user's own through this song (the setting: My own dances, 1.0.13). The dance made for this very
+   song and this pet in the pet editor (PETS.lines: the song's project keeps them — petLinesLoad; a singer's second pet
+   dances its singer's), danced where its moves were put, the pet standing and singing in between — or else its pet
+   sheet's own dance (the one in use: PetSheet reads the sheet's "dances"), laid out along the song where this pet sings,
+   round after round from a bar line, at rest through its long rests (PetDance.unroll). Either is made ready once
+   (PetDance.line: E.own) and played by the puppet's engine by the song's clock, as the automatic one is (E.D). The
+   pet's own animations in it are the sheet's clips, and only they may bend a knee (plan.knees). A plain picture, a pet
+   with neither dance, a song with no map: E as it came — it sings as before (E.plan stays null: no bounce either). */
+function petOwnDance(c, E) {
+  const S = E.S, M = PETS.map, P = PETS.sc && PETS.sc.pet;
+  if (!S || !M || PETS.cast.indexOf(c.g) < 0 || !window.PetDance || typeof PetDance.line !== 'function' || typeof PetSheet.dance !== 'function') return E;
+  try {
+    const L = PETS.lines && PETS.lines.id === PETS.songId ? PETS.lines.song : null;
+    const T = L ? PetDance.songItems(L, c.key, PETS.songId) || (c.g && c.g.of ? PetDance.songItems(L, c.g.of, PETS.songId) : null) : null;
+    const D = T ? null : PetDance.danceInUse(S.dances);
+    const items = T ? T.items : D ? PetDance.unroll(M, D, { own: (P && P.notes && P.notes.get(c.key)) || [] }) : null;
+    const plan = items ? PetDance.line(M, items, { clips: S.clips, fit: petHands(S), flip: !!(T && T.flip) }) : null;
+    if (plan) { E.own = plan; E.D = PetSheet.dance(S, { ch: PetDance.CHX, add: PetDance.ADD, len: plan.len, blend: 0.25, knees: plan.knees, face: plan.face, at: (n, o, w) => PetDance.lineAt(plan, n, o, w) }) || null; }
+  } catch (e) { E.own = null; E.D = null; }
+  return E;
+}
+/* The dances made for one song (the pet editor's "Dance for one song…"), which that song's project keeps (its record's
+   `dances`: { v, pets: { singer's key: { items } | { same, flip } } } — PetDance.cleanSong reads it): read as the song
+   is loaded (petSong) and again when the main window says they have changed (petLinesTold) — never in a frame.
+   PETS.lines = { id: the song's, song: its dances (null: none) }; until it is read, the pets go by their own dances. */
+function petLinesLoad(id) {
+  if (id == null || !window.PetDance || typeof PetDance.cleanSong !== 'function') return;
+  // (the main window's word that a song's dances changed is listened for from the first song on: petLinesTold)
+  if (!PETS.linesOn) { PETS.linesOn = true; try { window.addEventListener('storage', petLinesTold); } catch (e) {} }
+  let q = null;
+  try { q = getProject(id); } catch (e) { return; }
+  q.then(p => {
+    if (PETS.songId !== id) return;
+    let song = null;
+    try { song = PetDance.cleanSong(p && p.dances); } catch (e) {}
+    PETS.lines = { id, song };
+    PETS.dances = new Map(); // (every pet's dance again, as it is next drawn: petDanceOf)
+  }).catch(() => {});
+}
+/* The main window kept a song's dances just now (petSongDances: it writes 'map-pet.dances' = the song's id and the
+   time, which this window hears of as a storage event): if it's the song playing, they are read again at once. Should
+   the event not come, the next time the song starts has them all the same. */
+function petLinesTold(e) {
+  if (e && e.key === 'map-pet.dances' && PETS.songId != null && String(e.newValue || '').split('|')[0] === String(PETS.songId)) petLinesLoad(PETS.songId);
 }
 /* What a puppet's engine plays this frame (st.dance): its dance, or null. */
 const petDance = c => petDanceOf(c).D;
@@ -13631,6 +14573,9 @@ function petDraw(c, t, now, sc, x, y) {
       // the puppet: an animation of the sheet's own for a click doesn't start — petsheet.js, pickClip)
       st.air = !!c.fall || !!(c.ride && c.ride.h > 0); st.landAt = c.landAt; st.hopAt = j ? j.t0 - 110 : U.hop ? c.clickAt : null; st.hopMs = j ? PETL.leap * 1000 / 0.7 : 420; st.hopH = j ? 0 : 14;
       st.blink = U.blink; st.gesture = petGesture(U.gestures);
+      // (Variety: how much each play of its animations is its own — 0: every play as before —, and how far it came down
+      // to where it last landed, which its landing goes by (c.landH: petAnim); its jump up, as long as this one takes)
+      st.vary = PETV; st.landH = c.landH; if (j && j.T) st.hopMs = j.T * 1000 / 0.7;
       st.enterAt = c.state === 'leaving' ? null : c.inAt; st.leaveAt = c.state === 'leaving' ? c.leftAt : null;
       // (its shadow lies on the ground: under one that stands on the taskbar or on a window's edge — none under one left
       // standing in the air, and none carried along under one the user is carrying, whether or not it swings)
@@ -13752,14 +14697,14 @@ function petTakeOff(c, t, Ls, dt) {
    edge is missing from main's word meanwhile: it goes on to where that was, and lands as one whose edge is missing
    stands (c.on.lost, c.on.out: petMove waits PETL.hold for the edge, from when it was first missing, and then lets it down). */
 function petLeap(c, t, Ls, dt) {
-  const G = PETS.G, W = G.W, j = c.jump, d = c.dest, k = Math.min(1, (t - j.t0) / (PETL.leap * 1000)), fit = x => Math.max(c.w / 2, Math.min(W - c.w / 2, x));
+  const G = PETS.G, W = G.W, j = c.jump, d = c.dest, k = Math.min(1, (t - j.t0) / (petLeapS(c, j) * 1000)), fit = x => Math.max(c.w / 2, Math.min(W - c.w / 2, x)); // (petLeapS: PETL.leap — with Variety a little more or less, each jump its own)
   if (!d) { c.jump = null; return; } // (going nowhere any more)
   if (j.on) {
     const L = Ls[petLedgeOf(Ls, j.on.id, j.on.off, petRoom(c), G.feetY)];
     if (L) { j.x1 = L.wx + j.on.off; j.a1 = G.feetY - L.y; j.lost = 0; j.out = 0; } else if (!j.lost) { j.lost = t; j.out = 0; } else j.out += dt; // (out: how long it has been missing, in frames — petMove)
   } else { j.x1 = d.fx * W; j.a1 = Math.min(petTop(c), d.alt); }
   c.fx = (fit(j.x0) + (fit(j.x1) - fit(j.x0)) * k) / W; // (fit: also where it took off from — bigger since, it would hang over the side of the screen on the way)
-  c.alt = petLeapAt(k, j.a0, j.a1, Math.max(0, Math.min(PETL.peak * c.h, petTop(c) - j.a1)));
+  c.alt = petLeapAt(k, j.a0, j.a1, Math.max(0, Math.min((j.P || PETL.peak) * c.h, petTop(c) - j.a1)));
   PETS.rideAt = t; // (the mouse rectangles keep up with it: petRects)
   if (k < 1) return;
   c.jump = null; c.dest = null; c.alt = j.a1;
@@ -13823,7 +14768,7 @@ function petDrop(c) {
    or went: one of this song's singers with a picture comes on, a new picture swaps in, and one without a
    picture isn't shown — Remove in Characters… while it's on: it sinks away, the others stay where they are. */
 function petSync(key) {
-  const c = PETS.chars.get(key), g = PETS.cast.find(x => x.key === key);
+  const c = PETS.chars.get(key), g = PETS.cast.find(x => x.key === key) || petIdleG(key); // (Idle mode: one of the chosen pets is on whether or not it is in the song)
   const step = petStep(!!PETS.pics.get(g ? petPk(g) : c ? c.pk : key), c ? c.state : '', !!g);
   if (step === 'leave') petLeave(c, performance.now());
   else if (step === 'swap') petPic(c, true);
@@ -13842,6 +14787,7 @@ async function petSong(gen) {
   const raw = svp && svp.lyr ? petCast(svp, id) : [];
   Object.assign(PETS, { songId: id, svp, raw, ready: true, started: false, song: currentProject && currentProject.id === id ? currentProject.name : '' });
   PETS.map = petMapOf(svp); // (what the pets dance to — a song with a score that has words: worked out now, before it starts)
+  PETS.lines = null; petLinesLoad(id); // (and the dances made for this very song, which its project keeps)
   petGroup(); // (a picture not known yet: petPics below brings its singer on)
   const P = petPics(raw, true);
   await Promise.race([P, new Promise(r => setTimeout(r, PETS.first ? 2000 : 1000))]);
@@ -13855,9 +14801,11 @@ async function petSong(gen) {
 function petPets(raw, pet, mode = petMode()) {
   if (!pet) return null;
   const has = k => !!PETS.pics.get(k);
-  if (mode === 'one') return petSolo(raw, pet, has);
+  // (Idle mode: the singer that was asked for this song — PETS.ask — is one of its pets, where another would sing its lines: petLedBy)
+  const led = (m, cast) => (PETS.ask && has(PETS.ask) ? petLedBy(m, cast.find(g => g.key === PETS.ask)) : m);
+  if (mode === 'one') return led(petSolo(raw, pet, has), raw);
   const V = petVoiced(raw, pet);
-  return mode === 'few' && V.cast.length > 1 ? petFewest(V.cast, V, has) : V;
+  return mode === 'few' && V.cast.length > 1 ? led(petFewest(V.cast, V, has), V.cast) : V;
 }
 const petPk = g => g.of || g.key; // the singer whose picture a pet has (g: one of the cast): its own — a singer's second pet has that singer's
 const petHave = () => JSON.stringify(PETS.raw.filter(g => PETS.pics.get(g.key)).map(g => g.key)); // (which of the song's singers have a picture)
@@ -13872,7 +14820,7 @@ function petGroup() {
   PETS.sc = m ? { pet: { lines: m.lines, notes: m.notes } } : sc;
   PETS.have = petHave();
   petTimes();
-  if (PETS.cast.length) for (const c of [...PETS.chars.values()]) if (!PETS.cast.some(g => g.key === c.key)) petLeave(c, t);
+  if (PETS.cast.length) for (const c of [...PETS.chars.values()]) if (!PETS.cast.some(g => g.key === c.key) && !petIdleKeeps(c)) petLeave(c, t); // (Idle mode's chosen pets stay through any song)
   for (const g of PETS.cast) {
     const c = PETS.chars.get(g.key);
     if (c && c.state !== 'leaving') { c.g = g; c.label = g.label; } else petSync(g.key);
@@ -13887,7 +14835,7 @@ function petBye(id) {
   const n = PETS.next;
   if (!n || n.id !== id || !n.cast.length) return;
   const m = petPets(n.cast, n.pet, n.cast.every(g => PETS.pics.has(g.key)) ? petMode() : 'each'), cast = m ? m.cast : n.cast, t = performance.now();
-  for (const c of [...PETS.chars.values()]) if (!cast.some(g => g.key === c.key)) petLeave(c, t);
+  for (const c of [...PETS.chars.values()]) if (!cast.some(g => g.key === c.key) && !petIdleKeeps(c)) petLeave(c, t);
 }
 /* Onsets, when each one has lines and when each one comes on: again whenever the score is replaced (its
    timing changed) or the pets are other singers (petGroup). */
@@ -13988,7 +14936,7 @@ async function petReady(p, url, id) {
     x.putImageData(d, 0, 0);
     src = cv;
   }
-  if (PETS.dc.dance) petHands(S); // (where its hands meet, for a dance's claps: worked out now, not in the frame it first dances)
+  if (PETS.dc.dances !== 'off') petHands(S); // (where its hands meet, for a dance's claps: worked out now, not in the frame it first dances)
   const M = Math.max(S.right, -S.left); // (how far the standing puppet reaches from the middle of its feet, in cells: its wider side)
   return { url, w: 2 * M * S.cell, h: S.tall * S.cell, box: { x0: (M + S.left) / (2 * M), y0: 0, x1: (M + S.right) / (2 * M), y1: 1 },
     from: url, id, faces: petFaces(p), sheet: S, src, copy: null };
@@ -14108,13 +15056,15 @@ function petFrame() {
       const at = PETS.appear.get(c.key);
       // (the first singer as the song starts; the others 1 s before their first line — one with a jump up to its place
       // still to make, that much earlier: petLead —; one this song has no time for isn't in it)
-      if (!same || !PETS.started || at == null || (at !== -Infinity && now < at - petLead(c))) continue;
+      // (Idle mode: one of the chosen pets waits for no song and no line — it comes on at once)
+      if (!petIdleKeeps(c) && (!same || !PETS.started || at == null || (at !== -Infinity && now < at - petLead(c)))) continue;
       // (a song change: never one coming up in the spot of one still going down — petPlace)
       if (!petShow(c, t)) continue;
     }
     petAnim(c, now, t, dt, sc);
   }
   petBubbles(now, t, dt, sc);
+  petIdleFrame(t); // (Idle mode: an open list of songs stays by its pet)
   petRects(t);
 }
 /* How much earlier than usual a singer comes on (s of the song): one that has a higher place to jump up to once it is
@@ -14128,41 +15078,90 @@ function petLead(c) {
   return 0;
 }
 const petOut = k => 1 - (1 - k) * (1 - k) * (1 - k);
+/* Variety on the stage (PETV; with none of it each gives just what there always was — ms, 0, 1):
+   petRise: how long this coming on (kind 'rise') or going ('leave') takes, a quarter more or less at the most — ms as
+   ever, the play is the one that began at `at`; petRisePast: how far past its line (DIP, up) one that comes on is, k
+   of the way up — a little, late on, and back onto it by the time it is up; petBobBy: how many times as high a plain
+   picture's idle bob is this time round (each round its own, changed where the bob is at its lowest: never a jump). */
+const petRise = (c, kind, at, ms) => (PETV > 0 ? ms * (1 + 0.25 * PETV * petPlay(c, kind, at)[0]) : ms);
+const petRisePast = (c, k, low) => (PETV > 0 && k > 0.55 ? PETV * PETS.G.scale * (3 + 4.5 * (1 + petPlay(c, 'rise', c.t0)[1])) * Math.sin(Math.PI * (k - 0.55) / 0.45) : 0);
+const petBobBy = (c, t, V) => 1 + 0.4 * V * petPlay(c, 'bob', Math.floor(t / 2600 + c.phase))[0];
+/* petGlideBy: how many times as fast one steps aside this time (petMove) — each time it sets off its own: a step is a
+   new one when the last ended more than 0.4 s ago (c.gl: when this one began, and when it last moved).
+   petLeapS: how long this jump up to its place takes (s; j: c.jump) — PETL.leap, a little more or less; with it, how far
+   past the place the top of its arc is (j.P, × its height; j.T: the time). Worked out once a jump. */
+const petGlideBy = (c, t) => { if (!(PETV > 0)) return 1; const g = c.gl || (c.gl = { at: t, last: t }); if (t - g.last > 400) g.at = t; g.last = t; return 1 + 0.25 * PETV * petPlay(c, 'glide', g.at)[0]; };
+const petLeapS = (c, j) => { if (PETV > 0 && j.T == null) { const u = petPlay(c, 'leap', j.t0); j.T = PETL.leap * (1 + 0.15 * PETV * u[0]); j.P = PETL.peak * (1 + 0.4 * PETV * u[1]); } return j.T || PETL.leap; };
 function petAnim(c, now, t, dt, sc) {
   // coming on and going — coming on: always up from below the screen's edge, on the taskbar line (a higher place is
   // jumped to afterwards: petLeap). Going — on the taskbar: back down there, as ever; higher up: behind its own
   // standing line (cut off there: never a slide down the whole screen)
   const G = PETS.G, s = G.scale, feet = petFeet(c), air = c.alt > 0, low = c.h + (air ? 0 : G.H - G.feetY) + 8; // (that far down: out of sight)
   let y = 0;
-  if (c.state === 'rising') { const k = Math.min(1, (t - c.t0) / 500); y = (1 - petOut(k)) * low; if (k >= 1) c.state = 'in'; }
-  else if (c.state === 'leaving') { const k = Math.max(0, Math.min(1, (t - c.t0) / 400)); y = c.y0 + k * k * (low - c.y0); if (k >= 1) { petDrop(c); return; } } // (k 0 until c.t0: a goodbye of its own plays first — petLeave)
+  // (Variety — PETV; none of it at 0: coming on takes a little longer or less long and goes a little past its line before
+  // it settles, going takes a little longer or less long; each time its own — petRise)
+  if (c.state === 'rising') { const k = Math.min(1, (t - c.t0) / petRise(c, 'rise', c.t0, 500)); y = (1 - petOut(k)) * low - petRisePast(c, k, low); if (k >= 1) c.state = 'in'; }
+  else if (c.state === 'leaving') { const k = Math.max(0, Math.min(1, (t - c.t0) / petRise(c, 'leave', c.t0, 400))); y = c.y0 + k * k * (low - c.y0); if (k >= 1) { petDrop(c); return; } } // (k 0 until c.t0: a goodbye of its own plays first — petLeave)
+  // (how far it came down to where it just landed — c.landH, DIP: what its landing goes by with Variety, a picture's
+  // below and a puppet's own, petDraw. air0: the highest it has been since it left what it stood on — falling, on its
+  // jump, dropping onto a window's edge —, land0: the landing that is counted. Put down where it was held: 0)
+  if (c.drag) c.air0 = null;
+  else if (c.fall || c.jump || (c.ride && c.ride.h > 0)) c.air0 = c.air0 == null ? c.alt : Math.max(c.air0, c.alt);
+  if (c.landAt !== c.land0) { c.land0 = c.landAt; c.landH = c.air0 == null ? 0 : Math.max(0, c.air0 - c.alt); c.air0 = null; }
   // idle: a slow bob and a breath
   const b = 0.5 - 0.5 * Math.cos((t / 2600 + c.phase) * 2 * Math.PI);
   let up = 3 * s * b, sx = 1, sy = 1 + 0.01 * b;
+  const V = c.pup ? 0 : PETV; // (Variety for a plain picture's own moves, below; a puppet's are its engine's)
+  if (V > 0) { const m = petBobBy(c, t, V); up *= m; sy = 1 + 0.01 * b * m; } // (no bob as high as the last)
   // singing: a hop on each note it starts (half for short ones), a little squash, a tilt each way in turn
   const on = sc && PETS.on ? PETS.on.get(c.key) : null, cur = PETS.cur.get(c.key);
   let sing = false;
   if (on && cur) {
     const hit = petOnsetStep(cur, on, now);
     if (hit && !c.drag && t - c.hopAt > 120) { c.hopAt = t; c.hopH = (hit.d < 0.15 ? 3 : 6) * s; c.hopMs = 240; c.side = -c.side; }
+    if (V > 0 && c.hopAt === t) { const u = petPlay(c, 'note', t); c.hopH *= 1 + (u[0] > 0 ? 0.2 : 0.4) * V * u[0]; c.hopMs *= 1 + 0.2 * V * u[1]; } // (no note's hop like the last: a little higher or less high, longer or shorter)
     sing = petSounding(cur, on, now);
   }
   c.tiltTo = c.drag ? 4 * c.drag.dir : sing ? 2 * c.side : 0;
+  // (…and it tilts a little further or less far for this note, or this time it is picked up)
+  if (V > 0 && c.tiltTo) c.tiltTo *= 1 + 0.5 * V * (c.drag ? petPlay(c, 'held', c.drag.vt || (c.drag.vt = t))[0] : petPlay(c, 'note', c.hopAt)[2]);
   c.facing = petDrawn(c); // (the way its picture is drawn: nothing turns a pet round — a puppet's pose says its own, petDraw)
   // dancing, a plain picture (petPicDance; a puppet dances itself: petDraw): its bounce on the beat stands in for the idle
   // bob — a note's hop or a click's goes over it only where higher —, its lean for the note's tilt, and its squash and
   // its turn like a card's go on the picture as it is, all as far as the dance has come in (c.dz)
   const F = c.pup ? null : petPicDance(c, now, sc, dt), dz = c.dz;
   if (F) { up *= 1 - dz; c.tiltTo += (F.tilt - c.tiltTo) * dz; sx *= 1 + (F.sx - 1) * dz; sy *= 1 + (F.sy - 1) * dz; }
+  // (bob: the idle bob as it is before the hops go over it; nh: a note's hop or the dance's bounce now; ck: the click's hop now)
+  const bob = up, nh = Math.max(petArc((t - c.hopAt) / c.hopMs, c.hopH), F ? F.up * c.h / 200 * dz : 0);
+  let ck = petArc((t - c.clickAt) / 420, 14);
   // (a click's big hop runs its whole course, the notes' hops over it only where higher: petLift)
   up = petLift(up, Math.max(petArc((t - c.hopAt) / c.hopMs, c.hopH), F ? F.up * c.h / 200 * dz : 0), petArc((t - c.clickAt) / 420, 14), 14); // (F.up: px at a 200 px picture)
+  // (Variety: this click's hop a little higher or less high — never past the room there is for it —, longer or shorter, leaning a little to one side at its top)
+  if (V > 0) { const u = petPlay(c, 'hop', c.clickAt); ck = petArc((t - c.clickAt) / (420 * (1 + 0.2 * V * u[1])), 14 * (1 + (u[0] > 0 ? 0.14 : 0.35) * V * u[0])); up = petLift(bob, nh, ck, 14); c.tiltTo += 3 * V * u[2] * ck / 14; }
   const kq = (t - Math.max(c.hopAt, c.clickAt)) / 120;
   if (kq >= 0 && kq < 1) { sx *= 1 + 0.03 * (1 - kq); sy *= 1 - 0.04 * (1 - kq); }
+  const up1 = up; // (before it is held up, or bounces as it lands)
   // held: lifted a little; let go: it lands with a small bounce
   if (c.drag) up += petLifted(c);
   else { const kl = (t - c.landAt) / 450; if (kl >= 0 && kl < 1) up += 8 * Math.abs(Math.cos(kl * Math.PI * 1.5)) * (1 - kl); }
+  // (Variety: a landing goes by how far it came down — c.landH, above —: from where it touches, a rebound as high as it
+  // landed hard (a short drop: lower, a long one: higher and a little longer), a squash as it touches and a small wobble
+  // after — each landing a little its own)
+  if (V > 0 && !c.drag) {
+    const kl = (t - c.landAt) / 450;
+    if (kl >= 1 / 3 && kl < 2) {
+      const u = petPlay(c, 'land', c.landAt), S = Math.min(1.9, (1 + Math.min(1, 2.5 * V) * (petImpact(c.landH >= 0 ? c.landH / c.h : -1) - 1)) * (1 + 0.3 * V * u[0]));
+      const k2 = 1 / 3 + (kl - 1 / 3) / ((0.7 + 0.3 * S) * (1 + 0.2 * V * u[1])), tau = (t - c.landAt - 150) / 1000;
+      up = up1 + (k2 < 1 ? 8 * S * Math.abs(Math.cos(k2 * Math.PI * 1.5)) * (1 - k2) : 0);
+      if (tau < 0.16) { const q = Math.sin(Math.PI * tau / 0.16); sx *= 1 + 0.03 * S * q; sy *= 1 - 0.045 * S * q; }
+      if (tau < 0.8) c.tiltTo += 2.5 * V * u[2] * S * Math.sin(2 * Math.PI * 3 * tau) * Math.exp(-tau / 0.22);
+    }
+  }
   c.tilt += (c.tiltTo - c.tilt) * Math.min(1, dt * 14);
   c.sing = sing; c.y = y; c.up = up;
+  // (what of that lift its speech bubble goes with — petHeadNow: a click's hop, the dance's bounce, being held, the
+  // landing's rebound; not the idle bob, nor the small hop on each note: the words stay steady while it only sings)
+  c.hup = Math.max(ck, F ? F.up * c.h / 200 * dz : 0) + (up - up1);
   const cp = air && y > 0 ? 'inset(-999px -999px ' + y.toFixed(1) + 'px -999px)' : ''; // (nothing shows below its standing line)
   if (cp !== c.cp) c.el.style.clipPath = c.cp = cp;
   const px = c.fx * G.W, py = feet + y;
@@ -14185,6 +15184,7 @@ const petDrawn = c => { const p = PETS.pics.get(c.pk) || c.pic; return p && p.fa
 /* ---- where a singer stands ---- */
 const petFeet = c => PETS.G.feetY - c.alt; // its standing line (y in the window): the taskbar line, or higher up
 const petHead = c => petFeet(c) - c.h + c.box.y0 * c.h; // (the top of what's drawn)
+const petHeadAt = c => petHead(c) + (c.by || 0); // (…where its speech bubble takes it to be this frame: gone with its hop, its landing, its dance — petHeadNow)
 const petTop = c => Math.max(0, PETS.G.feetY - PETS.G.top - c.h - 14); // the highest its standing line may be (alt): the whole picture on the screen, a hop too
 const petRoom = c => PETS.G.top + c.h + 14; // …so a window's top edge above this (y in the window) is no place for it
 const petLifted = c => (c.pup ? 0 : 8); // how far a held picture is lifted (DIP); a puppet isn't: it hangs from the pointer, right where it's held
@@ -14225,7 +15225,10 @@ function petBox(c, lifted) {
   const b = c.box, r = petTurned(b, lifted ? c.flip : c.mir ? -1 : 1);
   const x = c.fx * PETS.G.W - c.w / 2 + r[0] * c.w, y = petFeet(c) - c.h + c.y - (lifted ? c.up || 0 : 0) + b.y0 * c.h;
   const cut = c.alt > 0 && c.y > 0 ? petFeet(c) : Infinity;
-  return { x, y, w: (r[1] - r[0]) * c.w, h: Math.min(y + (b.y1 - b.y0) * c.h, cut) - y };
+  // (as it shows this instant, it also reaches as far across as its head has gone — swinging while it's carried, a big
+  // step of its dance: c.tx, petHeadNow —, so a press there is still on it)
+  const ax = lifted ? c.tx || 0 : 0;
+  return { x: x + Math.min(0, ax), y, w: (r[1] - r[0]) * c.w + Math.abs(ax), h: Math.min(y + (b.y1 - b.y0) * c.h, cut) - y };
 }
 /* From now on it stands on a window's top edge (L: the part of it under x): from where it is it drops onto it, as
    onto the taskbar — or, let go a little under it, steps up onto it (c.ride: petMove). */
@@ -14294,6 +15297,7 @@ function petMove(t, dt) {
     if (c.fall) {
       const y0 = G.feetY - c.alt; // (its standing line before this frame's step)
       c.fall.v += PETL.fall * dt;
+      if (PETV > 0) c.fall.v += 0.15 * PETV * petPlay(c, 'fall', c.fall.t0 || (c.fall.t0 = t))[0] * PETL.fall * dt; // (Variety: this fall a little faster or slower than the last)
       c.alt -= c.fall.v * dt;
       // (gravity: it lands on the first window edge under it that its standing line reaches or passes in this step —
       // petFallOnto; lx: where it can stand, as one standing on an edge is kept on the screen — with a drop's bounce, as
@@ -14320,7 +15324,7 @@ function petMove(t, dt) {
     act.forEach((m, i) => {
       const d = to[i] - m.x;
       if (Math.abs(d) < 0.25) return; // (there near enough: it stands)
-      m.x += Math.sign(d) * Math.min(Math.abs(d), PETL.glide * dt);
+      m.x += Math.sign(d) * Math.min(Math.abs(d), PETL.glide * petGlideBy(m.c, t) * dt);
       if (m.c.on) m.c.on.off = m.x - m.L.wx; else m.c.fx = m.x / W;
       glid.add(m.c);
     });
@@ -14356,9 +15360,15 @@ function petMove(t, dt) {
    under it is free — which it is only once a bubble fading out there has gone (petStack) —, never passing
    another on the way. It goes along with a singer that is dragged, rides a window or comes down — at once, as
    far as its place moves with them (petWith): only making room is a glide. A new one
-   never draws over one fading out (petGate): it waits until that one has gone (quickly, 0.1 s), then fades in. */
+   never draws over one fading out (petGate): it waits until that one has gone (quickly, 0.1 s), then fades in.
+   And it goes with its singers' heads (1.0.13: petHeadNow, petHeadAt): a hop, a landing's dip, a jump in a dance, a
+   swing while it's carried take it along — as far as the head goes past a breath or a sway (petGoes), in the same
+   frame (that, too, is its singers' own move: petWith) —, its tail on the head all the while; a bubble that one of
+   those pushes up goes with it at once as well (gu, gd). Kept on the screen and clear of the others as ever: it is
+   only its lowest place — just over its singers — that moves. */
 function petBubbles(now, t, dt, sc) {
   const G = PETS.G, W = G.W, act = [];
+  for (const c of PETS.chars.values()) if (c.fx != null && petVis(c)) petHeadNow(c, t); // (where everyone's head is this frame: the bubbles go with them, and the mouse rectangles)
   if (sc) {
     const cast = PETS.cast.filter(g => petVis(PETS.chars.get(g.key)));
     for (const b of petActive(cast, PETS.sc, now)) act.push({ id: b.who.map(g => g.key).join('+') + '@' + b.L.s.toFixed(3) + '#' + b.L.t, b, who: b.who.map(g => PETS.chars.get(g.key)) });
@@ -14369,7 +15379,7 @@ function petBubbles(now, t, dt, sc) {
   let items = act.filter(it => !PETS.yielded.has(it.id));
   for (const B of PETS.bubs.values()) B.live = false;
   const base = Math.round(20 * G.txt * (PETS.small ? 0.85 : 1)), maxW = Math.min(460, 0.3 * W);
-  const cxOf = it => it.who.reduce((a, c) => a + c.fx * W, 0) / it.who.length;
+  const cxOf = it => it.who.reduce((a, c) => a + c.fx * W + (c.bx || 0), 0) / it.who.length; // (c.bx: with a singer far to the side of where it stands — petHeadNow)
   for (const it of items) {
     let B = PETS.bubs.get(it.id);
     if (!B) PETS.bubs.set(it.id, (B = petBub(it)));
@@ -14403,11 +15413,16 @@ function petBubbles(now, t, dt, sc) {
   }
   if (items.length) {
     const placed = []; // (the bubbles of the lines below, where they're put)
+    // (gu, gd: how far any singer's head so far — on this line or one below — went up, or down, since the last frame, at
+    // the most: a bubble that another pushes up as that one goes with its singer's hop goes with it at once too, rather
+    // than glide after it and lie on it meanwhile)
+    let gu = 0, gd = 0;
     // (the ones fading out where they were: a bubble that shows stays above them until they've gone — petStack)
     const fading = [...PETS.bubs.values()].filter(B => !B.live && B.da > 0.001).map(B => ({ x: B.x, y: B.y, w: B.w, h: B.h, soft: true }));
     for (const its of lines(items)) {
       // (where each one's singers are now: their middle, and just over their heads — as low as the bubble may be)
-      const at = its.map(it => ({ cx: cxOf(it), low: Math.min(...it.who.map(petHead)) - 18 }));
+      const at = its.map(it => ({ cx: cxOf(it), low: Math.min(...it.who.map(petHeadAt)) - 18 })); // (petHeadAt: where their heads are this frame — up with a hop, down with a landing)
+      its.forEach((it, i) => { const s = it.B.shown && it.B.low != null ? at[i].low - it.B.low : 0; if (s < gu) gu = s; if (s > gd) gd = s; });
       // (bottom: as low as a bubble may be, just over its singers' heads; ty: where it was put last frame — none: a new one)
       const L = petLay(its.map((it, i) => ({ cx: at[i].cx, w: it.B.w, h: it.B.h, tips: it.who.map(c => c.fx * W), bottom: at[i].low,
         y: it.B.ty == null ? null : it.B.y, shown: !!it.B.shown })), W, placed.concat(fading));
@@ -14420,12 +15435,12 @@ function petBubbles(now, t, dt, sc) {
         const k = B.shown ? Math.min(1, dt * 16) : 1; // (one that shows glides: up a row or aside to make room, back down once the room under it is free)
         // (…but where its singers went since the last frame, it goes with them at once — on a window that's being dragged,
         // carried, coming down: a bubble gliding there would trail behind them on a stretched tail: petWith)
-        if (B.shown && B.ty != null && B.tx != null) { B.x += petWith(at[i].cx - B.cx, L.x[i] - B.tx); B.y += petWith(at[i].low - B.low, y - B.ty); }
+        if (B.shown && B.ty != null && B.tx != null) { B.x += petWith(at[i].cx - B.cx, L.x[i] - B.tx); B.y += petWith(y < B.ty ? gu : gd, y - B.ty); } // (gu, gd: its own singers' move, or that of the ones whose bubble pushes it)
         B.tx = L.x[i]; B.cx = at[i].cx; B.low = at[i].low;
         B.ty = y;
         B.x += (L.x[i] - B.x) * k;
         B.y += (y - B.y) * k;
-        B.tips = it.who.map(c => ({ x: c.fx * W, y: petHead(c) - 8 }));
+        B.tips = it.who.map(c => ({ x: c.fx * W + (c.tx || 0), y: petHeadAt(c) - 8 })); // (the tail's tip: on the head, where that is this frame)
         placed.push({ x: L.x[i], y, w: B.w, h: B.h });
       });
     }
@@ -14468,6 +15483,33 @@ function petBubbles(now, t, dt, sc) {
     const d = petBubblePath(B.x, B.y, B.w, B.h, PETL.round, B.tips, PETL.tail);
     if (d !== B.d) B.path.setAttribute('d', (B.d = d));
   }
+}
+/* Where a singer's head is this frame, from where it is when it stands still (1.0.13): what its speech bubble goes
+   with (petBubbles) and what the mouse makes room for (petRects, petBox). Worked out once a frame for everyone on
+   screen, from what was just drawn — nothing is posed again:
+   · a puppet: its pose says where its head is (pose.hx, hy — petsheet.js: the middle of the top of the head, from its
+     feet), against its standing pose's — at half speed, the pose it shows;
+   · a plain picture: a click's hop, its dance's bounce, being held and its landing (c.hup: petAnim — not the idle
+     bob, nor the small hop and squash on each note) and how far its tilt takes its head across.
+   → on the singer, all DIP: hdx, hdy — how far the head is from there (across to the right; down — a hop is hdy < 0)
+   · by — how far its bubble and the tail's tip go up or down with it, tx — the tail's tip across, bx — the bubble
+   itself across (petGoes with PETB's shares of its height: nothing for a breath, a sway, a nod — downwards the
+   head may go further before the bubble does —; the bubble itself only for a singer far to the side) · ru, rl, rr — the room its mouse rectangle keeps for it upwards, to the left
+   and to the right: the most in the last PETB.hold ms, in steps of 4 DIP, so the rectangle is not a new one in every
+   frame of a hop (ra: until when). */
+function petHeadNow(c, t) {
+  const u = c.pup, p = u && !u.bad ? u.pose : null, h = c.h;
+  let dx = 0, dy = 0;
+  if (p && Number.isFinite(p.hx) && Number.isFinite(p.hy)) {
+    const S = c.pic.sheet, P0 = PetSheet.still(S), K = h / S.tall;
+    if (P0 && Number.isFinite(P0.hx) && Number.isFinite(P0.hy)) { dx = (p.hx - p.flip * P0.hx) * K; dy = (p.hy - P0.hy) * K; }
+  } else if (!u) { dx = h * (1 - c.box.y0) * Math.sin(c.tilt * Math.PI / 180); dy = -(c.hup || 0); }
+  c.hdx = dx; c.hdy = dy;
+  c.bx = petGoes(dx, PETB.boxX * h, PETB.boxS * h); c.tx = petGoes(dx, PETB.tailX * h, PETB.tailS * h); c.by = petGoes(dy, (dy > 0 ? PETB.down : PETB.still) * h, PETB.soft * h);
+  const up = Math.ceil(Math.max(0, -dy) / 4) * 4, lf = Math.ceil(Math.max(0, -c.tx) / 4) * 4, rt = Math.ceil(Math.max(0, c.tx) / 4) * 4;
+  if (!(t < c.ra)) c.ru = c.rl = c.rr = 0;
+  // (more room than it had: the rectangles go out as often as main looks at the mouse for a moment — PETS.rideAt, petRects — so main's is never far behind a hop)
+  if (up > c.ru || lf > c.rl || rt > c.rr) { c.ru = Math.max(c.ru, up); c.rl = Math.max(c.rl, lf); c.rr = Math.max(c.rr, rt); c.ra = t + PETB.hold; if (c.ru > petHop() || c.rl || c.rr) PETS.rideAt = t; }
 }
 function petBub(it) {
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'), txt = document.createElement('div');
@@ -14544,9 +15586,12 @@ function petRects(t) {
   const r = [], cap = PETS.cfg ? 128 : 8;
   for (const c of PETS.chars.values()) {
     if (!petVis(c) || c.fx == null || r.length >= cap) continue;
-    const g = petGrab(petBox(c), c.vx, c.vy, petHop());
+    // (…with the room its hop, its dance's jump or its swing took in the last moment — up, and across: petHeadNow)
+    const b = petBox(c), wide = (c.rl || 0) + (c.rr || 0);
+    const g = petGrab(wide ? { x: b.x - (c.rl || 0), y: b.y, w: b.w + wide, h: b.h } : b, c.vx, c.vy, Math.max(petHop(), c.ru || 0));
     if (g) r.push(g);
   }
+  petMenuRects(r); // (Idle mode: while a list of songs is open the whole window takes the mouse — a click anywhere else closes it)
   const sig = JSON.stringify(r);
   if (sig === PETS.rectSig) return;
   PETS.rectSig = sig; PETS.rectAt = t;
@@ -14556,6 +15601,7 @@ function petRects(t) {
 /* A press anywhere in the window (main only lets the mouse in over a singer): whose it is goes by where the
    singers are drawn, not by which picture happens to lie on top (petPick). One singer is held at a time. */
 function petDown(e) {
+  if (petMenuPress(e)) return; // (Idle mode: a press on an open list of songs is the list's; one anywhere else closes it)
   if (e.button !== 0) return;
   const h = PETS.held;
   if (h && h.drag && h.drag.id !== e.pointerId) return; // (another finger meanwhile: it holds the one)
@@ -14678,7 +15724,333 @@ function petLetGo(c, click) {
     c.clickAt = t;
     const name = PETS.song || (currentProject && currentProject.name) || '';
     if (name) c.say = { text: '♪ ' + name, until: t + 2000 };
+    petIdleTap(c); // (Idle mode, no song playing: its list of songs opens)
   }
+}
+/* ---- Idle mode (1.0.13) ----
+   Background mode → Desktop pet → Idle mode: the pets the user chose (the settings' idlePets, while idle is on) stay on
+   the taskbar with no song. They are singers on the strip like any (PETS.chars, by their singer's key), kept through
+   every song and after it (petIdleKeeps: petGroup and petBye let them be, petSync brings them on, petFrame shows them
+   at once) — so they stand where they stood, can be dragged, stand on windows, fall and hop as ever, and sing their
+   own lines when a song they are in plays.
+   What goes on is one of four states (PETID.st; petIdleStep says what leads where, and petIdleDo does it):
+   'play' — background mode as ever: this window was opened to play the playlist, or the playlist was started while
+     the pets were idle. When it stops, the chosen pets stay, idle — with none chosen the window closes, as always.
+   'idle' — nothing is loaded and nothing plays. A click on a pet (petLetGo → petIdleTap) opens its list of songs
+     (petMenuOpen): the songs it is part of, out of the index of the saved projects' scores (PETIX). While the list is
+     open the whole window takes the mouse (petMenuRects), so a click anywhere else closes it; so does Esc (main takes
+     the key meanwhile: mapApp.petMenu), and so does leaving it alone for PETI.menuMs.
+   'song' — the song that was picked loads and plays as a desktop-pet song does (bgmPlay, petSong): its other singers
+     with a picture come on and sing their lines. It is one song (BGM.one): when it ends, fails or is stopped, bgmStop
+     hands over to petIdleEnd, and the pets are idle again (petIdleRest) — the singers who aren't chosen leave.
+   'off' — Idle mode went off, or nobody can be shown, while nothing played: the window closes.
+   main hears how things stand with every word about what plays (petIdlePost → cover:state { idle }), and says
+   'idle' (Stop while something plays) and 'list' (Start background mode) through cover:msg (petIdleCmd).
+   PETID: st, menu — as petIdleStep has them · heard: the settings have come once · shown: main was told the pets are
+   idle (it shows the window then) · why: what bgmStop is being called for ('stop'; none: it ended) · halting: bgmStop
+   is only clearing the way for the playlist · shut: the pet whose list the press now going on closed (its click
+   doesn't open it again) · log: for tests — called with every step. */
+const PETID = { st: 'play', menu: '', heard: false, shown: false, why: '', halting: false, shut: '', log: null };
+/* This singer is one of the chosen pets (its own pet: a second pet of a singer with two lines at once comes and goes
+   with the songs). */
+const petIdleKeeps = c => PETS.idle.size > 0 && c.key === c.pk && PETS.idle.has(c.key);
+/* One of the chosen pets as a singer on the strip, when no song's cast has it: { key, label }; null: not chosen. */
+const petIdleG = key => (PETS.idle.has(key) ? { key, label: PETS.idleNames.get(key) || key.replace(/^[a-z]+:/, '') } : null);
+/* Idle mode is on and somebody can be shown: a chosen pet that has a picture, or whose picture hasn't been looked at yet. */
+function petIdleAble() {
+  for (const k of PETS.idle) if (!PETS.pics.has(k) || PETS.pics.get(k)) return true;
+  return false;
+}
+/* One step: what happened (ev: see petIdleStep; whether Idle mode is on is added here), the state that follows, and
+   what there is to do for it. → the step. */
+function petIdleDo(ev) {
+  const was = PETID.st, r = petIdleStep(PETID, { ...ev, on: petIdleAble() });
+  PETID.st = r.st; PETID.menu = r.menu;
+  for (const a of r.do) {
+    if (a === 'menu') petMenuOpen(PETS.chars.get(r.menu));
+    else if (a === 'shut') petMenuShut();
+    else if (a === 'sing') petIdleSing(ev.id, ev.key);
+    else if (a === 'rest') petIdleRest();
+    else if (a === 'list') petIdlePlaylist();
+    else if (a === 'halt') petIdleHalt();
+    else if (a === 'close') setTimeout(() => { if (PETID.st === 'off') mapApp.cover(false).catch(() => {}); }, 600); // (once they have sunk away; Idle mode switched on again meanwhile: they stay)
+  }
+  if (PETID.log) PETID.log(was, ev, r);
+  return r;
+}
+/* This page was opened for Idle mode (main: ?overlay=pet&idle=1), not to play the playlist: it starts idle, and the
+   chosen pets come on once main has said who they are (petIdleCfg). → whether it was. */
+function petIdleBorn() {
+  if (!/[?&]idle=1(&|$)/.test(location.search)) return false;
+  PETID.st = 'idle';
+  return true;
+}
+/* What the pet page hears for Idle mode besides its settings: Esc while a list of songs is open (main: { menu: false }),
+   and the index of songs written by the main window (a project saved or deleted there: an open list follows). */
+function petIdlePage() {
+  mapApp.onPet(m => { if (m && m.menu === false) petIdleDo({ t: 'shut' }); });
+  addEventListener('storage', e => { if (e.key === PETIX.key) petMenuFill(); });
+}
+/* The settings as main has them (petCfgNow: as the page loads and whenever one changes): who stays on the screen. One
+   taken off the list leaves — unless it sings in the song that plays: then it leaves with that song's singers. The
+   new ones' pictures are asked for (they come on as those arrive: petSync), and then the state follows — the list of a
+   pet that is no longer chosen closes, an idle window with nobody left closes, and main hears that the pets are idle. */
+function petIdleCfg(c) {
+  const want = new Set(c && c.idle === true && Array.isArray(c.idlePets) ? c.idlePets.filter(k => typeof k === 'string' && k).slice(0, PETI.max) : []);
+  const was = PETS.idle, t = performance.now(), fresh = [...want].filter(k => !was.has(k)), able = petIdleAble();
+  if (PETID.heard && !fresh.length && want.size === was.size) return; // (nothing about Idle mode changed)
+  PETID.heard = true;
+  PETS.idle = want;
+  for (const k of was) if (!want.has(k)) { const o = PETS.chars.get(k); if (o && o.key === o.pk && !PETS.cast.some(g => g.key === k)) petLeave(o, t); }
+  const told = () => {
+    petIdleDo({ t: 'cfg', keeps: k => PETS.idle.has(k) });
+    if (PETID.st === 'idle') petIdleSay();
+    else if (PETID.st !== 'off' && BGM.on && petIdleAble() !== able) bgmUI(); // (what plays, told again: main goes by whether the pets will stay when it stops)
+  };
+  if (fresh.length) petIdlePics(fresh).then(told, told); else told();
+}
+/* The chosen pets' pictures and names from the app (as a cast's are asked for: petPics), each looked at once; the
+   strip follows (petTake → petSync: a chosen pet with a picture comes on). */
+async function petIdlePics(keys) {
+  let r = null;
+  try { r = await mapApp.petPics(keys.map(key => ({ key, label: '', eng: '' }))); } catch (e) {}
+  if (!Array.isArray(r)) { for (const k of keys) if (!PETS.pics.has(k)) PETS.pics.set(k, null); return; } // (the app couldn't say: nobody to show for them — never an idle window that waits for pictures for ever)
+  for (const p of r) if (p && typeof p.key === 'string' && typeof p.label === 'string' && p.label) PETS.idleNames.set(p.key, p.label);
+  await Promise.all(r.map(p => petTake(p, true)));
+}
+/* main is told that the pets are idle: it shows the window if it isn't shown yet (never before the chosen pets'
+   pictures have been looked at), gives the main window its player back, and takes only the two keys that are the
+   pets'. The index of songs is brought up to date meanwhile, so the first click finds it ready. */
+function petIdleSay() {
+  PETID.shown = true;
+  try { coverPost({ idle: 'idle' }); } catch (e) {}
+  petIdxSoon();
+}
+/* What this window tells main about what plays (coverPost: every word goes through here), with how Idle mode stands
+   — idle: 'idle' nothing plays, the chosen pets stand there · 'song' the one song a pet was asked for (no "1 / 1") ·
+   'list' the playlist, and the pets will be idle when it stops · not said: background mode as ever. */
+function petIdlePost(s) {
+  if (s.idle) return s;
+  if (PETID.st === 'song') return { ...s, idle: 'song', n: 0 };
+  return PETID.st === 'play' && petIdleAble() ? { ...s, idle: 'list' } : s;
+}
+/* A click on a singer (petLetGo, after its hop). While the pets are idle: its list of songs opens — or closes, when
+   the press that is now a click was what closed it. While anything plays this is nothing: the click is the hop and the
+   song's name it always was. */
+function petIdleTap(c) {
+  if (PETID.st !== 'idle') return;
+  const again = PETID.shut === c.key;
+  PETID.shut = '';
+  if (!again) petIdleDo({ t: 'tap', key: c.key, idle: petIdleKeeps(c) });
+}
+/* main's word to this window about Idle mode (cover:msg { cmd }): 'idle' — the user stopped what plays, and the pets
+   are to be idle again (with Idle mode off meanwhile, the window closes as a stop always closed it: bgmStop) ·
+   'list' — Start background mode: the playlist plays here. → whether it was one of these. */
+function petIdleCmd(cmd) {
+  if (cmd === 'idle') { if (BGM.on) { PETID.why = 'stop'; bgmStop(); } else petIdleDo({ t: 'stop' }); return true; }
+  if (cmd === 'list') { petIdleDo({ t: 'list' }); return true; }
+  return false;
+}
+/* Background mode has stopped in this window (bgmStop: the playlist is over, the one song is, it couldn't be played,
+   or the user stopped it). → true: the pets are idle now, and the window stays; false: it closes, as it always has. */
+function petIdleEnd() {
+  const why = PETID.why || 'ended';
+  PETID.why = '';
+  if (PETID.halting) return true; // (only clearing the way: the playlist starts next — petIdleHalt)
+  return petIdleDo({ t: why }).st !== 'off';
+}
+/* The song a pet was asked for (id: its project; key: the pet): loaded and played as background mode plays a song —
+   bgmPlay: the project, then petSong for its singers and their pictures, then it starts —, but it is the only one
+   (BGM.one: bgmNext ends background mode after it, bgmUI says so). This device's settings are read again first (this
+   window may have stood idle for days, and Speaker delay or the audio engine may have been changed since). */
+function petIdleSing(id, key) {
+  PETS.ask = key || '';
+  try { loadPrefs(); } catch (e) {}
+  try {
+    Object.assign(BGM, { on: true, one: true, fails: 0, order: [id], i: 0, ended: 0, note: '' });
+    syncCapCss();
+    document.body.classList.add('bgm', 'bgm-visual');
+    bgmPlay(0).catch(() => { if (BGM.on) bgmStop(); });
+  } catch (e) { BGM.on = false; BGM.one = false; petIdleDo({ t: 'fail' }); }
+}
+/* Back to idle (and idle for the first time, in a window that played first): nothing stays loaded — a song still
+   loading stops at its next step —, the song's singers who aren't chosen leave as they do when a song changes, and the
+   chosen pets stay where they stand (one that isn't on, its picture known, comes on). */
+function petIdleRest() {
+  const t = performance.now();
+  BGM.one = false; BGM.busy = false; PETS.ask = ''; // (busy: a load that was stopped never says it is over — its turn has passed)
+  try { projGen++; clearMixer(); document.body.classList.remove('bgm', 'bgm-visual'); } catch (e) {}
+  Object.assign(PETS, { songId: null, svp: null, raw: [], cast: [], sc: null, map: null, song: '', ready: false, started: false, next: null });
+  petTimes();
+  for (const c of [...PETS.chars.values()]) if (!petIdleKeeps(c)) petLeave(c, t);
+  for (const k of PETS.idle) petSync(k);
+  petIdleSay();
+}
+/* Start background mode while the pets are idle: the playlist plays here, as it does in a window opened for it
+   (bgmStart) — with the playlist and this device's settings as they are kept now, not as they were when this window
+   opened. Nothing to play: idle again. */
+function petIdlePlaylist() {
+  PETS.ask = ''; BGM.one = false;
+  try { const p = JSON.parse(localStorage.getItem(PL_KEY) || '{}'); if (p && typeof p === 'object' && Array.isArray(p.ids)) Object.assign(PL, p); } catch (e) {}
+  try { loadPrefs(); } catch (e) {}
+  const fail = () => petIdleDo({ t: 'fail' });
+  Promise.resolve().then(() => bgmStart()).then(ok => { if (!ok) fail(); }, fail);
+}
+/* The song that plays stops without anybody leaving and without the window closing: the playlist is about to start. */
+function petIdleHalt() {
+  PETID.halting = true;
+  try { bgmStop(); } catch (e) {}
+  PETID.halting = false;
+  BGM.one = false;
+}
+/* Each frame (petFrame): an open list of songs stays by its pet — over its head, or beside it where there is no room
+   above (a pet standing high up, the strip along the bottom of the screen) —, and closes once nobody has touched it
+   for PETI.menuMs or its pet has gone. And idle pets whose pictures have all gone are nobody to show: the window closes. */
+function petIdleFrame(t) {
+  const M = PETS.menu, c = M && PETS.chars.get(M.key);
+  if (M && (!c || !petVis(c) || c.fx == null || t - M.seen > PETI.menuMs)) petIdleDo({ t: 'shut' });
+  else if (M) {
+    const G = PETS.G, W = G.W, w = M.w, h = M.h, head = petHead(c), pad = 8, b = petBox(c);
+    let x = c.fx * W - w / 2, y = head - h - 14;
+    if (y < G.top + pad) { x = b.x + b.w + 12 + w <= W - pad ? b.x + b.w + 12 : b.x - 12 - w; y = Math.max(G.top + pad, Math.min(G.H - h - pad, head)); }
+    x = Math.max(pad, Math.min(W - w - pad, x));
+    const tf = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px)';
+    if (tf !== M.tf) { M.el.style.transform = M.tf = tf; M.el.style.visibility = ''; }
+  }
+  if (PETID.st === 'idle' && PETID.shown && !petIdleAble()) petIdleDo({ t: 'cfg' });
+}
+/* ---- Idle mode: a pet's list of songs ---- */
+/* It opens by that pet (placed from the next frame on: petIdleFrame), filled from the index as it is kept — which is
+   brought up to date meanwhile, the list following as each score is read. main is told: Esc closes it. */
+function petMenuOpen(c) {
+  petMenuShut();
+  if (!c) { PETID.menu = ''; return; }
+  const el = document.createElement('div');
+  el.className = 'pet-menu';
+  el.setAttribute('role', 'menu');
+  el.style.visibility = 'hidden'; // (until it has its place)
+  el.addEventListener('pointermove', () => { if (PETS.menu) PETS.menu.seen = performance.now(); }); // (in use: it stays)
+  PETS.layer.appendChild(el);
+  PETS.menu = { key: c.key, el, seen: performance.now(), sig: null, w: 0, h: 0, tf: '' };
+  petMenuFill();
+  petIdxRefresh();
+  PETS.rectAt = 0; // (main lets the mouse in from the very next frame: petRects)
+  try { if (mapApp.petMenu) mapApp.petMenu(true).catch(() => {}); } catch (e) {}
+}
+function petMenuShut() {
+  const M = PETS.menu;
+  if (!M) return;
+  PETS.menu = null;
+  M.el.remove();
+  PETS.rectAt = 0;
+  try { if (mapApp.petMenu) mapApp.petMenu(false).catch(() => {}); } catch (e) {}
+}
+/* What the open list says: the pet's name, then a button for each song it is part of — the playlist's songs first,
+   then the other saved projects (petSongsFor) —, or, plainly, that it is in none; while scores are still being read,
+   that too. Drawn again only when it would say something else. */
+function petMenuFill() {
+  const M = PETS.menu;
+  if (!M) return;
+  const c = PETS.chars.get(M.key), name = (c && c.label) || PETS.idleNames.get(M.key) || 'This pet';
+  const list = petSongsFor(petIdxLoad(), M.key, petPlIds()), busy = PETIX.left > 0 || !PETIX.sure; // (scores still to read — or, the first time, the projects not even listed yet)
+  const sig = JSON.stringify([name, busy, list.map(s => [s.id, s.name])]);
+  if (sig === M.sig) return;
+  M.sig = sig;
+  const mk = (tag, cls, text) => { const e = document.createElement(tag); e.className = cls; e.textContent = text; return e; };
+  const items = [mk('div', 'pm-h', list.length ? name + ' can sing:' : name)];
+  for (const s of list) {
+    const b = mk('button', 'pm-song', '♪ ' + (s.name || 'A song'));
+    b.type = 'button';
+    b.setAttribute('role', 'menuitem');
+    b.onclick = () => petIdleDo({ t: 'pick', id: s.id, key: M.key });
+    items.push(b);
+  }
+  if (!list.length) items.push(mk('div', 'pm-none', busy ? 'Looking at your songs…' : 'It is in none of your songs yet. It can sing the songs in your playlist and your saved projects whose score has it.'));
+  else if (busy) items.push(mk('div', 'pm-none', 'Looking for more…'));
+  M.el.replaceChildren(...items);
+  M.songs = list; M.w = M.el.offsetWidth; M.h = M.el.offsetHeight; M.tf = '';
+}
+/* A press anywhere in the window while a list of songs is open (petDown asks first): on the list — it is the list's
+   own, and its button is clicked; anywhere else — the list closes, and the press goes on to whatever it is on (a pet
+   can be picked up straight away; a click on the list's own pet only closes the list: petIdleTap). → the press was
+   the list's. */
+function petMenuPress(e) {
+  PETID.shut = '';
+  const M = PETS.menu;
+  if (!M) return false;
+  if (e.target && typeof M.el.contains === 'function' && M.el.contains(e.target)) { M.seen = performance.now(); return true; }
+  PETID.shut = M.key;
+  petIdleDo({ t: 'shut' });
+  return false;
+}
+/* The rectangles main lets the mouse in over (petRects): with a list of songs open, the whole window — so a click
+   anywhere else comes here, and closes it. */
+function petMenuRects(r) {
+  if (PETS.menu) { r.length = 0; r.push({ x: 0, y: 0, w: PETS.G.W, h: PETS.G.H }); }
+  return r;
+}
+/* ---- Idle mode: the songs each singer is part of ----
+   An index of the saved projects' scores — per project its score's files, its name and the keys of its singers
+   (petIdxPlan, petIdxPut) — kept with the app's data (localStorage, which the main window and the pet window share:
+   'map-pet.songs'), so a score is read once, not at every click: reading every saved project's score takes a while.
+   Brought up to date in the background (petIdxRefresh) — in the main window whenever the projects change while Idle
+   mode is on and as its Settings show, in the pet window as the pets go idle and each time a list opens: the projects
+   are listed, and only a project that is new, or saved with another score, is read (petSongRead: the reading
+   Characters… and Start share). A score that can't be read is looked at again next time, as petSongRead keeps it.
+   PETIX: job — a run under way (one at a time; again: the projects changed meanwhile, so it looks once more) ·
+   left — how many scores it still has to read · sure — this window has listed the projects at least once (until then
+   an empty answer is "still looking", not "none") · subs — called when the index may have changed (the Settings
+   list) · timer: petIdxSoon's. */
+const PETIX = { key: 'map-pet.songs', job: null, again: false, left: 0, sure: false, timer: 0, subs: [] };
+function petIdxLoad() {
+  let j = null;
+  try { j = JSON.parse(localStorage.getItem(PETIX.key) || 'null'); } catch (e) {}
+  return petIdxClean(j);
+}
+function petIdxSave(idx) { try { const s = JSON.stringify(idx); if (localStorage.getItem(PETIX.key) !== s) localStorage.setItem(PETIX.key, s); } catch (e) {} } // (only when it says something new: the other window hears every write)
+/* The playlist as it is kept now (this window's own copy may be days old). */
+function petPlIds() {
+  try { const p = JSON.parse(localStorage.getItem('map-playlist') || '{}'); return p && Array.isArray(p.ids) ? p.ids.filter(x => typeof x === 'string') : []; } catch (e) { return []; }
+}
+function petIdxTold() {
+  petMenuFill();
+  for (const f of PETIX.subs) try { f(); } catch (e) {}
+}
+/* → once the index is up to date (never rejects). */
+function petIdxRefresh() {
+  if (PETIX.job) { PETIX.again = true; return PETIX.job; }
+  const run = async () => {
+    do {
+      PETIX.again = false;
+      let ps = null;
+      try { ps = await listProjects(); } catch (e) {}
+      if (!Array.isArray(ps)) { PETIX.sure = true; return; } // (the store can't be read just now: what is kept stands)
+      const plan = petIdxPlan(petIdxLoad(), ps), idx = plan.idx, by = new Map(ps.map(p => [p.id, p]));
+      petIdxSave(idx);
+      PETIX.sure = true; PETIX.left = plan.read.length;
+      petIdxTold(); // (what is known so far — and that more is being looked at)
+      for (const id of plan.read) {
+        let s = null;
+        try { s = await petSongRead(id, () => {}); } catch (e) {}
+        PETIX.left--;
+        if (s && s.why !== 'bad') { petIdxPut(idx, id, petIdxSig(by.get(id)), s.name, s.cast); petIdxSave(petIdxPlan(idx, ps).idx); } // (kept in the projects' order, as the next look will have it: nothing to write then)
+        petIdxTold();
+        await new Promise(r => setTimeout(r, 20)); // (a breath between two scores: the pets go on moving)
+      }
+    } while (PETIX.again);
+  };
+  const job = PETIX.job = run().catch(() => {}).then(() => { if (PETIX.job === job) PETIX.job = null; PETIX.left = 0; petIdxTold(); });
+  return job;
+}
+/* …a moment later, so a burst of changes is one look. */
+function petIdxSoon() {
+  clearTimeout(PETIX.timer);
+  PETIX.timer = setTimeout(() => { petIdxRefresh(); }, 800);
+}
+/* Idle mode, for tests (window.__pet.idle): the state, who is chosen, and the open list of songs. */
+function petIdleSnap() {
+  const M = PETS.menu;
+  return { state: PETID.st, pets: [...PETS.idle], asked: PETS.ask, menu: M ? { key: M.key, songs: (M.songs || []).map(s => ({ id: s.id, name: s.name })) } : null };
 }
 /* What's on the strip now, for tests (window.__pet): a plain copy. Places in the window's DIP; alt: how far its
    standing line is above the taskbar line, on: the window it stands on (its id), jumping: it is on its jump up to its
@@ -14710,6 +16082,7 @@ function petSnapshot() {
     bubbles: [...PETS.bubs.values()].filter(B => B.live).map(B => ({ text: B.text, line: B.line, singers: B.who.map(c => c.key), labels: B.who.map(c => c.label),
       rect: { x: B.x, y: B.y, w: B.w, h: B.h }, alpha: B.a, tails: B.tips.length, say: B.say })),
     fading: [...PETS.bubs.values()].filter(B => !B.live).map(B => ({ text: B.text, singers: B.who.map(c => c.key), rect: { x: B.x, y: B.y, w: B.w, h: B.h } })),
+    idle: petIdleSnap(), // (Idle mode: its state, who is chosen, the open list of songs)
     geom: G, cfg: PETS.cfg, pets: petMode(), puppets: PETS.sh, ledges: PETS.ledges, song: { id: PETS.songId, name: PETS.song, i: BGM.i }, time: PETS.now, playing: PETS.playing, small: PETS.small,
   }));
 }
@@ -14732,10 +16105,17 @@ async function petCfgUI() {
   let c = null;
   try { c = await mapApp.petCfgGet(); } catch (e) {}
   if (!c) return;
+  petIdleUI(c); // (Idle mode: its switch, and who stays on the screen)
   $('petSize').value = c.size;
   $('petLift').value = Math.round(c.lift * 100);
   $('petLiftTxt').textContent = Math.round(c.lift * 100) + '%';
   paintRange($('petLift'));
+  // (Variety — how much each play of a pet's animations differs from the last: offered by an app that keeps it)
+  const vary = Number.isFinite(c.vary);
+  $('petVary').value = Math.round(petVaryCfg(c) * 100);
+  $('petVaryTxt').textContent = $('petVary').value + '%';
+  paintRange($('petVary'));
+  $('petVaryRow').hidden = $('petVaryHint').hidden = !vary;
   // (an app from before pets could leave the taskbar says nothing about these two: they aren't offered)
   const can = typeof c.free === 'boolean' && typeof c.windows === 'boolean';
   $('petFree').checked = can && c.free;
@@ -14752,8 +16132,9 @@ async function petCfgUI() {
   for (const id of ['petPetsRow', 'petPetsHint']) $(id).hidden = !more;
   // (dancing, and how a pet sheet's puppet is carried and its face: offered by an app that keeps them — the dance where
   // this page can work one out, the carrying where a pet sheet can be shown at all; How lively only while they dance)
-  petDanceCan = typeof c.dance === 'boolean' && ['gentle', 'lively'].includes(c.danceSize) && !!window.PetSong && !!window.PetDance;
-  $('petDance').checked = petDanceCan && c.dance;
+  // (three choices since 1.0.13 — Off, My own dances, Made for me —, as the app keeps them: dances)
+  petDanceCan = PETDANCES.includes(c.dances) && ['gentle', 'lively'].includes(c.danceSize) && !!window.PetSong && !!window.PetDance;
+  $('petDance').value = petDanceCan ? c.dances : 'off';
   $('petDanceSize').value = petDanceCan ? c.danceSize : 'lively';
   petDanceUI();
   const carry = CAN_SHEET && ['hand', 'doll'].includes(c.carry) && typeof c.scared === 'boolean';
@@ -14771,11 +16152,11 @@ function petFreeUI(can) {
   $('petWinRow').hidden = $('petWinHint').hidden = !(can && $('petFree').checked);
   $('petGravRow').hidden = $('petGravHint').hidden = !(can && petGravCan && $('petFree').checked);
 }
-/* "How lively" is only offered while the pets dance. */
+/* "How lively" is only offered for the automatic dance (Made for me). */
 let petDanceCan = false; // (the app keeps the dance settings, and this page can work out a dance: petCfgUI)
 function petDanceUI() {
   $('petDanceRow').hidden = $('petDanceHint').hidden = !petDanceCan;
-  $('petDanceSizeRow').hidden = $('petDanceSizeHint').hidden = !(petDanceCan && $('petDance').checked);
+  $('petDanceSizeRow').hidden = $('petDanceSizeHint').hidden = !(petDanceCan && $('petDance').value === 'auto');
 }
 let petCfgBusy = null, petCfgNext = null;
 function petCfgSet(c) { // (one at a time; the slider's newest value wins — it moves the pets live)
@@ -14790,14 +16171,121 @@ function petCfgSet(c) { // (one at a time; the slider's newest value wins — it
 $('petSize').onchange = e => petCfgSet({ size: e.target.value });
 $('petLift').oninput = e => { $('petLiftTxt').textContent = e.target.value + '%'; petCfgSet({ lift: e.target.value / 100 }); };
 $('petLift').ondblclick = e => { e.target.value = 50; e.target.dispatchEvent(new Event('input', { bubbles: true })); };
+// (Variety: the number follows the slider as it moves; the setting is sent as it is let go — the pets take it from their very next frame)
+$('petVary').oninput = e => { $('petVaryTxt').textContent = e.target.value + '%'; };
+$('petVary').onchange = e => petCfgSet({ vary: e.target.value / 100 });
+$('petVary').ondblclick = e => { e.target.value = Math.round(PETV_USUAL * 100); e.target.dispatchEvent(new Event('input', { bubbles: true })); e.target.dispatchEvent(new Event('change', { bubbles: true })); };
 $('petFree').onchange = e => { petCfgSet({ free: e.target.checked }); petFreeUI(true); };
 $('petWindows').onchange = e => petCfgSet({ windows: e.target.checked });
 $('petGravity').onchange = e => petCfgSet({ gravity: e.target.checked });
 $('petPets').onchange = e => petCfgSet({ pets: e.target.value, merge: e.target.value === 'few' }); // (merge: what an app from before "One singer" goes by)
-$('petDance').onchange = e => { petCfgSet({ dance: e.target.checked }); petDanceUI(); };
+$('petDance').onchange = e => { if (PETDANCES.includes(e.target.value)) petCfgSet({ dances: e.target.value }); petDanceUI(); };
 $('petDanceSize').onchange = e => petCfgSet({ danceSize: e.target.value });
 $('petCarry').onchange = e => petCfgSet({ carry: e.target.value });
 $('petScared').onchange = e => petCfgSet({ scared: e.target.checked });
+/* ---- Idle mode (1.0.13), in the main window: its switch and the list of who stays on the screen ----
+   Offered by an app that keeps the two settings (idle, idlePets: petwin.js) and lists the singers it has met. The list
+   shows only while the switch is on: every singer with a picture — the playlist's first, as Characters… has them, then
+   every other singer the player has met (petIdleRows) —, each with its own switch; what is switched on is sent at once,
+   and the pets come and go on the screen as it changes (main opens the pet window for them, the pet page follows its
+   settings). Under each name: the songs it can be asked for, out of the index (PETIX), which is brought up to date
+   whenever the projects change while Idle mode is on.
+   PETIU: can — the app keeps the settings · on, pets — as it keeps them, and as they were last sent · gen: the
+   newest painting of the list wins · sig: the list as it is painted. */
+const PETIU = { can: false, on: false, pets: [], gen: 0, sig: '' };
+/* From petCfgUI: the settings as the app has them (the view opened, the playlist changed, or the app says they did). */
+function petIdleUI(c) {
+  const can = CAN_PET && typeof c.idle === 'boolean' && Array.isArray(c.idlePets) && !!mapApp.petChars;
+  // (a change of the user's still on its way to the app — petCfgSet — is newer than what the app just said: it stands)
+  if (!(can && PETIU.can && (petCfgBusy || petCfgNext))) Object.assign(PETIU, { can, on: can && c.idle, pets: can ? c.idlePets.filter(k => typeof k === 'string') : [] });
+  $('petIdleOn').checked = PETIU.on;
+  $('petIdleRow').hidden = $('petIdleHint').hidden = !can;
+  $('petIdleBox').hidden = !PETIU.on;
+  if (PETIU.on) { petIdleWho(); petIdxSoon(); }
+}
+/* The list is read and painted: the playlist's singers (the reading Characters… shares: petSongs), what the app has
+   for them, and every singer it has met. */
+async function petIdleWho() {
+  const gen = ++PETIU.gen, stale = () => gen !== PETIU.gen || !PETIU.on;
+  let songs = [], known = null, met = null;
+  if (!PETIU.songs) $('petIdleSum').textContent = 'Looking at the singers…'; // (the first time: the playlist's scores are read, as for Characters…)
+  try { songs = await petSongs(PL.ids, () => {}, stale); } catch (e) {}
+  if (stale()) return;
+  try { known = await petKnownPics(songs); met = await mapApp.petChars(); } catch (e) {}
+  if (stale()) return;
+  PETIU.songs = songs; PETIU.known = known; PETIU.met = met;
+  petIdlePaint();
+}
+/* …and painted again from what was read (a switch in it changed, the index of songs has more to say). */
+function petIdlePaint() {
+  if (!PETIU.on || !PETIU.songs) return;
+  const rows = petIdleRows(PETIU.songs, PETIU.known, PETIU.met, PETIU.pets), idx = petIdxLoad();
+  const sub = rows.map(r => { const s = petSongsFor(idx, r.key, PL.ids).map(x => x.name); return !r.url ? "No picture any more: it can't be shown" : s.length ? 'Sings in ' + petSongsText(s) : PETIX.left > 0 || !PETIX.sure ? '' : 'In none of your songs yet'; });
+  $('petIdleSum').textContent = petIdleSumText(rows) + (PETIU.pets.length && COVER.on && COVER.kind !== 'pet' ? ' They come on when background mode stops.' : '');
+  const sig = JSON.stringify([rows, sub]);
+  if (sig === PETIU.sig) return;
+  PETIU.sig = sig;
+  $('petIdleList').replaceChildren(...rows.map((r, i) => {
+    const li = document.createElement('li'), lab = document.createElement('label'), th = document.createElement('span'), tx = document.createElement('span');
+    const nm = document.createElement('div'), sg = document.createElement('div'), box = document.createElement('input');
+    th.className = 'pi-th'; tx.className = 'pi-txt'; nm.className = 'pi-name'; sg.className = 'pi-songs';
+    if (r.url && r.sheet) petThumb(th, r.url, r.sheet, true);
+    else if (r.url) { const im = new Image(); im.src = r.url; im.alt = ''; th.appendChild(im); } else th.innerHTML = PET_FRAME;
+    nm.textContent = r.label; sg.textContent = sub[i];
+    box.type = 'checkbox'; box.checked = r.on; box.autocomplete = 'off';
+    box.setAttribute('aria-label', r.label + ' stays on the screen');
+    box.onchange = () => petIdlePick(r.key, box);
+    tx.append(nm, sg);
+    lab.append(th, tx, box);
+    li.appendChild(lab);
+    return li;
+  }));
+}
+/* One singer switched on or off in the list: kept at once (the app keeps the first PETI.max). */
+function petIdlePick(key, box) {
+  const pets = PETIU.pets.filter(k => k !== key);
+  if (box.checked && pets.length >= PETI.max) { box.checked = false; say('At most ' + PETI.max + ' pets can stay on the screen', 2500); return; }
+  if (box.checked) pets.push(key);
+  PETIU.pets = pets;
+  petCfgSet({ idlePets: pets });
+  petIdlePaint();
+}
+$('petIdleOn').onchange = e => {
+  PETIU.on = PETIU.can && e.target.checked;
+  petCfgSet({ idle: PETIU.on });
+  $('petIdleBox').hidden = !PETIU.on;
+  if (PETIU.on) { PETIU.sig = ''; petIdleWho(); petIdxSoon(); }
+};
+/* What the main window hears about the idle pets (the app: cover:msg, beside what background mode's remote control
+   hears). { state: { idle: 'song' } } — a pet was asked for a song, and it plays in the pets' window: what plays here
+   is paused, never two players at once (this window is that song's remote control until it ends). { rest } — the pets
+   are idle (again): this window is the player once more, with what it had loaded. { petcfg } — the app changed a pet
+   setting itself (Idle mode off: stopped with Ctrl+Alt+End or ✕ while no song played): the switch shows it. */
+function petIdleHeard(m) {
+  if (!m) return;
+  if (m.state && m.state.idle === 'song' && playOn()) { airPause(pauseAll); say('Paused: a pet is singing', 2500); }
+  if (m.state && m.state.idle === 'song' && !PETIU.song) { PETIU.song = true; airUI(); } // (an open AirPlay panel: no Show on TV / Mirror while the song plays in the pets' window)
+  if (m.rest) PETIU.song = false;
+  if (m.rest && COVER.on) {
+    const fin = COVER.fin;
+    Object.assign(COVER, { on: false, playing: false, s: null, fin: false, kind: '', live: false });
+    renderPlaylist(); airUI();
+    say(fin ? 'Playlist finished' : 'The pets are idle again', 2000);
+  }
+  if (m.petcfg && !$('viewPlaylist').hidden) petCfgUI();
+  if (m.petcfg) say('Idle mode is off', 2000);
+}
+/* The saved projects changed (renderProjects: one was saved, renamed, deleted or imported — and each time their list
+   is drawn): while Idle mode is on, the index of songs is looked at again, here in the main window (the pet window
+   looks as a list opens). Nothing while it is off: no score is read for a mode nobody uses. */
+function petIdxProjects() { try { if (!SUBWIN && PETIU.on) petIdxSoon(); } catch (e) {} }
+if (CAN_PET) {
+  mapApp.onCover(petIdleHeard);
+  PETIX.subs.push(petIdlePaint); // (the index of songs has more to say: the lines under the names)
+  addEventListener('storage', e => { if (e.key === PETIX.key) petIdlePaint(); }); // (…also when the pet window read a score)
+  // (whether Idle mode is on, known from the start — not only once Background mode's settings have been opened)
+  if (mapApp.petCfgGet) mapApp.petCfgGet().then(c => { if (c && typeof c.idle === 'boolean' && Array.isArray(c.idlePets) && mapApp.petChars && !PETIU.can) Object.assign(PETIU, { can: true, on: c.idle, pets: c.idlePets.filter(k => typeof k === 'string') }); }).catch(() => {});
+}
 /* ---- Animated pets…: the settings that only matter for singers whose picture is a pet sheet — a puppet —, in a
    dialog of their own (size, height, how many pets and the other general ones stay in the list above).
    The app keeps them with the others (pet.json: sheet — PETSH has each of them and what it usually is) and tells the
@@ -14885,6 +16373,10 @@ const CAN_EDIT = CAN_SHEET && !!(window.PetSplit && window.PetEditor) && PetEdit
   give: async (key, png) => { try { await mapApp.petPics([{ key }]); return !!(await mapApp.petSetImg(key, png)); } catch (e) { return false; } }, // (met just now, as for any picture)
   saveBlob, say, paintRange,
   settings: petShOpen,
+  // (Dance for one song…, 1.0.13: the song that is open in this window — its map, lyric lines and singers, and the
+  // dances its project keeps — and keeping what is made with that project: petSongNow, petSongDances. Without the
+  // song map and the dance module the button isn't offered)
+  songs: window.PetSong && window.PetDance && typeof PetDance.cleanSong === 'function' ? { now: () => petSongNow(), save: (id, d) => petSongDances(id, d) } : null,
   // (its Carried preview carries the pet as the desktop does: Background mode → Desktop pet, Carry a pet and Scared face
   // when carried, as the list shows them — the usual, by one hand and scared, where the app keeps neither)
   carry: () => ({ hand: $('petCarry').value !== 'doll', face: $('petScaredRow').hidden || $('petScared').checked }),
@@ -14910,6 +16402,45 @@ const CAN_EDIT_CARD = CAN_EDIT && !!mapApp.petImgBytes;
 if (CAN_EDIT) {
   $('petSheetBtn').onclick = () => PetEditor.open();
   $('petSheetBtn').title = 'Make a singer that moves from one picture of it, set how each of its animations goes, and the settings for animated pets';
+}
+/* ---- a dance for one song (the pet editor's "Dance for one song…", 1.0.13) ----
+   The song is the one open in this window: a saved project (its id is what the playlist plays and what the pet window
+   reads the dances back by: petLinesLoad) whose score has words. What the editor needs of it: its map (the same
+   PetSong.build the pet window makes: the beats a dance's moves are counted in), its singers as the pets know them
+   (petCast, with this project's id — each under the key its dance is kept by, PetDance.relKey — with the notes it
+   sings, for the preview's mouth, and its lyric lines, to find one's way by), its length, and the dances the project
+   keeps now. → that, or { why: 'score' — no score with words is open · 'save' — it isn't a saved project }. */
+async function petSongNow() {
+  const sc = svp;
+  if (!sc || !sc.lyr || !Array.isArray(sc.notes) || !sc.notes.length || !window.PetSong || !window.PetDance) return { why: 'score' };
+  if (!currentProject) return { why: 'save' };
+  const id = currentProject.id, name = currentProject.name;
+  let p = null;
+  try { p = await getProject(id); } catch (e) {}
+  if (!p) return { why: 'save' };
+  let map = null, raw = [];
+  try { map = PetSong.build(sc, { dur: petSongLen() }); raw = petCast(sc, id); } catch (e) {}
+  if (!map || !raw.length || !sc.pet) return { why: 'score' };
+  const text = L => L.toks.map(k => (k.sp ? ' ' : '') + k.text).join('');
+  const cast = raw.map(g => ({ key: PetDance.relKey(g.key, id), label: g.label, notes: sc.pet.notes.get(g.key) || [],
+    lines: [].concat(...(sc.pet.lines.get(g.key) || []).map(x => x[1] || [])).map(L => ({ s: L.s, e: L.e, text: text(L) })).sort((a, b) => a.s - b.s) }));
+  return { id, name, map, cast, len: petSongLen(), dances: p.dances || null };
+}
+/* A song's dances are kept in its project (the record's `dances`; null: it has none any more — the key goes), and the
+   pet window is told (it hears 'map-pet.dances' change as a storage event: petLinesTold), so that pets dancing that
+   song now take the new moves at once. Nothing else of the project is touched. → a promise: true when it is kept. */
+async function petSongDances(id, dances) {
+  const d = dances && window.PetDance ? PetDance.cleanSong(dances) : null;
+  try {
+    let found = false;
+    await idb(['projects'], 'readwrite', t => {
+      const s = t.objectStore('projects');
+      s.get(id).onsuccess = e => { const p = e.target.result; if (!p) return; found = true; if (d) p.dances = d; else delete p.dances; s.put(p); };
+    });
+    if (!found) return false;
+  } catch (e) { return false; }
+  try { localStorage.setItem('map-pet.dances', id + '|' + Date.now()); } catch (e) {}
+  return true;
 }
 $('petCharsBtn').onclick = () => { const open = $('petPanel').hidden; PETR.closed = !open; petCharsOpen(open); };
 /* Characters… opened (→ once its list is filled, up to date) or closed (nothing stays selected out of sight). */
@@ -15646,6 +17177,7 @@ async function exportCurrent() {
     const name = (projName.value.trim() || (currentProject && currentProject.name) || String(first || '').replace(/\.[^.]+$/, '') || 'Project').slice(0, 80);
     const now = Date.now(), { p, files } = projectOfNow({ id: currentProject ? currentProject.id : newId(), name, created: now, updated: now });
     say('Exporting…');
+    if (currentProject) { const q = await getProject(currentProject.id).catch(() => null); if (q && q.dances) p.dances = q.dances; } // (the dances made for this song go with it, as its saved project has them)
     const ok = await Promise.all(files.map(f => f.file.slice(0, 1).arrayBuffer().then(() => true, () => false)));
     return packProjects([p], new Map(files.filter((f, i) => ok[i]).map(f => [f.key, f])));
   } catch (e) { say("Couldn't export"); }
@@ -15918,6 +17450,7 @@ function describeProject(p) {
   if (p.video) bits.push('video');
   if (p.scores && p.scores.length) bits.push(p.scores.length + ' UST');
   else if (p.score) bits.push(scoreLabel(p.scoreName));
+  if (p.lyrics && (p.score || (p.scores && p.scores.length))) bits.push('lyrics');
   if (p.bytes) bits.push(fmtBytes(p.bytes));
   return bits.join(' · ') || 'empty';
 }
@@ -15947,6 +17480,7 @@ function projectOfNow(head) {
     scores: svp && svp.srcFiles ? svp.srcFiles.map(keep) : null, // .ust: every part's file
     scoreName: svp ? svp.fileName : null,
     scoreNames: svp && svp.srcFiles ? svp.srcFiles.map(f => f.name) : null,
+    lyrics: svp && svp.txt ? { name: svp.txt.name, text: svp.txt.text } : null, // (the score's lyrics file — its text itself, not a stored file: lyricsOnto)
     settings: collectSettings(),
     state: { rate, masterVol, masterMuted, noVisuals: visToggle.on, barHidden: view.hidden,
              noTabs: document.body.classList.contains('no-tabs'), ...(svp && svp.raw && svp.raw.auto ? { tpqAuto: svp.raw.auto } : {}) },
@@ -15977,6 +17511,7 @@ async function saveProjectNow() {
     });
     say('Saving…');
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+    if (existing && existing.dances) p.dances = existing.dances; // (the dances made for this song in the pet editor stay with it: petSongDances keeps them in the record, not in what's loaded)
     await putProject(p, files);
     currentProject = { id: p.id, name };
     projName.value = name;
@@ -16016,6 +17551,7 @@ async function loadProject(id, pre) { // pre: { p, recs } already read (backgrou
       if (fs.length) await loadScore(fs);
     } else if (p.score) { const f = fileOf(p.score); if (f) await loadScore(f); else missing++; }
     if (my !== projGen) return; // another project (or Reset) took over meanwhile
+    if (svp && p.lyrics && typeof p.lyrics.text === 'string') setLyricsTxt({ name: String(p.lyrics.name || 'lyrics.txt'), text: p.lyrics.text }, true); // (its lyrics file, matched to the notes again)
     if (svp && svp.raw && p.state && p.state.tpqAuto) svp.raw.saved = p.state.tpqAuto; // (the Auto tempo decided before, so the moved numbers don't decide again. Before the settings: they re-time)
     applySettings(p.settings); // after the score, so the "Main lyrics" choice exists
     props.forEach((t, i) => restoreTrack(tracks[i], t));
@@ -16055,6 +17591,7 @@ const ICON = {
 let renderSeq = 0;
 async function renderProjects() {
   const seq = ++renderSeq;
+  petIdxProjects(); // (the desktop pets' Idle mode: the songs each singer is in are looked at again — a project was saved, renamed or deleted)
   filesUI(); // (Export current… is right as the view opens)
   let ps;
   try { ps = await listProjects(); }
@@ -16083,7 +17620,7 @@ async function renderProjects() {
     li.querySelector('.proj-date').textContent = new Date(p.updated).toLocaleDateString([], { month: 'short', day: 'numeric' });
     const what = li.querySelector('.proj-what');
     what.textContent = describeProject(p);
-    what.title = [...p.tracks.map(t => t.name), p.videoName, ...(p.scoreNames || [p.scoreName])].filter(Boolean).join('\n');
+    what.title = [...p.tracks.map(t => t.name), p.videoName, ...(p.scoreNames || [p.scoreName]), p.lyrics && p.lyrics.name].filter(Boolean).join('\n');
     li.querySelector('[data-a=load]').onclick = () => loadProject(p.id);
     li.querySelector('[data-a=edit]').onclick = () => editProject(p.id);
     li.querySelector('[data-a=export]').onclick = () => exportProjects([p.id]);
