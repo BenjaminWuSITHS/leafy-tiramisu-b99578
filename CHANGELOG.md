@@ -15,6 +15,17 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.15
+<!-- date: 2026-11-16T02:44 -->
+- Pets can wink: in your own animations a key pose says what the left eye and the right eye show, each by itself (Wink left, Wink right in the pose editor). Pets you made before can wink too.
+- Pet editor, Face: each eye can have pictures of its own, as many as you need (New picture…). Paint one, start from your picture, bring in a file, or copy it mirrored to the other eye.
+- Pet editor, new tab Hands and legs: a box on each hand, and other pictures for each hand and each leg (the whole leg, or its lower piece). A key pose chooses which one shows.
+- Every such picture is placed by dragging: move it, size it, turn it, mirror it, put it in front or behind. A pet with pictures of its own needs this version or a newer one to open.
+- The player now reads every VOCALOID project file, from VOCALOID1 to VOCALOID7 (.mid, .vsq, .vsqx, .vpr, .vprx): its notes, words, singers and tempo.
+- More kinds of song file: MusicXML (.musicxml, .xml, .mxl), Synthesizer V's first editor (.s5p), Piapro Studio (.ppsf, the newer kind) and UtaFormatix (.ufdata).
+- When a song file can't be read, the player says why if it knows.
+- Voicebank pictures finds VOCALOID7's voices.
+
 ## 1.0.14
 <!-- date: 2026-11-15T23:30 -->
 - The update popup shows What's new the way the What's new page does: each version with the day it came out, its points and its pictures (click a picture to see it large). You see it from the update after this one: the popup is drawn by the version you already have.

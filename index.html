@@ -796,6 +796,7 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-pan{grid-area:1/1;min-width:0}
 #petEdDlg .pd-pans.pd-solo>.pd-pan[data-off]{display:none} /* (3D: no picture under the tools to keep in its place) */
 #petEdDlg #petEdPanFace[data-off]{display:none} /* (Face's cards are the tallest by far: they take room only while Face is the tab) */
+#petEdDlg #petEdPanLimbs[data-off]{display:none} /* (Hands and legs: cards too, as tall as Face's) */
 #petEdDlg .pd-tools,#petEdDlg .pd-paint,#petEdDlg .pd-hidrow,#petEdDlg .pd-faceacts{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:8px 12px 0}
 #petEdDlg :is(.pd-tools,.pd-tabrow,.pd-hidrow,.pd-faceacts,.pd-facemore) button{font-size:.8rem;padding:4px 10px}
 #petEdDlg .pd-left button[aria-pressed=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent)}
@@ -842,6 +843,20 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-fpbar .pd-chip .pd-dot{width:8px;height:8px;border:0}
 #petEdDlg #petEdFpOver{margin:0;padding:6px 12px 0;font-size:.82rem}
 #petEdDlg #petEdFpOver button{margin-left:6px;font-size:.8rem;padding:4px 10px}
+/* The pet's own pictures (1.0.15), in Face and in Hands and legs: a row of cards ends in its New picture… button
+   (.pd-fc-new: dashed, a plus where a card has its small picture); a picture's bar (#petEdPcBar, under the cards): its
+   name and what it is made from, then where it sits — the numbers in narrow boxes; Hands and legs' line about a hand
+   with no box yet */
+#petEdDlg .pd-fc-new{justify-content:center;border-style:dashed;color:var(--muted)}
+#petEdDlg .pd-fc-new .pd-fc-plus{height:48px;font-size:1.5rem;font-weight:400;line-height:48px}
+#petEdDlg .pd-pcbar{min-width:0}
+#petEdDlg .pd-pcT{color:var(--muted);font-size:.8rem}
+#petEdDlg .pd-pcbar .pd-hidrow>.pd-chips,#petEdDlg .pd-faceacts>.pd-chips{flex:0 1 auto;min-width:0}
+#petEdDlg .pd-pcplace label{display:inline-flex;align-items:center;gap:5px;font-size:.82rem}
+#petEdDlg .pd-pcplace input[type=number]{width:62px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);font:inherit;font-size:.82rem;font-variant-numeric:tabular-nums}
+#petEdDlg .pd-pcplace input[type=number]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+#petEdDlg #petEdHandPut{margin:0;padding:8px 12px 0;font-size:.82rem}
+#petEdDlg #petEdHandPut button{margin-left:6px;font-size:.8rem;padding:4px 10px}
 #petEdDlg .pd-facemore{flex:none;padding:0 12px}
 #petEdDlg .pd-facemore .pd-row{margin:0 0 4px}
 #petEdDlg .pd-facemore .pd-look{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 20px;padding:0}
@@ -1263,6 +1278,7 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pa-tip{margin:0 0 8px;color:var(--muted);font-size:.8rem;line-height:1.4}
 #petEdDlg .pa-row,#petEdDlg .pa-op{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:32px;margin-bottom:2px}
 #petEdDlg .pa-row select{max-width:160px}
+#petEdDlg .pa-winks button{flex:1 1 0} /* (1.0.15: Wink left and Wink right share their row, under the two eyes' choices) */
 #petEdDlg .pa-op input[type=range]{flex:none;width:130px}
 #petEdDlg .pa-rv{display:block;color:var(--muted);font-size:.75rem;font-variant-numeric:tabular-nums}
 #petEdDlg .pa-all{margin:10px 0 8px}
@@ -1492,7 +1508,7 @@ body.loading :is(#list,#tabs,.transport,#seek){cursor:progress}
 #lenWarn li{margin:2px 0}
 #lenWarn button{position:absolute;top:4px;right:4px;padding:0 8px;border:none;background:transparent;color:inherit;font-size:1.2rem;line-height:1.6}
 @keyframes slideDown{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
-body.dropping::after{content:'Drop audio, video, SVP, MIDI, VoiSona, UST or USTX files';position:fixed;inset:12px;z-index:10;display:grid;place-items:center;border:3px dashed var(--accent);border-radius:16px;background:color-mix(in srgb,var(--accent) 12%,transparent);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:var(--fg);font-size:1.3rem;font-weight:600;pointer-events:none}
+body.dropping::after{content:'Drop audio, video or score files (SVP, MIDI, VOCALOID, VoiSona, UST, MusicXML…)';position:fixed;inset:12px;z-index:10;display:grid;place-items:center;border:3px dashed var(--accent);border-radius:16px;background:color-mix(in srgb,var(--accent) 12%,transparent);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:var(--fg);font-size:1.3rem;font-weight:600;pointer-events:none}
 #dbgPanel{position:fixed;left:calc(56px + var(--sal));top:calc(8px + var(--sat));z-index:20;max-width:calc(100vw - 70px);max-width:calc(100cqw - 70px);overflow:hidden;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.8);color:#9f9;font:11px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre;pointer-events:none}
 #dbgChip{position:fixed;top:calc(8px + var(--sat));left:50%;transform:translateX(-50%);z-index:21;padding:4px 12px;border-radius:999px;background:#ff9800;border-color:#ff9800;color:#000;font-size:.8rem;font-weight:600;white-space:nowrap}
 #dbgPanel[hidden],#dbgChip[hidden]{display:none}
@@ -1701,7 +1717,8 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     </div>
 
     <div class="sgroup">
-      <h2>Score <span class="h2sub">SVP / MIDI / VoiSona / UST / USTX / VSQX</span></h2>
+      <h2>Score <span class="h2sub">SVP / MIDI / VOCALOID / VoiSona / UST…</span></h2>
+      <p class="hint">A score is a song's own project file: the player shows its notes and lyrics<span class="desk-say">, and the desktop pets sing and dance by it</span>. It reads Synthesizer V (.svp, .s5p), MIDI (.mid, .kar), VOCALOID 1 to 7 (.mid, .vsq, .vsqx, .vpr, .vprx), VoiSona and CeVIO (.tssln, .ccs), UTAU and OpenUtau (.ust, .ustx), MusicXML (.musicxml, .xml, .mxl), Piapro Studio (.ppsf, the newer kind only) and UtaFormatix (.ufdata). Only the notes, words, singers and tempo are read: a project's own audio is not played.</p>
       <label class="op">Show piano roll <input autocomplete="off" type="checkbox" id="showRoll" checked></label>
       <div class="dep" data-needs="showRoll">
         <label class="op">Piano roll style <select autocomplete="off" id="rollStyle"><option value="classic" selected>Classic (scrolling)</option><option value="line">Pitch line</option><option value="falling">Falling notes (keyboard)</option></select></label>
@@ -1909,7 +1926,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
 
   <section id="viewProjects" hidden>
     <h1>Projects</h1>
-    <p class="hint">Save the current audio, video, score (SVP / MIDI / VoiSona / UST / USTX / VSQX) and all settings as a project, and reopen it any time. Files are copied into the app, so projects keep working even if the originals move.</p>
+    <p class="hint">Save the current audio, video, score (SVP, MIDI, VOCALOID, VoiSona, UST, USTX, MusicXML and the others the player reads) and all settings as a project, and reopen it any time. Files are copied into the app, so projects keep working even if the originals move.</p>
     <div class="psave"><input type="text" id="projName" placeholder="Project name" maxlength="80" aria-label="Project name"><button id="projSave" class="primary">Save</button></div>
     <p id="projStatus" class="hint"></p>
     <ul id="projList"></ul>
@@ -1953,7 +1970,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
       <label class="op" id="petPetsRow" hidden>How many pets <select id="petPets" autocomplete="off"><option value="each">A pet for each singer</option><option value="few">As few pets as possible</option><option value="one" id="petPetsOne">One singer</option></select></label>
       <p class="hint" id="petPetsHint" hidden>A pet for each singer: every singer with a picture is a pet, and one that sings two lines at once is two pets with the same picture, side by side, each with its own bubble. As few pets as possible: singers who never sing at the same time share one pet, which sings all their lines — the one of them with a picture who sings most; singers who do sing together stay separate pets. One singer: only one pet, the singer with a picture who sings most; it sings everybody's lines, and lines sung at the same time each get a speech bubble of their own over it.</p>
       <label class="op" id="petDanceRow" hidden>Dance while singing <select id="petDance" autocomplete="off"><option value="off" selected>Off</option><option value="own">My own dances</option><option value="auto">Made for me (automatic)</option></select></label>
-      <p class="hint" id="petDanceHint" hidden>Off: the pets only sing. My own dances: while a song with a score plays (SVP, MIDI, VoiSona, UST, USTX or VSQX), each pet whose picture is a pet sheet dances the dance you made for it, on the song's beat. You make dances in the pet editor (Animated pets…, then open the pet and look under Dances): a dance of its own, which it repeats for as long as it sings and rests from when it has nothing to sing for a while; and, for a song where you want exact moves at exact moments, a dance for that one song, which it then dances in place of its own. A pet with no dance just sings. Made for me (automatic): the app makes each pet a long dance for every song, worked out from the score: calmer in the verses, bigger in the choruses (the same moves each time a chorus comes back), a pose held on a long note, an arm up on a high one, and a bow together at the end; they all do the same moves, every other pet mirrored, and a pet with a plain picture bounces, sways and turns to the beat. Either way their mouths still sing, a click still makes one hop, and one you pick up stops dancing until you let go. The ready-made moves keep the legs straight. A song without a score: they only sing.</p>
+      <p class="hint" id="petDanceHint" hidden>Off: the pets only sing. My own dances: while a song with a score plays (SVP, MIDI, VOCALOID, VoiSona, UST, USTX, MusicXML or another kind the player reads), each pet whose picture is a pet sheet dances the dance you made for it, on the song's beat. You make dances in the pet editor (Animated pets…, then open the pet and look under Dances): a dance of its own, which it repeats for as long as it sings and rests from when it has nothing to sing for a while; and, for a song where you want exact moves at exact moments, a dance for that one song, which it then dances in place of its own. A pet with no dance just sings. Made for me (automatic): the app makes each pet a long dance for every song, worked out from the score: calmer in the verses, bigger in the choruses (the same moves each time a chorus comes back), a pose held on a long note, an arm up on a high one, and a bow together at the end; they all do the same moves, every other pet mirrored, and a pet with a plain picture bounces, sways and turns to the beat. Either way their mouths still sing, a click still makes one hop, and one you pick up stops dancing until you let go. The ready-made moves keep the legs straight. A song without a score: they only sing.</p>
       <label class="op" id="petDanceSizeRow" hidden>How lively <select id="petDanceSize" autocomplete="off"><option value="gentle">Gentle</option><option value="lively" selected>Lively</option></select></label>
       <p class="hint" id="petDanceSizeHint" hidden>For the automatic dance. Lively: the whole dance, with spins, jumps and claps over the head in the choruses. Gentle: smaller moves, with no spins or jumps.</p>
       <label class="op" id="petCarryRow" hidden>Carry a pet <select id="petCarry" autocomplete="off"><option value="hand" selected>By one hand</option><option value="doll">Like a doll (as before)</option></select></label>
@@ -1985,7 +2002,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <button class="rbtn" id="tabProjects" data-tip="Projects" aria-label="Projects"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></button>
   <button class="rbtn" id="tabPlaylist" data-tip="Background mode (playlist)" aria-label="Background mode (playlist)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h12M3 12h12M3 18h7"/><path d="M15 15.5v5l4.5-2.5z" fill="currentColor"/></svg></button>
   <span class="sep"></span>
-  <label class="rbtn file" data-tip="Add files (audio, video, SVP, MIDI, VoiSona, UST, USTX, VSQX, lyrics .txt)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><input id="picker" type="file" multiple accept="audio/*,video/*,.wav,.mp3,.ogg,.flac,.m4a,.aac,.opus,.mp4,.m4v,.webm,.mov,.mkv,.svp,.mid,.midi,.kar,.rmi,.tssln,.tssprj,.tsmsln,.ccs,.ust,.ustx,.vsqx,.txt,.mapproj" aria-label="Add files"></label>
+  <label class="rbtn file" data-tip="Add files (audio, video, SVP, MIDI, VOCALOID, VoiSona, UST, USTX, MusicXML, lyrics .txt)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><input id="picker" type="file" multiple accept="audio/*,video/*,.wav,.mp3,.ogg,.flac,.m4a,.aac,.opus,.mp4,.m4v,.webm,.mov,.mkv,.svp,.mid,.midi,.kar,.rmi,.tssln,.tssprj,.tsmsln,.ccs,.ust,.ustx,.vsqx,.vsq,.vpr,.vprx,.s5p,.musicxml,.mxl,.xml,.ppsf,.ufdata,.txt,.mapproj" aria-label="Add files"></label>
  <button class="rbtn" id="airBtn" data-tip="AirPlay" aria-label="AirPlay" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 17H4.5A2.5 2.5 0 0 1 2 14.5v-9A2.5 2.5 0 0 1 4.5 3h15A2.5 2.5 0 0 1 22 5.5v9a2.5 2.5 0 0 1-2.5 2.5H18"/><path d="M12 14.5l5.5 6.5h-11z" fill="currentColor"/></svg></button>
   <button class="rbtn" id="playPause" data-tip="Play / pause" aria-label="Play / pause" data-key="Space"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></button>
 </nav>
@@ -2586,8 +2603,8 @@ function mediaReady(el, stale) {
    ===================================================================== */
 const list = $('list');
 const emptyText = () => touchUI()
-  ? 'No files yet. Tap + to add audio, video, SVP, MIDI, VoiSona, UST or USTX files.'
-  : 'No files yet. Click + or drop audio, video, SVP, MIDI, VoiSona, UST or USTX files anywhere.';
+  ? 'No files yet. Tap + to add audio, video or a score (SVP, MIDI, VOCALOID, VoiSona, UST, MusicXML…).'
+  : 'No files yet. Click + or drop audio, video or a score (SVP, MIDI, VOCALOID, VoiSona, UST, MusicXML…) anywhere.';
 function showEmpty() {
   if (tracks.length) return;
   list.innerHTML = '';
@@ -6522,7 +6539,16 @@ addEventListener('keydown', e => {
 });
 
 /* =====================================================================
-   SVP (Synthesizer V) / MIDI / VoiSona: piano roll + karaoke lyrics
+   Scores: piano roll + karaoke lyrics. The files read (SCORE_FORMATS; each reader gives finishScore the notes, the
+   tracks' names, who sings them and the beat):
+     Synthesizer V   .svp (parseSVP) · .s5p, its first editor (parseS5P)
+     MIDI            .mid .midi .kar .rmi (parseMIDI)
+     VOCALOID        .mid (VOCALOID1) and .vsq (VOCALOID2): parseVSQ · .vsqx (VOCALOID3, 4): parseVSQX ·
+                     .vpr (VOCALOID5, 6) and .vprx (VOCALOID7): scoreFromVPR — parseVocaloid picks by what is in the file
+     VoiSona, CeVIO  .tssln .tssprj .tsmsln .ccs (parseVoiSona)
+     UTAU, OpenUtau  .ust (parseUST: a part a file) · .ustx (scoreFromUSTX)
+     MusicXML        .musicxml .xml .mxl (parseMusicXML)
+     Piapro Studio   .ppsf, the kind that is a zip (scoreFromPPSF) · UtaFormatix .ufdata (parseUfdata)
    ===================================================================== */
 const BLICK = 705600000;
 /* Lyric tuning:
@@ -7417,8 +7443,11 @@ function lyrTxtSay(name, R) {
    (then another standard rate is picked); can be set in Settings → VoiSona / CeVIO timing.
    ===================================================================== */
 const SCORE_TPQS = [480, 960, 1920, 3840];
+// (the name is what the player calls the file's kind — "Added VOCALOID" — and what parseScoreFile picks its reader by; the
+// VOCALOID family is one name for every version's file: .mid of VOCALOID1 is found by what is in it, see parseVSQ)
 const SCORE_FORMATS = [
-  [/\.svp$/i, 'SVP'], [/\.(mid|midi|kar|rmi)$/i, 'MIDI'], [/\.(tssln|tssprj|tsmsln)$/i, 'VoiSona'], [/\.ccs$/i, 'CeVIO'], [/\.ust$/i, 'UST'], [/\.ustx$/i, 'USTX'], [/\.vsqx$/i, 'VSQX'],
+  [/\.svp$/i, 'SVP'], [/\.(mid|midi|kar|rmi)$/i, 'MIDI'], [/\.(tssln|tssprj|tsmsln)$/i, 'VoiSona'], [/\.ccs$/i, 'CeVIO'], [/\.ust$/i, 'UST'], [/\.ustx$/i, 'USTX'], [/\.(vsqx|vsq|vpr|vprx)$/i, 'VOCALOID'],
+  [/\.s5p$/i, 'S5P'], [/\.(musicxml|mxl|xml)$/i, 'MusicXML'], [/\.ppsf$/i, 'Piapro Studio'], [/\.ufdata$/i, 'UtaFormatix'],
 ];
 const scoreLabel = name => (SCORE_FORMATS.find(([re]) => re.test(name || '')) || [0, 'score'])[1];
 /* VoiSona lyrics → words. Phonemes in brackets are dropped ("fingers[f,ih*~]" → "fingers").
@@ -7905,11 +7934,27 @@ $('svpClear').onclick = () => { svp = null; stopVoices(); applyRoll(); fillMainS
    ===================================================================== */
 /* =====================================================================
    VOCALOID 3 / 4 (.vsqx): XML. The master track has the resolution (ticks per beat), the number
-   of pre-measure bars, time signatures and tempos (VOCALOID4: <t>/<v>, VOCALOID3: <posTick>/<bpm>;
+   of pre-measure bars, time signatures (VOCALOID4: <m>/<nu>/<de>, VOCALOID3: <posMes>/<nume>/<denomi>)
+   and tempos (VOCALOID4: <t>/<v>, VOCALOID3: <posTick>/<bpm>;
    bpm × 100). Each vsTrack holds parts (V4 vsPart / V3 musicalPart) at a tick, and those hold notes
    (V4: t, dur, n, y — V3: posTick, durTick, noteNum, lyric) counted from the part's start. The
    pre-measure bars come before the song (time 0 is where they end, as in VOCALOID's own export).
+   (VOCALOID's other files — .mid, .vsq, .vpr, .vprx — are read further down: parseVSQ, scoreFromVPR.)
    ===================================================================== */
+/* @pure:score begin */
+/* VOCALOID lyrics, the same in every version's file. A lone "-" goes on with the note before — whether it only holds
+   it (its phonemes are "-" too) or sings sounds of its own that were typed as phonemes: the word shown is still the one
+   before, so it stays "-". A word typed as syllables is one note each, all but the last ending in a hyphen ("sum-",
+   then "mer"): the hyphen goes and the next note is glued to it, so the word shows whole — but only when a word comes
+   right after it (after "-" notes, those sang the rest of the word and the next word is another: nothing is joined).
+   ns: one part's notes in time order, each { l } → l and glue are set on them. */
+function vocaloidWords(ns) {
+  for (let i = 0; i + 1 < ns.length; i++) {
+    const a = ns[i], b = ns[i + 1];
+    if (/[^\s-]-$/.test(a.l) && b.l && b.l[0] !== '-' && !isFiller(b.l)) { a.l = a.l.slice(0, -1); b.glue = true; }
+  }
+}
+/* @pure:score end */
 function parseVSQX(text) {
   const doc = new DOMParser().parseFromString(text.replace(/^\uFEFF/, ''), 'application/xml');
   if (doc.getElementsByTagName('parsererror').length) throw new Error('not XML');
@@ -7920,7 +7965,7 @@ function parseVSQX(text) {
   if (!master) throw new Error('no master track');
   const tpq = num(master, 'resolution') > 0 ? num(master, 'resolution') : 480;
   const sigs = [...master.children].filter(c => c.localName === 'timeSig')
-    .map(e => ({ m: num(e, 'm', 'posMes') || 0, nu: num(e, 'nu') || 4, de: num(e, 'de') || 4 })).sort((a, b) => a.m - b.m);
+    .map(e => ({ m: num(e, 'm', 'posMes') || 0, nu: num(e, 'nu', 'nume') || 4, de: num(e, 'de', 'denomi') || 4 })).sort((a, b) => a.m - b.m);
   // ticks taken by the pre-measure bars (each bar in the time signature in force there)
   const preBars = Math.max(0, num(master, 'preMeasure') || 0);
   let prefix = 0;
@@ -7970,6 +8015,7 @@ function parseVSQX(text) {
       const at = (num(part, 't', 'posTick') || 0) - prefix;
       const sw = [...part.children].filter(c => c.localName === 'singer')
         .map(g => ({ c: num(g, 't', 'posTick') || 0, v: vt.get(bp(g)) })).sort((a, b) => a.c - b.c);
+      const k0 = ns.length; // (this part's notes begin here: vocaloidWords, below)
       [...part.children].filter(c => c.localName === 'note').forEach(n => {
         const nt = num(n, 't', 'posTick') || 0, c = at + nt, d = num(n, 'dur', 'durTick'), p = num(n, 'n', 'noteNum');
         if (!(d > 0) || !isFinite(p) || c + d <= 0) return;
@@ -7979,6 +8025,7 @@ function parseVSQX(text) {
         ns.push({ s: toSec(Math.max(0, c)), e: toSec(c + d), p, l: (ly ? ly.textContent : '').trim(), t: ti });
         sgs.push(as(v));
       });
+      vocaloidWords(ns.slice(k0).sort((a, b) => a.s - b.s)); // (a word typed as syllables, "sum-" then "mer", shows as one word)
     });
     singers.push(trackSinger(ns, sgs, fb));
     for (const n of ns) notes.push(n);
@@ -8227,6 +8274,484 @@ function scoreFromUSTX(doc) {
     .map(m => ({ bar: +m.bar_position, num: +m.beat_per_bar, den: +m.beat_unit })).sort((a, b) => a.bar - b.bar);
   return finishScore(notes, names, singers, { tempo: tempos.map(t => ({ q: t.c / res, bpm: t.bpm })), meter });
 }
+/* @pure:score begin */
+/* =====================================================================
+   More score files (1.0.15). VOCALOID's other project files — VOCALOID1 (.mid) and VOCALOID2 (.vsq): parseVSQ;
+   VOCALOID5 / 6 (.vpr) and VOCALOID7 (.vprx): scoreFromVPR —, Synthesizer V's first editor (.s5p), MusicXML
+   (.musicxml / .xml, and .mxl: a zip), Piapro Studio (.ppsf, the kind that is a zip) and UtaFormatix (.ufdata).
+   Each reader takes the song as its file counts it, in ticks, and hands it to scoreOfTicks. Nothing of the page is
+   used here but the helpers the older readers use (finishScore, the singers' names, inflate) and, for XML, DOMParser.
+   ===================================================================== */
+/* A score file that can't be read, with the reason in plain words: loadScore says it after the file's name. */
+const scoreErr = why => Object.assign(new Error(why), { say: why });
+/* What these readers share: a song counted in ticks → a score (finishScore). S: { tpq: ticks a beat (a quarter note),
+   tempos: [{ c: tick, bpm }], sigs: [{ bar, num, den }] (bars as the file counts them), pre: bars before the song that
+   hold no notes (VOCALOID's pre-measure: time 0 is where they end, as in parseVSQX; ticks are counted from the file's
+   own start), tracks: [{ name, singer: the track's own (null: the file names none), notes: [{ c, d, p, l, glue?, sg?
+   (who sings this one, when a track changes singer) }] }] }. A note that ends before time 0, or has no length or no
+   pitch, is left out; a song with no note at all can't be read. */
+function scoreOfTicks(S) {
+  const tpq = S.tpq > 0 ? S.tpq : 480, pre = Math.max(0, Math.round(S.pre) || 0);
+  const sigs = (S.sigs || []).filter(g => g && g.bar >= 0 && g.num > 0 && g.den > 0).sort((a, b) => a.bar - b.bar);
+  let prefix = 0; // ticks taken by the bars before the song (each bar in the time signature in force there)
+  for (let bar = 0; bar < pre; bar++) {
+    let sg = sigs[0] || { num: 4, den: 4 };
+    for (const g of sigs) if (g.bar <= bar) sg = g;
+    prefix += sg.num * tpq * 4 / sg.den;
+  }
+  let tempos = (S.tempos || []).filter(t => t && isFinite(t.c) && t.bpm > 0 && isFinite(t.bpm)).map(t => ({ c: t.c - prefix, bpm: t.bpm })).sort((a, b) => a.c - b.c);
+  const before = tempos.filter(t => t.c <= 0).pop();
+  tempos = [{ c: 0, bpm: before ? before.bpm : tempos.length ? tempos[0].bpm : 120 }].concat(tempos.filter(t => t.c > 0));
+  let acc = 0;
+  const segs = tempos.map((t, i) => {
+    const g = { c: t.c, sec: acc, spt: 60 / (t.bpm * tpq) };
+    if (tempos[i + 1]) acc += (tempos[i + 1].c - t.c) * g.spt;
+    return g;
+  });
+  const toSec = tk => {
+    let lo = 0, hi = segs.length - 1;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (segs[m].c <= tk) lo = m; else hi = m - 1; }
+    return segs[lo].sec + (tk - segs[lo].c) * segs[lo].spt;
+  };
+  const notes = [], names = [], singers = [];
+  (S.tracks || []).forEach((T, ti) => {
+    names.push(T.name || 'Track ' + (ti + 1));
+    const ns = [], sgs = [];
+    for (const n of T.notes || []) {
+      const c = n.c - prefix;
+      if (!(n.d > 0) || !isFinite(n.d) || !isFinite(n.p) || !isFinite(c) || c + n.d <= 0) continue;
+      ns.push(Object.assign({ s: toSec(Math.max(0, c)), e: toSec(c + n.d), p: n.p, l: n.l || '', t: ti }, n.glue ? { glue: true } : {}));
+      sgs.push(n.sg || T.singer || null);
+    }
+    singers.push(T.singer ? trackSinger(ns, sgs, T.singer) : null);
+    for (const n of ns) notes.push(n);
+  });
+  if (!notes.length) throw scoreErr('it has no notes');
+  const meter = [];
+  for (const g of sigs) { const bar = Math.max(0, Math.round(g.bar - pre)); if (meter.length && meter[meter.length - 1].bar === bar) meter.pop(); meter.push({ bar, num: g.num, den: g.den }); }
+  return finishScore(notes, names, singers, { tempo: tempos.map(t => ({ q: t.c / tpq, bpm: t.bpm })), meter });
+}
+/* A zip file, read from the list at its end (the central directory): only that list and the entries asked for are
+   read, never the whole file — a VOCALOID project carries its audio too, which can be very big. zipOpen(blob) →
+   [{ name, method (0: stored, 8: deflated), csize, usize (its size packed and unpacked), at (where its own header
+   is) }], or null: not a zip. zipRead(blob, entry) → its bytes (max: the most it may be, 200 MB unless said). */
+function zipDir(cd, n) {
+  const dv = new DataView(cd.buffer, cd.byteOffset, cd.byteLength), td = new TextDecoder('utf-8'), out = [];
+  let p = 0;
+  for (let i = 0; i < n && p + 46 <= cd.length && dv.getUint32(p, true) === 0x02014b50; i++) {
+    const method = dv.getUint16(p + 10, true), nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+    let csize = dv.getUint32(p + 20, true), usize = dv.getUint32(p + 24, true), at = dv.getUint32(p + 42, true);
+    if (p + 46 + nl + xl > cd.length) break;
+    for (let x = p + 46 + nl, xe = x + xl; x + 4 <= xe;) { // (a very big zip keeps what doesn't fit 32 bits in an extra field, in this order)
+      const id = dv.getUint16(x, true), len = dv.getUint16(x + 2, true);
+      let q = x + 4;
+      const big = () => { const v = q + 8 <= x + 4 + len && q + 8 <= cd.length ? Number(dv.getBigUint64(q, true)) : NaN; q += 8; return v; };
+      if (id === 1) { if (usize === 0xffffffff) usize = big(); if (csize === 0xffffffff) csize = big(); if (at === 0xffffffff) at = big(); }
+      x += 4 + len;
+    }
+    out.push({ name: td.decode(cd.subarray(p + 46, p + 46 + nl)), method, csize, usize, at });
+    p += 46 + nl + xl + cl;
+  }
+  return out;
+}
+async function zipOpen(blob) {
+  const size = blob.size, t0 = Math.max(0, size - 65558), tail = new Uint8Array(await blob.slice(t0, size).arrayBuffer()), dv = new DataView(tail.buffer);
+  let e = tail.length - 22;
+  while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+  if (e < 0) return null;
+  let n = dv.getUint16(e + 10, true), len = dv.getUint32(e + 12, true), at = dv.getUint32(e + 16, true);
+  if (e >= 20 && dv.getUint32(e - 20, true) === 0x07064b50) { // (a very big zip: the real numbers are in another record, which this one points at)
+    const a = Number(dv.getBigUint64(e - 12, true)), r = new DataView(await blob.slice(a, a + 56).arrayBuffer());
+    if (r.byteLength === 56 && r.getUint32(0, true) === 0x06064b50) { n = Number(r.getBigUint64(32, true)); len = Number(r.getBigUint64(40, true)); at = Number(r.getBigUint64(48, true)); }
+  }
+  if (!(at + len <= size) || len > 5e7) throw new Error('bad zip');
+  return zipDir(at >= t0 ? tail.subarray(at - t0, at - t0 + len) : new Uint8Array(await blob.slice(at, at + len).arrayBuffer()), n);
+}
+async function zipRead(blob, en, max) {
+  if (!(en.usize <= (max || 2e8)) || !(en.csize <= (max || 2e8))) throw new Error('too big');
+  const h = new DataView(await blob.slice(en.at, en.at + 30).arrayBuffer());
+  if (h.byteLength < 30 || h.getUint32(0, true) !== 0x04034b50) throw new Error('bad zip');
+  const a = en.at + 30 + h.getUint16(26, true) + h.getUint16(28, true), data = new Uint8Array(await blob.slice(a, a + en.csize).arrayBuffer());
+  if (data.length !== en.csize) throw new Error('truncated');
+  if (en.method === 0) return data;
+  if (en.method !== 8) throw new Error('zip method ' + en.method);
+  return inflate(data, 'deflate-raw');
+}
+/* The text of an XML or JSON file's bytes: UTF-16 when it starts with that mark, else as decodeText reads it. */
+function fileText(u8) {
+  if (u8[0] === 0xff && u8[1] === 0xfe) return new TextDecoder('utf-16le').decode(u8);
+  if (u8[0] === 0xfe && u8[1] === 0xff) return new TextDecoder('utf-16be').decode(u8);
+  return decodeText(u8).replace(/^﻿/, '');
+}
+
+/* ---- VOCALOID1 (.mid) and VOCALOID2 (.vsq) ----
+   A MIDI file whose notes aren't MIDI notes: each singing track carries a text — in pieces, as text events
+   "DM:0000:…", "DM:0001:…", joined as bytes and then read as UTF-8 or Shift_JIS — laid out like an INI file:
+   [Common] Name; [Master] PreMeasure (bars before the song); [Mixer] Mute0, Mute1 … (the first track's);
+   [EventList] tick=ID#0001 (several ids at one tick are split by commas; EOS ends it); [ID#0001] Type=Anote, Length,
+   Note#, LyricHandle=h#0002 — or Type=Singer, IconHandle=h#0001; [h#0002] L0="word","phonemes",…; [h#0001] IDS=the
+   singer's name, Language (0 Japanese, 1 English). Tempo and time signatures are the MIDI file's own (its first
+   track). → a score, or null: the file has no such text (an ordinary MIDI file: parseMIDI reads it, as ever). */
+const VOCALOID_LANGS = ['japanese', 'english', 'korean', 'spanish', 'chinese']; // (the language ids of every VOCALOID version)
+function parseVSQ(buf) {
+  const u8 = new Uint8Array(buf), dv = new DataView(buf);
+  let has = false;
+  for (let i = 0, n = u8.length - 3; i < n; i++) if (u8[i] === 0x44 && u8[i + 1] === 0x4d && u8[i + 2] === 0x3a) { has = true; break; } // ("DM:" somewhere: else not worth a second look)
+  if (!has) return null;
+  const tag = o => String.fromCharCode(u8[o], u8[o + 1], u8[o + 2], u8[o + 3]);
+  let p = 0;
+  while (p + 14 <= u8.length && tag(p) !== 'MThd') p++;
+  if (p + 14 > u8.length) return null;
+  const div = dv.getUint16(p + 12);
+  if (!div || (div & 0x8000)) return null;
+  p += 8 + dv.getUint32(p + 4);
+  const tempos = [], sigs = [], trs = [];
+  while (p + 8 <= u8.length) {
+    const id = tag(p), len = dv.getUint32(p + 4);
+    p += 8;
+    const end = Math.min(p + len, u8.length);
+    if (id !== 'MTrk') { p = end; continue; }
+    const tr = { name: null, text: [] };
+    let tick = 0, run = 0;
+    const vlq = () => {
+      let v = 0, b, n = 0;
+      do { if (p >= end) return v; b = u8[p++]; v = v * 128 + (b & 0x7f); } while ((b & 0x80) && ++n < 4);
+      return v;
+    };
+    while (p < end) {
+      tick += vlq();
+      if (p >= end) break;
+      let st = u8[p];
+      if (st & 0x80) { p++; if (st < 0xf0) run = st; }
+      else if (run) st = run;
+      else break;
+      if (st === 0xff) {
+        const type = u8[p++], l = vlq(), o = p;
+        if (o + l > end) break;
+        p += l;
+        if (type === 0x51 && l >= 3) tempos.push({ c: tick, us: (u8[o] << 16) | (u8[o + 1] << 8) | u8[o + 2] });
+        else if (type === 0x58 && l >= 2) sigs.push({ c: tick, num: u8[o], den: 2 ** u8[o + 1] });
+        else if (type === 0x03 && !tr.name) tr.name = u8.subarray(o, o + l);
+        else if (type === 0x01 && l > 3 && u8[o] === 0x44 && u8[o + 1] === 0x4d && u8[o + 2] === 0x3a) { // "DM:" + the piece's number + ":" + the piece
+          let k = o + 3;
+          while (k < o + l && k < o + 12 && u8[k] !== 0x3a) k++;
+          tr.text.push(u8.subarray(u8[k] === 0x3a && k < o + l ? k + 1 : o + 3, o + l));
+        } else if (type === 0x2f) break;
+      } else if (st === 0xf0 || st === 0xf7) {
+        const n = vlq();
+        p += n;
+      } else if (st >= 0xf0) break;
+      else p += (st & 0xf0) === 0xc0 || (st & 0xf0) === 0xd0 ? 1 : 2;
+    }
+    p = end;
+    trs.push(tr);
+  }
+  const dec = b => {
+    try { return new TextDecoder('utf-8', { fatal: true }).decode(b); } catch (e) {}
+    try { return new TextDecoder('shift_jis').decode(b); } catch (e) {}
+    return new TextDecoder().decode(b);
+  };
+  const get = (S, k) => { if (S) for (const kv of S) if (kv[0] === k) return kv[1]; return ''; };
+  const voc = [];
+  for (const tr of trs) {
+    if (!tr.text.length) continue;
+    const all = new Uint8Array(tr.text.reduce((a, x) => a + x.length, 0));
+    let o = 0;
+    for (const x of tr.text) { all.set(x, o); o += x.length; }
+    const text = dec(all);
+    if (!text.includes('[EventList]')) continue;
+    const sec = new Map();
+    let cur = null;
+    for (const line of text.split(/\r?\n/)) {
+      const h = /^\[([^\]]+)\]\s*$/.exec(line), i = line.indexOf('=');
+      if (h) { cur = []; if (!sec.has(h[1])) sec.set(h[1], cur); }
+      else if (cur && i > 0) cur.push([line.slice(0, i), line.slice(i + 1)]);
+    }
+    voc.push({ tr, sec });
+  }
+  if (!voc.length) return null;
+  const M = voc[0].sec, pre = Math.max(0, parseInt(get(M.get('Master'), 'PreMeasure'), 10) || 0);
+  const tracks = voc.map(({ tr, sec }, vi) => {
+    const name = get(sec.get('Common'), 'Name').trim() || (tr.name ? dec(tr.name).replace(/\0/g, '').trim() : '') || 'Track ' + (vi + 1);
+    const mute = +get(M.get('Mixer'), 'Mute' + vi) > 0, fb = singerOf('vocaloid', null, name, { mute }), mine = new Map(), sw = [], notes = [];
+    for (const [k, v] of sec.get('EventList') || []) {
+      const c = +k;
+      if (k.trim() === '' || !isFinite(c)) continue;
+      for (const id of v.split(',')) {
+        const E = sec.get(id.trim()), type = get(E, 'Type').trim();
+        if (type === 'Singer') { // (from here on this voice sings: the singer can change partway through a track)
+          const H = sec.get(get(E, 'IconHandle').trim()), nm = get(H, 'IDS').trim(), lg = get(H, 'Language').trim();
+          if (nm && !mine.has(nm)) mine.set(nm, voiceSinger('vocaloid', nm, { mute, lang: lg === '' ? '' : VOCALOID_LANGS[+lg] || '' }));
+          sw.push({ c, v: nm ? mine.get(nm) : fb });
+        } else if (type === 'Anote') {
+          const m = /^\s*"((?:[^"]|"")*)"/.exec(get(sec.get(get(E, 'LyricHandle').trim()), 'L0'));
+          notes.push({ c, d: +get(E, 'Length'), p: +get(E, 'Note#'), l: m ? m[1].replace(/""/g, '"').trim() : '' });
+        }
+      }
+    }
+    sw.sort((a, b) => a.c - b.c);
+    notes.sort((a, b) => a.c - b.c);
+    for (const n of notes) {
+      let v = sw.length ? sw[0].v : fb;
+      for (const x of sw) { if (x.c <= n.c) v = x.v; else break; }
+      n.sg = v;
+    }
+    vocaloidWords(notes);
+    return { name, singer: fb, notes };
+  });
+  return scoreOfTicks({ tpq: div, tempos: tempos.map(t => ({ c: t.c, bpm: 60e6 / t.us })), sigs: scoreMeter(sigs, div), pre, tracks });
+}
+
+/* ---- VOCALOID5 / 6 (.vpr) and VOCALOID7 (.vprx) ----
+   A zip whose Project/sequence.json holds the song (its audio lies beside it and isn't read). masterTrack:
+   tempo.events [{ pos, value: bpm × 100 }] — or one tempo for the whole song, tempo.global, when that is enabled —
+   and timeSig.events [{ bar, numer, denom }]; voices [{ compID, name }]; tracks [{ type (1: audio), name, isMuted,
+   parts [{ pos, notes [{ pos (from the part's start), duration, number, lyric, phoneme }] }] }]. 480 ticks a beat; no
+   bars before the song. Who sings: VOCALOID5 names the voice in each part (voice.compID), VOCALOID6 an AI voice there
+   too (aiVoice, on a track of type 2), VOCALOID7 in the track (voice); the language is the notes' own (langID) where
+   they say it, else the voice's. A part or a note that is muted (VOCALOID7) isn't sung, so it is left out; a muted track — or one switched
+   off — is read, and marked muted. Keys this doesn't know are passed over, so a newer version's file reads too. */
+function scoreFromVPR(j) {
+  if (!j || typeof j !== 'object' || !Array.isArray(j.tracks)) throw new Error('not a VOCALOID sequence');
+  const list = x => (Array.isArray(x) ? x : []), M = j.masterTrack || {}, T = M.tempo || {};
+  const tempos = T.global && T.global.isEnabled === true && T.global.value > 0 ? [{ c: 0, bpm: T.global.value / 100 }]
+    : list(T.events).filter(Boolean).map(t => ({ c: +t.pos || 0, bpm: t.value / 100 }));
+  const sigs = list(M.timeSig && M.timeSig.events).filter(Boolean).map(g => ({ bar: +g.bar || 0, num: +g.numer, den: +g.denom }));
+  const voices = new Map(list(j.voices).filter(v => v && v.compID).map(v => [String(v.compID), String(v.name == null ? '' : v.name).trim()]));
+  const tracks = [];
+  list(j.tracks).forEach((tr, ti) => {
+    if (!tr || typeof tr !== 'object') return;
+    const parts = list(tr.parts).filter(P => P && Array.isArray(P.notes));
+    if (!parts.length && (tr.type === 1 || list(tr.parts).some(P => P && P.wav))) return; // (an audio track)
+    const name = String(tr.name == null ? '' : tr.name).trim() || 'Track ' + (ti + 1), mute = tr.isMuted === true || tr.isTrackOn === false;
+    const fb = singerOf('vocaloid', null, name, { mute }), mine = new Map(), langs = new Map(), notes = [];
+    // (a part's voice: on an AI track — type 2 — its AI voice before its other one; on any other track the other way round; then the track's)
+    const voiceOf = P => (tr.type === 2 ? P.aiVoice || P.voice || tr.aiVoice || tr.voice : P.voice || P.aiVoice || tr.voice || tr.aiVoice) || null;
+    const idOf = P => { const v = voiceOf(P); return v && v.compID ? String(v.compID) : ''; };
+    for (const P of parts) { // (each voice's language here: what most of its notes say, else what the voice itself says)
+      const id = idOf(P), v = voiceOf(P), by = langs.get(id) || new Map();
+      langs.set(id, by);
+      if (v && Number.isInteger(v.langID)) by.set(v.langID, (by.get(v.langID) || 0) + 0.5);
+      for (const n of P.notes) if (n && Number.isInteger(n.langID)) by.set(n.langID, (by.get(n.langID) || 0) + 1);
+    }
+    const who = id => {
+      if (!id) return fb;
+      if (!mine.has(id)) {
+        let top = -1;
+        for (const [l, c] of langs.get(id) || []) if (top < 0 || c > langs.get(id).get(top)) top = l;
+        const sg = voiceSinger('vocaloid', voices.get(id) || id, { id, mute, lang: VOCALOID_LANGS[top] || '' });
+        sg.key = 'vocaloid:' + id; // (the same voice has the same key in a .vsqx)
+        mine.set(id, sg);
+      }
+      return mine.get(id);
+    };
+    for (const P of parts) {
+      if (P.isMuted === true) continue;
+      const at = +P.pos || 0, sg = who(idOf(P)), ns = [];
+      for (const n of P.notes) if (n && typeof n === 'object' && n.isMuted !== true) ns.push({ c: at + (+n.pos || 0), d: +n.duration, p: +n.number, l: String(n.lyric == null ? '' : n.lyric).trim(), sg });
+      ns.sort((a, b) => a.c - b.c);
+      vocaloidWords(ns);
+      for (const n of ns) notes.push(n);
+    }
+    tracks.push({ name, singer: fb, notes });
+  });
+  return scoreOfTicks({ tpq: 480, tempos, sigs, pre: 0, tracks });
+}
+/* Any VOCALOID project file, by what is in it rather than by its name: a zip (VOCALOID5, 6, 7), a MIDI file
+   (VOCALOID1, 2), XML (VOCALOID3, 4), or a sequence.json taken out of its zip. A .vprx that is none of these is a
+   kind of VOCALOID7 file this doesn't know: said plainly. */
+async function parseVocaloid(f) {
+  const h = new Uint8Array(await f.slice(0, 16).arrayBuffer()), is = s => [...s].every((ch, i) => h[i] === ch.charCodeAt(0));
+  const v7 = /\.vprx$/i.test(f.name || ''), no = () => scoreErr(v7 ? "this kind of VOCALOID7 file isn't known yet" : "it isn't a VOCALOID project the player knows");
+  if (!h.length) throw new Error('empty');
+  if (is('PK')) {
+    const es = await zipOpen(f);
+    if (!es) throw new Error('bad zip');
+    const en = es.find(e => /^project\/sequence\.json$/i.test(e.name)) || es.find(e => /(^|\/)sequence\.json$/i.test(e.name)) || es.filter(e => /\.json$/i.test(e.name)).sort((a, b) => b.usize - a.usize)[0];
+    if (!en) throw no();
+    const u8 = await zipRead(f, en);
+    let j = null;
+    try { j = JSON.parse(fileText(u8)); } catch (e) {}
+    if (!j || typeof j !== 'object' || !Array.isArray(j.tracks)) throw no();
+    const sc = scoreFromVPR(j);
+    // (a project keeps a copy of its score file: of a VOCALOID project that carries audio — more than 1 MB of other
+    // things — only the sequence is kept, under the file's own name; that reads the same: the "{" case below)
+    if (f.size - u8.length > 1e6) sc.keep = new File([u8], f.name || 'score.vpr', f.lastModified ? { lastModified: f.lastModified } : {});
+    return sc;
+  }
+  const buf = await f.arrayBuffer();
+  if (is('MThd') || is('RIFF')) return parseVSQ(buf) || parseMIDI(buf);
+  let k = h[0] === 0xef && h[1] === 0xbb && h[2] === 0xbf ? 3 : 0;
+  while (k < h.length && (h[k] === 0x20 || h[k] === 0x09 || h[k] === 0x0a || h[k] === 0x0d)) k++;
+  if (h[k] === 0x7b) { // "{": the sequence itself
+    let j = null;
+    try { j = JSON.parse(fileText(new Uint8Array(buf))); } catch (e) {}
+    if (!j || typeof j !== 'object' || !Array.isArray(j.tracks)) throw no();
+    return scoreFromVPR(j);
+  }
+  if (h[k] !== 0x3c && !/\.vsqx$/i.test(f.name || '')) throw no();
+  return parseVSQX(decodeText(buf));
+}
+
+/* ---- Synthesizer V's first editor (.s5p) ----
+   JSON: tempo [{ position, beatPerMinute }], meter [{ measure, beatPerMeasure, beatGranularity }], tracks [{ name,
+   dbName (the voice), mixer.muted, notes [{ onset, duration, pitch, lyric }] }]. Counted as an .svp is: 705600000 to a
+   beat. */
+function parseS5P(text) {
+  const j = JSON.parse(text.replace(/^﻿/, '').replace(/\0+$/, '')), list = x => (Array.isArray(x) ? x : []);
+  if (!j || typeof j !== 'object' || !Array.isArray(j.tracks)) throw new Error('not an .s5p');
+  const tracks = j.tracks.filter(t => t && typeof t === 'object').map((t, ti) => {
+    const name = String(t.name == null ? '' : t.name).trim() || 'Track ' + (ti + 1), mute = !!(t.mixer && t.mixer.muted === true), db = String(t.dbName == null ? '' : t.dbName).trim();
+    return { name, singer: db ? voiceSinger('svp', db, { mute }) : singerOf('svp', null, name, { mute }),
+      notes: list(t.notes).filter(Boolean).map(n => ({ c: +n.onset, d: +n.duration, p: +n.pitch, l: String(n.lyric == null ? '' : n.lyric).trim() })) };
+  });
+  return scoreOfTicks({ tpq: BLICK, tempos: list(j.tempo).filter(Boolean).map(t => ({ c: +t.position || 0, bpm: +t.beatPerMinute })),
+    sigs: list(j.meter).filter(Boolean).map(m => ({ bar: +m.measure || 0, num: +m.beatPerMeasure, den: +m.beatGranularity })), pre: 0, tracks });
+}
+/* ---- UtaFormatix (.ufdata) ----
+   JSON: project { tracks [{ name, notes [{ key, tickOn, tickOff, lyric }] }], tempos [{ tickPosition, bpm }],
+   timeSignatures [{ measurePosition, numerator, denominator }] }; 480 ticks a beat. It names no singers. */
+function parseUfdata(text) {
+  const j = JSON.parse(text.replace(/^﻿/, '')), P = j && j.project, list = x => (Array.isArray(x) ? x : []);
+  if (!P || typeof P !== 'object' || !Array.isArray(P.tracks)) throw new Error('not a .ufdata');
+  const tracks = P.tracks.filter(t => t && typeof t === 'object').map((t, ti) => ({ name: String(t.name == null ? '' : t.name).trim() || 'Track ' + (ti + 1), singer: null,
+    notes: list(t.notes).filter(Boolean).map(n => ({ c: +n.tickOn, d: n.tickOff - n.tickOn, p: +n.key, l: String(n.lyric == null ? '' : n.lyric).trim() })) }));
+  return scoreOfTicks({ tpq: 480, tempos: list(P.tempos).filter(Boolean).map(t => ({ c: +t.tickPosition || 0, bpm: +t.bpm })),
+    sigs: list(P.timeSignatures).filter(Boolean).map(g => ({ bar: +g.measurePosition || 0, num: +g.numerator, den: +g.denominator })), pre: 0, tracks });
+}
+/* ---- Piapro Studio (.ppsf) ----
+   The newer kind is a zip with ppsf.json in it: ppsf.project { tempo { const (bpm × 10000), use_sequence, sequence
+   [{ tick, value }] }, meter { const { nume, denomi }, use_sequence, sequence [{ measure, nume, denomi }] },
+   vocaloid_track / dvl_track [{ name, singer, events [{ pos, length, note_number, lyric }] }], singer_table }; 480 ticks
+   a beat. The older kind (not a zip) can't be read: said plainly. */
+function scoreFromPPSF(j) {
+  const P = j && j.ppsf && j.ppsf.project, list = x => (Array.isArray(x) ? x : []);
+  if (!P || typeof P !== 'object') throw new Error('not a .ppsf');
+  const T = P.tempo || {}, M = P.meter || {}, table = list(P.singer_table), tracks = [];
+  const tempos = T.use_sequence === true && list(T.sequence).length ? list(T.sequence).filter(Boolean).map(t => ({ c: +t.tick || 0, bpm: t.value / 10000 })) : [{ c: 0, bpm: (T.const > 0 ? T.const : 1200000) / 10000 }];
+  const sigs = M.use_sequence === true && list(M.sequence).length ? list(M.sequence).filter(Boolean).map(g => ({ bar: +g.measure || 0, num: +g.nume, den: +g.denomi }))
+    : [{ bar: 0, num: +(M.const && M.const.nume) || 4, den: +(M.const && M.const.denomi) || 4 }];
+  const add = (tr, own) => { // own: the track holds its singer itself (dvl_track); else a number into singer_table
+    if (!tr || typeof tr !== 'object') return;
+    const name = String(tr.name == null ? '' : tr.name).trim() || 'Track ' + (tracks.length + 1), mute = tr.enable === false || tr.enabled === false;
+    const S = own ? tr.singer : table[+tr.singer], who = S && typeof S === 'object' ? String(S.singer_name || S.character_name || S.name || '').trim() : '';
+    tracks.push({ name, singer: who ? voiceSinger('piapro', who, { mute, lang: (S && VOCALOID_LANGS[S.language_id]) || '' }) : singerOf('piapro', null, name, { mute }),
+      notes: list(tr.events).filter(n => n && n.enable !== false && n.enabled !== false).map(n => ({ c: +n.pos, d: +n.length, p: +n.note_number, l: String(n.lyric == null ? '' : n.lyric).trim() })) });
+  };
+  list(P.vocaloid_track).forEach(t => add(t, false));
+  list(P.dvl_track).forEach(t => add(t, true));
+  return scoreOfTicks({ tpq: 480, tempos, sigs, pre: 0, tracks });
+}
+async function parsePPSF(f) {
+  const h = new Uint8Array(await f.slice(0, 4).arrayBuffer());
+  if (h[0] !== 0x50 || h[1] !== 0x4b) throw scoreErr("it is the older kind of Piapro Studio file, which can't be read");
+  const es = await zipOpen(f);
+  if (!es) throw new Error('bad zip');
+  const en = es.find(e => /(^|\/)ppsf\.json$/i.test(e.name)) || es.filter(e => /\.json$/i.test(e.name)).sort((a, b) => b.usize - a.usize)[0];
+  if (!en) throw scoreErr("it isn't a Piapro Studio project the player knows");
+  return scoreFromPPSF(JSON.parse(fileText(await zipRead(f, en))));
+}
+
+/* ---- MusicXML (.musicxml, .xml; .mxl: a zip with the same inside) ----
+   score-partwise (part > measure) or score-timewise (measure > part). Each part is a track, named by the part list.
+   In a measure: attributes (divisions: how many of its time units make a quarter note; time: beats / beat-type;
+   transpose), notes (pitch step / alter / octave, duration; a rest; chord: it starts with the note before; grace
+   notes take no time and are left out; tie: the note goes on with the next of the same pitch), backup / forward
+   (move back or on in time: another voice), and the tempo (sound tempo="…", else the metronome mark). Lyrics: a
+   note's first lyric (text; syllabic begin / middle / end: one word over several notes), and a note without one
+   right after a sung note goes on with that word. Repeats aren't played out: every measure is read once, in the
+   file's order. It names no singers. */
+function parseMusicXML(text) {
+  const doc = new DOMParser().parseFromString(text.replace(/^﻿/, ''), 'application/xml'), root = doc.documentElement;
+  if (!root || doc.getElementsByTagName('parsererror').length) throw new Error('not XML');
+  const timewise = root.localName === 'score-timewise';
+  if (root.localName !== 'score-partwise' && !timewise) throw scoreErr("it isn't a MusicXML score");
+  const kid = (el, n) => { for (const c of el.children) if (c.localName === n) return c; return null; };
+  const kids = (el, n) => [...el.children].filter(c => c.localName === n);
+  const txt = (el, n) => { const c = kid(el, n); return c ? c.textContent.trim() : ''; };
+  const num = (el, n) => { const v = parseFloat(txt(el, n)); return isFinite(v) ? v : 0; };
+  const attr = (el, n) => { for (const a of el.attributes) if (a.name === n) return a.value; return ''; };
+  const pl = kid(root, 'part-list'), pname = new Map(), parts = new Map();
+  for (const sp of pl ? kids(pl, 'score-part') : []) pname.set(attr(sp, 'id'), txt(sp, 'part-name'));
+  if (timewise) for (const m of kids(root, 'measure')) for (const p of kids(m, 'part')) { const id = attr(p, 'id'); if (!parts.has(id)) parts.set(id, []); parts.get(id).push(p); }
+  else for (const p of kids(root, 'part')) { const id = attr(p, 'id'); parts.set(parts.has(id) ? id + ' ' + parts.size : id, kids(p, 'measure')); }
+  const STEP = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }, UNIT = { whole: 4, half: 2, quarter: 1, eighth: 0.5, '16th': 0.25, '32nd': 0.125 };
+  const tempos = [], metro = [], sigs = [], tracks = [];
+  let first = true; // (the first part's time signatures are the song's)
+  for (const [id, ms] of parts) {
+    const notes = [], open = new Map(), sing = new Map(); // open: voice/pitch → the note a tie goes on from · sing: voice → { end, on: a word is being sung }
+    let div = 1, q0 = 0, tr = 0, beats = 4, btype = 4; // divisions; where the measure begins (quarter notes); transposition; the time signature
+    ms.forEach((m, mi) => {
+      let q = q0, top = q0, from = q0;
+      for (const el of m.children) {
+        const k = el.localName;
+        if (k === 'attributes') {
+          if (num(el, 'divisions') > 0) div = num(el, 'divisions');
+          const t = kid(el, 'time'), b = t ? txt(t, 'beats').split('+').reduce((a, x) => a + (parseFloat(x) || 0), 0) : 0, bt = t ? num(t, 'beat-type') : 0;
+          if (b > 0 && bt > 0) { beats = b; btype = bt; if (first) sigs.push({ bar: mi, num: b, den: bt }); }
+          const x = kid(el, 'transpose');
+          if (x) tr = num(x, 'chromatic') + 12 * num(x, 'octave-change');
+        } else if (k === 'backup') q = Math.max(q0, q - num(el, 'duration') / div);
+        else if (k === 'forward') q += num(el, 'duration') / div;
+        else if (k === 'direction' || k === 'sound') {
+          const s = k === 'sound' ? el : kid(el, 'sound'), t = s ? parseFloat(attr(s, 'tempo')) : NaN;
+          if (t > 0) tempos.push({ c: q, bpm: t });
+          const dt = k === 'direction' ? kid(el, 'direction-type') : null, mt = dt && kid(dt, 'metronome'), pm = mt ? parseFloat(txt(mt, 'per-minute').replace(/^[^\d]*/, '')) : NaN;
+          if (pm > 0 && UNIT[txt(mt, 'beat-unit')]) metro.push({ c: q, bpm: pm * UNIT[txt(mt, 'beat-unit')] * (kid(mt, 'beat-unit-dot') ? 1.5 : 1) });
+        } else if (k === 'note' && !kid(el, 'grace')) {
+          const d = num(el, 'duration') / div, chord = !!kid(el, 'chord'), at = chord ? from : q, pe = kid(el, 'pitch'), voice = txt(el, 'voice');
+          if (!chord) { from = q; q += d; }
+          const st = sing.get(voice) || { end: -1, on: false };
+          sing.set(voice, st);
+          if (!pe || kid(el, 'rest') || kid(el, 'cue') || !(d > 0)) { if (!chord) st.on = false; }
+          else {
+            const p = Math.round((num(pe, 'octave') + 1) * 12 + (STEP[txt(pe, 'step').toUpperCase()] || 0) + num(pe, 'alter') + tr), key = voice + '/' + p;
+            const nt = kid(el, 'notations'), ties = kids(el, 'tie').concat(nt ? kids(nt, 'tied') : []).map(t => attr(t, 'type'));
+            const held = ties.includes('stop') ? open.get(key) : null;
+            let n = null;
+            if (held && Math.abs(held.c + held.d - at) < 1e-6) { held.d += d; n = held; } // (a tied note: the one before goes on)
+            else {
+              const ly = kids(el, 'lyric')[0], word = ly ? kids(ly, 'text').map(t => t.textContent).join('').trim() : '', syl = ly ? txt(ly, 'syllabic') : '';
+              let l = word;
+              if (word) st.on = true;
+              else if (st.on && !chord && Math.abs(st.end - at) < 1e-6) l = '-'; // (no word of its own, right after a sung note: the word goes on)
+              else if (!chord) st.on = false;
+              n = Object.assign({ c: at, d, p, l }, word && (syl === 'middle' || syl === 'end') ? { glue: true } : {});
+              notes.push(n);
+            }
+            if (!chord) st.end = at + d;
+            if (ties.includes('start')) open.set(key, n); else open.delete(key);
+          }
+        }
+        if (q > top) top = q;
+      }
+      q0 = top > q0 ? top : q0 + beats * 4 / btype; // (an empty measure is as long as its time signature says)
+    });
+    first = false;
+    if (!notes.length) continue; // (a part with nothing to sing or play: drums, or only rests)
+    const name = (pname.get(id) || '').replace(/\s+/g, ' ').trim() || 'Track ' + (tracks.length + 1);
+    tracks.push({ name, singer: singerOf('musicxml', null, name), notes });
+  }
+  return scoreOfTicks({ tpq: 1, tempos: tempos.length ? tempos : metro, sigs, pre: 0, tracks });
+}
+/* A .musicxml / .xml / .mxl file → a score. A zip: the file its META-INF/container.xml names, else the first XML
+   file in it. An .xml that is a VOCALOID3 / 4 project under another name is read as one. */
+async function parseXMLScore(f) {
+  const h = new Uint8Array(await f.slice(0, 4).arrayBuffer());
+  let u8;
+  if (h[0] === 0x50 && h[1] === 0x4b) {
+    const es = await zipOpen(f);
+    if (!es) throw new Error('bad zip');
+    const c = es.find(e => /^META-INF\/container\.xml$/i.test(e.name)), m = c ? /<rootfile\b[^>]*\bfull-path\s*=\s*["']([^"']+)["']/.exec(fileText(await zipRead(f, c, 1e6))) : null;
+    const en = (m && es.find(e => e.name === m[1])) || es.find(e => !/^META-INF\//i.test(e.name) && /\.(musicxml|xml)$/i.test(e.name));
+    if (!en) throw scoreErr('there is no score in it');
+    u8 = await zipRead(f, en);
+  } else u8 = new Uint8Array(await f.arrayBuffer());
+  // (the first element's name, past the XML declaration, comments and the DOCTYPE; "-{2}": the page's own script must not hold the start of an HTML comment)
+  const text = fileText(u8), root = /<([A-Za-z_][\w.-]*)/.exec(text.slice(0, 4000).replace(/<\?[\s\S]*?\?>|<!-{2}[\s\S]*?-{2}>|<!DOCTYPE[^>]*>/g, ''));
+  return root && /^vsq[34]$/.test(root[1]) ? parseVSQX(text) : parseMusicXML(text);
+}
+/* @pure:score end */
 let scoreGen = 0; // the latest score being read (a newer one, a project or Reset supersedes it)
 /* A score file (or a list of .ust files, one part each) read into a score, nothing else changed — so the
    desktop pets can read the next song's singers while this one plays. Throws if it can't be read;
@@ -8235,9 +8760,13 @@ async function parseScoreFile(list, bad) {
   const f = list[0], kind = scoreLabel(f.name);
   if (kind === 'UST') return scoreFromUST(list, bad);
   if (kind === 'USTX') return scoreFromUSTX(parseYAML(decodeText(await f.arrayBuffer())));
-  if (kind === 'MIDI') return parseMIDI(await f.arrayBuffer());
-  if (kind === 'VSQX') return parseVSQX(decodeText(await f.arrayBuffer()));
+  if (kind === 'MIDI') { const buf = await f.arrayBuffer(); return parseVSQ(buf) || parseMIDI(buf); } // (a VOCALOID1 .mid keeps its notes and words in text events: parseVSQ; any other MIDI file is read as ever)
+  if (kind === 'VOCALOID') return parseVocaloid(f); // (.vsqx, .vsq, .vpr, .vprx: by what is in the file)
   if (kind === 'VoiSona' || kind === 'CeVIO') { const raw = await parseVoiSona(await f.arrayBuffer()); return timeTicks(raw, chooseTpq(raw)); }
+  if (kind === 'MusicXML') return parseXMLScore(f);
+  if (kind === 'S5P') return parseS5P(await f.text());
+  if (kind === 'Piapro Studio') return parsePPSF(f);
+  if (kind === 'UtaFormatix') return parseUfdata(await f.text());
   return parseSVP(await f.text());
 }
 async function loadScore(f) { // f: a score file, or a list of .ust files (one part each)
@@ -8252,7 +8781,7 @@ async function loadScore(f) { // f: a score file, or a list of .ust files (one p
     svp = parsed;
     const ust = parsed.ustFiles;
     svp.fileName = ust ? (ust.length > 1 ? ust.length + ' UST files' : ust[0].name) : f.name;
-    svp.srcFile = ust ? null : f;      // (projects save this one file…)
+    svp.srcFile = ust ? null : parsed.keep || f; // (projects save this one file — of a VOCALOID project with audio in it, only its sequence: parseVocaloid…)
     svp.srcFiles = ust || null;        // (…or all the .ust files)
     parts.length = 0;
     glow.prev = null;
@@ -8263,7 +8792,9 @@ async function loadScore(f) { // f: a score file, or a list of .ust files (one p
     say(parsed.notes.length + ' notes loaded' + (ust && ust.length > 1 ? ' · ' + ust.length + ' parts' : '') +
         (bad.length ? " · couldn't read " + (bad.length === 1 ? bad[0] : bad.length + ' files') : ''));
   } catch (err) {
-    say("Couldn't read " + (list.length > 1 ? 'the UST files' : f.name));
+    // (why, where a reader can say it in plain words — a kind of file that isn't known, an older kind, no notes: scoreErr)
+    loadScore.why = err && typeof err.say === 'string' ? err.say : err && err.message === 'no notes' ? 'it has no notes' : '';
+    say("Couldn't read " + (list.length > 1 ? 'the UST files' : f.name) + (loadScore.why ? ': ' + loadScore.why : ''), loadScore.why ? 5000 : undefined);
     return false;
   }
   return true;
@@ -10425,10 +10956,11 @@ function paintRoll() {
 }
 
 /* =====================================================================
-   One place for all files: audio → track, video → background, score (.svp / MIDI / VoiSona /
-   CeVIO) → piano roll, a lyrics text (.txt) → the score's words. The + button and drag-and-drop both land here.
+   One place for all files: audio → track, video → background, score (every kind in SCORE_FORMATS: .svp / MIDI /
+   VOCALOID / VoiSona / CeVIO / UST / USTX / MusicXML …) → piano roll, a lyrics text (.txt) → the score's words. The +
+   button and drag-and-drop both land here.
    ===================================================================== */
-const SCORE_RE = /\.(svp|mid|midi|kar|rmi|tssln|tssprj|tsmsln|ccs|ust|ustx|vsqx)$/i;
+const SCORE_RE = /\.(svp|mid|midi|kar|rmi|tssln|tssprj|tsmsln|ccs|ust|ustx|vsqx|vsq|vpr|vprx|s5p|musicxml|mxl|xml|ppsf|ufdata)$/i;
 const VIDEO_RE = /\.(mp4|m4v|webm|mov|mkv|ogv)$/i;
 const AUDIO_RE = /\.(wav|mp3|ogg|oga|flac|m4a|aac|opus|weba|aif|aiff)$/i;
 function kindOf(f) {
@@ -10488,7 +11020,7 @@ async function handleFiles(files) {
   }
   if (bits.length) {
     let msg = 'Added ' + bits.join(' · ');
-    if (score && scoreOk === false) msg += " · couldn't read " + (ust.length ? 'the UST files' : score.name);
+    if (score && scoreOk === false) msg += " · couldn't read " + (ust.length ? 'the UST files' : score.name) + (loadScore.why ? ' (' + loadScore.why + ')' : '');
     if (ustBad.length) msg += " · couldn't read " + (ustBad.length === 1 ? ustBad[0].name : ustBad.length + ' UST files');
     if (skipped.length) msg += ' · ' + skipped.length + ' skipped';
     sayWhenLoaded(msg);
@@ -13421,8 +13953,10 @@ async function coverPage() {
    (0-255) · same – the four corners at least this alike · tol – backdrop pixels this close to its
    colour (0-255, each channel) · small – icons under this (px) · maxH – kept at most this tall (px) ·
    up – never shown bigger than this × its own size · cell – a pet sheet (a picture that is a puppet's
-   parts on a grid: petsheet.js) is none of that: it is kept as it is, its cells at most this big (px) */
-const PETP = { clear: 0.02, a: 24, patch: 8, std: 12, same: 24, tol: 24, small: 200, maxH: 600, up: 2, cell: 256 };
+   parts on a grid: petsheet.js) is none of that: it is kept as it is, its cells at most this big (px) ·
+   px – the most pixels a sheet's picture may have as it comes in (as many as the biggest sheet of four rows
+   has: 8 cells of 1024 px by 4 — so one of sixteen rows, 1.0.15, may have cells of 512 px) */
+const PETP = { clear: 0.02, a: 24, patch: 8, std: 12, same: 24, tol: 24, small: 200, maxH: 600, up: 2, cell: 256, px: 8192 * 4096 };
 /* The box around every pixel more opaque than a: { x, y, w, h }, or null when there's none. */
 function petAlphaBox(px, w, h, a = PETP.a) {
   let x0 = w, y0 = -1, x1 = -1, y1 = -1;
@@ -14419,7 +14953,8 @@ function petFit(c, dpr) {
 /* The sheet's picture, to draw a puppet hpx canvas pixels tall from: the picture itself, or — where that is all a
    sharp puppet of that height takes (PetSheet.cellFor) — a smaller copy, kept with the picture: every pet that has
    it is the same size, and a hundred singers needn't each be drawn from a full-size sheet. Copied cell by cell, so
-   nothing of one part runs into the cell beside it — as many rows as the sheet has (three, or four: sheet.rows). */
+   nothing of one part runs into the cell beside it — as many rows as the sheet has (sheet.rows: three, four, or up
+   to sixteen for a pet with pictures of its own, 1.0.15 — those rows hold them, one a cell). */
 function petSheetCopy(p, hpx) {
   const N = PetSheet.COLS, M = p.sheet.rows || 3, full = (p.src.naturalWidth || p.src.width) / N, cell = PetSheet.cellFor(p.sheet, hpx);
   if (!(cell < full)) return p.src;
@@ -16682,7 +17217,11 @@ async function petSheetIn(file, json) {
   if (!CAN_SHEET) return bad(PET_SHEET_NEW);
   const r = PetSheet.read(bytes, { name, json: text });
   if (!r.ok) return bad(r.error);
-  const S = r.sheet, w = S.w, h = S.h, C = S.cell, N = PetSheet.COLS, M = S.rows || 3; // (the sheet's own rows: three, or four)
+  const S = r.sheet, w = S.w, h = S.h, C = S.cell, N = PetSheet.COLS, M = S.rows || 3; // (the sheet's own rows: three, four, or — with pictures of its own, 1.0.15 — up to sixteen)
+  // (a sheet of many rows with big cells is far more picture than any sheet had before 1.0.15, and it is held here
+  // three times over while it is looked at: no more pixels than the biggest sheet of four rows — PETP.px. The app's
+  // own sheets, 256 px a cell, are a quarter of that with all sixteen rows)
+  if (w * h > PETP.px) return bad('The sheet is too big: with ' + M + ' rows of cells, a cell can be at most ' + Math.floor(Math.sqrt(PETP.px / (N * M))) + ' px (these are ' + C + ' px).');
   let bm = null;
   try { bm = await createImageBitmap(file); } catch (e) { return bad("The sheet's picture can't be opened: save it again as a PNG picture."); }
   if (bm.width !== w || bm.height !== h) { bm.close(); return bad("The sheet's picture couldn't be looked at."); }
