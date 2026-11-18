@@ -513,7 +513,7 @@ html:not(.overlay) body:not(.bgm-awake):not(.phone) #bgmBar .bgm-btns button{poi
 :is(body.phone,html.overlay body) #bgmBar svg,:is(body.phone,html.overlay body) #bgmBar .bgm-btns .pp svg{width:18px;height:18px}
 html.overlay #bgmBar .i-back{display:none}
 html.overlay #bgmBar .i-stop{display:block}
-/* Background mode: all its text sits on the lyrics' dark caption box (rgb(8,8,8); --cap-a is the song's
+/* Background mode: its text sits on the lyrics' dark caption box — not the words on the piano roll's notes (rgb(8,8,8); --cap-a is the song's
    Caption box opacity, at least 0.6 — see capA), so it reads over any video, picture or desktop */
 :root{--cap-a:.75;--cap-bg:rgb(8 8 8 / var(--cap-a))}
 body.bgm:not(.phone) #bgmBar .bgm-info{background:none;text-shadow:none;align-items:flex-start;gap:3px}
@@ -544,6 +544,8 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #plWhereRow[hidden],#plCoverHint[hidden],#plPetOld[hidden],#petSet[hidden],#petPanel[hidden],#plVisualRow[hidden],#plVisualHint[hidden],#plOneLyricRow[hidden],#plOneLyricHint[hidden]{display:none}
 /* Idle mode (Background mode → Desktop pet): its switch, and the list of singers with a picture — each a row with its picture, its name, the songs it sings in and its own switch (it stays on the screen) */
 #petIdleRow[hidden],#petIdleHint[hidden],#petIdleBox[hidden]{display:none}
+#bgmIdleNo[hidden],#petIdleNo[hidden],#bgmNow .dbg-row[hidden]{display:none}
+#bgmStart:disabled,#petIdleOn:disabled{opacity:.45;cursor:default} /* (1.0.16: Idle mode and background mode never run together — greyed, with a line saying why) */
 #petIdleList{list-style:none;margin:0 0 12px;padding:0;max-height:300px;overflow-y:auto}
 #petIdleList li{border-bottom:1px solid var(--line);font-size:.85rem}
 #petIdleList label{display:flex;gap:10px;align-items:center;padding:6px 2px;cursor:pointer}
@@ -803,6 +805,20 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-zoom{display:inline-flex;align-items:center;gap:4px}
 #petEdDlg .pd-zoom span{min-width:44px;text-align:center;font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
 #petEdDlg .pd-sw{display:inline-flex;align-items:center;gap:8px;font-size:.82rem}
+/* Cut's chips (1.0.16): the parts' row, then a row of groups — each limb's two pieces under its name — each kept
+   whole as the row wraps; the points not placed yet beside Show the points */
+#petEdDlg .pd-chipbr{flex-basis:100%;height:0}
+#petEdDlg .pd-chipgrp{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px;margin-right:6px}
+#petEdDlg .pd-chipcap{font-size:.75rem;color:var(--muted);white-space:nowrap}
+#petEdDlg .pd-ptsmiss{font-size:.78rem;color:var(--muted)}
+#petEdDlg .pd-clonew{padding:2px 10px;border:1px dashed var(--line);border-radius:999px;font-size:.8rem;line-height:1.5} /* (1.0.16: New clothing layer…, at the end of Cut's chips) */
+#petEdDlg .pd-clo{border-top:1px solid var(--line)} /* (How it moves: the chosen clothing layer's settings, under the animations) */
+#petEdDlg .pd-clo .pd-clorow1{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 8px}
+#petEdDlg .pd-clo .pd-clorow1 .pd-usual{margin-top:0}
+#petEdDlg .pd-clo .pd-name input{width:120px}
+#petEdDlg .pd-clo .op{flex-wrap:wrap}
+#petEdDlg .pd-clo select{max-width:100%}
+#petEdDlg .pd-clospace{width:14px} /* (a clothing layer's row in Layers: no grip — where it lies is In the pile's) */
 /* The brush's size: one row for both brushes. Everything in it has a width of its own — the number comes AFTER the
    slider, in a box that never changes size — so nothing can move under the mouse while the slider is dragged */
 #petEdDlg .pd-brush{display:flex;flex:none;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:6px 12px 0;font-size:.82rem;white-space:nowrap}
@@ -1727,7 +1743,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <label class="op"><span>Lyrics size <span class="rv" id="lyricSizeTxt">100%</span></span><input autocomplete="off" type="range" id="lyricSize" min="0.5" max="2.5" step="0.05" value="1" title="Double-click: back to 100%"></label>
         <p class="hint">How big the lyrics are (the piano roll gets the rest of the space). You can also drag the line between the lyrics and the piano roll; double-click it for 100%.</p>
         <label class="op">Caption box behind lyrics <input autocomplete="off" type="checkbox" id="lyricBox"></label>
-        <p class="hint">A dark box behind the lyrics, like video captions, so they read over any video. In background mode the box is always on, at least 60% opaque.</p>
+        <p class="hint">A dark box behind the lyrics, like video captions, so they read over any video. In background mode the box is always on, at least 60% opaque. The words on the piano roll's notes never get a box: each is drawn in a colour that reads on its note.</p>
         <div class="dep" data-needs="lyricBox">
           <label class="op">Caption box opacity <input autocomplete="off" type="range" id="lyricBoxAlpha" min="0.2" max="1" step="0.05" value="0.75"></label>
         </div>
@@ -1951,13 +1967,14 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <label class="op" id="plVisualRow">Visuals only <input type="checkbox" id="plVisual"></label>
     <p class="hint" id="plVisualHint">Visuals only: just the visualizer and the piano roll with its lyrics — no video, no backgrounds.</p>
     <label class="op" id="plOneLyricRow">Small player: just the main lyrics <input type="checkbox" id="plOneLyric" checked></label>
-    <p class="hint" id="plOneLyricHint">In the small player (the corner window), only the main singer's lines — or, while the main singer is quiet, the line that's being sung right now. In all of background mode, the lyrics and the syllables on the notes sit on a dark caption box, and so does the time, so they stay easy to read over anything behind them; in the small player and the browser's compact player the song name and "Next" do too (on phones they stay in the bar at the top). Its opacity is the song's Caption box opacity, at least 60%.</p>
+    <p class="hint" id="plOneLyricHint">In the small player (the corner window), only the main singer's lines — or, while the main singer is quiet, the line that's being sung right now. In all of background mode, the lyrics sit on a dark caption box, and so does the time, so they stay easy to read over anything behind them; in the small player and the browser's compact player the song name and "Next" do too (on phones they stay in the bar at the top). Its opacity is the song's Caption box opacity, at least 60%.</p>
     <label class="op" id="plWhereRow" hidden>Plays in <select id="plWhere" autocomplete="off"><option value="corner">Small corner player</option><option value="cover">Cover the screen</option><option value="pet" id="plWherePet">Desktop pet</option></select></label>
     <p class="hint" id="plPetOld" hidden>Install the newest version to get Desktop pet mode (this copy of the app is from before it).</p>
     <div id="petSet" hidden>
       <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer to move it (where you leave it is remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the top of the screen, in the middle) stops. Each singer is a picture of your own: Characters… lists the singers of the songs in your playlist, so you can give them their pictures before you start, and warns about any without one. When you start, the player also asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
       <label class="op" id="petIdleRow" hidden>Idle mode <input type="checkbox" id="petIdleOn" autocomplete="off"></label>
-      <p class="hint" id="petIdleHint" hidden>On: the pets you switch on in the list below stay on your taskbar with no song. They blink and move a little, and you can drag them, as always; the player stays as it is, and you can go on using it. Click one of them and it shows the songs it sings in: the songs in your playlist and your saved projects whose score has that singer. Choose a song and it plays as a desktop-pet song: the song's other singers with a picture come on and sing their lines too. When the song ends, or you stop it, the others leave and your pets are idle again. It plays that one song only, not the rest of the playlist. Esc, a click somewhere else, or a few seconds' wait closes the list. Idle pets come back by themselves each time you open the player. Ctrl+Alt+End (or ✕ on the little controls) while no song plays switches Idle mode off; this switch brings the pets back. Off: pets are only there while background mode plays.</p>
+      <p class="hint" id="petIdleNo" hidden>Background mode is playing: leave it first to switch Idle mode on.</p>
+      <p class="hint" id="petIdleHint" hidden>On: the pets you switch on in the list below stay on your taskbar with no song. They blink and move a little, and you can drag them, as always; the player stays as it is, and you can go on using it. Click one of them and it shows the songs it sings in: the songs in your playlist and your saved projects whose score has that singer. Choose a song and it plays as a desktop-pet song: the song's other singers with a picture come on and sing their lines too. When the song ends, or you stop it, the others leave and your pets are idle again. It plays that one song only, not the rest of the playlist. Esc, a click somewhere else, or a few seconds' wait closes the list. Idle pets come back by themselves each time you open the player. Ctrl+Alt+End (or ✕ on the little controls) while no song plays switches Idle mode off; this switch brings the pets back. While it is on, background mode can't be started, and while background mode plays, it can't be switched on: the two never run together. Off: pets are only there while background mode plays.</p>
       <div id="petIdleBox" hidden><p class="pet-sum" id="petIdleSum" role="status"></p><ul id="petIdleList"></ul></div>
       <label class="op">Character size <select id="petSize" autocomplete="off"><option value="S">Small</option><option value="M">Medium</option><option value="L">Large</option></select></label>
       <label class="op"><span>Height on the taskbar <span class="rv" id="petLiftTxt">50%</span></span><input autocomplete="off" type="range" id="petLift" min="0" max="150" step="5" value="50" title="0%: feet on the bottom edge of the screen · 50%: on the middle of the taskbar · 100%: on its top edge"></label>
@@ -1985,6 +2002,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     </div>
     <p class="hint" id="plCoverHint" hidden>Cover the screen: instead of the small window, the visualizer and the piano roll play over your whole screen, with nothing behind them — your other windows show through, and the mouse goes straight through to them. The player waits in the taskbar as the remote control. The controls are in a little window in the bottom-right corner of the screen (the song, previous, play / pause and next, and ✕ to stop), and these keys work from any app while it plays: Ctrl+Alt+Space play / pause, Ctrl+Alt+Page Down next song, Ctrl+Alt+Page Up previous song, Ctrl+Alt+End stop — and the media keys on your keyboard.</p>
     <button id="bgmStart" class="primary bgm-big">Start background mode</button>
+    <p class="hint" id="bgmIdleNo" hidden>Idle mode is on: switch it off to start background mode.</p>
   </section>
 </main>
 
@@ -6577,24 +6595,12 @@ const rollLayout = $('rollLayout'), barOpts = $('barOpts'), barPosSel = $('barPo
 const glowAmt = $('glowAmt'), noteLyrics = $('noteLyrics');
 const lyricPosSel = $('lyricPos'), lyricOne = $('lyricOne'), lyricColIn = $('lyricCol');
 const lyricBox = $('lyricBox'), lyricBoxAlpha = $('lyricBoxAlpha');
-// Caption box: in background mode it's always on, behind all its text (lyrics, the pitch line's syllables,
-// and in CSS the song name and the time), so it reads over any video, picture or desktop. Its opacity is
-// the song's own setting, but never below 0.6 there: a song saved at 0.2 would leave the box almost gone.
+// Caption box: in background mode it's always on, behind its lyrics (and in CSS the song name and the time),
+// so they read over any video, picture or desktop. Its opacity is the song's own setting, but never below 0.6
+// there: a song saved at 0.2 would leave the box almost gone. Never behind the words on the piano roll's notes
+// (1.0.16, every roll style, whatever this says): those are drawn in the ink that reads on their note (inkFor).
 const capOn = () => lyricBox.checked || lyrSmall || BGM.on;
 const capA = () => (BGM.on ? Math.max(0.6, +lyricBoxAlpha.value) : +lyricBoxAlpha.value);
-function capBox(cx, x, y, w, h, rad, alpha) {
-  cx.save(); cx.shadowBlur = 0; cx.globalAlpha = alpha; cx.fillStyle = 'rgb(8,8,8)';
-  cx.beginPath(); cx.roundRect(x, y, w, h, rad); cx.fill(); cx.restore();
-}
-// a note's syllable on its caption box, for text s drawn at (x, y) in the context's font, alignment and baseline.
-// Every box is at least as tall as 'Hg', so a row of syllables lines up ("a" and "light" alike).
-let capHg = null;
-function capLabBox(cx, s, x, y, r, alpha) {
-  const k = cx.font + cx.textBaseline;
-  if (!capHg || capHg.k !== k) { const m = cx.measureText('Hg'); capHg = { k, a: m.actualBoundingBoxAscent, d: m.actualBoundingBoxDescent }; }
-  const m = cx.measureText(s), asc = Math.max(capHg.a, m.actualBoundingBoxAscent), desc = Math.max(capHg.d, m.actualBoundingBoxDescent);
-  capBox(cx, x - (cx.textAlign === 'center' ? m.width / 2 : 0) - 3 * r, y - asc - 2 * r, m.width + 6 * r, asc + desc + 4 * r, 3 * r, alpha);
-}
 const syncCapCss = () => document.documentElement.style.setProperty('--cap-a', capA()); // (the CSS boxes: --cap-bg)
 lyricBoxAlpha.addEventListener('input', syncCapCss); // (a project's settings come in with an 'input' event too)
 const rollStyleSel = $('rollStyle');
@@ -10615,9 +10621,8 @@ function drawScrolling(G, line) {
         rc.rect(x, y, nw, hn);
         rc.clip();
         rc.shadowBlur = 0;
-        if (BGM.on) capLabBox(rc, n.lab, x + 5 * r, y + hn / 2 + 0.5 * r, r, capA()); // (background mode: white on a caption box, even on a faded note)
         rc.globalAlpha = act ? 1 : (n.e < now ? 0.45 : 0.85);
-        rc.fillStyle = BGM.on ? '#fff' : inkFor(col);
+        rc.fillStyle = inkFor(col); // (1.0.16: never a caption box behind a note's word, background mode too — the ink that reads on its note)
         rc.fillText(n.lab, x + 5 * r, y + hn / 2 + 0.5 * r);
         rc.restore();
       }
@@ -10702,14 +10707,14 @@ function drawPitchLines(G, hn, px, headX, rowY, tFrom, tTo) {
     if (!n.lab || nw < 10 * r || x0 > G.bx + G.bw || x0 + nw < bx) continue;
     labs.push([n.lab, x0, rowY(n.p) - lw / 2 - 8 * r, n.s <= now && now < n.e ? 1 : n.e < now ? 0.4 : 0.8]);
   }
-  if (BGM.on) { // (background mode: each syllable on a caption box, white; every box first, so none covers a neighbour's syllable)
-    rc.textBaseline = 'alphabetic'; // (the box is measured from the baseline: clear of the line and its ball below)
-    // (a full box for sung and coming syllables too, like drawLine's dimmed rows: only their text dims — a box
-    // faded with them left grey text on grey over a light background)
-    const ca = capA();
-    for (const [s, x, y] of labs) capLabBox(rc, s, x, y, r, ca);
+  rc.fillStyle = fg; // (1.0.16: never a caption box behind them, background mode too — the roll's own text colour, as everywhere)
+  if (OVERLAY) { // (Cover the screen: anything of the desktop can be behind them — white with a dark edge, as the lyric lines' own fallback: no box)
+    rc.fillStyle = '#fff';
+    rc.lineJoin = 'round';
+    rc.lineWidth = Math.max(1.5, 3 * r);
+    rc.strokeStyle = 'rgba(0,0,0,.7)';
+    for (const [s, x, y, a] of labs) { rc.globalAlpha = a; rc.strokeText(s, x, y); }
   }
-  rc.fillStyle = BGM.on ? '#fff' : fg;
   for (const [s, x, y, a] of labs) { rc.globalAlpha = a; rc.fillText(s, x, y); }
   rc.globalAlpha = 1;
 }
@@ -10775,9 +10780,8 @@ function drawFalling(G) {
       rc.beginPath();
       rc.rect(v.x, y0, v.w, y1 - y0);
       rc.clip();
-      if (BGM.on) capLabBox(rc, v.n.lab, tx, ty, r, capA()); // (background mode: white on a caption box)
       rc.globalAlpha = v.act ? 1 : 0.85;
-      rc.fillStyle = BGM.on ? '#fff' : inkFor(v.col);
+      rc.fillStyle = inkFor(v.col); // (1.0.16: never a caption box behind a note's word, background mode too — the ink that reads on its note)
       rc.fillText(v.n.lab, tx, ty);
       rc.restore();
     }
@@ -13660,6 +13664,7 @@ function bgmSync() {
 }
 const shuffled = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 async function bgmStart() {
+  if (await bgmIdleRefused()) return false; // (1.0.16: Idle mode is on — the two never run together)
   let ps = [];
   try { ps = await listProjects(); } catch (e) {}
   const ok = PL.ids.filter(id => ps.some(p => p.id === id));
@@ -13667,6 +13672,7 @@ async function bgmStart() {
   if (BGM.on || COVER.on) return false;
   if (CAN_PET && PL.where === 'pet') { // (a picture for each singer first: petAskFirst)
     if (!(await petAskFirst(ok)) || BGM.on || COVER.on) return false;
+    if (bgmIdleNo()) { say(PETIDLE_NO.bgm, 3500); return false; } // (Idle mode switched on while the singers were looked at: nothing starts)
     coverStart('pet');
     return true;
   }
@@ -13823,18 +13829,25 @@ setInterval(() => {
 }, 200);
 async function bgmUI() {
   const now = $('bgmNow');
+  bgmIdleUI(); // (1.0.16: Start greyed while Idle mode is on, Idle mode's switch while background mode plays)
   if (COVER.on) { // (main window, while background mode plays in its own window: what's playing there)
     const c = COVER.s || {}, corner = COVER.kind === 'corner', pet = COVER.kind === 'pet';
+    // (one: the song an idle pet was asked for — Idle mode's, not background mode: said so, with no playlist's Previous /
+    // Next, and no song of the playlist marked as playing, 1.0.16)
+    const one = pet && c.idle === 'song';
     now.hidden = false;
     now.querySelector('.bgm-title').textContent = !COVER.live // (its window shows once the first song has loaded and plays)
-      ? (corner ? 'Getting the corner player ready' : pet ? 'Getting the desktop pets ready' : 'Getting ready to cover the screen') + (c.song ? ' — loading ' + c.song : '') + '…'
+      ? (one ? "Getting the pet's song ready" : corner ? 'Getting the corner player ready' : pet ? 'Getting the desktop pets ready' : 'Getting ready to cover the screen') + (c.song ? ' — loading ' + c.song : '') + '…'
+      : one ? 'A pet is singing' + (c.song ? ': ' + c.song : '…')
       : (corner ? 'Playing in the corner' : pet ? 'Desktop pets' : 'Covering the screen') + (c.song ? (pet ? ': now playing ' : ' — now playing: ') + c.song + (c.n ? ' (' + c.i + ' / ' + c.n + ')' : '') : '…');
     now.querySelector('.bgm-next').textContent = c.up || '';
-    $('bgmStart').textContent = corner ? 'Back to the full player' : pet ? (c.idle === 'song' ? 'Stop the song' : c.idle === 'list' ? 'Stop the playlist' : 'Stop the desktop pets') : 'Stop covering the screen'; // (c.idle — the pets' Idle mode: what plays stops, and the idle pets stay)
+    now.querySelector('.dbg-row').hidden = one;
+    $('bgmStart').textContent = corner ? 'Back to the full player' : pet ? (one ? 'Stop the song' : 'Stop the desktop pets') : 'Stop covering the screen'; // (one — the pets' Idle mode: the song stops, and the idle pets stay)
     $('bgmStart').classList.remove('primary');
-    document.querySelectorAll('#plList li').forEach((li, k) => li.classList.toggle('now', !!c.id && PL.ids[k] === c.id));
+    document.querySelectorAll('#plList li').forEach((li, k) => li.classList.toggle('now', !one && !!c.id && PL.ids[k] === c.id));
     return;
   }
+  now.querySelector('.dbg-row').hidden = false;
   now.hidden = !BGM.on;
   if (!BGM.on) return;
   let ps = [];
@@ -13877,6 +13890,8 @@ async function coverStart(kind) {
   renderPlaylist(); airUI(); // (an open AirPlay panel: no Show on TV / Mirror while it plays in its own window)
   let ok = false;
   try { ok = await (kind === 'corner' ? mapApp.corner() : kind === 'pet' ? mapApp.pet() : mapApp.cover(true)); } catch (e) {}
+  // (1.0.16: the app refused — Idle mode is on, which this window hadn't heard of yet: nothing starts, and it says why)
+  if (ok === 'idle') { COVER.on = false; renderPlaylist(); airUI(); petIdleAsk(); say(PETIDLE_NO.bgm, 3500); return; }
   if (!ok) { COVER.on = false; renderPlaylist(); airUI(); say(kind === 'corner' ? "Couldn't open the corner player" : kind === 'pet' ? "Couldn't start the desktop pets" : "Couldn't cover the screen", 2500); }
 }
 /* Background mode's window is gone: back here, with nothing loaded (it was emptied when it started). */
@@ -13933,7 +13948,7 @@ document.documentElement.addEventListener('mouseleave', () => { clearTimeout(bgm
 async function coverPage() {
   mapApp.onCover(m => {
     if (!m || !m.cmd) return;
-    if (PET && petIdleCmd(m.cmd)) return; // (the pets' Idle mode: 'idle' — what plays stops, they stay — and 'list' — the playlist plays here)
+    if (PET && petIdleCmd(m.cmd)) return; // (the pets' Idle mode: 'idle' — the pet's song stops, they stay)
     if (m.cmd === 'next') { if (once('next', 'app')) bgmNext(1); }
     else if (m.cmd === 'prev') { if (once('prev', 'app')) bgmNext(-1); }
     else if (m.cmd === 'play') { if (once('pp', 'app')) togglePlay(); }
@@ -14610,7 +14625,8 @@ function petSongsFor(idx, key, playlist) {
   return out.concat(rest);
 }
 /* Idle mode's states, and what moves it from one to the next. S: { st, menu } —
-     st 'play': background mode as ever — the playlist plays, or is about to, in the pets' window ·
+     st 'play': background mode as ever — the playlist plays, or is about to, in the pets' window (1.0.16: a window
+        opened for it, which never has idle pets: Idle mode and background mode never run together) ·
         'idle': the chosen pets stand there with no song (menu: the key of the pet whose list of songs is open, '': none) ·
         'song': the one song a pet was asked for loads or plays ·
         'off': nothing is left to do here — the window is about to close.
@@ -14618,11 +14634,11 @@ function petSongsFor(idx, key, playlist) {
      'cfg' the settings or the pictures changed (keeps(key): that pet is still chosen) · 'tap' a click on a pet (key;
      idle: it is one of the chosen) · 'pick' a song chosen from the list (id) · 'shut' the list closes (Esc, a click
      somewhere else, nobody touched it for a while, its pet went) · 'ended' the song, or the playlist, is over · 'stop'
-     the user stopped it · 'fail' it couldn't be played · 'list' the playlist is to play (Start background mode).
+     the user stopped it · 'fail' it couldn't be played. (1.0.13's 'list', the playlist started under idle pets, is
+     gone: 1.0.16 refuses it — anything else is nothing here.)
    → { st, menu, do: [what the page does now, in order] } —
      'menu' that pet's list of songs opens · 'shut' the list closes · 'sing' the song ev.id is loaded and played ·
      'rest' back to idle: the song goes, the singers who aren't chosen leave, the chosen ones stay where they stand ·
-     'list' the playlist plays · 'halt' what plays stops without anybody leaving (the playlist is about to start) ·
      'end' background mode ends as it always has: the window closes (its caller sees to that) · 'close' the window
      closes itself, once the pets have sunk away.
    What isn't listed changes nothing: a click while a song plays is the hop and the song's name it always was, and a
@@ -14638,14 +14654,9 @@ function petIdleStep(S, ev) {
     if (ev.t === 'tap') return ev.idle && ev.key && ev.key !== menu ? { st, menu: ev.key, do: [...shut, 'menu'] } : { st, menu: '', do: shut };
     if (ev.t === 'shut') return { st, menu: '', do: shut };
     if (ev.t === 'pick') return menu && ev.id ? { st: 'song', menu: '', do: ['shut', 'sing'] } : same;
-    if (ev.t === 'list') return { st: 'play', menu: '', do: [...shut, 'list'] };
     return same; // ('ended', 'stop', 'fail': nothing plays)
   }
-  if (st === 'song') {
-    if (ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail') return end();
-    if (ev.t === 'list') return { st: 'play', menu: '', do: ['halt', 'list'] };
-    return same;
-  }
+  if (st === 'song') return ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail' ? end() : same;
   if (st === 'play') return ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail' ? end() : same;
   // 'off': the window is about to close — unless Idle mode is on again before it has
   return ev.t === 'cfg' && on ? { st: 'idle', menu: '', do: ['rest'] } : same;
@@ -16332,8 +16343,9 @@ function petLetGo(c, click) {
    at once) — so they stand where they stood, can be dragged, stand on windows, fall and hop as ever, and sing their
    own lines when a song they are in plays.
    What goes on is one of four states (PETID.st; petIdleStep says what leads where, and petIdleDo does it):
-   'play' — background mode as ever: this window was opened to play the playlist, or the playlist was started while
-     the pets were idle. When it stops, the chosen pets stay, idle — with none chosen the window closes, as always.
+   'play' — background mode as ever: this window was opened to play the playlist. 1.0.16: Idle mode and background
+     mode never run together — such a window has no idle pets whatever the settings say (petIdleCfg: only a window
+     opened for Idle mode, PETID.born, has them), and when the playlist stops it closes, as always.
    'idle' — nothing is loaded and nothing plays. A click on a pet (petLetGo → petIdleTap) opens its list of songs
      (petMenuOpen): the songs it is part of, out of the index of the saved projects' scores (PETIX). While the list is
      open the whole window takes the mouse (petMenuRects), so a click anywhere else closes it; so does Esc (main takes
@@ -16343,12 +16355,13 @@ function petLetGo(c, click) {
      hands over to petIdleEnd, and the pets are idle again (petIdleRest) — the singers who aren't chosen leave.
    'off' — Idle mode went off, or nobody can be shown, while nothing played: the window closes.
    main hears how things stand with every word about what plays (petIdlePost → cover:state { idle }), and says
-   'idle' (Stop while something plays) and 'list' (Start background mode) through cover:msg (petIdleCmd).
-   PETID: st, menu — as petIdleStep has them · heard: the settings have come once · shown: main was told the pets are
-   idle (it shows the window then) · why: what bgmStop is being called for ('stop'; none: it ended) · halting: bgmStop
-   is only clearing the way for the playlist · shut: the pet whose list the press now going on closed (its click
+   'idle' (Stop while a pet's song plays) through cover:msg (petIdleCmd). (1.0.13's 'list' — Start background mode,
+   the playlist in this window — is gone: 1.0.16 refuses it, in main and here.)
+   PETID: st, menu — as petIdleStep has them · born: this window was opened for Idle mode (petIdleBorn) · heard: the
+   settings have come once · shown: main was told the pets are idle (it shows the window then) · why: what bgmStop is
+   being called for ('stop'; none: it ended) · shut: the pet whose list the press now going on closed (its click
    doesn't open it again) · log: for tests — called with every step. */
-const PETID = { st: 'play', menu: '', heard: false, shown: false, why: '', halting: false, shut: '', log: null };
+const PETID = { st: 'play', menu: '', born: false, heard: false, shown: false, why: '', shut: '', log: null };
 /* This singer is one of the chosen pets (its own pet: a second pet of a singer with two lines at once comes and goes
    with the songs). */
 const petIdleKeeps = c => PETS.idle.size > 0 && c.key === c.pk && PETS.idle.has(c.key);
@@ -16369,8 +16382,6 @@ function petIdleDo(ev) {
     else if (a === 'shut') petMenuShut();
     else if (a === 'sing') petIdleSing(ev.id, ev.key);
     else if (a === 'rest') petIdleRest();
-    else if (a === 'list') petIdlePlaylist();
-    else if (a === 'halt') petIdleHalt();
     else if (a === 'close') setTimeout(() => { if (PETID.st === 'off') mapApp.cover(false).catch(() => {}); }, 600); // (once they have sunk away; Idle mode switched on again meanwhile: they stay)
   }
   if (PETID.log) PETID.log(was, ev, r);
@@ -16380,7 +16391,7 @@ function petIdleDo(ev) {
    chosen pets come on once main has said who they are (petIdleCfg). → whether it was. */
 function petIdleBorn() {
   if (!/[?&]idle=1(&|$)/.test(location.search)) return false;
-  PETID.st = 'idle';
+  PETID.st = 'idle'; PETID.born = true;
   return true;
 }
 /* What the pet page hears for Idle mode besides its settings: Esc while a list of songs is open (main: { menu: false }),
@@ -16392,9 +16403,11 @@ function petIdlePage() {
 /* The settings as main has them (petCfgNow: as the page loads and whenever one changes): who stays on the screen. One
    taken off the list leaves — unless it sings in the song that plays: then it leaves with that song's singers. The
    new ones' pictures are asked for (they come on as those arrive: petSync), and then the state follows — the list of a
-   pet that is no longer chosen closes, an idle window with nobody left closes, and main hears that the pets are idle. */
+   pet that is no longer chosen closes, an idle window with nobody left closes, and main hears that the pets are idle.
+   1.0.16: only in a window opened for Idle mode (PETID.born) — background mode's own pet window never has idle pets,
+   whatever the settings say (Idle mode and background mode never run together). */
 function petIdleCfg(c) {
-  const want = new Set(c && c.idle === true && Array.isArray(c.idlePets) ? c.idlePets.filter(k => typeof k === 'string' && k).slice(0, PETI.max) : []);
+  const want = new Set(PETID.born && c && c.idle === true && Array.isArray(c.idlePets) ? c.idlePets.filter(k => typeof k === 'string' && k).slice(0, PETI.max) : []);
   const was = PETS.idle, t = performance.now(), fresh = [...want].filter(k => !was.has(k)), able = petIdleAble();
   if (PETID.heard && !fresh.length && want.size === was.size) return; // (nothing about Idle mode changed)
   PETID.heard = true;
@@ -16426,11 +16439,10 @@ function petIdleSay() {
 }
 /* What this window tells main about what plays (coverPost: every word goes through here), with how Idle mode stands
    — idle: 'idle' nothing plays, the chosen pets stand there · 'song' the one song a pet was asked for (no "1 / 1") ·
-   'list' the playlist, and the pets will be idle when it stops · not said: background mode as ever. */
+   not said: background mode as ever (1.0.16: never with idle pets — 1.0.13's 'list' is gone). */
 function petIdlePost(s) {
   if (s.idle) return s;
-  if (PETID.st === 'song') return { ...s, idle: 'song', n: 0 };
-  return PETID.st === 'play' && petIdleAble() ? { ...s, idle: 'list' } : s;
+  return PETID.st === 'song' ? { ...s, idle: 'song', n: 0 } : s;
 }
 /* A click on a singer (petLetGo, after its hop). While the pets are idle: its list of songs opens — or closes, when
    the press that is now a click was what closed it. While anything plays this is nothing: the click is the hop and the
@@ -16442,11 +16454,11 @@ function petIdleTap(c) {
   if (!again) petIdleDo({ t: 'tap', key: c.key, idle: petIdleKeeps(c) });
 }
 /* main's word to this window about Idle mode (cover:msg { cmd }): 'idle' — the user stopped what plays, and the pets
-   are to be idle again (with Idle mode off meanwhile, the window closes as a stop always closed it: bgmStop) ·
-   'list' — Start background mode: the playlist plays here. → whether it was one of these. */
+   are to be idle again (with Idle mode off meanwhile, the window closes as a stop always closed it: bgmStop). (1.0.13's
+   'list' — the playlist played here — is gone in 1.0.16: main never sends it, and a 'list' that came all the same
+   would be nothing, as any word this page doesn't know.) → whether it was 'idle'. */
 function petIdleCmd(cmd) {
   if (cmd === 'idle') { if (BGM.on) { PETID.why = 'stop'; bgmStop(); } else petIdleDo({ t: 'stop' }); return true; }
-  if (cmd === 'list') { petIdleDo({ t: 'list' }); return true; }
   return false;
 }
 /* Background mode has stopped in this window (bgmStop: the playlist is over, the one song is, it couldn't be played,
@@ -16454,7 +16466,6 @@ function petIdleCmd(cmd) {
 function petIdleEnd() {
   const why = PETID.why || 'ended';
   PETID.why = '';
-  if (PETID.halting) return true; // (only clearing the way: the playlist starts next — petIdleHalt)
   return petIdleDo({ t: why }).st !== 'off';
 }
 /* The song a pet was asked for (id: its project; key: the pet): loaded and played as background mode plays a song —
@@ -16484,23 +16495,8 @@ function petIdleRest() {
   for (const k of PETS.idle) petSync(k);
   petIdleSay();
 }
-/* Start background mode while the pets are idle: the playlist plays here, as it does in a window opened for it
-   (bgmStart) — with the playlist and this device's settings as they are kept now, not as they were when this window
-   opened. Nothing to play: idle again. */
-function petIdlePlaylist() {
-  PETS.ask = ''; BGM.one = false;
-  try { const p = JSON.parse(localStorage.getItem(PL_KEY) || '{}'); if (p && typeof p === 'object' && Array.isArray(p.ids)) Object.assign(PL, p); } catch (e) {}
-  try { loadPrefs(); } catch (e) {}
-  const fail = () => petIdleDo({ t: 'fail' });
-  Promise.resolve().then(() => bgmStart()).then(ok => { if (!ok) fail(); }, fail);
-}
-/* The song that plays stops without anybody leaving and without the window closing: the playlist is about to start. */
-function petIdleHalt() {
-  PETID.halting = true;
-  try { bgmStop(); } catch (e) {}
-  PETID.halting = false;
-  BGM.one = false;
-}
+/* (1.0.13's petIdlePlaylist and petIdleHalt — the playlist started under idle pets — are gone in 1.0.16: Idle mode
+   and background mode never run together.) */
 /* Each frame (petFrame): an open list of songs stays by its pet — over its head, or beside it where there is no room
    above (a pet standing high up, the strip along the bottom of the screen) —, and closes once nobody has touched it
    for PETI.menuMs or its pet has gone. And idle pets whose pictures have all gone are nobody to show: the window closes. */
@@ -16800,6 +16796,52 @@ function petIdleUI(c) {
   $('petIdleRow').hidden = $('petIdleHint').hidden = !can;
   $('petIdleBox').hidden = !PETIU.on;
   if (PETIU.on) { petIdleWho(); petIdxSoon(); }
+  bgmIdleUI();
+}
+/* ---- 1.0.16: Idle mode and background mode never run together ----
+   With Idle mode on, background mode can't be started from anywhere: Start background mode is greyed with a line
+   under it (bgmIdleUI), a press that comes all the same is refused with that line as a message (bgmIdleRefused), and
+   the app refuses too (win:cover, win:corner, win:pet answer 'idle': coverStart). While background mode plays (or is
+   getting ready), Idle mode's switch can't be turned on: greyed, with a line under it, and the app keeps it off too.
+   An idle pet's own song (tap a pet, pick a song) is Idle mode's, not background mode: it plays, and Idle mode can be
+   switched off — or on again — while it does. */
+const PETIDLE_NO = { bgm: 'Idle mode is on: switch it off to start background mode.', idle: 'Background mode is playing: leave it first to switch Idle mode on.' };
+/* Start background mode can't be pressed now: Idle mode is on (as the app keeps it) and nothing plays in background
+   mode's window — while something does, the button is that window's Stop and stays as it is. */
+const bgmIdleNo = () => CAN_PET && PETIU.can && PETIU.on && !COVER.on && !BGM.on;
+/* Idle mode's switch can't be turned on now: background mode plays, or is getting ready — not an idle pet's song. */
+const petIdleLocked = () => CAN_PET && PETIU.can && !PETIU.on && (BGM.on || (COVER.on && !(COVER.s && COVER.s.idle === 'song')));
+/* The two greyed controls and their lines, as things stand (from bgmUI — every change of what plays —, petIdleUI, the
+   switch, and as the app's settings are heard). The line under Start says where the switch is when it isn't in sight. */
+function bgmIdleUI() {
+  const no = bgmIdleNo(), locked = petIdleLocked(), line = $('bgmIdleNo');
+  $('bgmStart').disabled = no || PETASK.busy; // (busy: the singers are being looked at — petAskFirst)
+  line.hidden = !no;
+  if (no) line.textContent = PETIDLE_NO.bgm + (PL.where === 'pet' ? '' : ' Its switch shows when Plays in is Desktop pet.');
+  $('petIdleOn').disabled = locked;
+  $('petIdleNo').hidden = !locked;
+}
+/* What the app keeps about Idle mode, asked again (as the page loads, when the app has changed it itself, and as
+   background mode is to start): PETIU follows it — unless a change of the user's is still on its way there (petCfgSet:
+   that is newer) —, and so do the two controls. */
+async function petIdleAsk() {
+  if (!CAN_PET || !mapApp.petCfgGet) return;
+  try {
+    if (petCfgBusy) await petCfgBusy; // (what the user just changed reaches the app first: its answer is then up to date)
+    const c = await mapApp.petCfgGet();
+    if (c && typeof c.idle === 'boolean' && Array.isArray(c.idlePets) && mapApp.petChars && !petCfgBusy && !petCfgNext) Object.assign(PETIU, { can: true, on: c.idle, pets: c.idlePets.filter(k => typeof k === 'string') });
+  } catch (e) {}
+  bgmIdleUI();
+}
+/* Start background mode, pressed (or asked for some other way) while Idle mode is on: nothing starts, and the player
+   says why. The app is asked first (Idle mode left on from last time and not heard of yet, or switched off with ✕).
+   → true: refused. */
+async function bgmIdleRefused() {
+  if (!CAN_PET) return false;
+  await petIdleAsk();
+  if (!bgmIdleNo()) return false;
+  say(PETIDLE_NO.bgm, 3500);
+  return true;
 }
 /* The list is read and painted: the playlist's singers (the reading Characters… shares: petSongs), what the app has
    for them, and every singer it has met. */
@@ -16849,10 +16891,12 @@ function petIdlePick(key, box) {
   petIdlePaint();
 }
 $('petIdleOn').onchange = e => {
+  if (e.target.checked && petIdleLocked()) { e.target.checked = false; say(PETIDLE_NO.idle, 3500); bgmIdleUI(); return; } // (1.0.16: not while background mode plays — greyed then; a change that comes all the same is refused)
   PETIU.on = PETIU.can && e.target.checked;
   petCfgSet({ idle: PETIU.on });
   $('petIdleBox').hidden = !PETIU.on;
   if (PETIU.on) { PETIU.sig = ''; petIdleWho(); petIdxSoon(); }
+  bgmIdleUI();
 };
 /* What the main window hears about the idle pets (the app: cover:msg, beside what background mode's remote control
    hears). { state: { idle: 'song' } } — a pet was asked for a song, and it plays in the pets' window: what plays here
@@ -16871,7 +16915,7 @@ function petIdleHeard(m) {
     say(fin ? 'Playlist finished' : 'The pets are idle again', 2000);
   }
   if (m.petcfg && !$('viewPlaylist').hidden) petCfgUI();
-  if (m.petcfg) say('Idle mode is off', 2000);
+  if (m.petcfg) { say(m.why === 'bgm' ? PETIDLE_NO.idle : 'Idle mode is off', 2000); petIdleAsk(); } // (why 'bgm', 1.0.16: it was asked to go on while background mode plays, and stayed off)
 }
 /* The saved projects changed (renderProjects: one was saved, renamed, deleted or imported — and each time their list
    is drawn): while Idle mode is on, the index of songs is looked at again, here in the main window (the pet window
@@ -16881,8 +16925,9 @@ if (CAN_PET) {
   mapApp.onCover(petIdleHeard);
   PETIX.subs.push(petIdlePaint); // (the index of songs has more to say: the lines under the names)
   addEventListener('storage', e => { if (e.key === PETIX.key) petIdlePaint(); }); // (…also when the pet window read a score)
-  // (whether Idle mode is on, known from the start — not only once Background mode's settings have been opened)
-  if (mapApp.petCfgGet) mapApp.petCfgGet().then(c => { if (c && typeof c.idle === 'boolean' && Array.isArray(c.idlePets) && mapApp.petChars && !PETIU.can) Object.assign(PETIU, { can: true, on: c.idle, pets: c.idlePets.filter(k => typeof k === 'string') }); }).catch(() => {});
+  // (whether Idle mode is on, known from the start — not only once Background mode's settings have been opened: Start
+  // background mode is greyed from the first moment, 1.0.16; once the page's script has run to its end)
+  Promise.resolve().then(petIdleAsk);
 }
 /* ---- Animated pets…: the settings that only matter for singers whose picture is a pet sheet — a puppet —, in a
    dialog of their own (size, height, how many pets and the other general ones stay in the list above).
@@ -17606,6 +17651,7 @@ async function petAskFirst(ids) {
     btn.textContent = was;
     btn.disabled = false;
     PETASK.busy = false;
+    bgmIdleUI(); // (1.0.16: …greyed again if Idle mode went on meanwhile)
   }
 }
 const PET_FRAME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20.2c.9-3.7 3.7-5.7 7.2-5.7s6.3 2 7.2 5.7"/></svg>';

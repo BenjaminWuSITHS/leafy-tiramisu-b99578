@@ -15,6 +15,18 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.16
+<!-- date: 2026-11-17T00:45 -->
+- Idle mode and background mode no longer run together: while Idle mode is on, Start background mode is greyed and says why, and while background mode plays, Idle mode can't be switched on.
+- A song you ask an idle pet for shows its name and a stop button only on the little controls, and the player says "A pet is singing".
+- The words on the piano roll's notes never sit on a dark box, in background mode too.
+- Pet editor, Cut: every piece of an arm and a leg has its own chip (Upper arm, Forearm and hand, Thigh, Shin and foot), so you decide exactly where a limb is cut. It still bends at its point.
+- Pet editor, Cut: a Hair in front chip for a fringe, drawn over the eyes and the mouth.
+- Pet editor: Show the points shows every point with its name, and the face and hand boxes, while you paint.
+- Pets can wear clothing that moves. In Cut, New clothing layer… gives a piece of clothing its own chip: paint over it, and on the pet it lags, sways, stretches over a lifted leg and settles back to how you drew it. Up to 32 layers.
+- How it moves (beside the puppet) sets what each layer hangs from, what it is in front of or behind, and how it swings, how heavy and stiff it is, how far it stretches and flutters. Shake it gives the pet a push to watch it.
+- Layers: each clothing layer has a row of its own. Where it covered the body, the body has a striped Missing area to paint; nothing is filled in for you. A pet with clothing layers needs this version or a newer one.
+
 ## 1.0.15
 <!-- date: 2026-11-16T02:44 -->
 - Pets can wink: in your own animations a key pose says what the left eye and the right eye show, each by itself (Wink left, Wink right in the pose editor). Pets you made before can wink too.
