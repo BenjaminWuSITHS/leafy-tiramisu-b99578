@@ -15,6 +15,13 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.18
+<!-- date: 2026-11-18T02:01 -->
+- Pet editor, Cut: a piece's chip (Upper arm, Forearm and hand, Thigh, Shin and foot) now also paints the hidden part of its arm or leg: what you painted in Layers where other parts hide it, and its striped Missing area. You decide which piece it goes into; nothing else of the pet changes.
+- Pet editor, Cut: when a piece's brush goes over nothing of its arm or leg, the line under the picture just says so.
+- A second kind of hair, Close hair, for a bob or the hair over the head: paint it in Cut with its own chip. It goes with the head and springs a little behind it, only squashing and stretching, and never comes off. Nothing becomes close hair unless you paint it.
+- Pet editor, 3D: Close hair, under Head, sets how much it lags and squashes. Layers has a row for it above the Head. A pet with close hair needs this version or a newer one.
+
 ## 1.0.17
 <!-- date: 2026-11-17T23:51 -->
 - Idle pets say goodbye: switching Idle mode off, pressing Stop or a song ending makes them sink away instead of popping off the screen.
