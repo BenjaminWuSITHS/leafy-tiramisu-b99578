@@ -557,6 +557,7 @@ body.bgm.bgm-fill:not(.phone) #viz{--ui-bg:0;border-top-color:transparent;box-sh
 #petIdleList .pi-songs{color:var(--muted);font-size:.78rem;line-height:1.35;overflow-wrap:anywhere}
 #petFreeRow[hidden],#petFreeHint[hidden],#petWinRow[hidden],#petWinHint[hidden],#petGravRow[hidden],#petGravHint[hidden]{display:none}
 #petVaryRow[hidden],#petVaryHint[hidden]{display:none}
+#petInertRow[hidden],#petInertHint[hidden]{display:none}
 #petPetsRow[hidden],#petPetsHint[hidden]{display:none}
 #petDanceRow[hidden],#petDanceHint[hidden],#petDanceSizeRow[hidden],#petDanceSizeHint[hidden],#petCarryRow[hidden],#petCarryHint[hidden],#petScaredRow[hidden],#petScaredHint[hidden]{display:none}
 #petList{list-style:none;margin:6px 0 10px;padding:0}
@@ -1130,6 +1131,26 @@ body.m-rot-ccw :is(#newsDlg,#newsPicDlg){transform:translate(-50%,-50%) rotate(-
 #petEdDlg .pd-set3 h4{margin:2px 0 8px}
 #petEdDlg .pd-set3 .op{flex-wrap:wrap} /* (a narrow window: a slider goes under its name rather than past the column) */
 #petEdDlg .pd-set3 input[type=range]{width:min(150px,100%)}
+/* Animations (1.0.17): as 3D — the list (the app's animations, your own, the dances) where the picture is, the chosen
+   one's settings beside it, each scrolling by itself; under the puppet, the animation it plays, chosen from any tab */
+#petEdDlg .pd-animbox{grid-template-columns:minmax(150px,260px) minmax(200px,1fr)}
+#petEdDlg .pd-animbox>.pd-anims{min-height:0;overflow:auto;overscroll-behavior:contain;padding:10px 12px 12px;border-right:1px solid var(--line)}
+#petEdDlg #petEdAnimSet>.pd-set{padding:0}
+#petEdDlg #petEdAnimSet h4{margin:10px 0 6px}
+#petEdDlg #petEdAnimSet>.pd-depth{margin:12px 0 0;padding:10px 0 0}
+#petEdDlg .pd-plays{display:flex;align-items:center;padding:10px 14px 6px}
+#petEdDlg .pd-plays select{max-width:220px}
+/* 3D's clothing layers (1.0.17): their caption in the list, and How it moves beside it (the panel under the puppet in Cut) */
+#petEdDlg .pd-treecap{margin:10px 0 2px;padding:0 8px;font-size:.75rem;font-weight:600;color:var(--muted)}
+#petEdDlg .pd-clo3{border-top:none}
+/* The editor's "i"s (1.0.17: the page's tips, addTip): a card's button keeps the card's width with its "i" beside it;
+   the chosen animation's name over its settings sits at the top */
+#petEdDlg .pd-howcard>.tipg>button{flex:1}
+#petEdDlg .pd-whyat{display:inline-flex;align-items:center} /* (an "i" of its own beside words that code writes: Face's and Hands and legs' row under the cards) */
+#petEdDlg #petEdSet>h4:first-child{margin-top:0}
+@media (max-width:760px),(max-height:520px){
+  #petEdDlg .pd-animbox>.pd-anims{overflow:visible;border-right:none;border-bottom:1px solid var(--line)} /* (one column: the list over the settings, as 3D's tree) */
+}
 /* The tutorial (a dialog of its own, over the editor): the film, the caption under it (never over the editor it
    shows), the chapters, every step as text */
 #petTutDlg{width:min(1180px,calc(100vw - 24px));max-width:none;max-height:calc(100vh - 24px);padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);box-shadow:0 16px 48px rgba(0,0,0,.45);overflow:auto}
@@ -1767,7 +1788,7 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
         <option value="3840">3840 ticks / beat</option>
       </select></label>
       <div class="op"><span>Lyrics from a text file <span class="rv" id="lyrTxtName">none</span></span><button type="button" id="lyrTxtPick">Choose…</button></div>
-      <p class="hint" id="lyrTxtHint">Have the song's words in a .txt file? Add it (here, or with the + button, or drop it on the player) and its words are shown in place of the score's own, line by line as the file has them, in time with the notes. Where a line can't be matched, the score's words stay.</p>
+      <p class="hint" id="lyrTxtHint">Have the song's words in a .txt file? Add it (here, or with the + button, or drop it on the player) and its words are shown in place of the score's own, line by line as the file has them, in time with the notes. Where a line can't be matched, the score's words stay — and so they do on notes the file has no line for, and in a part too long to match.</p>
       <div class="hint" id="lyrTxtStat"></div>
       <button id="lyrTxtOff" hidden>Take the lyrics file off</button>
       <button id="svpClear" hidden>Remove score</button>
@@ -1973,17 +1994,19 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     <div id="petSet" hidden>
       <p class="hint">Desktop pet: the singers stand on your taskbar and sing their lines in speech bubbles; the first of them to sing is there as the song starts, and each of the others comes on just before their first line. Only the singers and their bubbles show — the mouse goes straight through everywhere else. Drag a singer to move it (where you leave it is remembered); click one to see the song's name. Ctrl+Alt+H hides and shows them while the music goes on; Ctrl+Alt+End (or ✕ on the little controls at the top of the screen, in the middle) stops. Each singer is a picture of your own: Characters… lists the singers of the songs in your playlist, so you can give them their pictures before you start, and warns about any without one. When you start, the player also asks for one for every singer in the playlist that doesn't have one yet, unless you left it out or removed its picture before (Characters… still gives it one). Only singers with a picture come on — a singer you leave out isn't shown.</p>
       <label class="op" id="petIdleRow" hidden>Idle mode <input type="checkbox" id="petIdleOn" autocomplete="off"></label>
-      <p class="hint" id="petIdleNo" hidden>Background mode is playing: leave it first to switch Idle mode on.</p>
-      <p class="hint" id="petIdleHint" hidden>On: the pets you switch on in the list below stay on your taskbar with no song. They blink and move a little, and you can drag them, as always; the player stays as it is, and you can go on using it. Click one of them and it shows the songs it sings in: the songs in your playlist and your saved projects whose score has that singer. Choose a song and it plays as a desktop-pet song: the song's other singers with a picture come on and sing their lines too. When the song ends, or you stop it, the others leave and your pets are idle again. It plays that one song only, not the rest of the playlist. Esc, a click somewhere else, or a few seconds' wait closes the list. Idle pets come back by themselves each time you open the player. Ctrl+Alt+End (or ✕ on the little controls) while no song plays switches Idle mode off; this switch brings the pets back. While it is on, background mode can't be started, and while background mode plays, it can't be switched on: the two never run together. Off: pets are only there while background mode plays.</p>
+      <p class="hint" id="petIdleHint" hidden>On: the pets you switch on in the list below stay on your taskbar with no song. Only singers with a picture can be chosen: give one a picture in Characters… below. They blink and move a little, and you can drag them, as always; the player stays as it is, and you can go on using it. Click one of them and it shows the songs it sings in: the songs in your playlist and your saved projects whose score has that singer. Choose a song and it plays as a desktop-pet song: the song's other singers with a picture come on and sing their lines too. When the song ends, or you stop it, the others leave and your pets are idle again. It plays that one song only, not the rest of the playlist. Esc, a click somewhere else, or a few seconds' wait closes the list. Idle pets come back by themselves each time you open the player. Ctrl+Alt+End (or ✕ on the little controls) while no song plays switches Idle mode off; this switch brings the pets back. While it is on, background mode can't be started, and while background mode plays, it can't be switched on: the two never run together. Off: pets are only there while background mode plays.</p>
+      <div class="hint" id="petIdleNo" hidden>Background mode is playing</div>
       <div id="petIdleBox" hidden><p class="pet-sum" id="petIdleSum" role="status"></p><ul id="petIdleList"></ul></div>
       <label class="op">Character size <select id="petSize" autocomplete="off"><option value="S">Small</option><option value="M">Medium</option><option value="L">Large</option></select></label>
       <label class="op"><span>Height on the taskbar <span class="rv" id="petLiftTxt">50%</span></span><input autocomplete="off" type="range" id="petLift" min="0" max="150" step="5" value="50" title="0%: feet on the bottom edge of the screen · 50%: on the middle of the taskbar · 100%: on its top edge"></label>
       <label class="op" id="petFreeRow" hidden>Pets can go anywhere on the screen <input type="checkbox" id="petFree" autocomplete="off" checked></label>
       <p class="hint" id="petFreeHint" hidden>Drag a singer up off the taskbar and it stays where you leave it, in the air (with Gravity on, it falls); let it go near the taskbar and it stands on it again. Off: the singers stay on the taskbar and only move left and right.</p>
       <label class="op" id="petWinRow" hidden>Pets can stand on windows <input type="checkbox" id="petWindows" autocomplete="off" checked></label>
-      <p class="hint" id="petWinHint" hidden>Let go of a singer just over the top edge of a window and it stands on it: it rides along when you move the window, and comes down when the window closes, is minimised or stays covered there for more than a moment: to the taskbar, or with Gravity on to the next window below. Opening this player's own window never knocks anyone off.</p>
+      <p class="hint" id="petWinHint" hidden>Let go of a singer just over the top edge of a window and it stands on it: it rides along when you move the window, and comes down when the window closes, is minimised or stays covered there for more than a moment: to the taskbar, or with Gravity on to the next window below. Pets can't pass through the sides of windows either: a window you move into a pet pushes it along, and a pet you let go of partly over a window's side steps off it. Opening this player's own window never knocks anyone off.</p>
       <label class="op" id="petGravRow" hidden>Gravity <input type="checkbox" id="petGravity" autocomplete="off"></label>
       <p class="hint" id="petGravHint" hidden>On: a singer with nothing under its feet falls. Let go of one in the air and it drops onto the top edge of the first window below it, or onto the taskbar; when the window it stands on goes away, it lands on the next window down. Singers hanging in the air come down as soon as you switch this on, and where they land is remembered. Off: a singer stays where you leave it, in the air.</p>
+      <label class="op" id="petInertRow" hidden><span>Inertia on windows <span class="rv" id="petInertTxt">Off</span></span><input autocomplete="off" type="range" id="petInert" min="0" max="100" step="5" value="0" title="Off: it moves with the window exactly · 100%: it slides a lot"></label>
+      <p class="hint" id="petInertHint" hidden>A pet standing on a window you move doesn't move with it all at once: it lags behind a little, slides, and then catches up. The higher this is, the further it slides. Pull the window away fast and the pet can slide off it: with Gravity on it falls, with Gravity off it stays where it was, in the air. Off: it moves with the window exactly, as before. Double-click the slider for Off.</p>
       <label class="op" id="petPetsRow" hidden>How many pets <select id="petPets" autocomplete="off"><option value="each">A pet for each singer</option><option value="few">As few pets as possible</option><option value="one" id="petPetsOne">One singer</option></select></label>
       <p class="hint" id="petPetsHint" hidden>A pet for each singer: every singer with a picture is a pet, and one that sings two lines at once is two pets with the same picture, side by side, each with its own bubble. As few pets as possible: singers who never sing at the same time share one pet, which sings all their lines — the one of them with a picture who sings most; singers who do sing together stay separate pets. One singer: only one pet, the singer with a picture who sings most; it sings everybody's lines, and lines sung at the same time each get a speech bubble of their own over it.</p>
       <label class="op" id="petDanceRow" hidden>Dance while singing <select id="petDance" autocomplete="off"><option value="off" selected>Off</option><option value="own">My own dances</option><option value="auto">Made for me (automatic)</option></select></label>
@@ -2002,7 +2025,8 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
     </div>
     <p class="hint" id="plCoverHint" hidden>Cover the screen: instead of the small window, the visualizer and the piano roll play over your whole screen, with nothing behind them — your other windows show through, and the mouse goes straight through to them. The player waits in the taskbar as the remote control. The controls are in a little window in the bottom-right corner of the screen (the song, previous, play / pause and next, and ✕ to stop), and these keys work from any app while it plays: Ctrl+Alt+Space play / pause, Ctrl+Alt+Page Down next song, Ctrl+Alt+Page Up previous song, Ctrl+Alt+End stop — and the media keys on your keyboard.</p>
     <button id="bgmStart" class="primary bgm-big">Start background mode</button>
-    <p class="hint" id="bgmIdleNo" hidden>Idle mode is on: switch it off to start background mode.</p>
+    <div class="hint" id="bgmIdleNo" hidden>Idle mode is on</div>
+    <p class="hint" id="bgmIdleWhy">Background mode can't start while Idle mode is on: the two never run together. Switch Idle mode off first: it is in the Desktop pet settings above (Plays in: Desktop pet).</p>
   </section>
 </main>
 
@@ -2089,11 +2113,13 @@ body.m-landscape.no-visuals #stageViz svg{transform:rotate(180deg)}
   <div class="air-head"><b>AirPlay</b><button class="air-x" aria-label="Close" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <p class="air-how">Your iPhone sends the player's sound to AirPlay itself. Choose a speaker or TV here, or in Control Center (the AirPlay icon on the music controls). A TV plays the sound only: the picture stays on this phone. To stop, choose iPhone in the same list.</p>
   <button type="button" class="air-pick pri">Play the sound on a speaker or TV…</button>
-  <p class="air-none" hidden>No AirPlay speakers or TVs found yet: they need to be on the same Wi-Fi as this phone.</p>
+  <p class="air-none" hidden>No AirPlay speakers or TVs found yet</p>
+  <p class="hint" id="airNoneHint">They need to be on the same Wi-Fi as this phone.</p>
   <label class="air-nd"><input type="checkbox"> <span>No-delay AirPlay</span></label>
   <p class="air-nd-how">On: the speaker starts at once and stays in time with the lyrics and piano roll, as it plays a ready-made mix of the song. Changes to the mix (a track's volume or mute, tracks added) take a moment to reach the speaker.</p>
   <p class="air-nd-msg" role="status" hidden></p>
-  <label class="air-late"><input type="checkbox"> <span>Keep the lyrics and piano roll in time with an AirPlay speaker (it plays about 2 seconds late; Sync → Speaker delay)</span></label>
+  <label class="air-late"><input type="checkbox"> <span>Keep the lyrics and piano roll in time with an AirPlay speaker</span></label>
+  <p class="hint" id="airLateHint">An AirPlay speaker plays about 2 seconds late: this holds the lyrics and the piano roll back by as much (Sync → Speaker delay).</p>
 </div>
 <div id="airPanel" role="dialog" aria-label="AirPlay" hidden>
   <div class="air-head"><b>AirPlay</b><button class="air-x" aria-label="Close" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
@@ -3698,11 +3724,14 @@ const TIP_ON = [
   ['#petPanel > .hint:first-child', '#petCharsBtn'],
   ['#petBankHint', '#petBankBtn'],
   ['#petKitHint', '#petKitBtn'],
+  ['#bgmIdleWhy', '#bgmIdleNo'], // (1.0.17: why Start background mode is greyed — on the short line that says so)
   ['#petPicP', '#petPicT'],
   ['#petSheetP', '#petSheetT'],
   ['#airHelp .air-how', '#airHelp .air-head b'],
   ['#airHelp .air-nd-how', '#airHelp .air-nd'],
   ['#airPanel .air-note', '#airPanel .air-head b'],
+  ['#airLateHint', '#airHelp .air-late span'], // (1.0.17: why it's there, on the switch's own words)
+  ['#airNoneHint', '#airHelp .air-none'], // (1.0.17: what they need, on the short line that says none is found)
 ];
 /* An explanation is out of play while it, or what it sits in up to what it explains, is hidden (code hides some
    with what they explain, or until they apply) */
@@ -8842,7 +8871,7 @@ function lyricsUI() { // Settings → Score: which file, how it went, which of i
   if (t && R) {
     const cut = s => (s.length > 30 ? s.slice(0, 29) + '…' : s), miss = R.missed.slice(0, 6).map(x => 'line ' + x.n + ' “' + cut(x.text) + '”');
     says = lyrTxtSay(t.name, R) + '.' + (miss.length ? ' Not matched: ' + miss.join(', ') + (R.missed.length > 6 ? ' and ' + (R.missed.length - 6) + ' more' : '') + '.' : '') +
-      (R.own ? ' Notes the file has no line for keep the score\'s own words.' : '') + (R.big ? ' One part is too long to match and keeps its own words.' : '');
+      (R.own ? ' Some notes have no line in the file.' : '') + (R.big ? ' One part is too long to match.' : ''); // (1.0.17: what that means — they keep the score's own words — is behind the row's "i")
   }
   if (stat.textContent !== says) stat.textContent = says;
 }
@@ -8895,11 +8924,18 @@ $('lyrTxtOff').onclick = () => { LYR.wait = null; if (svp && svp.txt) setLyricsT
    running into the next part's first: under a tenth of a second where this was set, with real
    second lines overlapping by seconds) · grip – a puppet picked up by one hand comes to hang from the pointer by
    it over this long (s: petHeldAt) · dz – a plain picture's dance comes in and goes out over this long (s: petPicDance)
+   1.0.17, the sides of windows and Inertia on windows: wall – one partly in a window's side steps out of it this fast
+   (DIP/s: petWallStop) · push – a side that moves further than this into a singer in one frame (DIP) is a window that
+   jumped (restored, snapped), not one pushing: the singer is in front of it · slip – how hard standing on a window
+   holds a singer at 100% inertia (DIP/s² of pull: petSlip; at k it's slip / k) · toss / drift – one that slides off a
+   window keeps at most this much of its speed across as it falls (DIP/s), less and less (gone to a third in this long, s) ·
+   bounce – what is left of that speed, the other way, when it bumps into a window's side
    ===================================================================== */
 const PETL = { early: 0.25, unison: 0.3, appear: 1, jump: 1, max: 100, at: 0.7, step: 1, pad: 16, bump: 0.6, edge: 8, gap: 6, rows: 3, round: 12, tail: 7,
   keep: 6, glide: 140, floor: 40, ledge: 28, fall: 3000, lag: 0.2, reach: 160,
   over: 0.3,
-  level: 10, turns: 100, hold: 0.15, pop: 600, leap: 0.45, peak: 0.12, grip: 0.25, dz: 0.12 };
+  level: 10, turns: 100, hold: 0.15, pop: 600, leap: 0.45, peak: 0.12, grip: 0.25, dz: 0.12,
+  wall: 600, push: 120, slip: 2400, toss: 400, drift: 0.3, bounce: 0.35 };
 /* A track named after its singer plus a harmony word ("Lumi_harm", "Lumi (chorus)", "Lumiハモリ",
    "ルミ（ハモリ）", "ルミ・ハモ") is that singer. Latin words need a separator before them ("Echo" stays
    "Echo"). NFKC first: Japanese typing gives full-width brackets （ ）［ ］. */
@@ -9418,6 +9454,54 @@ function petFallOnto(ledges, x, y0, y1, room = 0, feetY = Infinity) {
     if (x >= L.x0 && x <= L.x1 && L.y >= y0 && L.y <= y1 && L.y >= room && L.y < feetY && (best < 0 || L.y < ledges[best].y)) best = i;
   });
   return best;
+}
+/* 1.0.17: the sides of the windows are solid for a singer. walls: [{ x, y0, y1, s, px }] (petsnap.walls, in the window,
+   y down: x the side's line, y0…y1 the part of it that shows, s which way is outside — -1 a window's left side, its
+   outside to the left; 1 a right side —, px where that side was a frame ago, none: where it is). The singer: `half` wide
+   each way from its centre, drawn from y0 down to y1; x — where its centre is now, was — where it was a frame ago; lo,
+   hi — where its centre may be at all (the screen). A side it is level with (they overlap in height by more than a
+   pixel: one standing on a window's top edge is not level with that window's own sides) and on whose outside its
+   centre was a frame ago is solid:
+   · it was clear of it then, or only just touched it: it doesn't get into it — it stops against it, or, where the side
+     moved into it, is pushed along (a side further than `push` DIP into it at once is a window that jumped — restored,
+     snapped to a side —, not one moving: it is in front of that window then, as of any window it overlaps);
+   · it was partly in it already (let go there; a window that came up there): it steps out of it, never deeper in,
+     `out` DIP a frame at most.
+   One whose centre was inside a window is in front of it: its sides are nothing to it. Nobody is put past lo…hi: one
+   pressed against the side of the screen is passed by the window (it is in front of it then).
+   → { x: where it is, hit: the s of the last side it was stopped or pushed by, 0: none } */
+function petWallStop(x, was, half, y0, y1, walls, lo, hi, out = Infinity, push = Infinity) {
+  let nx = x, hit = 0;
+  for (let turn = 0; turn < 2; turn++) { // (twice: pushed by one side into another, the first one is looked at again)
+    for (const w of walls || []) {
+      if (!(y0 < w.y1 - 1 && y1 > w.y0 + 1)) continue;
+      const px = Number.isFinite(w.px) ? w.px : w.x, d0 = (was - px) * w.s, d1 = (nx - w.x) * w.s;
+      if (!(d0 > 0)) continue; // (in front of that window — or right on its line)
+      const clear = d0 >= half - 0.5, want = clear ? half : Math.min(half, d0 + out); // (partly in: out by `out` from where it was — or further, if it went out further by itself)
+      if (d1 >= want - 1e-9 || (clear && want - d1 > push)) continue;
+      nx = Math.max(lo, Math.min(hi, w.x + w.s * want)); hit = w.s;
+    }
+  }
+  return { x: nx, hit };
+}
+/* 1.0.17: the ends of a singer's own line that the sides of windows make, for keeping apart (petKeep keeps everyone this
+   side of them, as it keeps them on their line): x its centre, half, y0 … y1, walls as for petWallStop. Each side it is
+   level with and whose outside its centre is on is an end. → { lo, hi }: as they were where the sides would leave it no
+   room at all. */
+function petWallEnds(x, half, y0, y1, walls, lo, hi) {
+  let a = lo, b = hi;
+  for (const w of walls || []) if (y0 < w.y1 - 1 && y1 > w.y0 + 1 && (x - w.x) * w.s > 0) { if (w.s < 0) b = Math.min(b, w.x - half); else a = Math.max(a, w.x + half); }
+  return a <= b ? { lo: a, hi: b } : { lo, hi };
+}
+/* 1.0.17, Inertia on windows (k: the setting, 0…1 — 0: off, and then nothing calls this): a singer standing on a window's
+   top edge that moves doesn't go along with it at once. x: where it stood a frame ago (its centre, DIP), v: how fast it
+   went then (DIP/s, across), u: how fast its window went in this frame, dt: the frame (s). It is held to the window only
+   as hard as standing on it holds — PETL.slip / k DIP/s² at most —: as the window starts it lags behind, as it stops it
+   slides on a little, and in between it catches up and goes along; one jerked away fast enough slides off it. Nothing
+   turns or bends: only where it stands changes. → { x: where it is now, v } */
+function petSlip(x, v, u, dt, k) {
+  const a = PETL.slip / Math.max(0.05, k) * dt, nv = v + Math.max(-a, Math.min(a, u - v));
+  return { x: x + nv * dt, v: nv };
 }
 /* Singers on one line keep apart (the rule for one line by itself: what petKeep, which the stage goes by,
    gives on a line, and what it is checked against): items { x (centre), span (petSpan), lo, hi (where its
@@ -14165,6 +14249,9 @@ const petLift = (bob, note, click, top) => bob * (1 - Math.min(1, click / top)) 
    half its height as ever (about 1), a long one harder (up to 2.2); petsheet.js has the same. */
 const PETV_USUAL = 0.4;
 const petVaryCfg = c => { const v = c && typeof c === 'object' ? c.vary : null; return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : PETV_USUAL; };
+/* 1.0.17, Inertia on windows (Background mode → Desktop pet), as the app hands it over → 0…1; nothing said, or nonsense:
+   0 — off: one standing on a window goes along with it exactly, as before (petSlip is then never called). */
+const petInertCfg = c => { const v = c && typeof c === 'object' ? c.inertia : null; return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0; };
 function petPlay(c, kind, at) {
   const V = c.vp || (c.vp = {}), P = V[kind] || (V[kind] = { at: null, u: new Float64Array(6) });
   if (P.at !== at) {
@@ -14575,8 +14662,9 @@ function petBankPlan(rows, sel, again, has) {
    a song's end or a stop leads to (petIdleStep), who leads a song's pets when one was asked for it (petLedBy), and the
    Settings list of who can be chosen (petIdleRows).
    max: how many pets may be chosen (petwin.js keeps that many: MAX_IDLE) · menuMs: a list of songs nobody touches
-   closes after this long. */
-const PETI = { max: 32, menuMs: 12000 };
+   closes after this long · byeMs (1.0.17): Idle mode over, the window waits this long at most for its pets to have
+   left (a goodbye of a puppet's own is 2 s at most, then it sinks away: petLeave) before it closes. */
+const PETI = { max: 32, menuMs: 12000, byeMs: 3500 };
 /* A project's score as the index knows it: its files' keys, as the store has them (what PET_READ goes by too: a song
    saved with another score has other keys). '': it has no score. */
 const petIdxSig = p => (p && p.scores && p.scores.length ? p.scores : [p && p.score]).filter(Boolean).join('\n');
@@ -14640,7 +14728,8 @@ function petSongsFor(idx, key, playlist) {
      'menu' that pet's list of songs opens · 'shut' the list closes · 'sing' the song ev.id is loaded and played ·
      'rest' back to idle: the song goes, the singers who aren't chosen leave, the chosen ones stay where they stand ·
      'end' background mode ends as it always has: the window closes (its caller sees to that) · 'close' the window
-     closes itself, once the pets have sunk away.
+     closes itself, once the pets have left (1.0.17: every one of them leaves as at a song's end, and the window waits
+     for the last — petIdleClose).
    What isn't listed changes nothing: a click while a song plays is the hop and the song's name it always was, and a
    second song can't be asked for until this one is over (there is no list to pick from). */
 function petIdleStep(S, ev) {
@@ -14656,7 +14745,9 @@ function petIdleStep(S, ev) {
     if (ev.t === 'pick') return menu && ev.id ? { st: 'song', menu: '', do: ['shut', 'sing'] } : same;
     return same; // ('ended', 'stop', 'fail': nothing plays)
   }
-  if (st === 'song') return ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail' ? end() : same;
+  // (1.0.17: a pet's song over with Idle mode off — switched off while it played —: the pets leave and the window closes
+  // after them, 'close', not at once as 'end' closes background mode's own)
+  if (st === 'song') return ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail' ? (on ? end() : { st: 'off', menu: '', do: ['close'] }) : same;
   if (st === 'play') return ev.t === 'ended' || ev.t === 'stop' || ev.t === 'fail' ? end() : same;
   // 'off': the window is about to close — unless Idle mode is on again before it has
   return ev.t === 'cfg' && on ? { st: 'idle', menu: '', do: ['rest'] } : same;
@@ -14702,10 +14793,11 @@ function petIdleRows(songs, known, met, chosen) {
 /* The line over that list: rows as petIdleRows gives them. */
 function petIdleSumText(rows) {
   const have = rows.filter(r => r.url), n = have.filter(r => r.on).length, gone = rows.filter(r => r.on && !r.url).length;
-  if (!have.length) return 'No singer has a picture yet. Give one a picture in Characters… below; then it can be chosen here.';
-  const lost = gone ? ' ' + (gone === 1 ? 'One chosen pet has no picture any more, so it' : gone + ' chosen pets have no picture any more, so they') + " can't be shown." : '';
-  if (!n) return 'Switch on the pets that should stay on your screen.' + lost;
-  return (n === 1 ? '1 pet stays' : n + ' pets stay') + ' on your screen. Click one to ask it for a song.' + lost;
+  // (1.0.17: short status lines only — what to do, and what a click on a pet does, are behind Idle mode's "i")
+  if (!have.length) return 'No singer has a picture yet';
+  const lost = gone ? ' · ' + (gone === 1 ? 'one chosen pet has' : gone + ' chosen pets have') + ' no picture any more' : '';
+  if (!n) return 'No pet chosen yet' + lost;
+  return (n === 1 ? '1 pet stays' : n + ' pets stay') + ' on your screen' + lost;
 }
 /* @pure:pet end */
 
@@ -14762,6 +14854,10 @@ const PETS = {
   next: null,         // the next song's singers, from the read-ahead: { id, cast, pet: their lines and notes } (petBye)
   cfg: null,          // the pets' settings as main keeps them ({ size, lift, free, windows, … }: pet:msg { cfg }); null: not told (an app from before that)
   ledges: null,       // the window top edges a singer can stand on: [{ id, x0, x1, y, wx }] in this window's DIP (pet:msg { ledges }); null: not heard yet
+  // 1.0.17 — walls: the windows' sides, which a singer can't pass: [{ id, x, y0, y1, s }] in this window's DIP (pet:msg
+  // { walls }: petsnap.walls — s -1 a window's left side, 1 its right side); null: not heard (an app from before them:
+  // none) · wallX: where each side was in the last frame (id + side → x: petMove — a side that moves into a singer pushes it)
+  walls: null, wallX: new Map(),
   held: null,         // the singer the user is holding (one at a time)
   // Idle mode (1.0.13; see "Idle mode" below) — idle: the singers that stay on the screen with no song (their keys: the
   // settings' idlePets while Idle mode is on, else none — petIdleCfg) · idleNames: what they are called, as the app has
@@ -14780,6 +14876,7 @@ function petPage() {
     if (m.geom) petGeom(m.geom);
     if (m.cfg && typeof m.cfg === 'object') petCfgNow(m.cfg);
     if (Array.isArray(m.ledges)) petLedges(m.ledges);
+    if (Array.isArray(m.walls)) petWalls(m.walls);
     if (m.img && typeof m.img.key === 'string' && typeof m.img.url === 'string') petNewPic(m.img);
   });
   mapApp.petGeom().then(petGeom).catch(() => {});
@@ -14818,7 +14915,8 @@ function petCfgNow(c) {
   if (v.dances !== v0.dances || v.danceSize !== v0.danceSize) PETS.dances = new Map();
   PETS.cfg = { ...c };
   PETV = petVaryCfg(c); // (Variety: from the very next frame — a play that has begun goes on with its own numbers, the more or less of them)
-  if (c.free === false || c.windows === false) PETS.ledges = []; // (nobody stands on a window any more: petMove lets them down)
+  PETN = petInertCfg(c); // (1.0.17, Inertia on windows: from the very next frame)
+  if (c.free === false || c.windows === false) { PETS.ledges = []; PETS.walls = []; } // (nobody stands on a window any more: petMove lets them down — and their sides are nothing to anyone)
   if (petMode() !== was && PETS.ready) petGroup(); // (a pet for each singer, as few as possible, or one singer: who the pets are)
   petIdleCfg(c); // (Idle mode: who stays on the screen with no song)
 }
@@ -14827,6 +14925,7 @@ function petCfgNow(c) {
    and landing), petMove (how fast one falls or steps aside), petLeap (the jump up to its place); a puppet is told it
    every frame and varies its own animations (petDraw: st.vary, st.landH). */
 let PETV = petVaryCfg(null);
+let PETN = petInertCfg(null); // (1.0.17: Inertia on windows as the app says it now — 0 until it does, and off: petMove, petSlide)
 /* How many pets show (the setting, pets): 'each' — a pet for each singer —, 'few' — as few pets as possible — or 'one' —
    one singer. An app from before the last of these has only merge (true: 'few'). */
 const petMode = () => { const c = PETS.cfg || {}; return c.pets === 'few' || c.pets === 'one' ? c.pets : c.pets == null && c.merge === true ? 'few' : 'each'; };
@@ -14839,6 +14938,12 @@ function petLedges(list) {
   const ok = L => !!L && typeof L.id === 'string' && [L.x0, L.x1, L.y, L.wx].every(Number.isFinite) && L.x1 > L.x0;
   PETS.ledges = list.filter(ok).slice(0, 64).map(L => ({ id: L.id, x0: L.x0, x1: L.x1, y: L.y, wx: L.wx }));
   for (const c of PETS.chars.values()) if (c.on) { PETS.rideAt = performance.now(); break; }
+}
+/* 1.0.17: main: the parts of the other apps' windows' left and right sides that show (petsnap.walls), sent with the
+   ledges whenever either changes: what a singer can't pass (petMove: petWallStop). */
+function petWalls(list) {
+  const ok = V => !!V && typeof V.id === 'string' && [V.x, V.y0, V.y1].every(Number.isFinite) && V.y1 > V.y0 && (V.s === -1 || V.s === 1);
+  PETS.walls = list.filter(ok).slice(0, 128).map(V => ({ id: V.id, x: V.x, y0: V.y0, y1: V.y1, s: V.s }));
 }
 /* A singer with a picture: an element on the strip (its picture inside .pet-fig, which hops and tilts), not
    shown yet. Its place: fx, alt, on, fall (see PETS above); ride: just let go onto a window, it is dropping onto
@@ -15799,6 +15904,7 @@ const petRoom = c => PETS.G.top + c.h + 14; // …so a window's top edge above t
 const petLifted = c => (c.pup ? 0 : 8); // how far a held picture is lifted (DIP); a puppet isn't: it hangs from the pointer, right where it's held
 const petHeldAlt = c => Math.min(petTop(c), c.alt + petLifted(c)); // (held, it is lifted a little: where it comes down from)
 const petLs = () => (PETS.G.free && PETS.ledges) || []; // the window top edges there are to stand on
+const petWs = () => (PETS.G.free && PETS.walls) || []; // (1.0.17) the windows' sides there are, which nobody passes
 /* What's drawn of a singer, in height, standing with its feet at feet (y in the window; as it stands now: petFeet):
    { y0, y1 }, top and bottom — what being level, and so keeping apart, goes by (petLevel, petKeep). */
 const petExt = (c, feet = petFeet(c)) => ({ y0: feet - c.h + c.box.y0 * c.h, y1: feet - c.h + c.box.y1 * c.h });
@@ -15846,6 +15952,22 @@ function petStandOn(c, L, x, t) {
   c.ride = { h: c.alt - (PETS.G.feetY - L.y), v: 0 }; // (how far over the edge it was let go — under it: < 0 — and how fast it drops: petMove)
   c.fall = null; c.dest = null; c.jump = null;
 }
+/* 1.0.17, Inertia on windows (PETN > 0): one standing on a window's top edge, L the part of it that was under it a frame
+   ago — where it has slid to this frame (petSlip: by how fast its window went in this frame — c.on.wx is where that
+   window's left side was a frame ago — and how fast it went itself, c.on.v; it starts where it was, c.mx). Kept on the
+   screen (lo…hi: a window dragged off the side leaves it there, as ever). → { x, L, i }: it is still on its window (L,
+   i: the part under it now); null: the window has slid from under it — it comes off: with Gravity it falls (keeping a
+   little of its speed across: PETL.toss), else it stays where it is, in the air. */
+function petSlide(c, L, ax, lo, hi, dt, Ls, grav) {
+  const G = PETS.G, was = c.mx != null ? c.mx : ax, u = c.on.wx != null && dt > 0 ? (L.wx - c.on.wx) / dt : 0;
+  const q = petSlip(was, c.on.v || 0, u, dt, PETN), x = Math.max(lo, Math.min(hi, q.x));
+  c.on.v = x === q.x ? q.v : 0; c.on.wx = L.wx; c.on.off = x - L.wx;
+  const i = petLedgeOf(Ls, c.on.id, c.on.off, petRoom(c), G.feetY);
+  if (i >= 0) return { x, L: Ls[i], i };
+  c.fx = x / G.W; c.on = null; c.ride = null;
+  if (grav) c.fall = { v: 0, vx: Math.max(-PETL.toss, Math.min(PETL.toss, q.v)) };
+  return null;
+}
 /* Where a singer stands now is remembered (map-pet.pos, the newest 200), for one the user put there: x and
    height as shares (petPosOf). On its way somewhere — down to the taskbar, onto a window — it's where it will be. */
 function petRemember(c) {
@@ -15871,10 +15993,14 @@ function petRemember(c) {
    One the user holds is no part of that: carried, it is on no line, and nobody it's carried past moves because
    of it; once it's let go — on a line, or in the air — it and whoever it overlaps glide apart like anyone, and
    where it comes to rest is what's remembered. Nobody walks about by itself: a singer only moves when it is
-   carried, falls, jumps up to its place, rides on its window or steps aside. */
+   carried, falls, jumps up to its place, rides on its window or steps aside.
+   1.0.17: the left and right sides of the windows are solid too (petWalls, petWallStop): nobody passes the side of a
+   window it is beside, a window moved into one pushes it, and one let go partly in a side steps out of it. And with
+   Inertia on windows (PETN) one on a window that moves lags behind it and slides (petSlide): it can slide off. */
 function petMove(t, dt) {
   const G = PETS.G, W = G.W, Ls = petLs(), grav = petGrav(), lines = new Map(), glid = new Set(), airs = []; // (airs: the ones left standing in the air)
-  const join = (k, c, x, lo, hi, L) => { if (!lines.has(k)) lines.set(k, []); lines.get(k).push({ c, x, lo, hi, L }); };
+  const Ws = petWs().map(w => ({ ...w, px: PETS.wallX.get(w.id + ':' + w.s) })); // (1.0.17: the windows' sides, and where each was a frame ago)
+  const join =(k, c, x, lo, hi, L) => { if (!lines.has(k)) lines.set(k, []); lines.get(k).push({ c, x, lo, hi, L }); };
   for (const c of PETS.chars.values()) {
     if (c.fx == null || !petVis(c)) continue;
     const x = c.fx * W, lo = c.w / 2, hi = W - c.w / 2;
@@ -15890,7 +16016,18 @@ function petMove(t, dt) {
     if (!c.on && !c.fall && !c.drag && c.alt > petTop(c)) c.alt = Math.max(petTop(c), c.alt - 2 * PETL.glide * dt);
     if (c.on) {
       const i = petLedgeOf(Ls, c.on.id, c.on.off, petRoom(c), G.feetY), L = Ls[i], ax = L ? Math.max(lo, Math.min(hi, L.wx + c.on.off)) : 0;
-      if (L && ax >= L.x0 && ax <= L.x1) { c.on.lost = 0; join('w' + i, c, ax, Math.max(lo, L.x0), Math.min(hi, L.x1), L); continue; }
+      if (L && ax >= L.x0 && ax <= L.x1) {
+        // (1.0.17, Inertia on windows: it lags behind its window and slides — petSlide; not while it still drops onto the
+        // edge it was let go over. Its edge back after a moment's gap: the window's move meanwhile is no jerk)
+        if (PETN > 0 && !c.ride) {
+          if (c.on.lost) c.on.wx = null;
+          c.on.lost = 0;
+          const s = petSlide(c, L, ax, lo, hi, dt, Ls, grav);
+          if (s) join('w' + s.i, c, s.x, Math.max(lo, s.L.x0), Math.min(hi, s.L.x1), s.L);
+          continue;
+        }
+        c.on.lost = 0; join('w' + i, c, ax, Math.max(lo, L.x0), Math.min(hi, L.x1), L); continue;
+      }
       // (nothing under it in what main said last — its window isn't listed, is covered just there, or has no room for it
       // now: it waits where it is, on no line, and stands on its edge again if that is back in time. One word from main
       // that lacks an edge is often put right by the next; by time, not by words: main speaks only when something changed.
@@ -15908,10 +16045,14 @@ function petMove(t, dt) {
       c.fall.v += PETL.fall * dt;
       if (PETV > 0) c.fall.v += 0.15 * PETV * petPlay(c, 'fall', c.fall.t0 || (c.fall.t0 = t))[0] * PETL.fall * dt; // (Variety: this fall a little faster or slower than the last)
       c.alt -= c.fall.v * dt;
+      // (1.0.17: one that slid off a window that moved away under it keeps a little of its speed across — less and less:
+      // PETL.toss, drift; a window's side it bumps into sends it back a little, petWallStop below)
+      let fx = x;
+      if (c.fall.vx) { fx = Math.max(lo, Math.min(hi, x + c.fall.vx * dt)); c.fx = fx / W; c.fall.vx = fx === lo || fx === hi || Math.abs(c.fall.vx) < 5 ? 0 : c.fall.vx * Math.exp(-dt / PETL.drift); }
       // (gravity: it lands on the first window edge under it that its standing line reaches or passes in this step —
       // petFallOnto; lx: where it can stand, as one standing on an edge is kept on the screen — with a drop's bounce, as
       // one let go over an edge has. Without gravity it goes on down to the taskbar, through any window, as ever)
-      const lx = Math.max(lo, Math.min(hi, x)), li = grav ? petFallOnto(Ls, lx, y0, G.feetY - c.alt, petRoom(c), G.feetY) : -1;
+      const lx = Math.max(lo, Math.min(hi, fx)), li =grav ? petFallOnto(Ls, lx, y0, G.feetY - c.alt, petRoom(c), G.feetY) : -1;
       if (li >= 0) { const L = Ls[li]; c.fx = lx / W; c.alt = G.feetY - L.y; c.on = { id: L.id, off: lx - L.wx, lost: 0 }; c.fall = null; c.landAt = t - (c.pup ? 0 : 150); glid.add(c); continue; }
       // (down: the bounce a drop has, from where it touches. It only just got there: whether it can stay right there —
       // someone may be standing in its way — shows from the next frame on, so it hasn't come to rest yet)
@@ -15929,7 +16070,8 @@ function petMove(t, dt) {
   // (while the user holds anybody, pressed or carried, nobody anywhere steps apart: where there are more singers than
   // fit, the shares go by how many they are, so one fewer would set them all moving. It settles once the user lets go)
   if (act.length > 1 && !(PETS.held && PETS.held.drag)) {
-    const to = petKeep(act.map(m => ({ x: m.x, span: petSpan(m.c.w, m.c.box), lo: m.lo, hi: m.hi, ...petExt(m.c, m.L ? m.L.y : petFeet(m.c)) })));
+    // (1.0.17: the side of a window one is beside is an end of its line too — petWallEnds: nobody is moved into one)
+    const to = petKeep(act.map(m => { const e = petExt(m.c, m.L ? m.L.y : petFeet(m.c)); return { x: m.x, span: petSpan(m.c.w, m.c.box), ...(Ws.length ? petWallEnds(m.x, petSpan(m.c.w, m.c.box) / 2, e.y0, e.y1, Ws, m.lo, m.hi) : { lo: m.lo, hi: m.hi }), ...e }; }));
     act.forEach((m, i) => {
       const d = to[i] - m.x;
       if (Math.abs(d) < 0.25) return; // (there near enough: it stands)
@@ -15950,12 +16092,39 @@ function petMove(t, dt) {
       c.alt = G.feetY - m.L.y + (c.ride ? c.ride.h : 0); // (from the edge where that is now: a window moved meanwhile takes it along)
     }
   }
+  // 1.0.17: the sides of the windows are solid (petWs — none with "Pets can stand on windows" off): nobody who stands,
+  // rides a window, steps aside or falls passes the side of a window beside it — it stops against it, and a side that
+  // moves into it pushes it along; one on a window's top edge pushed off its end comes off it (with Gravity it falls,
+  // else it stays there, in the air); one partly in a side, its middle outside, steps out of it (PETL.wall a second —
+  // let go there, it does so as it falls: it slides down the side); one falling with speed across bumps back a little.
+  // Not one that is held (carried, it goes where the hand takes it, in front of every window), nor one on its jump up
+  // to its place (that goes straight up). One whose middle is inside a window is in front of it: its sides are nothing
+  // to it (petWallStop).
+  if (Ws.length) {
+    for (const c of PETS.chars.values()) {
+      if (c.fx == null || !petVis(c) || c.drag || c.jump || (c.dest && !c.dest.until)) continue;
+      const x = c.fx * W, was = c.mx != null ? c.mx : x, e = petExt(c);
+      const r = petWallStop(x, was, petSpan(c.w, c.box) / 2, e.y0, e.y1, Ws, c.w / 2, W - c.w / 2, PETL.wall * dt, PETL.push);
+      if (r.x === x) continue;
+      c.fx = r.x / W; glid.add(c);
+      if (c.fall && c.fall.vx && c.fall.vx * r.hit < 0) c.fall.vx *= -PETL.bounce; // (it was going into the window: back a little)
+      if (c.on) {
+        const P = Ls.find(L => L.id === c.on.id);
+        if (P) c.on.off = r.x - P.wx;
+        if (c.on.v != null && dt > 0) c.on.v = (r.x - was) / dt; // (Inertia on windows: it goes as fast as what stops or pushes it)
+        if (P && !c.on.lost && petLedgeOf(Ls, c.on.id, c.on.off, petRoom(c), G.feetY) < 0) { c.on = null; c.ride = null; if (grav) c.fall = { v: 0 }; } // (pushed off its window's end)
+      }
+    }
+  }
   for (const c of PETS.chars.values()) {
     // one the user put somewhere: what's remembered is where it came to rest (the others' are as the user left them)
     // (not while anybody is held: nobody steps apart then, so one still on its way to its place hasn't come to rest; nor
     // while it waits for its window's edge to be back: that would be remembered as a place in the air)
     if (c.keep && petVis(c) && !c.drag && !c.fall && !c.ride && !c.dest && !c.jump && !(c.on && c.on.lost) && !glid.has(c) && !(PETS.held && PETS.held.drag)) { c.keep = false; petRemember(c); }
   }
+  // (1.0.17: where everyone, and every window's side, is now — what the next frame's sides and slides go by: petWallStop, petSlide)
+  for (const c of PETS.chars.values()) if (c.fx != null) c.mx = c.fx * W;
+  if (Ws.length || PETS.wallX.size) PETS.wallX = new Map(Ws.map(w => [w.id + ':' + w.s, w.x]));
 }
 /* The speech bubbles: who sings now (petActive) — one bubble per line, one shared by singers singing the
    same words together, with a tail to each; a long line in bubble-wide pieces with the karaoke wipe; on
@@ -16353,7 +16522,8 @@ function petLetGo(c, click) {
    'song' — the song that was picked loads and plays as a desktop-pet song does (bgmPlay, petSong): its other singers
      with a picture come on and sing their lines. It is one song (BGM.one): when it ends, fails or is stopped, bgmStop
      hands over to petIdleEnd, and the pets are idle again (petIdleRest) — the singers who aren't chosen leave.
-   'off' — Idle mode went off, or nobody can be shown, while nothing played: the window closes.
+   'off' — Idle mode went off, or nobody can be shown, while nothing played (or a pet's song is over with it off): the
+     pets leave as at a song's end, and then the window closes (1.0.17: petIdleClose — never an instant vanish).
    main hears how things stand with every word about what plays (petIdlePost → cover:state { idle }), and says
    'idle' (Stop while a pet's song plays) through cover:msg (petIdleCmd). (1.0.13's 'list' — Start background mode,
    the playlist in this window — is gone: 1.0.16 refuses it, in main and here.)
@@ -16382,7 +16552,7 @@ function petIdleDo(ev) {
     else if (a === 'shut') petMenuShut();
     else if (a === 'sing') petIdleSing(ev.id, ev.key);
     else if (a === 'rest') petIdleRest();
-    else if (a === 'close') setTimeout(() => { if (PETID.st === 'off') mapApp.cover(false).catch(() => {}); }, 600); // (once they have sunk away; Idle mode switched on again meanwhile: they stay)
+    else if (a === 'close') petIdleClose(); // (1.0.17: once they have all left, as they leave at a song's end — never at once; Idle mode switched on again meanwhile: they stay)
   }
   if (PETID.log) PETID.log(was, ev, r);
   return r;
@@ -16454,7 +16624,8 @@ function petIdleTap(c) {
   if (!again) petIdleDo({ t: 'tap', key: c.key, idle: petIdleKeeps(c) });
 }
 /* main's word to this window about Idle mode (cover:msg { cmd }): 'idle' — the user stopped what plays, and the pets
-   are to be idle again (with Idle mode off meanwhile, the window closes as a stop always closed it: bgmStop). (1.0.13's
+   are to be idle again (with Idle mode off meanwhile, 1.0.17: the pets leave, and then the window closes — bgmStop,
+   petIdleEnd, petIdleClose; main sends this for that Stop too, rather than shut the window at once). (1.0.13's
    'list' — the playlist played here — is gone in 1.0.16: main never sends it, and a 'list' that came all the same
    would be nothing, as any word this page doesn't know.) → whether it was 'idle'. */
 function petIdleCmd(cmd) {
@@ -16466,7 +16637,26 @@ function petIdleCmd(cmd) {
 function petIdleEnd() {
   const why = PETID.why || 'ended';
   PETID.why = '';
-  return petIdleDo({ t: why }).st !== 'off';
+  const r = petIdleDo({ t: why });
+  return r.st !== 'off' || r.do.includes('close'); // (1.0.17 'close': a pet's song is over with Idle mode off — the pets leave first, and the window closes itself after them: petIdleClose)
+}
+/* 1.0.17: Idle mode is over here (petIdleStep's 'close': switched off — in Settings, or with Stop while only idle pets
+   stand there —, nobody left to show, or a pet's song is over with it off). Every pet still on the screen leaves as the
+   singers leave when the song changes (petLeave: a puppet's own goodbye first, if its sheet has one, then it sinks away
+   with its wave), and only once the last of them has gone does the window close (main: win:cover) — never in the
+   middle of that, as 1.0.13–1.0.16 did after a fixed 0.6 s, and never at once. PETI.byeMs at the most (one that can't
+   finish, the window hidden with Ctrl+Alt+H and drawing nothing: then it closes at once). Idle mode on again before
+   that: they stay (petIdleStep 'off' → 'idle'). */
+function petIdleClose() {
+  const t0 = performance.now();
+  for (const c of [...PETS.chars.values()]) petLeave(c, t0);
+  let n = 0; // (looks so far, a tenth of a second apart: the wait is counted in those, so it ends even where no frame is drawn)
+  const gone = () => {
+    if (PETID.st !== 'off') return;
+    if (document.hidden || ![...PETS.chars.values()].some(c => c.state === 'leaving') || ++n * 100 >= PETI.byeMs) mapApp.cover(false).catch(() => {});
+    else setTimeout(gone, 100);
+  };
+  setTimeout(gone, 100);
 }
 /* The song a pet was asked for (id: its project; key: the pet): loaded and played as background mode plays a song —
    bgmPlay: the project, then petSong for its singers and their pictures, then it starts —, but it is the only one
@@ -16714,6 +16904,11 @@ async function petCfgUI() {
   const can = typeof c.free === 'boolean' && typeof c.windows === 'boolean';
   $('petFree').checked = can && c.free;
   $('petWindows').checked = can && c.windows;
+  // (1.0.17, Inertia on windows: offered by an app that keeps it, while pets can stand on windows — petFreeUI)
+  petInertCan = can && Number.isFinite(c.inertia);
+  $('petInert').value = Math.round(petInertCfg(c) * 100);
+  petInertTxt();
+  paintRange($('petInert'));
   // (Gravity: offered by an app that keeps the setting, while pets can go anywhere — petFreeUI)
   petGravCan = can && typeof c.gravity === 'boolean';
   $('petGravity').checked = petGravCan && c.gravity;
@@ -16741,9 +16936,11 @@ async function petCfgUI() {
 }
 /* "Pets can stand on windows" and "Gravity" are only offered while they can go anywhere. */
 let petGravCan = false; // (the app keeps the Gravity setting: petCfgUI)
+let petInertCan = false; // (1.0.17: the app keeps Inertia on windows: petCfgUI)
 function petFreeUI(can) {
   $('petFreeRow').hidden = $('petFreeHint').hidden = !can;
   $('petWinRow').hidden = $('petWinHint').hidden = !(can && $('petFree').checked);
+  $('petInertRow').hidden = $('petInertHint').hidden = !(can && petInertCan && $('petFree').checked && $('petWindows').checked); // (1.0.17: only while they can stand on windows)
   $('petGravRow').hidden = $('petGravHint').hidden = !(can && petGravCan && $('petFree').checked);
 }
 /* "How lively" is only offered for the automatic dance (Made for me). */
@@ -16770,8 +16967,13 @@ $('petVary').oninput = e => { $('petVaryTxt').textContent = e.target.value + '%'
 $('petVary').onchange = e => petCfgSet({ vary: e.target.value / 100 });
 $('petVary').ondblclick = e => { e.target.value = Math.round(PETV_USUAL * 100); e.target.dispatchEvent(new Event('input', { bubbles: true })); e.target.dispatchEvent(new Event('change', { bubbles: true })); };
 $('petFree').onchange = e => { petCfgSet({ free: e.target.checked }); petFreeUI(true); };
-$('petWindows').onchange = e => petCfgSet({ windows: e.target.checked });
+$('petWindows').onchange = e => { petCfgSet({ windows: e.target.checked }); petFreeUI(true); }; // (1.0.17: Inertia on windows shows only while they can stand on windows)
 $('petGravity').onchange = e => petCfgSet({ gravity: e.target.checked });
+// (1.0.17, Inertia on windows: as Variety — the number follows the slider as it moves, "Off" at 0; the setting is sent as it is let go)
+function petInertTxt() { const v = +$('petInert').value; $('petInertTxt').textContent = v > 0 ? v + '%' : 'Off'; }
+$('petInert').oninput = petInertTxt;
+$('petInert').onchange = e => petCfgSet({ inertia: e.target.value / 100 });
+$('petInert').ondblclick = e => { e.target.value = 0; e.target.dispatchEvent(new Event('input', { bubbles: true })); e.target.dispatchEvent(new Event('change', { bubbles: true })); };
 $('petPets').onchange = e => petCfgSet({ pets: e.target.value, merge: e.target.value === 'few' }); // (merge: what an app from before "One singer" goes by)
 $('petDance').onchange = e => { if (PETDANCES.includes(e.target.value)) petCfgSet({ dances: e.target.value }); petDanceUI(); };
 $('petDanceSize').onchange = e => petCfgSet({ danceSize: e.target.value });
@@ -16812,12 +17014,12 @@ const bgmIdleNo = () => CAN_PET && PETIU.can && PETIU.on && !COVER.on && !BGM.on
 /* Idle mode's switch can't be turned on now: background mode plays, or is getting ready — not an idle pet's song. */
 const petIdleLocked = () => CAN_PET && PETIU.can && !PETIU.on && (BGM.on || (COVER.on && !(COVER.s && COVER.s.idle === 'song')));
 /* The two greyed controls and their lines, as things stand (from bgmUI — every change of what plays —, petIdleUI, the
-   switch, and as the app's settings are heard). The line under Start says where the switch is when it isn't in sight. */
+   switch, and as the app's settings are heard). 1.0.17: each line is a short status ("Idle mode is on", "Background
+   mode is playing"); why, and where the switch is, is behind an "i" (#bgmIdleWhy; Idle mode's own row). */
 function bgmIdleUI() {
   const no = bgmIdleNo(), locked = petIdleLocked(), line = $('bgmIdleNo');
   $('bgmStart').disabled = no || PETASK.busy; // (busy: the singers are being looked at — petAskFirst)
-  line.hidden = !no;
-  if (no) line.textContent = PETIDLE_NO.bgm + (PL.where === 'pet' ? '' : ' Its switch shows when Plays in is Desktop pet.');
+  line.hidden = !no; // (1.0.17: a short line — "Idle mode is on" —, why and where the switch is behind its "i": #bgmIdleWhy)
   $('petIdleOn').disabled = locked;
   $('petIdleNo').hidden = !locked;
 }
@@ -16861,7 +17063,7 @@ function petIdlePaint() {
   if (!PETIU.on || !PETIU.songs) return;
   const rows = petIdleRows(PETIU.songs, PETIU.known, PETIU.met, PETIU.pets), idx = petIdxLoad();
   const sub = rows.map(r => { const s = petSongsFor(idx, r.key, PL.ids).map(x => x.name); return !r.url ? "No picture any more: it can't be shown" : s.length ? 'Sings in ' + petSongsText(s) : PETIX.left > 0 || !PETIX.sure ? '' : 'In none of your songs yet'; });
-  $('petIdleSum').textContent = petIdleSumText(rows) + (PETIU.pets.length && COVER.on && COVER.kind !== 'pet' ? ' They come on when background mode stops.' : '');
+  $('petIdleSum').textContent = petIdleSumText(rows) + (PETIU.pets.length && COVER.on && COVER.kind !== 'pet' ? ' · they come on when background mode stops' : '');
   const sig = JSON.stringify([rows, sub]);
   if (sig === PETIU.sig) return;
   PETIU.sig = sig;
@@ -17015,6 +17217,8 @@ const CAN_EDIT = CAN_SHEET && !!(window.PetSplit && window.PetEditor) && PetEdit
   thumb: (th, url, json, key) => petThumb(th, url, json || PETR.sheets.get(key) || '', true),
   give: async (key, png) => { try { await mapApp.petPics([{ key }]); return !!(await mapApp.petSetImg(key, png)); } catch (e) { return false; } }, // (met just now, as for any picture)
   saveBlob, say, paintRange,
+  // (1.0.17: the editor's explanations behind an "i", as Settings' are — the page's own tips, their look and their keys)
+  tip: (t, p) => addTip(t, p),
   settings: petShOpen,
   // (Dance for one song…, 1.0.13: the song that is open in this window — its map, lyric lines and singers, and the
   // dances its project keeps — and keeping what is made with that project: petSongNow, petSongDances. Without the

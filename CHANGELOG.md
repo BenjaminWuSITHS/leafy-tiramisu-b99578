@@ -15,6 +15,19 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.17
+<!-- date: 2026-11-17T23:51 -->
+- Idle pets say goodbye: switching Idle mode off, pressing Stop or a song ending makes them sink away instead of popping off the screen.
+- Pets bump into the sides of windows: they can't pass through them, and a window you move into a pet pushes it along.
+- New setting, Inertia on windows (Background mode → Desktop pet): a pet on a window you move lags, slides and catches up, and can slide off one you pull away fast. Off unless you turn it up.
+- Explanations are behind a small "i" in Settings, the player and the pet editor.
+- Clothing no longer goes up with a raised arm: a layer hung from the body moves only with the body and the legs.
+- Pet editor: animations have a tab of their own, Animations, with your own animations and the dances. The puppet stays beside every tab, and Animation under it chooses what it plays.
+- Pet editor, Cut: a piece's chip shows that arm or leg alone, hidden parts and all, and while you move a point you see the parts it cuts.
+- Pet editor, Hands and legs: Start from the picture copies the arm or leg as it is cut out, with what you painted where other parts hide it.
+- Pet editor, Face: paint past an eye's or the mouth's box and the box grows to hold it.
+- Pet editor, 3D: your clothing layers are listed there too, with the same How it moves settings.
+
 ## 1.0.16
 <!-- date: 2026-11-17T00:45 -->
 - Idle mode and background mode no longer run together: while Idle mode is on, Start background mode is greyed and says why, and while background mode plays, Idle mode can't be switched on.
