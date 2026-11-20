@@ -15,6 +15,12 @@ release on GitHub, which is where the app reads it for the popup. A push that ch
 makes a new version too, so a fix to an older part's words, dates or pictures is best pushed with the next version.
 If a version has no part here, the build lists the first line of each commit since the last release instead.
 
+## 1.0.19
+<!-- date: 2026-11-19T21:42 -->
+- Pet editor, Layers: a new switch, Show the Missing area, hides the red stripes over what other parts hide, so you can see what you draw. Press H to hide them or show them again; the Bucket still fills a hidden piece in one click.
+-free popeyes
+  <!-- picture: changelog/1.0.19/chatgpt-image-jun-27-2026-12-02-40-am.png |  -->
+
 ## 1.0.18
 <!-- date: 2026-11-18T02:01 -->
 - Pet editor, Cut: a piece's chip (Upper arm, Forearm and hand, Thigh, Shin and foot) now also paints the hidden part of its arm or leg: what you painted in Layers where other parts hide it, and its striped Missing area. You decide which piece it goes into; nothing else of the pet changes.
